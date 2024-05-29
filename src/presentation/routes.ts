@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { dioceseRoutes } from "./diocese/routes.diocese";
+import { dioceseRoutes } from "./diocese/diocese.routes";
 
 export class AppRoutes {
   static get routes(): Router {
