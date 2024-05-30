@@ -1,9 +1,9 @@
-import { dioceseEntity } from "../entities/diocese.entity";
+import { DioceseEntity } from "../entities/diocese.entity";
 
-export abstract class dioceseDatasource {
-  abstract create(): Promise<dioceseEntity>;
-  abstract getAll(): Promise<dioceseEntity[]>;
-  abstract findById(id: number): Promise<dioceseEntity>;
-  abstract updateById(): Promise<dioceseEntity>;
-  abstract deleteById(id: number): Promise<dioceseEntity>;
+export abstract class DioceseDatasource {
+  abstract create(): Promise<DioceseEntity>;
+  abstract getAll(): Promise<DioceseEntity[]>;
+  abstract findById(id: number): Promise<DioceseEntity>;
+  abstract updateById(): Promise<DioceseEntity>;
+  abstract deleteById(id: number): Promise<DioceseEntity>;
 }

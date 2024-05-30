@@ -2,29 +2,29 @@
 import { prisma } from "../../data/postgres";
 
 
-import { dioceseDatasource } from "../../domain/datasource/diocese.datasource";
-import { dioceseEntity } from "../../domain/entities/diocese.entity";
+import { DioceseDatasource } from "../../domain/datasource/diocese.datasource";
+import { DioceseEntity } from "../../domain/entities/diocese.entity";
 
 
-export class dioceseDatasourceImpl implements dioceseDatasource {
-    create(): Promise<dioceseEntity> {
+export class DioceseDatasourceImpl implements DioceseDatasource {
+    create(): Promise<DioceseEntity> {
         throw new Error("Method not implemented.");
     }
 
-    async getAll(): Promise<dioceseEntity[]> {
+    async getAll(): Promise<DioceseEntity[]> {
         const dioceses = await prisma.diocese.findMany();
-        return dioceses.map( diocese => dioceseEntity.fromObject(diocese));
+        return dioceses.map( diocese => DioceseEntity.fromObject(diocese));
     }
 
-    findById(id: number): Promise<dioceseEntity> {
+    findById(id: number): Promise<DioceseEntity> {
         throw new Error("Method not implemented.");
     }
 
-    updateById(): Promise<dioceseEntity> {
+    updateById(): Promise<DioceseEntity> {
         throw new Error("Method not implemented.");
     }
 
-    deleteById(id: number): Promise<dioceseEntity> {
+    deleteById(id: number): Promise<DioceseEntity> {
         throw new Error("Method not implemented.");
     }
 

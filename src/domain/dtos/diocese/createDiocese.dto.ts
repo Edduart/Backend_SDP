@@ -1,5 +1,5 @@
 
-export class createDiocese {
+export class CreateDiocese {
 
   private constructor(
 
@@ -9,7 +9,7 @@ export class createDiocese {
 
   ) {}
 
-  static create(props: { [key: string]: any }): [string?, createDiocese?] {
+  static create(props: { [key: string]: any }): [string?, CreateDiocese?] {
     const { id, name, holder } = props;
 
     if (!id) return ["ID is required", undefined];
@@ -22,7 +22,7 @@ export class createDiocese {
     //
     //
 
-    return [undefined, new createDiocese(id, name, holder)];
+    return [undefined, new CreateDiocese(id, name, holder)];
   }
 }
 

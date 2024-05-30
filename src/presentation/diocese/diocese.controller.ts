@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { prisma } from "../../data/postgres";
-import { createDiocese } from "../../domain/dtos";
+import { CreateDiocese } from "../../domain/dtos";
 import { 
     GetDioceses, 
-    dioceseRepository 
+    DioceseRepository 
 } from "../../domain";
 
-export class dioceseController {
+export class DioceseController {
   //* DI
-  constructor(private readonly dioceseRepository: dioceseRepository) {}
+  constructor(private readonly dioceseRepository: DioceseRepository) {}
 
   public getDioceses = (req: Request, res: Response) => {
 

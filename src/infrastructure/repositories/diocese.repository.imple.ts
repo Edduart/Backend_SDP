@@ -1,27 +1,27 @@
 import {
-  dioceseDatasource,
-  dioceseEntity,
-  dioceseRepository,
+  DioceseDatasource,
+  DioceseEntity,
+  DioceseRepository,
   } from "../../domain";
 
-export class dioceseRepositoryImpl implements dioceseRepository {
-  constructor(private readonly datasource: dioceseDatasource) {}
+export class DioceseRepositoryImpl implements DioceseRepository {
+  constructor(private readonly datasource: DioceseDatasource) {}
 
-  create(): Promise<dioceseEntity> {
+  create(): Promise<DioceseEntity> {
     throw new Error("Method not implemented.");
   }
 
-  getAll(): Promise<dioceseEntity[]> {
+  getAll(): Promise<DioceseEntity[]> {
     return this.datasource.getAll();
   }
 
-  findById(id: number): Promise<dioceseEntity> {
+  findById(id: number): Promise<DioceseEntity> {
     throw new Error("Method not implemented.");
   }
-  updateById(): Promise<dioceseEntity> {
+  updateById(): Promise<DioceseEntity> {
     throw new Error("Method not implemented.");
   }
-  deleteById(id: number): Promise<dioceseEntity> {
+  deleteById(id: number): Promise<DioceseEntity> {
     throw new Error("Method not implemented.");
   }
 }
