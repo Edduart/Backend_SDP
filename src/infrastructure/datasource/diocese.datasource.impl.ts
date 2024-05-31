@@ -13,7 +13,7 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
 
     async getAll(): Promise<DioceseEntity[]> {
         const dioceses = await prisma.diocese.findMany();
-        return dioceses.map( diocese => DioceseEntity.fromObject(diocese));
+        return dioceses.map( (diocese: { [key: string]: any; }) => DioceseEntity.fromObject(diocese));
     }
 
     findById(id: number): Promise<DioceseEntity> {
