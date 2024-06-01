@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { DioceseController } from "./diocese.controller";
+import { DioceseController } from "../diocese/diocese.controller";
 import { DioceseDatasourceImpl } from "../../infrastructure/datasource/diocese.datasource.impl";
 import { DioceseRepositoryImpl } from "../../infrastructure/repositories/diocese.repository.imple";
 
-export class DioceseRoutes {
+module.exports =  class DioceseRoutes {
   static get routes(): Router {
     const router = Router();
 
@@ -21,3 +21,5 @@ export class DioceseRoutes {
     return router;
   }
 }
+
+

@@ -1,8 +1,5 @@
-/*
 import express, { Router } from 'express';
 import fs from 'fs';
-
-
 
 
 export class AppRoutes{
@@ -17,14 +14,14 @@ export class AppRoutes{
       const name = removeExtension(file);
       if (name !== 'index' && file !== '__test__') {
         console.log(`ruta actual: ${name}`);
-        console.log(`/${name}/${name}.routes`);
-        router.use(`/${name}`, require(`./${file}/${name}.routes`));
+        router.use(`/${name}`, require(`./${file}`));
       }
     });
     return router;
   }
 }
-*/
+/*
+router viejo
 
 
 import { Router } from "express";
@@ -41,3 +38,4 @@ export class AppRoutes {
     return router;
   }
 }
+*/
