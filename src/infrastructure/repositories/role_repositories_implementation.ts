@@ -6,15 +6,23 @@ export class RoleRepositoryImpl implements RoleRepository{
     constructor (
         private readonly datasource: RoleDataSource,
     ){}
-
-
-    create(permisos: number[]): Promise<RoleEntity> {
-        return this.datasource.create(permisos);
+    
+    Update(): Promise<RoleEntity> {
+        throw new Error("Method not implemented.");
     }
+    getById(id: number): Promise<RoleEntity> {
+        return this.datasource.getById(id);
+    }
+
+
+    create(): Promise<RoleEntity> {
+        return this.datasource.create();
+    }
+    
     getAll(): Promise<RoleEntity[]> {
         return this.datasource.getAll();
     }
-    Delete(id: number): Promise<RoleEntity[]> {
+    Delete(id: number): Promise<RoleEntity> {
         return this.datasource.Delete(id);
     }
     

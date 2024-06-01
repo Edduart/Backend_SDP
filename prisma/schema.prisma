@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -134,12 +128,6 @@ model instructor_position {
   instructor  instructor[] @ignore
 }
 
-model ministry {
-  id                  Int                   @id @default(autoincrement()) @db.TinyInt
-  description         String                @db.VarChar(100)
-  seminarian_ministry seminarian_ministry[]
-}
-
 model parish {
   id         Int     @id @default(autoincrement())
   diocese_id Int
@@ -215,12 +203,12 @@ model seminarian {
   apostleships         String?               @db.Text
   status_id            Int                   @db.TinyInt
   location_id          Int                   @db.TinyInt
+  Ministery            seminarian_Ministery?
   enrollment           enrollment[]
   foreigner_seminarian foreigner_seminarian?
   seminarian_location  seminarian_location   @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_seminarian_location")
   user                 user                  @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_user")
   seminarian_status    seminarian_status     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fl_seminarian_seminarian_status")
-  seminarian_ministry  seminarian_ministry?
 
   @@index([location_id], map: "fk_seminarian_seminarian_location_idx")
   @@index([status_id], map: "fl_seminarian_seminarian_status_idx")
@@ -230,17 +218,6 @@ model seminarian_location {
   id          Int          @id @default(autoincrement()) @db.TinyInt
   description String       @db.VarChar(50)
   seminarian  seminarian[]
-}
-
-model seminarian_ministry {
-  seminarian_id String     @id @db.VarChar(20)
-  ministry_id   Int        @db.TinyInt
-  created_at    DateTime   @default(now()) @db.DateTime(0)
-  updated_at    DateTime   @default(now()) @db.DateTime(0)
-  ministry      ministry   @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_ministry_ministry")
-  seminarian    seminarian @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_ministry_seminarian")
-
-  @@index([ministry_id], map: "fk_seminarian_ministry_ministry_idx")
 }
 
 model seminarian_status {
@@ -332,6 +309,12 @@ model user {
   @@index([parish_id], map: "fk_user_parish_idx")
 }
 
+enum seminarian_Ministery {
+  Unkown      @map("Unkown")
+  Admision    @map("Admisión")
+  Lectorado   @map("Lectorado")
+  Acolitado   @map("Acolitado")
+}
 enum foreigner_seminarian_stage {
    PROPEDEUTICO  @map("1")
    DISCIPULADO   @map("2")
