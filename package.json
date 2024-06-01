@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./src/index.ts",
     "dev": "nodemon ./src/index.ts",
+    "Seed_Permission": "ts-node ./src/seed/permission_up.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

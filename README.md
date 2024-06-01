@@ -3,5 +3,8 @@ Al primer inicio instalar dependencias, hacer npx prima db pull y luego de arreg
 npx prisma generate,cambiar el valor de los datos en el archivo .env para acceder a la base de datos, cambiando el usuario y contraseña
 
 
+la base de datos viene vacia
+lanzar npm run Seed_Permission para usar el seeder
+
 NODEMON:
 npm run dev
