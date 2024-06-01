@@ -1,59 +1,41 @@
 import { Request, Response } from "express";
 import { prisma } from "../../data/postgres";
-import { CreateDiocese } from "../../domain/dtos";
 import { 
-    GetDioceses, 
-    DioceseRepository 
+    GetDioceses,
+    GetDiocese,
+    UpdateDiocese, 
+    DioceseRepository,
+    UpdateDioceseDto 
 } from "../../domain";
 
 export class DioceseController {
-  //* DI
   constructor(private readonly dioceseRepository: DioceseRepository) {}
 
   public getDioceses = (req: Request, res: Response) => {
-
     new GetDioceses(this.dioceseRepository)
       .execute()
-      .then((todos) => res.json(todos)) //check parameter
+      .then((dioceses) => res.json(dioceses)) //check parameter
       .catch((error) => res.status(400).json({ error }));
   };
 
-  /*public getTodoById = (req: Request, res: Response) => {
+  public GetDioceseById = (req: Request, res: Response) => {
     const id = +req.params.id;
 
-    new GetTodo(this.todoRepository)
+    new GetDiocese(this.dioceseRepository)
       .execute(id)
-      .then((todo) => res.json(todo))
+      .then((diocese) => res.json(diocese))
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public createTodo = (req: Request, res: Response) => {
-    const [error, createTodoDto] = CreateTodoDto.create(req.body);
+  public updateDioceseById = (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const [error, updateDioceseDto] = UpdateDioceseDto.update({ ...req.body, id });
+
     if (error) return res.status(400).json({ error });
 
-    new CreateTodo(this.todoRepository)
-      .execute(createTodoDto!)
+    new UpdateDiocese(this.dioceseRepository)
+      .execute(updateDioceseDto!)
       .then((todo) => res.json(todo))
       .catch((error) => res.status(400).json({ error }));
   };
-
-  public updateTodo = (req: Request, res: Response) => {
-    const id = +req.params.id;
-    const [error, updateTodoDto] = UpdateTodoDto.create({ ...req.body, id });
-    if (error) return res.status(400).json({ error });
-
-    new UpdateTodo(this.todoRepository)
-      .execute(updateTodoDto!)
-      .then((todo) => res.json(todo))
-      .catch((error) => res.status(400).json({ error }));
-  };
-
-  public deleteTodo = (req: Request, res: Response) => {
-    const id = +req.params.id;
-
-    new DeleteTodo(this.todoRepository)
-      .execute(id)
-      .then((todo) => res.json(todo))
-      .catch((error) => res.status(400).json({ error }));
-  };*/
 }

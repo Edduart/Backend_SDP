@@ -1,5 +1,5 @@
-import { DioceseEntity } from "../entities/diocese.entity";
-import { DioceseRepository } from "..//repositories/diocese.repository";
+import { DioceseEntity } from "../../entities/diocese.entity";
+import { DioceseRepository } from "../../repositories/diocese.repository";
 
 export interface GetDiocesesUseCase {
   execute(): Promise<DioceseEntity[]>;

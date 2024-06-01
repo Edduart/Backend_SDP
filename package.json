@@ -1,9 +1,9 @@
 {
   "name": "repository_test",
   "version": "0.0.1",
-  "main": "src/index.ts",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "node ./src/index.ts",
+    "start": "node ./src/app.ts",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
