@@ -10,12 +10,343 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  provider = "mysql"
+  url      = env("MYSQL_URL")
 }
 
-model Diocese {
-  id    Int     @id @default(autoincrement())
-  name  String @db.VarChar
-  holder  String @db.VarChar
+model academic_degree {
+  id          Int     @id @default(autoincrement())
+  user_id     String  @db.VarChar(20)
+  description String  @db.VarChar(200)
+  link        String? @db.Text
+  user        user    @relation(fields: [user_id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_academic_degree_user")
+
+  @@index([user_id], map: "fk_academic_degree_user_idx")
+}
+
+model academic_term {
+  id          Int           @id @default(autoincrement())
+  start_date  DateTime      @db.Date
+  end_date    DateTime      @db.Date
+  enrollment  enrollment[]
+  instruction instruction[]
+}
+
+model basic_worker {
+  person_id             String                @id @db.VarChar(20)
+  job_position          Int                   @db.TinyInt
+  person                person                @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_basic_worker_person")
+  basic_worker_position basic_worker_position @relation(fields: [job_position], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_basic_worker_position")
+
+  @@index([job_position], map: "fk_basic_worker_position_idx")
+}
+
+model basic_worker_position {
+  id           Int            @id @default(autoincrement()) @db.TinyInt
+  description  String         @db.VarChar(100)
+  basic_worker basic_worker[]
+}
+
+model course {
+  id            Int         @id @default(autoincrement())
+  stage_id      Int         @db.TinyInt
+  description   String      @db.VarChar(200)
+  instructor_id String?     @db.VarChar(20)
+  instructor    instructor? @relation(fields: [instructor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_instructor") @ignore
+  stage         stage       @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_stage")
+  subject       subject[]
+
+  @@index([instructor_id], map: "fk_course_instructor_idx")
+  @@index([stage_id], map: "fk_course_stage_idx")
+}
+
+model diocese {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(200)
+  holder String   @db.VarChar(100)
+  parish parish[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model enrollment {
+  seminarian_id     String            @db.VarChar(20)
+  subject_id        Int
+  academic_term_id  Int
+  status_id         Int               @db.TinyInt
+  enrollment_status enrollment_status @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_enrollment_enrollment_status")
+  academic_term     academic_term     @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
+  seminarian        seminarian        @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
+  subject           subject           @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
+  test_score        test_score[]
+
+  @@id([seminarian_id, subject_id, academic_term_id])
+  @@index([status_id], map: "fk_enrollment_enrollment_status_idx")
+  @@index([academic_term_id], map: "fk_seminarian_academic_term_idx")
+  @@index([subject_id], map: "fk_seminarian_subject_subject_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model enrollment_status {
+  id          Int          @id @default(autoincrement()) @db.TinyInt
+  description String       @db.VarChar(50)
+  enrollment  enrollment[]
+}
+
+model foreigner_seminarian {
+  id            String                     @id @db.VarChar(20)
+  seminary_name String                     @db.VarChar(200)
+  stage         foreigner_seminarian_stage
+  stage_year    Int
+  seminarian    seminarian                 @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_foreigner_seminarian_seminarian")
+}
+
+model instruction {
+  professor_id     String        @db.VarChar(20)
+  subject_id       Int
+  academic_term_id Int
+  academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professo_subject_academic_term")
+  professor        professor     @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_professor")
+  subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_subject")
+  test             test[]
+
+  @@id([professor_id, subject_id, academic_term_id])
+  @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
+  @@index([subject_id], map: "fk_professor_subject_subject_idx")
+  @@unique([subject_id, professor_id, academic_term_id])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model instructor {
+  professor_id        String              @db.VarChar(20) @unique
+  starting_date       DateTime            @db.Date
+  position_id         Int                 @db.TinyInt
+  course              course[]
+  instructor_position instructor_position @relation(fields: [position_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_instructor_position")
+  professor           professor           @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_professor")
+
+  @@index([position_id], map: "fk_instructor_instructor_position_idx")
+  @@index([professor_id], map: "fk_instructor_professor_idx")
+  @@ignore
+}
+
+model instructor_position {
+  id          Int          @id @default(autoincrement()) @db.TinyInt
+  description String       @db.VarChar(50)
+  instructor  instructor[] @ignore
+}
+
+model ministry {
+  id                  Int                   @id @default(autoincrement()) @db.TinyInt
+  description         String                @db.VarChar(100)
+  seminarian_ministry seminarian_ministry[]
+}
+
+model parish {
+  id         Int     @id @default(autoincrement())
+  diocese_id Int
+  name       String  @db.Text
+  patron     String  @db.VarChar(100)
+  diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")
+  user       user[]
+
+  @@index([diocese_id], map: "fk_parish_diocese_idx")
+}
+
+model permission {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(100)
+  description     String?           @db.Text
+  role_permission role_permission[]
+}
+
+model person {
+  id                   String            @id @db.VarChar(20)
+  profile_picture_path String?           @db.Text
+  forename             String            @db.VarChar(100)
+  surname              String            @db.VarChar(100)
+  email                String            @db.VarChar(200)
+  birthdate            DateTime          @db.Date
+  medical_record       String?           @db.Text
+  BloodType            person_BloodType? @default(UNKNOWN)
+  basic_worker         basic_worker?
+  phone_number         phone_number[]
+  social_media         social_media[]
+  user                 user?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model phone_number {
+  id           Int    @id @default(autoincrement())
+  phone_number String @db.VarChar(20)
+  person_id    String @db.VarChar(20)
+  description  String @db.VarChar(100)
+  person       person @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_phone_number_person")
+
+  @@index([person_id], map: "fk_phone_number_person_idx")
+}
+
+model professor {
+  id          String        @id @db.VarChar(20)
+  status_id   Int           @db.TinyInt
+  instruction instruction[]
+  instructor  instructor[]  @ignore
+  user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
+}
+
+model role {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(100)
+  description     String?           @db.Text
+  role_permission role_permission[]
+  user            user[]
+}
+
+model role_permission {
+  role_id       Int
+  permission_id Int
+  permission    permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_role_permission_permission")
+  role          role       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_role_permission_role")
+
+  @@id([role_id, permission_id])
+  @@index([permission_id], map: "fk_role_permission_permission_idx")
+}
+
+model seminarian {
+  id                   String                @id @db.VarChar(20)
+  apostleships         String?               @db.Text
+  status_id            Int                   @db.TinyInt
+  location_id          Int                   @db.TinyInt
+  enrollment           enrollment[]
+  foreigner_seminarian foreigner_seminarian?
+  seminarian_location  seminarian_location   @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_seminarian_location")
+  user                 user                  @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_user")
+  seminarian_status    seminarian_status     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fl_seminarian_seminarian_status")
+  seminarian_ministry  seminarian_ministry?
+
+  @@index([location_id], map: "fk_seminarian_seminarian_location_idx")
+  @@index([status_id], map: "fl_seminarian_seminarian_status_idx")
+}
+
+model seminarian_location {
+  id          Int          @id @default(autoincrement()) @db.TinyInt
+  description String       @db.VarChar(50)
+  seminarian  seminarian[]
+}
+
+model seminarian_ministry {
+  seminarian_id String     @id @db.VarChar(20)
+  ministry_id   Int        @db.TinyInt
+  created_at    DateTime   @default(now()) @db.DateTime(0)
+  updated_at    DateTime   @default(now()) @db.DateTime(0)
+  ministry      ministry   @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_ministry_ministry")
+  seminarian    seminarian @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_ministry_seminarian")
+
+  @@index([ministry_id], map: "fk_seminarian_ministry_ministry_idx")
+}
+
+model seminarian_status {
+  id          Int          @id @default(autoincrement()) @db.TinyInt
+  description String       @db.VarChar(50)
+  seminarian  seminarian[]
+}
+
+model social_media {
+  id                                                                              Int                   @id @default(autoincrement())
+  person_id                                                                       String                @db.VarChar(20)
+  social_media_category                                                           Int
+  link                                                                            String                @db.VarChar(2000)
+  person                                                                          person                @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_social_media_person")
+  social_media_category_social_media_social_media_categoryTosocial_media_category social_media_category @relation("social_media_social_media_categoryTosocial_media_category", fields: [social_media_category], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_social_media_social_media_category")
+
+  @@index([person_id], map: "fk_social_media_person_idx")
+  @@index([social_media_category], map: "fk_social_media_social_media_category_idx")
+}
+
+model social_media_category {
+  id                                                                     Int            @id @default(autoincrement())
+  description                                                            String         @db.VarChar(100)
+  social_media_social_media_social_media_categoryTosocial_media_category social_media[] @relation("social_media_social_media_categoryTosocial_media_category")
+}
+
+model stage {
+  id          Int      @id @default(autoincrement()) @db.TinyInt
+  description String   @db.VarChar(45)
+  course      course[]
+}
+
+model subject {
+  id            Int           @id @default(autoincrement())
+  course_id     Int
+  description   String        @db.VarChar(200)
+  status        Boolean
+  precedent     Int?
+  enrollment    enrollment[]
+  instruction   instruction[]
+  course        course        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_course")
+  subject       subject?      @relation("subjectTosubject", fields: [precedent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_precedent")
+  other_subject subject[]     @relation("subjectTosubject")
+
+  @@index([course_id], map: "fk_subject_course_idx")
+  @@index([precedent], map: "fk_subject_precedent_idx")
+}
+
+model test {
+  id               Int         @id @default(autoincrement())
+  subject_id       Int
+  professor_id     String      @db.VarChar(20)
+  academic_term_id Int
+  description      String      @db.VarChar(200)
+  status           Boolean
+  maximum_score    Decimal     @db.Decimal(5, 2)
+  instruction      instruction @relation(fields: [subject_id, professor_id, academic_term_id], references: [subject_id, professor_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
+  test_score       test_score?
+
+  @@index([subject_id, professor_id, academic_term_id], map: "fk_test_subject_idx")
+}
+
+model test_score {
+  test_id          Int        @id
+  seminarian_id    String     @db.VarChar(20)
+  subject_id       Int
+  academic_term_id Int
+  score            Decimal    @db.Decimal(5, 2)
+  enrollment       enrollment @relation(fields: [seminarian_id, subject_id, academic_term_id], references: [seminarian_id, subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
+  test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
+
+  @@index([seminarian_id, subject_id, academic_term_id], map: "fk_test_score_enrollment_idx")
+}
+
+model user {
+  person_id       String            @id @db.VarChar(20)
+  status          Boolean           @default(true)
+  parish_id       Int
+  password        String?           @db.Text
+  Role_id         Int
+  academic_degree academic_degree[]
+  professor       professor?
+  seminarian      seminarian?
+  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
+  parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
+  person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
+
+  @@index([Role_id], map: "Role_id_idx")
+  @@index([parish_id], map: "fk_user_parish_idx")
+}
+
+enum foreigner_seminarian_stage {
+   PROPEDEUTICO  @map("1")
+   DISCIPULADO   @map("2")
+   CONFIGURATIVA @map("3")
+}
+
+enum person_BloodType {
+  A_POSITIVO      @map("A+")
+  A_NEGATIVO      @map("A-")
+  B_POSITIVO      @map("B+")
+  B_NEGATIVO      @map("B-")
+  AB_POSITIVO     @map("AB+")
+  AB_NEGATIVO     @map("AB-")
+  O_POSITIVO      @map("O+")
+  O_NEGATIVO      @map("O-")
+  UNKNOWN
 }
