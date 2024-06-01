@@ -5,9 +5,9 @@ export abstract class RoleDataSource{
 del tipo de informacion que estamos manejando
 */
 //a demas se le envia un array de numeros que contendrá los id de los permisos a asignar
-    abstract create(): Promise<RoleEntity>;
+    abstract create(name: string, description: string, numbers: number[]): Promise<RoleEntity>;
     abstract Update(): Promise<RoleEntity>;
     abstract getAll(): Promise<RoleEntity[]>;
     abstract getById(id: number): Promise<RoleEntity>;
-    abstract Delete(id: number): Promise<RoleEntity>;
+    abstract Delete(id: number): Promise<null>;
 }

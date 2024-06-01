@@ -1,13 +1,26 @@
 import { RoleDataSource } from "../../domain/datasource/role_datasource";
-import { CreateRole } from "../../domain/dtos/role/create-role";
 import { UpdateRole } from "../../domain/dtos/role/update_role";
 import { RoleEntity } from "../../domain/entities/role.entity";
 import { prisma } from "../../data/postgres";
 import { PermissionEntity } from "../../domain/entities/permission.entity";
 export class RoleDataSourceImpl implements RoleDataSource{
     
-    create(): Promise<RoleEntity> {
-        throw new Error("Method not implemented.");
+    async create(name: string, description: string, numbers: number[]): Promise<RoleEntity> {
+        const result = await prisma.role.create({
+          data:{
+            name: name,
+            description: description,
+          }
+        });
+        const data = numbers.map((number) => {
+          return { role_id: result.id, permission_id: number }
+        })
+          await prisma.role_permission.createMany({
+            data: data
+          })
+        const result_individual = this.getById(result.id);
+
+        return (result_individual);
     }
     Update(): Promise<RoleEntity> {
         throw new Error("Method not implemented.");
@@ -92,8 +105,18 @@ export class RoleDataSourceImpl implements RoleDataSource{
       if ( !result_db ) throw `Role with id ${ id } not found`;
       return result_enti[0];
     }
-    Delete(id: number): Promise<RoleEntity> {
-        throw new Error("Method not implemented.");
+    async Delete(id: number): Promise<null> {
+        await prisma.role_permission.deleteMany({
+          where:{
+            role_id: id
+          }
+        })
+        await prisma.role.delete({
+          where:{
+            id: id
+          }
+        })
+      
+      return null;
     }
-    
 }

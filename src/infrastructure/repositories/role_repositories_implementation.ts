@@ -15,14 +15,14 @@ export class RoleRepositoryImpl implements RoleRepository{
     }
 
 
-    create(): Promise<RoleEntity> {
-        return this.datasource.create();
+    create(name: string, description: string, numbers: number[]): Promise<RoleEntity> {
+        return this.datasource.create(name, description, numbers);
     }
     
     getAll(): Promise<RoleEntity[]> {
         return this.datasource.getAll();
     }
-    Delete(id: number): Promise<RoleEntity> {
+    Delete(id: number) {
         return this.datasource.Delete(id);
     }
     
