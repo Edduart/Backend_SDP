@@ -1,17 +1,5 @@
 import { Request, Response } from "express";
 
-/*
-import { RoleRepository, UpdateRole_struc } from "../../domain";
-
-import { GetRole } from "../../domain/useCases/role/getRole";
-import { getById } from '../../domain/useCases/role/getById';
-import { DeleteRole } from "../../domain/useCases/role/deleteRole";
-import { CreateRole } from '../../domain/useCases/role/create'
-import { RoleEntity } from "../../domain/entities/role.entity";
-import { CreateRole_Struc } from "../../domain/dtos/role/create.role";
-import { GetAllPermissions } from "../../domain/useCases/role/getPermission";
-import { UpdateRole } from "../../domain/useCases/role/update";*/
-
 import {
   GetRole,
   getById,

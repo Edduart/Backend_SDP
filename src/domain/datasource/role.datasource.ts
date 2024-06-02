@@ -1,7 +1,5 @@
-import { PermissionEntity } from "../entities/permission.entity";
-import { RoleEntity } from "../entities/role.entity";
-import { CreateRoleStruc } from "../dtos/role/create.role"
-import { UpdateRoleStruc } from "../dtos";
+import { PermissionEntity, RoleEntity } from "../entities";
+import { CreateRoleStruc, UpdateRoleStruc } from "../dtos/";
 //en este archivo se hace abstracto todos los metodos que se vaya a usar 
 export abstract class RoleDataSource{
 /*este metodo es para crear un rol, se le envia un objeto rol que contiene la informacion a guardar en la db y retorna una promesa

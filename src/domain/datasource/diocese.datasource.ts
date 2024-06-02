@@ -1,4 +1,4 @@
-import { DioceseEntity } from "../entities/diocese.entity";
+import { DioceseEntity } from "../entities";
 import { UpdateDioceseDto } from "../dtos";
 export abstract class DioceseDatasource {
   abstract getAll(): Promise<DioceseEntity[]>;

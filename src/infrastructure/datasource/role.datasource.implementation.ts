@@ -1,9 +1,11 @@
-import { RoleDataSource } from "../../domain/datasource/role.datasource";
-import { UpdateRoleStruc } from "../../domain/dtos/role/update.role";
-import { RoleEntity } from "../../domain/entities/role.entity";
 import { prisma } from "../../data/postgres";
-import { PermissionEntity } from "../../domain/entities/permission.entity";
-import { CreateRoleStruc } from "../../domain/dtos";
+import {
+  RoleDataSource,
+  UpdateRoleStruc,
+  RoleEntity,
+  PermissionEntity,
+  CreateRoleStruc,
+} from "../../domain";
 export class RoleDataSourceImpl implements RoleDataSource{
     
     async create(sper: CreateRoleStruc): Promise<RoleEntity> {
