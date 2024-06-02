@@ -3,11 +3,9 @@
   "version": "0.0.1",
   "main": "src/app.ts",
   "scripts": {
-    "start": "node ./src/index.ts",
-    "dev": "nodemon ./src/index.ts",
-    "Seed_Permission": "ts-node ./src/seed/permission_up.ts",
     "start": "node ./src/app.ts",
     "dev": "nodemon",
+    "Seed_Permission": "ts-node ./src/seed/permissionUp.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
