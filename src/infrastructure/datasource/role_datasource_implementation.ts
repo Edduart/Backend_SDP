@@ -1,18 +1,19 @@
 import { RoleDataSource } from "../../domain/datasource/role_datasource";
-import { UpdateRole } from "../../domain/dtos/role/update_role";
+import { UpdateRole_struc } from "../../domain/dtos/role/update_role";
 import { RoleEntity } from "../../domain/entities/role.entity";
 import { prisma } from "../../data/postgres";
 import { PermissionEntity } from "../../domain/entities/permission.entity";
+import { CreateRole_Struc } from "../../domain/dtos";
 export class RoleDataSourceImpl implements RoleDataSource{
     
-    async create(name: string, description: string, numbers: number[]): Promise<RoleEntity> {
+    async create(sper: CreateRole_Struc): Promise<RoleEntity> {
         const result = await prisma.role.create({
           data:{
-            name: name,
-            description: description,
+            name: sper.name,
+            description: sper.description,
           }
         });
-        const data = numbers.map((number) => {
+        const data = sper.numbers.map((number) => {
           return { role_id: result.id, permission_id: number }
         })
           await prisma.role_permission.createMany({
@@ -26,8 +27,24 @@ export class RoleDataSourceImpl implements RoleDataSource{
         const from_db = await prisma.permission.findMany();
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
-    Update(nuevo: RoleEntity): Promise<RoleEntity> {
-        throw new Error("Method not implemented.");
+    async Update(nuevo: UpdateRole_struc): Promise<RoleEntity> {
+      await prisma.role_permission.deleteMany({
+        where:{
+          role_id: nuevo.id
+        }
+      })
+      const result = await prisma.role.update({
+        where: { id: nuevo.id },
+        data: {name: nuevo.name, description: nuevo.description}
+      });
+      const data = nuevo.numbers.map((number) => {
+        return { role_id: result.id, permission_id: number }
+      })
+        await prisma.role_permission.createMany({
+          data: data
+        })
+      const result_individual = this.getById(result.id);
+      return result_individual;
     }
     async getAll(): Promise<RoleEntity[]> {
         const roles_baseD = await prisma.role.findMany({

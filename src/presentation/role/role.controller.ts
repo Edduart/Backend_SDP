@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { RoleRepository } from "../../domain";
+import { RoleRepository, UpdateRole_struc } from "../../domain";
 import { GetRole } from "../../domain/useCases/role/getRole";
 import { getById } from '../../domain/useCases/role/getById';
 import { DeleteRole } from "../../domain/useCases/role/DeleteRole";
 import { CreateRole } from '../../domain/useCases/role/Create'
 import { RoleEntity } from "../../domain/entities/role.entity";
+import { CreateRole_Struc } from "../../domain/dtos/role/create-role";
 import { GetAllPermissions } from "../../domain/useCases/role/getPermission";
 import { UpdateRole } from "../../domain/useCases/role/Update";
 export class RoleController{
@@ -25,11 +26,10 @@ export class RoleController{
             .catch((error) => res.status(400).json({ error }));
         };
         public CreateRole = (req: Request, res: Response) => {
-            const name = req.body.name;
-            const description = req.body.description;
-            const numbers: number[] = req.body.numbers;
+            const [ error, CreateRole_ ] = CreateRole_Struc.Create( req.body );
+            if ( error ) return res.status( 400 ).json( { error } );
             new CreateRole(this.repository)
-                .execute(name,description,numbers)
+                .execute(CreateRole_!)
                 .then((role) => res.json(role)) //check parameter
                 .catch((error) => res.status(400).json({ error }));
             };
@@ -47,8 +47,10 @@ export class RoleController{
                   .catch((error) => res.status(400).json({ error }));
               };
               public UpdateRole = (req: Request, res: Response) => {
+                const [ error, nuevo ] = UpdateRole_struc.Create( req.body );
+                if ( error ) return res.status( 400 ).json( { error } ); 
                 new UpdateRole(this.repository)
-                  .execute()
+                  .execute(nuevo!)
                   .then((role) => res.json(role)) //check parameter
                   .catch((error) => res.status(400).json({ error }));
               };
