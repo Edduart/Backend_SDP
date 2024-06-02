@@ -1,4 +1,4 @@
-import { DioceseEntity } from "../entities/diocese.entity";
+import { DioceseEntity } from "../entities";
 import { UpdateDioceseDto } from '../dtos/diocese/updateDiocese.dto';
 
 export abstract class DioceseRepository {

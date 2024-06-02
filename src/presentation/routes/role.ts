@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { RoleController } from "../role/role.controller";
-import { RoleDataSourceImpl } from "../../infrastructure/datasource/role_datasource_implementation";
-import { RoleRepositoryImpl } from "../../infrastructure/repositories/role_repositories_implementation";
+import { RoleDataSourceImpl } from "../../infrastructure/datasource/role.datasource.implementation";
+import { RoleRepositoryImpl } from "../../infrastructure/repositories/role.repositories.implementation";
 
 const router = Router();
 const datasource = new RoleDataSourceImpl();

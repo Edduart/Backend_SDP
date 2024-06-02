@@ -1,13 +1,31 @@
 import { Request, Response } from "express";
+
+/*
 import { RoleRepository, UpdateRole_struc } from "../../domain";
+
 import { GetRole } from "../../domain/useCases/role/getRole";
 import { getById } from '../../domain/useCases/role/getById';
-import { DeleteRole } from "../../domain/useCases/role/DeleteRole";
-import { CreateRole } from '../../domain/useCases/role/Create'
+import { DeleteRole } from "../../domain/useCases/role/deleteRole";
+import { CreateRole } from '../../domain/useCases/role/create'
 import { RoleEntity } from "../../domain/entities/role.entity";
-import { CreateRole_Struc } from "../../domain/dtos/role/create-role";
+import { CreateRole_Struc } from "../../domain/dtos/role/create.role";
 import { GetAllPermissions } from "../../domain/useCases/role/getPermission";
-import { UpdateRole } from "../../domain/useCases/role/Update";
+import { UpdateRole } from "../../domain/useCases/role/update";*/
+
+import {
+  GetRole,
+  getById,
+  DeleteRole,
+  CreateRole,
+  RoleEntity,
+  GetAllPermissions,
+  UpdateRole,
+  CreateRoleStruc,
+  RoleRepository,
+  UpdateRoleStruc,
+} from "../../domain";
+
+
 export class RoleController{
 
     constructor(private readonly repository: RoleRepository) {}
@@ -26,7 +44,7 @@ export class RoleController{
             .catch((error) => res.status(400).json({ error }));
         };
         public CreateRole = (req: Request, res: Response) => {
-            const [ error, CreateRole_ ] = CreateRole_Struc.Create( req.body );
+            const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
             if ( error ) return res.status( 400 ).json( { error } );
             new CreateRole(this.repository)
                 .execute(CreateRole_!)
@@ -47,7 +65,7 @@ export class RoleController{
                   .catch((error) => res.status(400).json({ error }));
               };
               public UpdateRole = (req: Request, res: Response) => {
-                const [ error, nuevo ] = UpdateRole_struc.Create( req.body );
+                const [ error, nuevo ] = UpdateRoleStruc.Create( req.body );
                 if ( error ) return res.status( 400 ).json( { error } ); 
                 new UpdateRole(this.repository)
                   .execute(nuevo!)

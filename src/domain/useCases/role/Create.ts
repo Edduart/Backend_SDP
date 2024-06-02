@@ -1,15 +1,15 @@
-import { CreateRole_Struc } from "../../dtos";
+import { CreateRoleStruc } from "../../dtos";
 import { RoleEntity } from "../../entities/role.entity";
-import { RoleRepository } from "../../repositories/role_repository";
+import { RoleRepository } from "../../repositories/role.repository";
 
 export interface CreateRoleUseCare{
-    execute(sper: CreateRole_Struc): Promise<RoleEntity>;
+    execute(sper: CreateRoleStruc): Promise<RoleEntity>;
 }
 
 export class CreateRole implements CreateRoleUseCare {
     constructor(private readonly repository: RoleRepository) {}
   
-    execute(sper: CreateRole_Struc): Promise<RoleEntity> {
+    execute(sper: CreateRoleStruc): Promise<RoleEntity> {
       return this.repository.create(sper);
     }
   }
