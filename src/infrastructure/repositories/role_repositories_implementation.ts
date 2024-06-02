@@ -1,4 +1,5 @@
 import { CreateRole, RoleDataSource, RoleRepository } from "../../domain";
+import { PermissionEntity } from "../../domain/entities/permission.entity";
 import { RoleEntity } from "../../domain/entities/role.entity";
 
 
@@ -7,14 +8,16 @@ export class RoleRepositoryImpl implements RoleRepository{
         private readonly datasource: RoleDataSource,
     ){}
     
-    Update(): Promise<RoleEntity> {
-        throw new Error("Method not implemented.");
+    Update(nuevo: RoleEntity): Promise<RoleEntity> {
+        return this.datasource.Update(nuevo);
     }
     getById(id: number): Promise<RoleEntity> {
         return this.datasource.getById(id);
     }
 
-
+    GetAllPermissions(): Promise<PermissionEntity[]> {
+        return this.datasource.GetAllPermissions();
+    }
     create(name: string, description: string, numbers: number[]): Promise<RoleEntity> {
         return this.datasource.create(name, description, numbers);
     }

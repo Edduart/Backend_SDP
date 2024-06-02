@@ -1,3 +1,4 @@
+import { PermissionEntity } from "../entities/permission.entity";
 import { RoleEntity } from "../entities/role.entity";
 //en este archivo se hace abstracto todos los metodos que se vaya a usar 
 export abstract class RoleDataSource{
@@ -6,8 +7,9 @@ del tipo de informacion que estamos manejando
 */
 //a demas se le envia un array de numeros que contendrá los id de los permisos a asignar
     abstract create(name: string, description: string, numbers: number[]): Promise<RoleEntity>;
-    abstract Update(): Promise<RoleEntity>;
+    abstract Update(nuevo: RoleEntity): Promise<RoleEntity>;
     abstract getAll(): Promise<RoleEntity[]>;
     abstract getById(id: number): Promise<RoleEntity>;
     abstract Delete(id: number): Promise<null>;
+    abstract GetAllPermissions(): Promise <PermissionEntity[]>;
 }

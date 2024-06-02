@@ -12,4 +12,5 @@ router.post('/', RoleControl.CreateRole);
 router.get("/", RoleControl.GetRole);
 router.get("/one/:id", RoleControl.getById);
 router.delete("/:id", RoleControl.DeleteRole);
+router.get("/permi/",RoleControl.GetAllPermissions);
 module.exports= router;

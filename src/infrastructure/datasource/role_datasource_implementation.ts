@@ -22,7 +22,11 @@ export class RoleDataSourceImpl implements RoleDataSource{
 
         return (result_individual);
     }
-    Update(): Promise<RoleEntity> {
+    async GetAllPermissions(): Promise<PermissionEntity[]> {
+        const from_db = await prisma.permission.findMany();
+        return from_db.map(permiso => PermissionEntity.fromdb(permiso));
+    }
+    Update(nuevo: RoleEntity): Promise<RoleEntity> {
         throw new Error("Method not implemented.");
     }
     async getAll(): Promise<RoleEntity[]> {

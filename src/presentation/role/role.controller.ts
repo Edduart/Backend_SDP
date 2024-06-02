@@ -5,6 +5,8 @@ import { getById } from '../../domain/useCases/role/getById';
 import { DeleteRole } from "../../domain/useCases/role/DeleteRole";
 import { CreateRole } from '../../domain/useCases/role/Create'
 import { RoleEntity } from "../../domain/entities/role.entity";
+import { GetAllPermissions } from "../../domain/useCases/role/getPermission";
+import { UpdateRole } from "../../domain/useCases/role/Update";
 export class RoleController{
 
     constructor(private readonly repository: RoleRepository) {}
@@ -38,4 +40,17 @@ export class RoleController{
                   .then((role) => res.json(role)) //check parameter
                   .catch((error) => res.status(400).json({ error }));
               };
+              public GetAllPermissions = (req: Request, res: Response) => {
+                new GetAllPermissions(this.repository)
+                  .execute()
+                  .then((role) => res.json(role)) //check parameter
+                  .catch((error) => res.status(400).json({ error }));
+              };
+              public UpdateRole = (req: Request, res: Response) => {
+                new UpdateRole(this.repository)
+                  .execute()
+                  .then((role) => res.json(role)) //check parameter
+                  .catch((error) => res.status(400).json({ error }));
+              };
+              
 }
