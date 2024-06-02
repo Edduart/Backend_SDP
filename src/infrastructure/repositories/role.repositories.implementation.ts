@@ -1,4 +1,4 @@
-import { CreateRole_Struc, RoleDataSource, RoleRepository, UpdateRole_struc } from "../../domain";
+import { CreateRoleStruc, RoleDataSource, RoleRepository, UpdateRoleStruc } from "../../domain";
 import { PermissionEntity } from "../../domain/entities/permission.entity";
 import { RoleEntity } from "../../domain/entities/role.entity";
 
@@ -8,7 +8,7 @@ export class RoleRepositoryImpl implements RoleRepository{
         private readonly datasource: RoleDataSource,
     ){}
     
-    Update(nuevo: UpdateRole_struc): Promise<RoleEntity> {
+    Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
         return this.datasource.Update(nuevo);
     }
     getById(id: number): Promise<RoleEntity> {
@@ -18,7 +18,7 @@ export class RoleRepositoryImpl implements RoleRepository{
     GetAllPermissions(): Promise<PermissionEntity[]> {
         return this.datasource.GetAllPermissions();
     }
-    create(data: CreateRole_Struc): Promise<RoleEntity> {
+    create(data: CreateRoleStruc): Promise<RoleEntity> {
         return this.datasource.create(data);
     }
     

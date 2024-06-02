@@ -1,4 +1,4 @@
-export class UpdateRole_struc{
+export class UpdateRoleStruc{
     constructor(public readonly id: number,
         public readonly name: string,
         public readonly description: string |null,
@@ -10,7 +10,7 @@ export class UpdateRole_struc{
         if(this.description) returnObj.description = this.description;
         return returnObj
     }
-static Create(props: {[key:string]: any} ): [string?, UpdateRole_struc?]{
+static Create(props: {[key:string]: any} ): [string?, UpdateRoleStruc?]{
     const { id, name, description, numbers } = props;
     if(!id || isNaN( Number(id))){
         return ['id must be a number > 0 and integer'];
@@ -21,7 +21,7 @@ static Create(props: {[key:string]: any} ): [string?, UpdateRole_struc?]{
     }
 
 
-    return [undefined, new UpdateRole_struc(id, name, description, numbers)]
+    return [undefined, new UpdateRoleStruc(id, name, description, numbers)]
 }
     
 }

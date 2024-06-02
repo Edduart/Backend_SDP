@@ -1,12 +1,14 @@
-import { RoleDataSource } from "../../domain/datasource/role_datasource";
-import { UpdateRole_struc } from "../../domain/dtos/role/update_role";
-import { RoleEntity } from "../../domain/entities/role.entity";
 import { prisma } from "../../data/postgres";
-import { PermissionEntity } from "../../domain/entities/permission.entity";
-import { CreateRole_Struc } from "../../domain/dtos";
+import {
+  RoleDataSource,
+  UpdateRoleStruc,
+  RoleEntity,
+  PermissionEntity,
+  CreateRoleStruc,
+} from "../../domain";
 export class RoleDataSourceImpl implements RoleDataSource{
     
-    async create(sper: CreateRole_Struc): Promise<RoleEntity> {
+    async create(sper: CreateRoleStruc): Promise<RoleEntity> {
         const result = await prisma.role.create({
           data:{
             name: sper.name,
@@ -27,7 +29,7 @@ export class RoleDataSourceImpl implements RoleDataSource{
         const from_db = await prisma.permission.findMany();
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
-    async Update(nuevo: UpdateRole_struc): Promise<RoleEntity> {
+    async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
       await prisma.role_permission.deleteMany({
         where:{
           role_id: nuevo.id

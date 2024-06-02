@@ -1,5 +1,5 @@
 import { PermissionEntity } from "../../entities/permission.entity";
-import { RoleRepository } from "../../repositories/role_repository";
+import { RoleRepository } from "../../repositories/role.repository";
 
 export interface GetPermissionseUseCare{
     execute(): Promise<PermissionEntity[]>;

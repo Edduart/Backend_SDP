@@ -1,5 +1,5 @@
 import { RoleEntity } from "../../entities/role.entity";
-import { RoleRepository } from "../../repositories/role_repository";
+import { RoleRepository } from "../../repositories/role.repository";
 
 export interface getByIdUseCare{
     execute(id: number): Promise<RoleEntity>;
