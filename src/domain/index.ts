@@ -2,6 +2,4 @@ export * from "./dtos"
 export * from "./datasource/diocese.datasource";
 export * from "./entities/diocese.entity";
 export * from "./repositories/diocese.repository";
-export * from "./useCases/getDiocese"
-export * from './datasource/role_datasource';
-export * from './repositories/role_repository'
+export * from "./useCases"
