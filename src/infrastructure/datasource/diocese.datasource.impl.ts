@@ -4,11 +4,19 @@ import {
   UpdateDioceseDto,
   DioceseDatasource,
   DioceseEntity,
+  CreateDioceseDto,
 } from "../../domain";
 
 
 
 export class DioceseDatasourceImpl implements DioceseDatasource {
+
+  async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
+    const createDiocese = await prisma.diocese.create({
+      data: createDioceseDto!,
+    });
+    return DioceseEntity.fromObject(createDiocese);
+  }
 
 
   async getAll(): Promise<DioceseEntity[]> {

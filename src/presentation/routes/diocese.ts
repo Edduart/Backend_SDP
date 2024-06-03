@@ -8,7 +8,7 @@ const datasource = new DioceseDatasourceImpl();
 const dioceseRepository = new DioceseRepositoryImpl(datasource);
 const dioceseController = new DioceseController(dioceseRepository);
 
-//router.post("/", dioceseController.create);
+router.post("/", dioceseController.CreateDiocese);
 router.get("/", dioceseController.getDioceses);
 router.get("/:id", dioceseController.GetDioceseById);
 router.put("/:id", dioceseController.updateDioceseById);
