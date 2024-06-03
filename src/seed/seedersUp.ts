@@ -1,7 +1,6 @@
 import { prisma } from "../data/postgres";
 import { permissions as permsData, dioceses as diocesesData } from "./data";
 
-//console.log(Object.keys(permsData));
 
 const seederMain = async () => {
   const checkDiocese = await prisma.diocese.findMany();
@@ -13,7 +12,7 @@ const seederMain = async () => {
   const checkPerms = await prisma.permission.findMany();
   if (checkPerms.length === 0) {
     await prisma.permission.createMany({
-      data: permsData,
+      data: permsData
     });
   }
   console.log("Seeding completed");
