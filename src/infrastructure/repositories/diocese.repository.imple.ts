@@ -1,4 +1,5 @@
 import {
+  CreateDioceseDto,
   DioceseDatasource,
   DioceseEntity,
   DioceseRepository,
@@ -7,6 +8,10 @@ import {
 
 export class DioceseRepositoryImpl implements DioceseRepository {
   constructor(private readonly datasource: DioceseDatasource) {}
+
+  create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
+    return this.datasource.create(createDioceseDto);
+  }
 
   getAll(): Promise<DioceseEntity[]> {
     return this.datasource.getAll();
