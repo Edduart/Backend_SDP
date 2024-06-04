@@ -22,11 +22,14 @@ export class UpdateDioceseDto {
     }
 
     if (!name) {
-      return ["Diocese name is required"];
+      return ["Name is required"];
+    } else if (typeof name !== "string") {
+      return ["Name must be a string"];
     }
-
     if (!holder) {
-      return ["Holder name is required"];
+      return ["Holder is required"];
+    } else if (typeof name !== "string") {
+      return ["Holder must be a string"];
     }
 
     //validate 

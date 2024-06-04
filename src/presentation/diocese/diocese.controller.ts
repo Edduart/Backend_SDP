@@ -7,6 +7,7 @@ import {
   UpdateDiocese,
   DioceseRepository,
   UpdateDioceseDto,
+  DeleteDiocese
 } from "../../domain";
 
 export class DioceseController {
@@ -24,7 +25,9 @@ export class DioceseController {
 
     new GetDiocese(this.dioceseRepository)
       .execute(id)
-      .then((diocese) => res.json(diocese))
+      .then((diocese) => res.json({
+        mjs: "Diosesis ID:"+diocese.id+", encontrada exitosamente!",
+        diocese}))
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -39,7 +42,7 @@ export class DioceseController {
 
     new UpdateDiocese(this.dioceseRepository)
       .execute(updateDioceseDto!)
-      .then((diocese) => res.json(diocese))
+      .then((diocese) => res.json({msj: "Diocese ID:"+diocese.id+", actualizada correctamente!", diocese }))
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -49,7 +52,21 @@ export class DioceseController {
 
     new CreateDiocese(this.dioceseRepository)
       .execute(createDioceseDto!)
-      .then((role) => res.json(role)) 
+      .then((diocese) => res.json({msj: "Diocese creada exitosamente", diocese}))
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public DeleteDiocese = (req: Request, res: Response) => {
+    const id = +req.params.id;
+
+    new DeleteDiocese(this.dioceseRepository)
+      .execute(id)
+      .then((diocese) =>
+        res.json({
+          msj: "Diocesis " + diocese.name + " eliminada exitosamente!",
+          diocese,
+        })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 }
