@@ -7,4 +7,5 @@ export abstract class DioceseDatasource {
   abstract updateById(
     updateDioceseDto: UpdateDioceseDto
   ): Promise<DioceseEntity>;
+  abstract deleteById(id: number): Promise<DioceseEntity>;
 }

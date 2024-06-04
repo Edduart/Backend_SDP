@@ -9,14 +9,16 @@ export class CreateDioceseDto {
   static create(props: { [key: string]: any }): [string?, CreateDioceseDto?] {
     const {  name, holder } = props;
 
-    if (!name) return ["Name is required", undefined];
-    if (!holder) return ["Holder is required", undefined];
-
-    //
-    //
-    //make more validations
-    //
-    //
+    if (!name) {
+      return ["Name is required"];
+    } else if (typeof name !== "string") {
+      return ["Name must be a string"];
+    }
+    if (!holder) {
+      return ["Holder is required"];
+    } else if (typeof name !== "string") {
+      return ["Holder must be a string"];
+    }
 
     return [undefined, new CreateDioceseDto(name, holder)];
   }

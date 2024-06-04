@@ -12,20 +12,6 @@ router.post("/", dioceseController.CreateDiocese);
 router.get("/", dioceseController.getDioceses);
 router.get("/:id", dioceseController.GetDioceseById);
 router.put("/:id", dioceseController.updateDioceseById);
+router.delete("/:id", dioceseController.DeleteDiocese);
 module.exports = router;
 
-/*module.exports = class DioceseRoutes {
-  static get routes(): Router {
-    const router = Router();
-
-    const datasource = new DioceseDatasourceImpl();
-    const dioceseRepository = new DioceseRepositoryImpl(datasource);
-    const dioceseController = new DioceseController(dioceseRepository);
-
-    router.get("/", dioceseController.getDioceses);
-    router.get("/:id", dioceseController.GetDioceseById);
-    router.put("/:id", dioceseController.updateDioceseById);
-
-    return router;
-  }
-};*/
