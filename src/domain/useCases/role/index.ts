@@ -1,0 +1,6 @@
+export * from "./create"
+export * from "./deleteRole"
+export * from "./getById"
+export * from "./getPermission"
+export * from "./getRole"
+export * from "./update"
