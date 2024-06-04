@@ -1,4 +1,5 @@
 //This is the controller
+import { error } from "console";
 import { prisma } from "../../data/postgres";
 import {
   UpdateDioceseDto,
@@ -10,7 +11,12 @@ import {
 
 export class DioceseDatasourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
-    console.log(createDioceseDto);
+    const check = await this.getByName(createDioceseDto);
+    const DioceseExist = check.find(
+      (item) => item.name === createDioceseDto.name
+    );
+    if (DioceseExist)
+      throw `Diocese with name: ${createDioceseDto.name}, already exist`;
     const createDiocese = await prisma.diocese.create({
       data: createDioceseDto!,
     });
@@ -32,20 +38,26 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
     return DioceseEntity.fromObject(diocese);
   }
 
-  async getByName(searchDioceseDto: GetDioceseByNameDto): Promise<DioceseEntity[]> {
-    
+  async getByName(
+    searchDioceseDto: GetDioceseByNameDto
+  ): Promise<DioceseEntity[]> {
     const dioceseByName = await prisma.diocese.findMany({
       where: {
         name: { contains: searchDioceseDto.name },
       },
     });
-    
+
     return dioceseByName.map((diocese) => DioceseEntity.fromObject(diocese));
-    
   }
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
     await this.findById(updateDioceseDto.id);
+    const check = await this.getByName(updateDioceseDto);
+    const DioceseExist = check.find(
+      (item) => item.name === updateDioceseDto.name
+    );
+    if (DioceseExist)
+      throw `Diocese with name: ${updateDioceseDto.name}, already exist`;
     const updateDiocese = await prisma.diocese.update({
       where: { id: updateDioceseDto.id },
       data: updateDioceseDto!.values,
