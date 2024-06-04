@@ -5,7 +5,7 @@ export interface GetStagesUseCase {
   execute(): Promise<StageEntity[]>;
 }
 
-export class GetDioceses implements GetStagesUseCase {
+export class GetStages implements GetStagesUseCase {
   constructor(private readonly repository: StageRepository) {}
 
   execute(): Promise<StageEntity[]> {

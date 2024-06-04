@@ -45,7 +45,11 @@ export class DioceseController {
 
     new GetDioceseByName(this.dioceseRepository)
       .execute(getDioceseByNameDto!)
-      .then((diocese) => res.json(diocese)
+      .then((diocese) =>
+        res.json({
+          msj: "coincidencias con la palabra: "+getDioceseByNameDto!.name,
+          diocese
+        })
       )
       .catch((error) => res.status(400).json({ error }));
   };
