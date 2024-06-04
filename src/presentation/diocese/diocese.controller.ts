@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import {
   CreateDioceseDto,
+  GetDioceseByNameDto,
   CreateDiocese,
   GetDioceses,
   GetDiocese,
+  GetDioceseByName,
   UpdateDiocese,
   DioceseRepository,
   UpdateDioceseDto,
@@ -25,9 +27,26 @@ export class DioceseController {
 
     new GetDiocese(this.dioceseRepository)
       .execute(id)
-      .then((diocese) => res.json({
-        mjs: "Diosesis ID:"+diocese.id+", encontrada exitosamente!",
-        diocese}))
+      .then((diocese) =>
+        res.json({
+          mjs: "Diosesis ID:" + diocese.id + ", encontrada exitosamente!",
+          diocese,
+        })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public GetDioceseByName = (req: Request, res: Response) => {
+    const [error, getDioceseByNameDto] = GetDioceseByNameDto.getByName({
+      ...req.body,
+    });
+
+    if (error) return res.status(400).json({ error });
+
+    new GetDioceseByName(this.dioceseRepository)
+      .execute(getDioceseByNameDto!)
+      .then((diocese) => res.json(diocese)
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -42,7 +61,12 @@ export class DioceseController {
 
     new UpdateDiocese(this.dioceseRepository)
       .execute(updateDioceseDto!)
-      .then((diocese) => res.json({msj: "Diocese ID:"+diocese.id+", actualizada correctamente!", diocese }))
+      .then((diocese) =>
+        res.json({
+          msj: "Diocese ID:" + diocese.id + ", actualizada correctamente!",
+          diocese,
+        })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -52,7 +76,9 @@ export class DioceseController {
 
     new CreateDiocese(this.dioceseRepository)
       .execute(createDioceseDto!)
-      .then((diocese) => res.json({msj: "Diocese creada exitosamente", diocese}))
+      .then((diocese) =>
+        res.json({ msj: "Diocese creada exitosamente", diocese })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 
