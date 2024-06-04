@@ -9,7 +9,7 @@ import {
 export class RoleDataSourceImpl implements RoleDataSource{
     
     async create(sper: CreateRoleStruc): Promise<RoleEntity> {
-        const result = await prisma.role.create({
+      const result = await prisma.role.create({
           data:{
             name: sper.name,
             description: sper.description,
@@ -21,8 +21,8 @@ export class RoleDataSourceImpl implements RoleDataSource{
           await prisma.role_permission.createMany({
             data: data
           })
+          
         const result_individual = this.getById(result.id);
-
         return (result_individual);
     }
     async GetAllPermissions(): Promise<PermissionEntity[]> {
