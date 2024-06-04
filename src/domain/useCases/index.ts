@@ -3,6 +3,7 @@ export * from "./diocese/usecase.getDioceses";
 export * from "./diocese/usecase.updateDiocese";
 export * from "./diocese/usecase.createDiocese";
 export * from "./diocese/usecase.deleteDiocese";
+export * from "./diocese/usecase.getDioceseByName"
 
 export * from "./role/create"
 export * from "./role/deleteRole"

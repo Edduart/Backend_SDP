@@ -5,15 +5,16 @@ import {
   DioceseDatasource,
   DioceseEntity,
   CreateDioceseDto,
+  GetDioceseByNameDto,
 } from "../../domain";
 
 export class DioceseDatasourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
-     console.log(createDioceseDto);
-      const createDiocese = await prisma.diocese.create({
-        data: createDioceseDto!,
-      });
-      return DioceseEntity.fromObject(createDiocese);
+    console.log(createDioceseDto);
+    const createDiocese = await prisma.diocese.create({
+      data: createDioceseDto!,
+    });
+    return DioceseEntity.fromObject(createDiocese);
   }
 
   async getAll(): Promise<DioceseEntity[]> {
@@ -29,6 +30,18 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
     });
     if (!diocese) throw `Diocese with id ${id} not found`;
     return DioceseEntity.fromObject(diocese);
+  }
+
+  async getByName(searchDioceseDto: GetDioceseByNameDto): Promise<DioceseEntity[]> {
+    
+    const dioceseByName = await prisma.diocese.findMany({
+      where: {
+        name: { contains: searchDioceseDto.name },
+      },
+    });
+    
+    return dioceseByName.map((diocese) => DioceseEntity.fromObject(diocese));
+    
   }
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {

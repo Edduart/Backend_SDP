@@ -16,7 +16,7 @@ export class CreateDioceseDto {
     }
     if (!holder) {
       return ["Holder is required"];
-    } else if (typeof name !== "string") {
+    } else if (typeof holder !== "string") {
       return ["Holder must be a string"];
     }
 
