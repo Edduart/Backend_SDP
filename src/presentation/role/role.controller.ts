@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import {
   GetRole,
-  getById,
+  getOne,
   DeleteRole,
   CreateRole,
   RoleEntity,
@@ -24,10 +24,12 @@ export class RoleController{
           .then((role) => res.json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));
       };
-    public getById = (req: Request, res: Response) => {
-        const id = +req.params.id;
-        new getById(this.repository)
-            .execute(id)
+    public getOne = (req: Request, res: Response) => {
+        const id = req.body.id;
+        const name = req.body.name;
+        console.log(id, name);
+         new getOne(this.repository)
+            .execute(id, name)
             .then((role) => res.json(role)) //check parameter
             .catch((error) => res.status(400).json({ error }));
         };
