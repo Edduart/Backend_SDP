@@ -8,8 +8,7 @@ del tipo de informacion que estamos manejando
 //a demas se le envia un array de numeros que contendrá los id de los permisos a asignar
     abstract create(data: CreateRoleStruc): Promise<RoleEntity>;
     abstract Update(nuevo: UpdateRoleStruc): Promise<RoleEntity>;
-    abstract getAll(): Promise<RoleEntity[]>;
-    abstract getOne(id: number|null,name: string|null): Promise<RoleEntity>;
+    abstract getOne(id: number|undefined,namesur: string|undefined): Promise<RoleEntity[]>;
     abstract Delete(id: number): Promise<null>;
     abstract GetAllPermissions(): Promise <PermissionEntity[]>;
 }
