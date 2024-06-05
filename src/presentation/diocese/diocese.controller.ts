@@ -22,7 +22,7 @@ export class DioceseController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public GetDioceseById = (req: Request, res: Response) => {
+  public getDioceseById = (req: Request, res: Response) => {
     const id = +req.params.id;
 
     new GetDiocese(this.dioceseRepository)
@@ -36,7 +36,7 @@ export class DioceseController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public GetDioceseByName = (req: Request, res: Response) => {
+  public getDioceseByName = (req: Request, res: Response) => {
     const [error, getDioceseByNameDto] = GetDioceseByNameDto.getByName({
       ...req.body,
     });
@@ -74,7 +74,7 @@ export class DioceseController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public CreateDiocese = (req: Request, res: Response) => {
+  public createDiocese = (req: Request, res: Response) => {
     const [error, createDioceseDto] = CreateDioceseDto.create(req.body);
     if (error) return res.status(400).json({ error });
 
@@ -86,7 +86,7 @@ export class DioceseController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public DeleteDiocese = (req: Request, res: Response) => {
+  public deleteDiocese = (req: Request, res: Response) => {
     const id = +req.params.id;
 
     new DeleteDiocese(this.dioceseRepository)

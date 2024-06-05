@@ -1,5 +1,3 @@
-//This is the controller
-import { error } from "console";
 import { prisma } from "../../data/postgres";
 import {
   UpdateDioceseDto,
@@ -9,7 +7,7 @@ import {
   GetDioceseByNameDto,
 } from "../../domain";
 
-export class DioceseDatasourceImpl implements DioceseDatasource {
+export class DioceseDataSourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
     const check = await this.getByName(createDioceseDto);
     const DioceseExist = check.find(
@@ -44,9 +42,8 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
     const dioceseByName = await prisma.diocese.findMany({
       where: {
         name: { contains: searchDioceseDto.name },
-      },
+      }
     });
-
     return dioceseByName.map((diocese) => DioceseEntity.fromObject(diocese));
   }
 
@@ -60,7 +57,7 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
       throw `Diocese with name: ${updateDioceseDto.name}, already exist`;
     const updateDiocese = await prisma.diocese.update({
       where: { id: updateDioceseDto.id },
-      data: updateDioceseDto!.values,
+      data: updateDioceseDto!.values
     });
     return DioceseEntity.fromObject(updateDiocese);
   }
@@ -68,7 +65,7 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
   async deleteById(id: number): Promise<DioceseEntity> {
     await this.findById(id);
     const deleteDiocese = await prisma.diocese.delete({
-      where: { id: id },
+      where: { id: id }
     });
     return DioceseEntity.fromObject(deleteDiocese);
   }

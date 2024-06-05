@@ -6,5 +6,5 @@ export abstract class StageRepository {
   abstract getAll(): Promise<StageEntity[]>;
   abstract findById(id: number): Promise<StageEntity>;
   abstract updateById(updateStageDto: UpdateStageDto): Promise<StageEntity>;
-  abstract delete(id: number): Promise<null>;
+  abstract delete(id: number): Promise<StageEntity>;
 }
