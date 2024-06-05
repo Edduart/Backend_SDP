@@ -1,18 +1,18 @@
-import { UpdateDioceseDto } from "../../dtos"
-import { DioceseEntity,  } from "../../entities/diocese.entity";
-import { DioceseRepository } from "../../repositories/diocese.repository";
+import { UpdateParishDto } from "../../dtos"
+import { ParishEntity,  } from "../../entities/parish.entity";
+import { ParishRepository } from "../../repositories/parish.repository";
 
 
-export interface UpdateDioceseUseCase {
-    execute(dto :UpdateDioceseDto) : Promise<DioceseEntity>;
+export interface UpdateParishUseCase {
+    execute(dto :UpdateParishDto) : Promise<ParishEntity>;
 }
 
-export class UpdateDiocese implements UpdateDioceseUseCase {
+export class UpdateParish implements UpdateParishUseCase {
     constructor(
-        private readonly repository: DioceseRepository,
+        private readonly repository: ParishRepository,
     ){}
 
-    execute(dto: UpdateDioceseDto): Promise<DioceseEntity> {
+    execute(dto: UpdateParishDto): Promise<ParishEntity> {
         return this.repository.updateById(dto);
     }
 }

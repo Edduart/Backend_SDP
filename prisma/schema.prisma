@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -27,18 +27,11 @@ model academic_term {
 }
 
 model basic_worker {
-  person_id             String                @id @db.VarChar(20)
-  job_position          Int                   @db.TinyInt
-  person                person                @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_basic_worker_person")
-  basic_worker_position basic_worker_position @relation(fields: [job_position], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_basic_worker_position")
+  person_id    String                    @id @db.VarChar(20)
+  job_position basic_worker_job_position
+  person       person                    @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_basic_worker_person")
 
   @@index([job_position], map: "fk_basic_worker_position_idx")
-}
-
-model basic_worker_position {
-  id           Int            @id @default(autoincrement()) @db.TinyInt
-  description  String         @db.VarChar(100)
-  basic_worker basic_worker[]
 }
 
 model course {
@@ -106,7 +99,6 @@ model instruction {
   @@id([professor_id, subject_id, academic_term_id])
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
-  @@unique([subject_id, professor_id, academic_term_id])
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -141,7 +133,7 @@ model parish {
 }
 
 model permission {
-  id              Int               @id @default(autoincrement())
+  id              Int               @id
   name            String            @db.VarChar(100)
   description     String?           @db.Text
   role_permission role_permission[]
@@ -192,11 +184,12 @@ model role {
 model role_permission {
   role_id       Int
   permission_id Int
-  permission    permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_role_permission_permission")
-  role          role       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_role_permission_role")
+  permission    permission @relation(fields: [permission_id], references: [id], onUpdate: Restrict, map: "Relation_permission")
+  role          role       @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "Relation_role")
 
   @@id([role_id, permission_id])
-  @@index([permission_id], map: "fk_role_permission_permission_idx")
+  @@index([role_id], map: "role_id_idx")
+  @@index([permission_id], map: "role_permission_idx")
 }
 
 model seminarian {
@@ -332,4 +325,10 @@ enum person_BloodType {
   O_POSITIVO      @map("O+")
   O_NEGATIVO      @map("O-")
   UNKNOWN
+}
+
+enum basic_worker_job_position {
+  Mantenimiento
+  Cocinero
+  Transportista
 }

@@ -1,14 +1,14 @@
-import { DioceseEntity } from "../../entities/diocese.entity";
-import { DioceseRepository } from "../../repositories/diocese.repository";
+import { ParishEntity } from "../../entities/parish.entity";
+import { ParishRepository } from "../../repositories/parish.repository";
 
-export interface GetDiocesesUseCase {
-  execute(): Promise<DioceseEntity[]>;
+export interface GetParishesUseCase {
+  execute(): Promise<ParishEntity[]>;
 }
 
-export class GetDioceses implements GetDiocesesUseCase {
-  constructor(private readonly repository: DioceseRepository) {}
+export class Getparishes implements GetParishesUseCase {
+  constructor(private readonly repository: ParishRepository) {}
 
-  execute(): Promise<DioceseEntity[]> {
+  execute(): Promise<ParishEntity[]> {
     return this.repository.getAll();
   }
 }
