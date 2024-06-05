@@ -1,18 +1,18 @@
 import { Router } from "express";
 import { DioceseController } from "../diocese/diocese.controller";
-import { DioceseDatasourceImpl } from "../../infrastructure/datasource/diocese.datasource.impl";
-import { DioceseRepositoryImpl } from "../../infrastructure/repositories/diocese.repository.imple";
+import { DioceseDataSourceImpl } from "../../infrastructure/datasource/";
+import { DioceseRepositoryImpl } from "../../infrastructure/repositories/";
 
 const router = Router();
-const datasource = new DioceseDatasourceImpl();
+const datasource = new DioceseDataSourceImpl();
 const dioceseRepository = new DioceseRepositoryImpl(datasource);
 const dioceseController = new DioceseController(dioceseRepository);
 
-router.post("/", dioceseController.CreateDiocese);
+router.post("/", dioceseController.createDiocese);
 router.get("/", dioceseController.getDioceses);
-router.get("/search", dioceseController.GetDioceseByName);
-router.get("/:id", dioceseController.GetDioceseById);
+router.get("/search", dioceseController.getDioceseByName);
+router.get("/:id", dioceseController.getDioceseById);
 router.put("/:id", dioceseController.updateDioceseById);
-router.delete("/:id", dioceseController.DeleteDiocese);
+router.delete("/:id", dioceseController.deleteDiocese);
 module.exports = router;
 

@@ -3,21 +3,19 @@ import { CreateStageDto, StageDataSource, StageEntity, StageRepository, UpdateSt
 
 export class StageRepositoryImpl implements StageRepository {
   constructor(private readonly datasource: StageDataSource) {}
-    create(createStageDto: CreateStageDto): Promise<StageEntity> {
-        throw new Error("Method not implemented.");
-    }
-    getAll(): Promise<StageEntity[]> {
-        throw new Error("Method not implemented.");
-    }
-    findById(id: number): Promise<StageEntity> {
-        throw new Error("Method not implemented.");
-    }
-    updateById(updateStageDto: UpdateStageDto): Promise<StageEntity> {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: number): Promise<null> {
-        throw new Error("Method not implemented.");
-    }
-
-
+  create(dto: CreateStageDto): Promise<StageEntity> {
+    return this.datasource.create(dto);
+  }
+  getAll(): Promise<StageEntity[]> {
+    return this.datasource.getAll();
+  }
+  findById(id: number): Promise<StageEntity> {
+    return this.datasource.findById(id);
+  }
+  updateById(dto: UpdateStageDto): Promise<StageEntity> {
+    return this.datasource.updateById(dto);
+  }
+  delete(id: number): Promise<StageEntity> {
+    return this.datasource.deleteById(id);
+  }
 }
