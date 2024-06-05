@@ -1,5 +1,4 @@
 //This is the controller
-import { error } from "console";
 import { prisma } from "../../data/postgres";
 import {
   UpdateDioceseDto,
@@ -11,7 +10,7 @@ import {
 
 export class DioceseDatasourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
-    const check = await this.getByName(createDioceseDto);
+    const check: DioceseEntity[] = await this.getByName(createDioceseDto);
     const DioceseExist = check.find(
       (item) => item.name === createDioceseDto.name
     );
@@ -52,7 +51,7 @@ export class DioceseDatasourceImpl implements DioceseDatasource {
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
     await this.findById(updateDioceseDto.id);
-    const check = await this.getByName(updateDioceseDto);
+    const check: DioceseEntity[] = await this.getByName(updateDioceseDto);
     const DioceseExist = check.find(
       (item) => item.name === updateDioceseDto.name
     );
