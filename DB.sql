@@ -129,7 +129,7 @@ DROP TABLE IF EXISTS `diocese`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `diocese` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) NOT NULL,
+  `name` varchar(200) NOT NULL UNIQUE,
   `holder` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

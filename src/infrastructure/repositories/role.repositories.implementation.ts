@@ -11,8 +11,8 @@ export class RoleRepositoryImpl implements RoleRepository{
     Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
         return this.datasource.Update(nuevo);
     }
-    getById(id: number): Promise<RoleEntity> {
-        return this.datasource.getById(id);
+    getOne(id: number|null,name: string|null): Promise<RoleEntity> {
+        return this.datasource.getOne(id,name);
     }
 
     GetAllPermissions(): Promise<PermissionEntity[]> {

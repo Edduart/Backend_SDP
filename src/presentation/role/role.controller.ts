@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import {
   GetRole,
-  getById,
+  getOne,
   DeleteRole,
   CreateRole,
   RoleEntity,
@@ -17,21 +17,23 @@ import {
 export class RoleController{
 
     constructor(private readonly repository: RoleRepository) {}
-    public GetRole = (req: Request, res: Response) => {
+    public getRole = (req: Request, res: Response) => {
 
         new GetRole(this.repository)
           .execute()
           .then((role) => res.json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));
       };
-    public getById = (req: Request, res: Response) => {
-        const id = +req.params.id;
-        new getById(this.repository)
-            .execute(id)
+    public getOne = (req: Request, res: Response) => {
+        const id = req.body.id;
+        const name = req.body.name;
+        console.log(id, name);
+         new getOne(this.repository)
+            .execute(id, name)
             .then((role) => res.json(role)) //check parameter
             .catch((error) => res.status(400).json({ error }));
         };
-        public CreateRole = (req: Request, res: Response) => {
+        public createRole = (req: Request, res: Response) => {
             const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
             if ( error ) return res.status( 400 ).json( { error } );
             new CreateRole(this.repository)
@@ -39,14 +41,14 @@ export class RoleController{
                 .then((role) => res.json(role)) //check parameter
                 .catch((error) => res.status(400).json({ error }));
             };
-            public DeleteRole = (req: Request, res: Response) => {
+            public deleteRole = (req: Request, res: Response) => {
                 const id = parseInt(req.params.id);
                 new DeleteRole(this.repository)
                   .execute(id)
                   .then((role) => res.json(role)) //check parameter
                   .catch((error) => res.status(400).json({ error }));
               };
-              public GetAllPermissions = (req: Request, res: Response) => {
+              public getAllPermissions = (req: Request, res: Response) => {
                 new GetAllPermissions(this.repository)
                   .execute()
                   .then((role) => res.json(role)) //check parameter
