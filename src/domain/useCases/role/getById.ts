@@ -1,14 +1,14 @@
 import { RoleEntity } from "../../entities/role.entity";
 import { RoleRepository } from "../../repositories/role.repository";
 
-export interface getByIdUseCare{
-    execute(id: number): Promise<RoleEntity>;
+export interface getOneUseCare{
+    execute(id: number|null, name: string|null): Promise<RoleEntity>;
 }
 
-export class getById implements getByIdUseCare {
+export class getOne implements getOneUseCare {
     constructor(private readonly repository: RoleRepository) {}
   
-    execute( id: number ): Promise<RoleEntity> {
-      return this.repository.getById(id);
+    execute(id: number|null,name: string|null): Promise<RoleEntity> {
+      return this.repository.getOne(id,name);
     }
   }

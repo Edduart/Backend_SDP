@@ -11,7 +11,7 @@ const RoleControl = new RoleController(Repository);
 
 router.post('/', ValidatorCreateUser,RoleControl.CreateRole);
 router.get("/", RoleControl.GetRole);
-router.get("/one/:id", RoleControl.getById);
+router.get("/one/", RoleControl.getOne);
 router.delete("/:id", RoleControl.DeleteRole);
 router.get("/permi/",RoleControl.GetAllPermissions);
 router.put("/", ValidatorEdit, RoleControl.UpdateRole);

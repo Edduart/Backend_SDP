@@ -9,7 +9,7 @@ del tipo de informacion que estamos manejando
     abstract create(data: CreateRoleStruc): Promise<RoleEntity>;
     abstract Update(nuevo: UpdateRoleStruc): Promise<RoleEntity>;
     abstract getAll(): Promise<RoleEntity[]>;
-    abstract getById(id: number): Promise<RoleEntity>;
+    abstract getOne(id: number|null,name: string|null): Promise<RoleEntity>;
     abstract Delete(id: number): Promise<null>;
     abstract GetAllPermissions(): Promise <PermissionEntity[]>;
 }
