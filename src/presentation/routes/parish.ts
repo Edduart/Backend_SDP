@@ -9,11 +9,10 @@ const parishRepository = new ParishRepositoryImpl(datasource);
 const parishController = new ParishController(parishRepository);
 
 router.post("/", parishController.createParish);
-/*router.get("/", dioceseController.getDioceses);
-router.get("/search", dioceseController.getDioceseByName);
-router.get("/:id", dioceseController.getDioceseById);
-router.put("/:id", dioceseController.updateDioceseById);
-router.delete("/:id", dioceseController.deleteDiocese);*/
+router.get("/", parishController.getParishes);
+router.get("/:id", parishController.GetParishById);
+router.put("/:id", parishController.UpdateParishById);
+router.delete("/:id", parishController.deleteParishById);
 module.exports = router;
 
 

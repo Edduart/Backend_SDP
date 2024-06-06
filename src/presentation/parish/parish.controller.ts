@@ -42,7 +42,7 @@ export class ParishController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public updateDioceseById = (req: Request, res: Response) => {
+  public UpdateParishById = (req: Request, res: Response) => {
     const id = +req.params.id;
     const [error, updateDioceseDto] = UpdateParishDto.update({
       ...req.body,
