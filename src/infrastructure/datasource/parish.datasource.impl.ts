@@ -39,14 +39,18 @@ export class ParishDatasourceimpl implements ParishDataSource {
   }
 
   async create(created:CreateParishDto): Promise<ParishEntity> {
-    const searchDiocese:DioceseEntity[] = await prisma.diocese.findMany();
-    const result = await prisma.parish.create({
-      data:{
-        name:created.name,
-        patron: created.patron,
-        diocese_id: searchDiocese[1].id,
-      }
-    });
+    
+      const searchDiocese: DioceseEntity[] = await prisma.diocese.findMany({
+        where: {id: created.diocese_id}
+      });
+      
+      const result = await prisma.parish.create({
+        data: {
+          name: created.name,
+          patron: created.patron,
+          diocese_id: searchDiocese[0].id,
+        },
+      });
     
     const result_i = this.findById(result.id);
     return (result_i);
