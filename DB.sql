@@ -75,11 +75,10 @@ DROP TABLE IF EXISTS `basic_worker`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `basic_worker` (
   `person_id` varchar(20) NOT NULL,
-  `job_position` tinyint NOT NULL,
+  `job_position` enum('Mantenimiento','Cocinero','Transportista') NOT NULL,
   PRIMARY KEY (`person_id`),
   KEY `fk_basic_worker_position_idx` (`job_position`),
-  CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
-  CONSTRAINT `fk_basic_worker_position` FOREIGN KEY (`job_position`) REFERENCES `basic_worker_position` (`id`)
+  CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,29 +89,6 @@ CREATE TABLE `basic_worker` (
 LOCK TABLES `basic_worker` WRITE;
 /*!40000 ALTER TABLE `basic_worker` DISABLE KEYS */;
 /*!40000 ALTER TABLE `basic_worker` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `basic_worker_position`
---
-
-DROP TABLE IF EXISTS `basic_worker_position`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `basic_worker_position` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `basic_worker_position`
---
-
-LOCK TABLES `basic_worker_position` WRITE;
-/*!40000 ALTER TABLE `basic_worker_position` DISABLE KEYS */;
-/*!40000 ALTER TABLE `basic_worker_position` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -153,10 +129,10 @@ DROP TABLE IF EXISTS `diocese`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `diocese` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) NOT NULL,
+  `name` varchar(200) NOT NULL UNIQUE,
   `holder` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -363,11 +339,11 @@ DROP TABLE IF EXISTS `permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `permission` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -471,7 +447,7 @@ CREATE TABLE `role` (
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,9 +470,10 @@ CREATE TABLE `role_permission` (
   `role_id` int NOT NULL,
   `permission_id` int NOT NULL,
   PRIMARY KEY (`role_id`,`permission_id`),
-  KEY `fk_role_permission_permission_idx` (`permission_id`),
-  CONSTRAINT `fk_role_permission_permission` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`),
-  CONSTRAINT `fk_role_permission_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+  KEY `role_id_idx` (`role_id`),
+  KEY `role_permission_idx` (`permission_id`),
+  CONSTRAINT `Relation_permission` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `Relation_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -647,7 +624,7 @@ DROP TABLE IF EXISTS `stage`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `stage` (
   `id` tinyint NOT NULL AUTO_INCREMENT,
-  `description` varchar(45) NOT NULL,
+  `description` varchar(45) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -790,4 +767,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-01 14:45:27
+-- Dump completed on 2024-06-03 12:36:09

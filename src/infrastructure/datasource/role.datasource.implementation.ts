@@ -9,7 +9,14 @@ import {
 export class RoleDataSourceImpl implements RoleDataSource{
     
     async create(sper: CreateRoleStruc): Promise<RoleEntity> {
-        const result = await prisma.role.create({
+      const exists = await prisma.role.findFirst({
+        where: { name: sper.name }
+      })
+      if(exists){
+        throw `Usuario ya tiene un nombre registrado`;
+      }
+      console.log("Pollo")
+      const result = await prisma.role.create({
           data:{
             name: sper.name,
             description: sper.description,
@@ -21,8 +28,8 @@ export class RoleDataSourceImpl implements RoleDataSource{
           await prisma.role_permission.createMany({
             data: data
           })
-        const result_individual = this.getById(result.id);
-
+          
+        const result_individual = this.getOne(result.id, "None");
         return (result_individual);
     }
     async GetAllPermissions(): Promise<PermissionEntity[]> {
@@ -30,6 +37,12 @@ export class RoleDataSourceImpl implements RoleDataSource{
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
     async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
+      const exists = await prisma.role.findFirst({
+        where: { name: nuevo.name }
+      })
+      if(exists){
+        throw `Usuario ya tiene un nombre registrado`;
+      }
       await prisma.role_permission.deleteMany({
         where:{
           role_id: nuevo.id
@@ -45,7 +58,7 @@ export class RoleDataSourceImpl implements RoleDataSource{
         await prisma.role_permission.createMany({
           data: data
         })
-      const result_individual = this.getById(result.id);
+      const result_individual = this.getOne(result.id, "None");
       return result_individual;
     }
     async getAll(): Promise<RoleEntity[]> {
@@ -87,28 +100,35 @@ export class RoleDataSourceImpl implements RoleDataSource{
 
           return roleEntities
     }
-    async getById(id: number): Promise<RoleEntity>{
-      const result_db = await prisma.role.findMany({
-        where: {
-          id: id
-        },
-        select: {
-          id: true,
-          name: true,
-          description:  true,
-          role_permission: {
-            select: {
-              permission: {
-                select: {
-                    id: true,
-                    name: true,
-                    description: true
-                }
+    async getOne(id: number,namesur: string): Promise<RoleEntity> {
+      if(id === null){
+        id = 0;
+      }else{
+        namesur = "None"
+      }
+      console.log(id, namesur)
+      const result_db = await prisma.role.findMany({where: {
+        OR: [
+          {id: id,},
+          {name: namesur}
+        ]
+      },
+      select: {
+        id: true,
+        name: true,
+        description:  true,
+        role_permission: {
+          select: {
+            permission: {
+              select: {
+                  id: true,
+                  name: true,
+                  description: true
               }
             }
           }
         }
-      })
+      }})  
       const result_enti: RoleEntity[] = result_db.map(rol => {
         const permissions: PermissionEntity[] = rol.role_permission.map(rolePermission => {
           return PermissionEntity.fromdb({
@@ -125,7 +145,7 @@ export class RoleDataSourceImpl implements RoleDataSource{
           premissions: permissions
         });
       });
-      if ( !result_db ) throw `Role with id ${ id } not found`;
+      if ( !result_db ) throw `Role with not found`;
       return result_enti[0];
     }
     async Delete(id: number): Promise<null> {

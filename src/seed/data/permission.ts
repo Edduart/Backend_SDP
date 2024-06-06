@@ -1,87 +1,148 @@
-export const permissions = [{
-    'name': 'CanCreateInstructor',
-    'description': 'Permiso para crear instructores'
-}, 
-{
-    'name': 'CanEditInstructor',
-    'description': 'Permiso para editar instructores'
-},{
-    'name': 'CanDeleteInstructor',
-    'description': 'Permiso para eliminar instructores'
-},{
-    'name': 'CanViewInstructor',
-    'description': 'Permiso para ver instructores'
-},{
-    'name': 'CanCreateUser',
-    'description': 'Permiso para crear usuarios'
-},{
-    'name': 'CanEditUser',
-    'description': 'Permiso para editar usuarios'
-},{
-    'name': 'CanViewUser',
-    'description': 'Permiso para ver usuarios'
-},{
-    'name': 'CanDeleteUser',
-    'description': 'Permiso para eliminar usuarios'
-},{
-    'name': 'CanCreateSeminarian',
-    'description': 'Permiso para crear seminaristas'
-},{
-    'name': 'CanEditSeminarian',
-    'description': 'Permiso para editar seminaristas'
-},{
-    'name': 'CanViewSeminarian',
-    'description': 'Permiso para ver seminaristas'
-},{
-    'name': 'CanDeleteSeminarian',
-    'description': 'Permiso para eliminar seminaristas'
-},{
-    'name': 'CanCreateTest',
-    'description': 'Permiso para crear tests'
-},{
-    'name': 'CanEditTest',
-    'description': 'Permiso para editar tests'
-},{
-    'name': 'CanViewTest',
-    'description': 'Permiso para ver tests'
-},{
-    'name': 'CanDeleteTest',
-    'description': 'Permiso para eliminar tests'
-},{
-    'name': 'CanCreateStage',
-    'description': 'Permiso para crear etapas'
-},{
-    'name': 'CanEditStage',
-    'description': 'Permiso para editar etapas'
-},{
-    'name': 'CanViewStage',
-    'description': 'Permiso para ver etapas'
-},{
-    'name': 'CanDeleteStage',
-    'description': 'Permiso para eliminar etapas'
-},{
-    'name': 'CanCreateCourse',
-    'description': 'Permiso para crear cursos'
-},{
-    'name': 'CanEditCourse',
-    'description': 'Permiso para editar cursos'
-},{
-    'name': 'CanViewCourse',
-    'description': 'Permiso para ver cursos'
-},{
-    'name': 'CanDeleteCourse',
-    'description': 'Permiso para eliminar cursos'
-},{
-    'name': 'CanCreateSubject',
-    'description': 'Permiso para crear materias'
-},{
-    'name': 'CanEditSubject',
-    'description': 'Permiso para editar materias'
-},{
-    'name': 'CanViewSubject',
-    'description': 'Permiso para ver materias'
-},{
-    'name': 'CanDeleteSubject',
-    'description': 'Permiso para eliminar materias'
+export const permissions: permisos[] = [
+  {
+    id: 1,
+    name: "CanCreateInstructor",
+    description: "Permiso para crear instructores",
+  },
+  {
+    id: 2,
+    name: "CanEditInstructor",
+    description: "Permiso para editar instructores",
+  },
+  {
+    id: 3,
+    name: "CanDeleteInstructor",
+    description: "Permiso para eliminar instructores",
+  },
+  {
+    id: 4,
+    name: "CanViewInstructor",
+    description: "Permiso para ver instructores",
+  },
+  {
+    id: 5,
+    name: "CanCreateUser",
+    description: "Permiso para crear usuarios",
+  },
+  {
+    id: 6,
+    name: "CanEditUser",
+    description: "Permiso para editar usuarios",
+  },
+  {
+    id: 7,
+    name: "CanViewUser",
+    description: "Permiso para ver usuarios",
+  },
+  {
+    id: 8,
+    name: "CanDeleteUser",
+    description: "Permiso para eliminar usuarios",
+  },
+  {
+    id: 9,
+    name: "CanCreateSeminarian",
+    description: "Permiso para crear seminaristas",
+  },
+  {
+    id: 10,
+    name: "CanEditSeminarian",
+    description: "Permiso para editar seminaristas",
+  },
+  {
+    id: 11,
+    name: "CanViewSeminarian",
+    description: "Permiso para ver seminaristas",
+  },
+  {
+    id: 12,
+    name: "CanDeleteSeminarian",
+    description: "Permiso para eliminar seminaristas",
+  },
+  {
+    id: 13,
+    name: "CanCreateTest",
+    description: "Permiso para crear tests",
+  },
+  {
+    id: 14,
+    name: "CanEditTest",
+    description: "Permiso para editar tests",
+  },
+  {
+    id: 15,
+    name: "CanViewTest",
+    description: "Permiso para ver tests",
+  },
+  {
+    id: 16,
+    name: "CanDeleteTest",
+    description: "Permiso para eliminar tests",
+  },
+  {
+    id: 17,
+    name: "CanCreateStage",
+    description: "Permiso para crear etapas",
+  },
+  {
+    id: 18,
+    name: "CanEditStage",
+    description: "Permiso para editar etapas",
+  },
+  {
+    id: 19,
+    name: "CanViewStage",
+    description: "Permiso para ver etapas",
+  },
+  {
+    id: 20,
+    name: "CanDeleteStage",
+    description: "Permiso para eliminar etapas",
+  },
+  {
+    id: 21,
+    name: "CanCreateCourse",
+    description: "Permiso para crear cursos",
+  },
+  {
+    id: 22,
+    name: "CanEditCourse",
+    description: "Permiso para editar cursos",
+  },
+  {
+    id: 23,
+    name: "CanViewCourse",
+    description: "Permiso para ver cursos",
+  },
+  {
+    id: 24,
+    name: "CanDeleteCourse",
+    description: "Permiso para eliminar cursos",
+  },
+  {
+    id: 25,
+    name: "CanCreateSubject",
+    description: "Permiso para crear materias",
+  },
+  {
+    id: 26,
+    name: "CanEditSubject",
+    description: "Permiso para editar materias",
+  },
+  {
+    id: 27,
+    name: "CanViewSubject",
+    description: "Permiso para ver materias",
+  },
+  {
+    id: 28,
+    name: "CanDeleteSubject",
+    description: "Permiso para eliminar materias",
+  },
+];
+
+interface permisos{
+  id: number,
+  name: string,
+  description: string
 }
-]

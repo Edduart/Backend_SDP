@@ -1,8 +1,15 @@
 import { DioceseEntity } from "../entities";
-import { UpdateDioceseDto } from '../dtos/diocese/updateDiocese.dto';
+import { UpdateDioceseDto, CreateDioceseDto, GetDioceseByNameDto } from '../dtos';
 
 export abstract class DioceseRepository {
+  abstract create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity>;
   abstract getAll(): Promise<DioceseEntity[]>;
   abstract findById(id: number): Promise<DioceseEntity>;
-  abstract updateById( updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity>; // revisar
+  abstract getByName(
+    searchDioceseDto: GetDioceseByNameDto
+  ): Promise<DioceseEntity[]>;
+  abstract updateById(
+    updateDioceseDto: UpdateDioceseDto
+  ): Promise<DioceseEntity>;
+  abstract deleteById(id: number): Promise<DioceseEntity>;
 }

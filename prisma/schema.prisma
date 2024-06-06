@@ -49,7 +49,7 @@ model course {
 
 model diocese {
   id     Int      @id @default(autoincrement())
-  name   String   @db.VarChar(200)
+  name   String   @db.VarChar(200) @unique
   holder String   @db.VarChar(100)
   parish parish[]
 }
@@ -302,33 +302,34 @@ model user {
   @@index([Role_id], map: "Role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
 }
-
-enum seminarian_Ministery {
-  Unkown      @map("Unkown")
-  Admision    @map("Admisión")
-  Lectorado   @map("Lectorado")
-  Acolitado   @map("Acolitado")
-}
-enum foreigner_seminarian_stage {
-   PROPEDEUTICO  @map("1")
-   DISCIPULADO   @map("2")
-   CONFIGURATIVA @map("3")
-}
-
-enum person_BloodType {
-  A_POSITIVO      @map("A+")
-  A_NEGATIVO      @map("A-")
-  B_POSITIVO      @map("B+")
-  B_NEGATIVO      @map("B-")
-  AB_POSITIVO     @map("AB+")
-  AB_NEGATIVO     @map("AB-")
-  O_POSITIVO      @map("O+")
-  O_NEGATIVO      @map("O-")
-  UNKNOWN
-}
-
 enum basic_worker_job_position {
   Mantenimiento
   Cocinero
   Transportista
+}
+
+
+enum seminarian_Ministery {
+  Unkown    @map("Unkown")
+  Admision  @map("Admisión")
+  Lectorado @map("Lectorado")
+  Acolitado @map("Acolitado")
+}
+
+enum foreigner_seminarian_stage {
+  PROPEDEUTICO  @map("1")
+  DISCIPULADO   @map("2")
+  CONFIGURATIVA @map("3")
+}
+
+enum person_BloodType {
+  A_POSITIVO  @map("A+")
+  A_NEGATIVO  @map("A-")
+  B_POSITIVO  @map("B+")
+  B_NEGATIVO  @map("B-")
+  AB_POSITIVO @map("AB+")
+  AB_NEGATIVO @map("AB-")
+  O_POSITIVO  @map("O+")
+  O_NEGATIVO  @map("O-")
+  UNKNOWN
 }
