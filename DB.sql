@@ -129,10 +129,10 @@ DROP TABLE IF EXISTS `diocese`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `diocese` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) NOT NULL UNIQUE,
+  `name` varchar(200) NOT NULL,
   `holder` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,6 +265,7 @@ CREATE TABLE `instructor` (
   `professor_id` varchar(20) NOT NULL,
   `starting_date` date NOT NULL,
   `position_id` tinyint NOT NULL,
+  PRIMARY KEY (`professor_id`),
   KEY `fk_instructor_professor_idx` (`professor_id`),
   KEY `fk_instructor_instructor_position_idx` (`position_id`),
   CONSTRAINT `fk_instructor_instructor_position` FOREIGN KEY (`position_id`) REFERENCES `instructor_position` (`id`),
@@ -603,7 +604,7 @@ CREATE TABLE `social_media_category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -767,4 +768,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-03 12:36:09
+-- Dump completed on 2024-06-07 16:02:50

@@ -39,7 +39,7 @@ model course {
   stage_id      Int         @db.TinyInt
   description   String      @db.VarChar(200)
   instructor_id String?     @db.VarChar(20)
-  instructor    instructor? @relation(fields: [instructor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_instructor") @ignore
+  instructor    instructor? @relation(fields: [instructor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_instructor")
   stage         stage       @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_stage")
   subject       subject[]
 
@@ -49,7 +49,7 @@ model course {
 
 model diocese {
   id     Int      @id @default(autoincrement())
-  name   String   @db.VarChar(200) @unique
+  name   String   @db.VarChar(200)
   holder String   @db.VarChar(100)
   parish parish[]
 }
@@ -101,9 +101,8 @@ model instruction {
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model instructor {
-  professor_id        String              @db.VarChar(20) @unique
+  professor_id        String              @id @db.VarChar(20)
   starting_date       DateTime            @db.Date
   position_id         Int                 @db.TinyInt
   course              course[]
@@ -112,13 +111,12 @@ model instructor {
 
   @@index([position_id], map: "fk_instructor_instructor_position_idx")
   @@index([professor_id], map: "fk_instructor_professor_idx")
-  @@ignore
 }
 
 model instructor_position {
   id          Int          @id @default(autoincrement()) @db.TinyInt
   description String       @db.VarChar(50)
-  instructor  instructor[] @ignore
+  instructor  instructor[]
 }
 
 model parish {
@@ -169,7 +167,7 @@ model professor {
   id          String        @id @db.VarChar(20)
   status_id   Int           @db.TinyInt
   instruction instruction[]
-  instructor  instructor[]  @ignore
+  instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
 }
 
@@ -302,6 +300,7 @@ model user {
   @@index([Role_id], map: "Role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
 }
+
 enum basic_worker_job_position {
   Mantenimiento
   Cocinero
