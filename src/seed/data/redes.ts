@@ -1,4 +1,4 @@
-export const Redes = [
+export const redes = [
     {
         description: "Facebook" 
     },{
