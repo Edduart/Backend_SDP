@@ -1,4 +1,4 @@
-import { person_BloodType } from "@prisma/client";
+import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import { CreateWorker, WorkerDataSource, WorkerEntity } from "../../domain";
 
@@ -25,10 +25,31 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                     }
                 });
             }
+            if(spers.telefono != null){
+                await prisma.phone_number.create({
+                    data:{
+                        person_id: presona_realizar.id,
+                        phone_number: spers.telefono.phone_numbre,
+                        description: spers.telefono.description,
+                    }
+                });
+            }
+            await prisma.basic_worker.create({
+                data:{
+                    person_id: presona_realizar.id,
+                    job_position: spers.job_position as basic_worker_job_position
+                }
+            });
         })
         
         throw new Error("Method not implemented.");
     }
 
+    get(id: number): Promise<WorkerEntity[]> {
+        
+        
+        
+        throw new Error("Method not implemented.");
+    }
 
 }

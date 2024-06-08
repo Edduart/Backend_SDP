@@ -72,7 +72,8 @@ export class RoleDataSourceImpl implements RoleDataSource{
                     select: {
                         id: true,
                         name: true,
-                        description: true
+                        type: true, 
+                        table: true,
                     }
                   }
                 }
