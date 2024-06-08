@@ -21,18 +21,10 @@ CREATE TABLE `academic_term` (
 -- CreateTable
 CREATE TABLE `basic_worker` (
     `person_id` VARCHAR(20) NOT NULL,
-    `job_position` TINYINT NOT NULL,
+    `job_position` ENUM('Mantenimiento', 'Cocinero', 'Transportista') NOT NULL,
 
     INDEX `fk_basic_worker_position_idx`(`job_position`),
     PRIMARY KEY (`person_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `basic_worker_position` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -53,6 +45,7 @@ CREATE TABLE `diocese` (
     `name` VARCHAR(200) NOT NULL,
     `holder` VARCHAR(100) NOT NULL,
 
+    UNIQUE INDEX `diocese_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -95,7 +88,6 @@ CREATE TABLE `instruction` (
 
     INDEX `fk_professo_subject_academic_term_idx`(`academic_term_id`),
     INDEX `fk_professor_subject_subject_idx`(`subject_id`),
-    UNIQUE INDEX `instruction_subject_id_professor_id_academic_term_id_key`(`subject_id`, `professor_id`, `academic_term_id`),
     PRIMARY KEY (`professor_id`, `subject_id`, `academic_term_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -119,14 +111,6 @@ CREATE TABLE `instructor_position` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `ministry` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(100) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `parish` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `diocese_id` INTEGER NOT NULL,
@@ -139,7 +123,7 @@ CREATE TABLE `parish` (
 
 -- CreateTable
 CREATE TABLE `permission` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL,
     `name` VARCHAR(100) NOT NULL,
     `description` TEXT NULL,
 
@@ -193,7 +177,8 @@ CREATE TABLE `role_permission` (
     `role_id` INTEGER NOT NULL,
     `permission_id` INTEGER NOT NULL,
 
-    INDEX `fk_role_permission_permission_idx`(`permission_id`),
+    INDEX `role_id_idx`(`role_id`),
+    INDEX `role_permission_idx`(`permission_id`),
     PRIMARY KEY (`role_id`, `permission_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -203,6 +188,7 @@ CREATE TABLE `seminarian` (
     `apostleships` TEXT NULL,
     `status_id` TINYINT NOT NULL,
     `location_id` TINYINT NOT NULL,
+    `Ministery` ENUM('Unkown', 'Admisión', 'Lectorado', 'Acolitado') NULL,
 
     INDEX `fk_seminarian_seminarian_location_idx`(`location_id`),
     INDEX `fl_seminarian_seminarian_status_idx`(`status_id`),
@@ -215,17 +201,6 @@ CREATE TABLE `seminarian_location` (
     `description` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `seminarian_ministry` (
-    `seminarian_id` VARCHAR(20) NOT NULL,
-    `ministry_id` TINYINT NOT NULL,
-    `created_at` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-    `updated_at` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-
-    INDEX `fk_seminarian_ministry_ministry_idx`(`ministry_id`),
-    PRIMARY KEY (`seminarian_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -323,9 +298,6 @@ ALTER TABLE `academic_degree` ADD CONSTRAINT `fk_academic_degree_user` FOREIGN K
 ALTER TABLE `basic_worker` ADD CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `basic_worker` ADD CONSTRAINT `fk_basic_worker_position` FOREIGN KEY (`job_position`) REFERENCES `basic_worker_position`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE `course` ADD CONSTRAINT `fk_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor`(`professor_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
@@ -371,10 +343,10 @@ ALTER TABLE `phone_number` ADD CONSTRAINT `fk_phone_number_person` FOREIGN KEY (
 ALTER TABLE `professor` ADD CONSTRAINT `fk_professor_user` FOREIGN KEY (`id`) REFERENCES `user`(`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `role_permission` ADD CONSTRAINT `fk_role_permission_permission` FOREIGN KEY (`permission_id`) REFERENCES `permission`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_permission` FOREIGN KEY (`permission_id`) REFERENCES `permission`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE `role_permission` ADD CONSTRAINT `fk_role_permission_role` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_role` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
 ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_seminarian_location` FOREIGN KEY (`location_id`) REFERENCES `seminarian_location`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -384,12 +356,6 @@ ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) 
 
 -- AddForeignKey
 ALTER TABLE `seminarian` ADD CONSTRAINT `fl_seminarian_seminarian_status` FOREIGN KEY (`status_id`) REFERENCES `seminarian_status`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `seminarian_ministry` ADD CONSTRAINT `fk_seminarian_ministry_ministry` FOREIGN KEY (`ministry_id`) REFERENCES `ministry`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `seminarian_ministry` ADD CONSTRAINT `fk_seminarian_ministry_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `social_media` ADD CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
