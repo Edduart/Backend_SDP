@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import {
   GetRole,
-  getOne,
   DeleteRole,
   CreateRole,
   RoleEntity,
@@ -17,22 +16,13 @@ import {
 export class RoleController{
 
     constructor(private readonly repository: RoleRepository) {}
-    public getRole = (req: Request, res: Response) => {
-
+    public getRoleMultiple = (req: Request, res: Response) => {
+        
         new GetRole(this.repository)
-          .execute()
+          .execute(req.body.id, req.body.name)
           .then((role) => res.json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));
       };
-    public getOne = (req: Request, res: Response) => {
-        const id = req.body.id;
-        const name = req.body.name;
-        console.log(id, name);
-         new getOne(this.repository)
-            .execute(id, name)
-            .then((role) => res.json(role)) //check parameter
-            .catch((error) => res.status(400).json({ error }));
-        };
         public createRole = (req: Request, res: Response) => {
             const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
             if ( error ) return res.status( 400 ).json( { error } );
