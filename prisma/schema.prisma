@@ -133,7 +133,8 @@ model parish {
 model permission {
   id              Int               @id
   name            String            @db.VarChar(100)
-  description     String?           @db.Text
+  type            String            @db.VarChar(1)
+  table           String            @db.VarChar(80)
   role_permission role_permission[]
 }
 
@@ -306,7 +307,6 @@ enum basic_worker_job_position {
   Cocinero
   Transportista
 }
-
 
 enum seminarian_Ministery {
   Unkown    @map("Unkown")
