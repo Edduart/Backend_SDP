@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import {
+  GetRole,
   getOne,
   DeleteRole,
   CreateRole,
