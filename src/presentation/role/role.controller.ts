@@ -17,6 +17,13 @@ import {
 export class RoleController{
 
     constructor(private readonly repository: RoleRepository) {}
+    public getRole = (req: Request, res: Response) => {
+
+        new GetRole(this.repository)
+          .execute()
+          .then((role) => res.json(role)) //check parameter
+          .catch((error) => res.status(400).json({ error }));
+      };
     public getOne = (req: Request, res: Response) => {
         const id = req.body.id;
         const name = req.body.name;
