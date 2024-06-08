@@ -1,36 +1,30 @@
-import { modelData } from "./data/seederData";
-import { modelPrismaData } from "./model/seederModel";
+import { prisma } from "../data/postgres";
+import { permissions as permsData, dioceses as diocesesData, Redes as RedData } from "./data";
 
 
-Object.values(modelData).forEach(model => {
-  new modelPrismaData(model);
-});
-
-
-//new modelPrismaData(modelData.diocese);
-
-
-
-/*const seederMain = async () => {
-  await prisma.diocese.createMany({
-    data: diocesesData,
-    skipDuplicates: true,
-  });
-  await prisma.permission.createMany({
-    data: permsData,
-    skipDuplicates: true,
-  });
-  await prisma.social_media_category.createMany({
-    data: RedData,
-    skipDuplicates: true,
-  });
-  await prisma.stage.createMany({
-    data: stageData,
-    skipDuplicates: true,
-  });
+const seederMain = async () => {
+  const checkDiocese = await prisma.diocese.findMany();
+  if (checkDiocese.length === 0) {
+    await prisma.diocese.createMany({
+      data: diocesesData,
+    });
+  }
+  const checkPerms = await prisma.permission.findMany();
+  if (checkPerms.length === 0) {
+    await prisma.permission.createMany({
+      data: permsData
+    });
+  }
+  const checkRed = await prisma.social_media_category.findMany();
+  if(checkRed.length === 0){
+    await prisma.social_media_category.createMany({
+      data: RedData
+    });
+  }
   console.log("Seeding completed");
 };
 
 seederMain().catch((error) => {
   throw error;
-});*/
+});
+
