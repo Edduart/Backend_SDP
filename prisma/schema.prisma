@@ -302,9 +302,9 @@ model user {
 }
 
 enum basic_worker_job_position {
-  Mantenimiento
-  Cocinero
-  Transportista
+  Mantenimiento @map("Mantenimiento")
+  Cocinero      @map("Cocinero")
+  Transportista @map("Transportista")
 }
 
 

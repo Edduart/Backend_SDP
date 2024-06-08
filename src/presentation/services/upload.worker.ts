@@ -1,13 +1,15 @@
 import multer, { FileFilterCallback } from "multer";
+import path from 'path';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
         cb(null, './images/worker')
     },
     filename: function(req, file, cb){
-        console.log(req.body);
-        //let data = JSON.parse(req.body.data);// convierrto esta mangua a string
-        cb(null, 'data.id '+'.' + file.mimetype.split('/')[1])
+        const filename = 'data.id' +'.' + file.mimetype.split('/')[1];
+        cb(null, filename);
+        // Set req.body.ayuda to the path of the file
+        req.body.ayuda = path.join('./images/worker', filename);
     }
 });
 const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilterCallback) {

@@ -7,7 +7,7 @@ export class PersonEntity{
         public email: string,
         public birthdate: Date,
         public medical_record: string,
-        public BloodType: string
+        public BloodType: BloodType
 
     ){}
 
@@ -23,4 +23,16 @@ export class PersonEntity{
         
         return new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType)
     }
+}
+
+export enum BloodType {
+    A_POSITIVO  = 'A+',
+    A_NEGATIVO  = 'A-',
+    B_POSITIVO  = 'B+',
+    B_NEGATIVO  = 'B-',
+    AB_POSITIVO = 'AB+',
+    AB_NEGATIVO = 'AB-',
+    O_POSITIVO  = 'O+',
+    O_NEGATIVO  = 'O-',
+    UNKNOWN     = 'UNKNOWN'
 }

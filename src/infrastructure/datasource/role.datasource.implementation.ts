@@ -15,7 +15,6 @@ export class RoleDataSourceImpl implements RoleDataSource{
       if(exists){
         throw `Usuario ya tiene un nombre registrado`;
       }
-      console.log("Pollo")
       const result = await prisma.role.create({
           data:{
             name: sper.name,

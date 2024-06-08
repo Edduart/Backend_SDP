@@ -1,7 +1,7 @@
 export class SocialMedia{
-    private constructor(
-        private readonly person_id: string,
-        private readonly social_media_category: number,
-        private readonly link: string,
+    constructor(
+        public readonly person_id: string,
+        public readonly social_media_category: number,
+        public readonly link: string,
     ){}
 }

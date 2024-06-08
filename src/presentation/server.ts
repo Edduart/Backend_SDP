@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import cors from "cors";
+import multer from "multer";
 //import path from "path"; No needed by now, just in case
 
 interface Options {

@@ -8,3 +8,9 @@ export class CreateWorker{
         public readonly telefono: CreatePhone|null,
     ){}
 }
+
+export enum basic_worker_job_position {
+    Mantenimiento   = "Mantenimiento",
+    Cocinero        = "Cocinero",
+    Transportista   = "Transportista",
+  }
