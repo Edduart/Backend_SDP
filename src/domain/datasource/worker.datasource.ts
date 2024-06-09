@@ -1,10 +1,10 @@
 import { CreateWorker } from "../dtos";
-import { PersonEntity } from "../entities";
+import { Job_Psotion_Enum, PersonEntity } from "../entities";
 import { WorkerEntity } from "../entities";
 
 
 export abstract class WorkerDataSource{
     abstract create(data: CreateWorker): Promise<WorkerEntity>;
-    abstract get(id: number): Promise<WorkerEntity[]>;
+    abstract get(id_re: string | undefined, puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]>;
     
 }

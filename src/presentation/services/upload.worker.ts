@@ -6,13 +6,18 @@ const storage = multer.diskStorage({
         cb(null, './images/worker')
     },
     filename: function(req, file, cb){
-        const filename = 'data.id' +'.' + file.mimetype.split('/')[1];
+        const filename = 'image' +'.' + file.mimetype.split('/')[1];
         cb(null, filename);
         // Set req.body.ayuda to the path of the file
         req.body.ayuda = path.join('./images/worker', filename);
     }
 });
 const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilterCallback) {
+    //mando un mensaje en caso de que esté vacio
+    if (!file) {
+        req.body.ayuda = null;
+        return cb(null, false);
+    }
     // flitro para solo imagenes
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
         req.fileValidationError = 'Solo archivos de imagen';
