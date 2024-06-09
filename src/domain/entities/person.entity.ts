@@ -6,7 +6,7 @@ export class PersonEntity{
         public surname: string,
         public email: string,
         public birthdate: Date,
-        public medical_record: string,
+        public medical_record: string|null,
         public BloodType: BloodType
 
     ){}

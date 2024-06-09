@@ -63,6 +63,9 @@ export class RoleDataSourceImpl implements RoleDataSource{
     }
     async getRoleMultiple(id: number|undefined,name: string|undefined): Promise<RoleEntity[]> {
       let roles_baseD; 
+      /* si ambas variables son undefined se procede con el select all, sin embargo si una de las variables es undefined
+      se procede con el filtro, pues prisma controla el undefined como una forma de ignorar dicha comparacion 
+      y null como un valor */
       if((id === undefined) && (name === undefined) ){
         roles_baseD = await prisma.role.findMany({
           select: {
