@@ -9,7 +9,7 @@ export interface CreateWorkerUseCare{
     execute(sper: CreateWorker): Promise<WorkerEntity>;
 }
 
-export class CreateWorkerUseCase implements CreateWorkerUseCare {
+export class CreateRole implements CreateWorkerUseCare {
     constructor(private readonly repository: WorkerRepository) {}
   
     execute(sper: CreateWorker): Promise<WorkerEntity> {

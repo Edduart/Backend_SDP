@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import {
   GetRole,
   DeleteRole,
@@ -13,41 +14,43 @@ import {
 
 
 export class RoleController{
+
     constructor(private readonly repository: RoleRepository) {}
-      public getRoleMultiple = (req: Request, res: Response) => {
+    public getRoleMultiple = (req: Request, res: Response) => {
+        
         new GetRole(this.repository)
           .execute(req.body.id, req.body.name)
           .then((role) => res.json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));
       };
-      public createRole = (req: Request, res: Response) => {
-        const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
-        if ( error ) return res.status( 400 ).json( { error } );
-          new CreateRole(this.repository)
-            .execute(CreateRole_!)
-            .then((role) => res.json(role)) //check parameter
-            .catch((error) => res.status(400).json({ error }));
-      };
-      public deleteRole = (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
-        new DeleteRole(this.repository)
-            .execute(id)
-            .then((role) => res.json(role)) //check parameter
-            .catch((error) => res.status(400).json({ error }));
-      };
-      public getAllPermissions = (req: Request, res: Response) => {
-        new GetAllPermissions(this.repository)
-          .execute()
-          .then((role) => res.json(role)) //check parameter
-          .catch((error) => res.status(400).json({ error }));
-      };
-      public UpdateRole = (req: Request, res: Response) => {
-        const [ error, nuevo ] = UpdateRoleStruc.Create( req.body );
-        if ( error ) return res.status( 400 ).json( { error } ); 
-        new UpdateRole(this.repository)
-          .execute(nuevo!)
-          .then((role) => res.json(role)) //check parameter
-          .catch((error) => res.status(400).json({ error }));
-      };
+        public createRole = (req: Request, res: Response) => {
+            const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
+            if ( error ) return res.status( 400 ).json( { error } );
+            new CreateRole(this.repository)
+                .execute(CreateRole_!)
+                .then((role) => res.json(role)) //check parameter
+                .catch((error) => res.status(400).json({ error }));
+            };
+            public deleteRole = (req: Request, res: Response) => {
+                const id = parseInt(req.params.id);
+                new DeleteRole(this.repository)
+                  .execute(id)
+                  .then((role) => res.json(role)) //check parameter
+                  .catch((error) => res.status(400).json({ error }));
+              };
+              public getAllPermissions = (req: Request, res: Response) => {
+                new GetAllPermissions(this.repository)
+                  .execute()
+                  .then((role) => res.json(role)) //check parameter
+                  .catch((error) => res.status(400).json({ error }));
+              };
+              public UpdateRole = (req: Request, res: Response) => {
+                const [ error, nuevo ] = UpdateRoleStruc.Create( req.body );
+                if ( error ) return res.status( 400 ).json( { error } ); 
+                new UpdateRole(this.repository)
+                  .execute(nuevo!)
+                  .then((role) => res.json(role)) //check parameter
+                  .catch((error) => res.status(400).json({ error }));
+              };
               
 }
