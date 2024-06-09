@@ -9,8 +9,15 @@ const WorkerControl = new WorkerControler(Repository);
 
 
 
-
-router.post('/', guardar.single('file'), WorkerControl.create);
+//si el middleware lanza error se cancela toda la ejecicion
+router.post('/:id', (req, res, next) => {
+    guardar.single('file')(req, res, (err) => {
+        if (err) {
+            return next(err);
+        }
+        WorkerControl.create(req, res);
+    });
+});
 router.get('/', WorkerControl.get);
 
 

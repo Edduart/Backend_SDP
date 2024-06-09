@@ -14,20 +14,14 @@ export class WorkerControler{
     };
 
     public create = (req: Request, res: Response) =>{
+        console.log("entro al error");
         //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
         let origin = JSON.parse(req.body.data);
         let persona_json = origin.persona;
         let  nuevopath
-       //si es null significa que no 
+       //si es null significa que no se envio imagenes
         if(req.body.ayuda != null){
-            //primero procedo a renombrar el archivo imagen
-            const origenpath = req.body.ayuda;
-            nuevopath =  path.join(path.dirname(origenpath), persona_json.id + path.extname(origenpath));
-            fs.rename(origenpath, nuevopath, err =>{
-                if (err) {
-                    return res.status(500).send(err);
-            }});
-            nuevopath = nuevopath.replace(/\\/g, "/");
+            nuevopath = req.body.ayuda.replace(/\\/g, "/");
         }else nuevopath = null;
          
         //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
@@ -43,9 +37,17 @@ export class WorkerControler{
         //finalmente creo la entidad para crear al trabajador
         const data = new CreateWorker(persona, origin.job_position, socials, telefonos);
         new CreateWorkerUseCase(this.repository)
-        .execute(data!)
-        .then((worker) => res.json(worker).send) //check parameter
-        .catch((error) => res.status(400).json({ error }));
+        .execute(data)
+        .then((worker) => {
+            res.json(worker);
+        }) //check parameter
+        .catch((error) => {
+            //si hay un error se borra la imagen
+            if(nuevopath != null){
+                fs.unlinkSync(nuevopath);
+            }
+            res.status(400).json({ error })
+        });
     };
 
 

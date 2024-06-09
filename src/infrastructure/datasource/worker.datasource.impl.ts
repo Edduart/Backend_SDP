@@ -4,8 +4,13 @@ import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, S
 
 export class WorkerDataSourceImpl implements WorkerDataSource{
     async create(spers: CreateWorker): Promise<WorkerEntity> {
-        try{
-            prisma.$transaction(async (tx) => {
+        const result_individual = await prisma.$transaction(async (tx) => {
+            const exists = await prisma.person.findFirst({
+                where: { id: spers.persona.id }
+              })
+              if(exists){
+                throw `Usuario ya tiene un nombre registrado`;
+              }
                 const presona_realizar = await prisma.person.create({
                     data: {
                         id:                         spers.persona.id,
@@ -47,15 +52,9 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                         job_position:               spers.job_position as basic_worker_job_position
                     }
                 });
-                const result_individual = await this.get(presona_realizar.id, undefined);
-                return result_individual[0];
+                return await this.get(presona_realizar.id, undefined);
             })
-
-        }catch(error: any){
-            throw new Error("Something went wrong" + error);
-        }
-        const result_individual = await this.get(spers.persona.id, undefined);
-        return result_individual[0];
+            return result_individual[0];
     }
 
     async get(id_re: string | undefined, puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]> {

@@ -1,20 +1,25 @@
 import multer, { FileFilterCallback } from "multer";
 import path from 'path';
+import fs from 'fs';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
         cb(null, './images/worker')
     },
     filename: function(req, file, cb){
-        const filename = 'image' +'.' + file.mimetype.split('/')[1];
+        console.log(req.params.id);
+        const filename = req.params.id +'.' + file.mimetype.split('/')[1];
+        const filePath = path.join('./images/worker', filename);
+        if (fs.existsSync(filePath)) {
+            return cb(new Error('File already exists'), '');
+        }
         cb(null, filename);
-        // Set req.body.ayuda to the path of the file
         req.body.ayuda = path.join('./images/worker', filename);
     }
 });
 const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilterCallback) {
     //mando un mensaje en caso de que esté vacio
-    if (!file) {
+    if (file === undefined) {
         req.body.ayuda = null;
         return cb(null, false);
     }
