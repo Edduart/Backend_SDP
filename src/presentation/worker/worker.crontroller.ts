@@ -1,7 +1,6 @@
 import { CreatePhone, CreateWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
-import path from 'path';
 
 
 export class WorkerControler{
@@ -14,7 +13,6 @@ export class WorkerControler{
     };
 
     public create = (req: Request, res: Response) =>{
-        console.log("entro al error");
         //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
         let origin = JSON.parse(req.body.data);
         let persona_json = origin.persona;
@@ -25,7 +23,10 @@ export class WorkerControler{
         }else nuevopath = null;
          
         //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
+        
+
         const persona = new PersonEntity(persona_json.id, nuevopath, persona_json.forename, persona_json.surname, persona_json.email, new Date(persona_json.birthdate),persona_json.medical_record, persona_json.BloodType);
+       
         const social_json = origin.social;
         const socials: SocialMedia[] = social_json.map( (sociales: { social_media_category: number; link: string; }) => {
             return new SocialMedia(sociales.social_media_category, sociales.link);
@@ -35,19 +36,31 @@ export class WorkerControler{
             return new CreatePhone(celulares.phone_numbre, celulares.description);
         });
         //finalmente creo la entidad para crear al trabajador
+        
         const data = new CreateWorker(persona, origin.job_position, socials, telefonos);
-        new CreateWorkerUseCase(this.repository)
-        .execute(data)
-        .then((worker) => {
-            res.json(worker);
-        }) //check parameter
-        .catch((error) => {
-            //si hay un error se borra la imagen
-            if(nuevopath != null){
-                fs.unlinkSync(nuevopath);
-            }
-            res.status(400).json({ error })
-        });
+        data.validate()
+  .then(() => {
+    // si pasa el validador se prosigue
+    new CreateWorkerUseCase(this.repository)
+      .execute(data)
+      .then((worker) => {
+        res.json(worker);
+      })
+      .catch((error) => {
+        // errores de proceso
+        if (nuevopath != null) {
+            fs.unlinkSync(nuevopath);
+          }
+          res.status(400).json({ error });
+      });
+  })
+  .catch((error) => {
+    // errores de verificacion
+    if (nuevopath != null) {
+        fs.unlinkSync(nuevopath);
+      }
+      res.status(418).send("Error de validaciones " + error);
+  });
     };
 
 
