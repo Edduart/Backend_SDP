@@ -5,3 +5,5 @@ export * from "./role"
 export * from "./stage"
 
 export * from "./worker"
+
+export * from "./instructorPosition"

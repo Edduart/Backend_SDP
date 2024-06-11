@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import {
   CreateDioceseDto,
   GetDioceseByNameDto,
@@ -9,7 +10,8 @@ import {
   UpdateDiocese,
   DioceseRepository,
   UpdateDioceseDto,
-  DeleteDiocese
+  DeleteDiocese,
+  DioceseEntity,
 } from "../../domain";
 
 export class DioceseController {
@@ -47,8 +49,8 @@ export class DioceseController {
       .execute(getDioceseByNameDto!)
       .then((diocese) =>
         res.json({
-          msj: "coincidencias con la palabra: "+getDioceseByNameDto!.name,
-          diocese
+          msj: "coincidencias con la palabra: " + getDioceseByNameDto!.name,
+          diocese,
         })
       )
       .catch((error) => res.status(400).json({ error }));
@@ -100,3 +102,5 @@ export class DioceseController {
       .catch((error) => res.status(400).json({ error }));
   };
 }
+
+

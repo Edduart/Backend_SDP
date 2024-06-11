@@ -6,3 +6,4 @@ export * from "./person.entity";
 export * from "./worker.entity";
 export * from "./phone.entity";
 export * from "./social.media.entity";
+export * from "./instructorPosition.entity"
