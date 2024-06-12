@@ -20,7 +20,7 @@ export class DioceseController {
   public getDioceses = (req: Request, res: Response) => {
     new GetDioceses(this.dioceseRepository)
       .execute()
-      .then((dioceses) => res.json(dioceses)) //check parameter
+      .then((dioceses) => res.json(dioceses)) // add msj if this is zero
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -28,7 +28,7 @@ export class DioceseController {
     const id = +req.params.id;
 
     new GetDiocese(this.dioceseRepository)
-      .execute(id)
+      .execute(id) // add msj if diocese is zero
       .then((diocese) =>
         res.json({
           mjs: "Diosesis ID:" + diocese.id + ", encontrada exitosamente!",

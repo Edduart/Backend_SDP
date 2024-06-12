@@ -4,3 +4,4 @@ export * from "./stage.datasource"
 export * from "./worker.datasource"
 export * from "./instructorPosition.datasource"
 export * from "./instructor.datasource";
+export * from "./course.datasorce"

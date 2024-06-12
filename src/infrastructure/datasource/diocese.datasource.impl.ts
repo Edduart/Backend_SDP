@@ -10,10 +10,10 @@ import {
 export class DioceseDataSourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
     const check: DioceseEntity[] = await this.getByName(createDioceseDto);
-    const DioceseExist = check.find(
+    const dioceseExist = check.find(
       (item) => item.name === createDioceseDto.name
     );
-    if (DioceseExist)
+    if (dioceseExist)
       throw `Diocese with name: ${createDioceseDto.name}, already exist`;
     const createDiocese = await prisma.diocese.create({
       data: createDioceseDto!,
@@ -50,10 +50,10 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
     await this.findById(updateDioceseDto.id);
     const check: DioceseEntity[] = await this.getByName(updateDioceseDto);
-    const DioceseExist = check.find(
+    const dioceseExist = check.find(
       (item) => item.name === updateDioceseDto.name
     );
-    if (DioceseExist)
+    if (dioceseExist)
       throw `Diocese with name: ${updateDioceseDto.name}, already exist`;
     const updateDiocese = await prisma.diocese.update({
       where: { id: updateDioceseDto.id },
