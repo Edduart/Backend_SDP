@@ -20,6 +20,6 @@ router.post('/:id', (req: Request, res: Response, next: NextFunction) => {
     });
 });
 router.get('/', WorkerControl.get);
-
+router.delete('/:id', WorkerControl.deleteRole);
 
 module.exports= router;

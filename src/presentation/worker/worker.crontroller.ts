@@ -1,4 +1,4 @@
-import { CreatePhone, CreateWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository } from "../../domain";
+import { CreatePhone, CreateWorker, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 
@@ -10,6 +10,13 @@ export class WorkerControler{
             .execute(req.body.id, req.body.job)
             .then((worker) => res.json(worker)) //check parameter
             .catch((error) => res.status(400).json({ error }));
+    };
+
+    public deleteRole = (req: Request, res: Response) => {
+      new DeleteWorker(this.repository)
+          .execute(req.params.id)
+          .then((worker) => res.json(worker)) //check parameter
+          .catch((error) => res.status(400).json({ error }));
     };
 
     public create = (req: Request, res: Response) =>{

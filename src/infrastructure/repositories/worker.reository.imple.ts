@@ -5,6 +5,9 @@ export class WorkerRepositoryImpl implements WorkerRepository{
     constructor (
         private readonly datasource: WorkerDataSource,
     ){}
+    Delete(id: string): Promise<string> {
+        return this.datasource.Delete(id);
+    }
     create(data: CreateWorker): Promise<WorkerEntity> {
         return this.datasource.create(data);
     }

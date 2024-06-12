@@ -3,6 +3,31 @@ import { prisma } from "../../data/postgres";
 import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
 
 export class WorkerDataSourceImpl implements WorkerDataSource{
+    async Delete(id: string): Promise<string> {
+        await prisma.$transaction(async (tx) =>{
+            await prisma.phone_number.deleteMany({
+                where:{
+                    person_id: id
+                }
+            });
+            await prisma.social_media.deleteMany({
+                where:{
+                    person_id: id
+                }
+            })
+            await prisma.basic_worker.delete({
+                where:{
+                    person_id:id
+                }
+            });
+            await prisma.person.delete({
+                where:{
+                    id: id
+                }
+            });
+        })
+        return("Trabajador eliminado");
+    }
     async create(spers: CreateWorker): Promise<WorkerEntity> {
         const result_individual = await prisma.$transaction(async (tx) => {
             const exists = await prisma.person.findFirst({
