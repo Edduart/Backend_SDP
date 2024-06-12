@@ -1,6 +1,5 @@
-import { CreateWorker } from "../../dtos";
-import { WorkerEntity } from "../../entities";
-import { WorkerRepository } from "../../repositories";
+import { CreateWorker, WorkerEntity, WorkerRepository } from "../..";
+
 
 
 

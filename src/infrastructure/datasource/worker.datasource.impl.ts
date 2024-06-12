@@ -3,6 +3,80 @@ import { prisma } from "../../data/postgres";
 import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
 
 export class WorkerDataSourceImpl implements WorkerDataSource{
+    async Update(data: CreateWorker): Promise<WorkerEntity> {
+        console.log("Etapa 4");
+        const reslut_trans = await prisma.$transaction(async (tx) => {
+            const exists = await prisma.person.findFirst({
+                where: { id: data.persona.id }
+              })
+              if(exists){
+                
+              }else{
+                throw `Usuario no encontrado`;
+              }
+            const perona_actualizar = await prisma.person.update({
+                where:{
+                    id: data.persona.id
+                },
+                data:{
+                    forename:                   data.persona.forename,
+                    surname:                    data.persona.surname,
+                    birthdate:                  data.persona.birthdate,
+                    profile_picture_path:       data.persona.profile_picture_path,
+                    email:                      data.persona.email,
+                    medical_record:             data.persona.medical_record,
+                    BloodType:                  data.persona.BloodType as person_BloodType,
+                }
+            });
+            
+            if(data.social != null){
+                await prisma.social_media.deleteMany({
+                    where:{
+                        person_id: data.persona.id
+                    }
+                })
+                const data_social = data.social.map(social => {
+                    return {
+                        person_id:              data.persona.id,
+                        social_media_category:  social.social_media_category,
+                        link:                   social.link
+                    }
+                });
+                    await prisma.social_media.createMany({
+                        data: data_social
+                    });
+                }
+
+                if(data.telefono != null){
+                    await prisma.phone_number.deleteMany({
+                        where:{
+                            person_id: data.persona.id,
+                        }
+                    });
+                    const data_telefono = data.telefono.map(celular => {
+                        return{
+                            person_id:              data.persona.id,
+                            phone_number:           celular.phone_numbre,
+                            description:            celular.description,
+                        }
+                    })
+                    await prisma.phone_number.createMany({
+                        data: data_telefono
+                    });
+                }
+                await prisma.basic_worker.update({
+                    where:{
+                        person_id: perona_actualizar.id,
+                    },
+                    data:{
+                        job_position:   data.job_position as basic_worker_job_position
+                    }
+                });
+                return await this.get(perona_actualizar.id, undefined);
+        });
+        return reslut_trans[0];
+    }
+
     async Delete(id: string): Promise<string> {
         await prisma.$transaction(async (tx) =>{
             await prisma.phone_number.deleteMany({

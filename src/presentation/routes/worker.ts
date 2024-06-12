@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { guardar } from "../services/upload.worker";
+import { actualizar, guardar } from "../services/upload.worker";
 import { WorkerDataSourceImpl, WorkerRepositoryImpl } from "../../infrastructure";
 import { WorkerControler } from "../worker/worker.crontroller";
 import { Request, Response, NextFunction } from 'express';
@@ -15,8 +15,15 @@ router.post('/:id', (req: Request, res: Response, next: NextFunction) => {
         if (err) {
             return next(err);
         }
-        console.log(req.body.data);
         WorkerControl.create(req, res);
+    });
+});
+router.put('/:id', (req: Request, res: Response, next: NextFunction) => {
+    actualizar.single('file')(req, res, (err) => {
+        if (err) {
+            return next(err);
+        }
+        WorkerControl.update(req, res);
     });
 });
 router.get('/', WorkerControl.get);

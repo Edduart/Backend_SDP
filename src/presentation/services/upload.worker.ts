@@ -7,7 +7,6 @@ const storage = multer.diskStorage({
         cb(null, './images/worker')
     },
     filename: function(req, file, cb){
-        console.log(req.params.id);
         const filename = req.params.id +'.' + file.mimetype.split('/')[1];
         const filePath = path.join('./images/worker', filename);
         if (fs.existsSync(filePath)) {
@@ -30,5 +29,15 @@ const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilter
     }
     cb(null, true);
 };
-
+const storage_U = multer.diskStorage({
+    destination: function (req, file, cb){
+        cb(null, './images/worker')
+    },
+    filename: function(req, file, cb){
+        const filename = req.params.id +'.' + file.mimetype.split('/')[1];
+        cb(null, filename);
+        req.body.ayuda = path.join('./images/worker', filename);
+    }
+});
 export const guardar = multer({ storage: storage, fileFilter: fileFilter });
+export const actualizar = multer({storage: storage_U,fileFilter: fileFilter});

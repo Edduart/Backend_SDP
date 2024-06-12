@@ -41,11 +41,9 @@ export class PersonEntity{
           if ((years >= 120) || (years <= 16)) {
             return reject(new Error("Fecha invalida"));
           }
-      
           if (!(this.BloodType in BloodType)) {
-            return reject(new Error("Fecha Sangre Invalida"));
+            return reject(new Error("Sangre Invalida"));
           }
-      
           resolve();
         });
       }
