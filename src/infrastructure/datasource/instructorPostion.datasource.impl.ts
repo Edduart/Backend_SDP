@@ -15,7 +15,7 @@ export class InstructorPositionDataSourceImple
     const getInstructorPositionById = await prisma.instructor_position.findUnique({
       where: { id: id },
     });
-    if (!getInstructorPositionById) throw "Stage with ID: ${id} no found";
+    if (!getInstructorPositionById) throw "Instructor postion with ID: ${id} no found";
     return InstructorPositionEntity.fromObject(getInstructorPositionById);
   }
 }
