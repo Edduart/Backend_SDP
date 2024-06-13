@@ -7,9 +7,9 @@ import {
 } from "../../domain";
 
 export class CourseDataSourceImpl implements CourseDatasource {
-  async create(CreateDto: CreateCourseDto): Promise<CourseEntity> {
+  async create(createDto: CreateCourseDto): Promise<CourseEntity> {
     const createCourse = await prisma.course.create({
-      data: CreateDto!,
+      data: createDto!,
     });
     return CourseEntity.fromObject(createCourse);
   }
