@@ -9,7 +9,7 @@ const Repository = new WorkerRepositoryImpl(datasource);
 const WorkerControl = new WorkerControler(Repository);
 //si el middleware lanza error se cancela toda la ejecicion
 
-
+router.get('/socials/', WorkerControl.GetSocials);
 router.post('/:id', (req: Request, res: Response, next: NextFunction) => {
     guardar.single('file')(req, res, (err) => {
         if (err) {

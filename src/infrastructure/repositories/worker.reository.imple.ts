@@ -1,10 +1,13 @@
-import { CreateWorker, Job_Psotion_Enum, WorkerDataSource, WorkerEntity, WorkerRepository } from "../../domain";
+import { CreateWorker, Job_Psotion_Enum, SocialMediaCategoryEntity, WorkerDataSource, WorkerEntity, WorkerRepository } from "../../domain";
 
 
 export class WorkerRepositoryImpl implements WorkerRepository{
     constructor (
         private readonly datasource: WorkerDataSource,
     ){}
+    GetSocial(): Promise<SocialMediaCategoryEntity[]> {
+        return this.datasource.GetSocial();
+    }
     Update(data: CreateWorker): Promise<WorkerEntity> {
         return this.datasource.Update(data);
     }

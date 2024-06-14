@@ -1,8 +1,19 @@
 import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
+import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
 
 export class WorkerDataSourceImpl implements WorkerDataSource{
+    async GetSocial(): Promise<SocialMediaCategoryEntity[]> {
+        const socials = await prisma.social_media_category.findMany({});
+        const social_cate: SocialMediaCategoryEntity[] = socials.map(sociales => {
+            return SocialMediaCategoryEntity.fromdb({
+                id:         sociales.id,
+                description:  sociales.description,
+                icon: sociales.icon,
+            });
+        });
+        return social_cate;
+    }
     async Update(data: CreateWorker): Promise<WorkerEntity> {
         console.log("Etapa 4");
         const reslut_trans = await prisma.$transaction(async (tx) => {

@@ -1,10 +1,18 @@
-import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository } from "../../domain";
+import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository, GetSocials } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 
 
 export class WorkerControler{
     constructor(private readonly repository: WorkerRepository){}
+    public GetSocials = (req: Request, res: Response) => {
+      new GetSocials(this.repository)
+          .execute()
+          .then((worker) => res.json(worker)) //check parameter
+          .catch((error) => res.status(400).json({ error }));
+  };
+
+
     public get = (req: Request, res: Response) => {
         new GetWorker(this.repository)
             .execute(req.body.id, req.body.job)
