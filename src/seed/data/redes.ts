@@ -3,7 +3,7 @@ export const redes = [
         description: "Facebook",
         icon: "localhost:3000/images/icons/facebook.png",
     },{
-        description: "X (Twitter)",
+        description: "Twitter",
         icon: "localhost:3000/images/icons/x.png",
     },{
         description: "LinkedIn",
