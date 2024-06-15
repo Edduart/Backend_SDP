@@ -1,4 +1,4 @@
-import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository, GetSocials } from "../../domain";
+import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository, GetSocials, Job_Psotion_Enum } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 
@@ -14,8 +14,13 @@ export class WorkerControler{
 
 
     public get = (req: Request, res: Response) => {
+      //si el id es string y mayor a 0 caracteres, y no es numero entonces se manda undefined, si es number tambien se manda el id convertido en numero
+      const id = typeof req.query.id === 'string' && req.query.id.length < 20 &&  req.query.id.length > 1? req.query.id : undefined;
+      //confirma que la query sea string, este entre 1 y 99 caracteres y retorna el string o undefined
+      const job = typeof req.query.job === 'string' && req.query.job.length < 100 &&  req.query.job.length > 1? req.query.job : undefined;
+
         new GetWorker(this.repository)
-            .execute(req.body.id, req.body.job)
+            .execute(id, job as Job_Psotion_Enum|undefined)
             .then((worker) => res.json(worker)) //check parameter
             .catch((error) => res.status(400).json({ error }));
     };
