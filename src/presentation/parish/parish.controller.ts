@@ -44,7 +44,7 @@ export class ParishController {
 
   public UpdateParishById = (req: Request, res: Response) => {
     const id = +req.params.id;
-    const [error, updateDioceseDto] = UpdateParishDto.update({
+    const [error, updateParishDto] = UpdateParishDto.update({
       ...req.body,
       id,
     });
@@ -52,7 +52,7 @@ export class ParishController {
     if (error) return res.status(400).json({ error });
 
     new UpdateParish(this.parishrepository)
-      .execute(updateDioceseDto!)
+      .execute(updateParishDto!)
       .then((todo) => res.json(todo))
       .catch((error) => res.status(400).json({ error }));
   };
@@ -65,7 +65,7 @@ export class ParishController {
     });
     new DeleteParish(this.parishrepository)
       .execute(id)
-      .then((parish) => res.json(parish))
+      .then((parish) => res.json({msj:" Parroquia id:"+id+" eliminada correctamente"}))
       .catch((error) => res.status(400).json({ error }));
   };
 }

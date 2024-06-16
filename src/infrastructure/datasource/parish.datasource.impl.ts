@@ -1,4 +1,5 @@
 //This is the controller 
+import { error } from "console";
 import { prisma } from "../../data/postgres";
 import {
   UpdateParishDto,
@@ -8,6 +9,7 @@ import {
   DeleteParish,
   DioceseEntity
 } from "../../domain";
+import { parish } from "@prisma/client";
 
 
 
@@ -43,6 +45,7 @@ export class ParishDatasourceimpl implements ParishDataSource {
       const searchDiocese: DioceseEntity[] = await prisma.diocese.findMany({
         where: {id: created.diocese_id}
       });
+      if(searchDiocese.length==0) throw "No diocesis found";
       
       const result = await prisma.parish.create({
         data: {

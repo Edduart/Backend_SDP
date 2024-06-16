@@ -15,6 +15,10 @@ export class CreateParishDto {
     if (!name) return ["Name is required", undefined];
     if (!patron) return ["Patron is required", undefined];
 
+    //new validations
+    
+
+
     //
     //
     //make more validations
