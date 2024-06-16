@@ -1,3 +1,4 @@
+import { toUSVString } from "util";
 import { prisma } from "../../data/postgres";
 import {
   RoleDataSource,
@@ -9,7 +10,13 @@ import {
 export class RoleDataSourceImpl implements RoleDataSource{
     
     async create(sper: CreateRoleStruc): Promise<RoleEntity> {
-        const result = await prisma.role.create({
+      const exists = await prisma.role.findFirst({
+        where: { name: sper.name }
+      })
+      if(exists){
+        throw `Usuario ya tiene un nombre registrado`;
+      }
+      const result = await prisma.role.create({
           data:{
             name: sper.name,
             description: sper.description,
@@ -21,15 +28,21 @@ export class RoleDataSourceImpl implements RoleDataSource{
           await prisma.role_permission.createMany({
             data: data
           })
-        const result_individual = this.getById(result.id);
-
-        return (result_individual);
+          
+        const result_individual = await this.getRoleMultiple(result.id, undefined);
+        return result_individual[0];
     }
     async GetAllPermissions(): Promise<PermissionEntity[]> {
         const from_db = await prisma.permission.findMany();
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
     async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
+      const exists = await prisma.role.findFirst({
+        where: { name: nuevo.name }
+      })
+      if(exists){
+        throw `Usuario ya tiene un nombre registrado`;
+      }
       await prisma.role_permission.deleteMany({
         where:{
           role_id: nuevo.id
@@ -45,35 +58,66 @@ export class RoleDataSourceImpl implements RoleDataSource{
         await prisma.role_permission.createMany({
           data: data
         })
-      const result_individual = this.getById(result.id);
-      return result_individual;
+        const result_individual = await this.getRoleMultiple(result.id, undefined);
+        return result_individual[0];
     }
-    async getAll(): Promise<RoleEntity[]> {
-        const roles_baseD = await prisma.role.findMany({
-            select: {
-              id: true,
-              name: true,
-              description:  true,
-              role_permission: {
-                select: {
-                  permission: {
-                    select: {
-                        id: true,
-                        name: true,
-                        description: true
-                    }
+    async getRoleMultiple(id: number|undefined,name: string|undefined): Promise<RoleEntity[]> {
+      let roles_baseD; 
+      /* si ambas variables son undefined se procede con el select all, sin embargo si una de las variables es undefined
+      se procede con el filtro, pues prisma controla el undefined como una forma de ignorar dicha comparacion 
+      y null como un valor */
+      if((id === undefined) && (name === undefined) ){
+        roles_baseD = await prisma.role.findMany({
+          select: {
+            id: true,
+            name: true,
+            description:  true,
+            role_permission: {
+              select: {
+                permission: {
+                  select: {
+                      id: true,
+                      name: true,
+                      type: true, 
+                      table: true,
                   }
                 }
               }
             }
-          })
-
+          }
+        });
+       } else{
+        roles_baseD = await prisma.role.findMany({where: {
+          OR: [
+            {id: id},
+            {name: name}
+          ]
+        },
+        select: {
+          id: true,
+          name: true,
+          description:  true,
+          role_permission: {
+            select: {
+              permission: {
+                select: {
+                    id: true,
+                    name: true,
+                    type: true,
+                    table: true,
+                }
+              }
+            }
+          }
+        }});  
+       }
           const roleEntities: RoleEntity[] = roles_baseD.map(rol => {
             const permissions: PermissionEntity[] = rol.role_permission.map(rolePermission => {
               return PermissionEntity.fromdb({
-                id: rolePermission.permission.id,
-                name: rolePermission.permission.name,
-                description: rolePermission.permission.description
+                id:     rolePermission.permission.id,
+                name:   rolePermission.permission.name,
+                type:   rolePermission.permission.type, 
+                table:  rolePermission.permission.table,
               });
             });
         
@@ -86,47 +130,6 @@ export class RoleDataSourceImpl implements RoleDataSource{
           });
 
           return roleEntities
-    }
-    async getById(id: number): Promise<RoleEntity>{
-      const result_db = await prisma.role.findMany({
-        where: {
-          id: id
-        },
-        select: {
-          id: true,
-          name: true,
-          description:  true,
-          role_permission: {
-            select: {
-              permission: {
-                select: {
-                    id: true,
-                    name: true,
-                    description: true
-                }
-              }
-            }
-          }
-        }
-      })
-      const result_enti: RoleEntity[] = result_db.map(rol => {
-        const permissions: PermissionEntity[] = rol.role_permission.map(rolePermission => {
-          return PermissionEntity.fromdb({
-            id: rolePermission.permission.id,
-            name: rolePermission.permission.name,
-            description: rolePermission.permission.description
-          });
-        });
-    
-        return RoleEntity.fromdb({
-          id: rol.id,
-          name: rol.name,
-          description: rol.description,
-          premissions: permissions
-        });
-      });
-      if ( !result_db ) throw `Role with id ${ id } not found`;
-      return result_enti[0];
     }
     async Delete(id: number): Promise<null> {
         await prisma.role_permission.deleteMany({
