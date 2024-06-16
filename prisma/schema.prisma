@@ -40,7 +40,7 @@ model course {
   stage_id      Int         @db.TinyInt
   description   String      @db.VarChar(200)
   instructor_id String?     @db.VarChar(20)
-  instructor    instructor? @relation(fields: [instructor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_instructor") @ignore
+  instructor    instructor? @relation(fields: [instructor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_instructor")
   stage         stage       @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_course_stage")
   subject       subject[]
 
@@ -50,7 +50,7 @@ model course {
 
 model diocese {
   id     Int      @id @default(autoincrement())
-  name   String   @db.VarChar(200) @unique
+  name   String   @db.VarChar(200)
   holder String   @db.VarChar(100)
   parish parish[]
 }
@@ -102,9 +102,8 @@ model instruction {
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model instructor {
-  professor_id        String              @db.VarChar(20) @unique
+  professor_id        String              @id @db.VarChar(20)
   starting_date       DateTime            @db.Date
   position_id         Int                 @db.TinyInt
   course              course[]
@@ -113,13 +112,12 @@ model instructor {
 
   @@index([position_id], map: "fk_instructor_instructor_position_idx")
   @@index([professor_id], map: "fk_instructor_professor_idx")
-  @@ignore
 }
 
 model instructor_position {
   id          Int          @id @default(autoincrement()) @db.TinyInt
   description String       @db.VarChar(50)
-  instructor  instructor[] @ignore
+  instructor  instructor[]
 }
 
 model parish {
@@ -136,19 +134,20 @@ model parish {
 model permission {
   id              Int               @id
   name            String            @db.VarChar(100)
-  description     String?           @db.Text
+  type            String            @db.VarChar(1)
+  table           String            @db.VarChar(80)
   role_permission role_permission[]
 }
 
 model person {
-  id                   String            @id @db.VarChar(20)
-  profile_picture_path String?           @db.Text
-  forename             String            @db.VarChar(100)
-  surname              String            @db.VarChar(100)
-  email                String            @db.VarChar(200)
-  birthdate            DateTime          @db.Date
-  medical_record       String?           @db.Text
-  BloodType            person_BloodType? @default(UNKNOWN)
+  id                   String           @id @db.VarChar(20)
+  profile_picture_path String?          @db.Text
+  forename             String           @db.VarChar(100)
+  surname              String           @db.VarChar(100)
+  email                String           @db.VarChar(200)
+  birthdate            DateTime         @db.Date
+  medical_record       String?          @db.Text
+  BloodType            person_BloodType @default(UNKNOWN)
   basic_worker         basic_worker?
   phone_number         phone_number[]
   social_media         social_media[]
@@ -170,7 +169,7 @@ model professor {
   id          String        @id @db.VarChar(20)
   status_id   Int           @db.TinyInt
   instruction instruction[]
-  instructor  instructor[]  @ignore
+  instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
 }
 
@@ -236,6 +235,7 @@ model social_media {
 model social_media_category {
   id                                                                     Int            @id @default(autoincrement())
   description                                                            String         @db.VarChar(100)
+  icon                                                                   String         @db.VarChar(1000)
   social_media_social_media_social_media_categoryTosocial_media_category social_media[] @relation("social_media_social_media_categoryTosocial_media_category")
 }
 
@@ -304,11 +304,10 @@ model user {
   @@index([parish_id], map: "fk_user_parish_idx")
 }
 enum basic_worker_job_position {
-  Mantenimiento
-  Cocinero
-  Transportista
+  Mantenimiento @map("Mantenimiento")
+  Cocinero      @map("Cocinero")
+  Transportista @map("Transportista")
 }
-
 
 enum seminarian_Ministery {
   Unkown    @map("Unkown")

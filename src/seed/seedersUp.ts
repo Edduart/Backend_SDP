@@ -1,13 +1,17 @@
-import { prisma } from "../data/postgres";
+import { modelData } from "./data/seederData";
+import { modelPrismaData } from "./model/seederModel";
 
-import {
-  permissions as permsData,
-  dioceses as diocesesData,
-  Redes as RedData,
-  stages as stageData,
-} from "./data";
 
-const seederMain = async () => {
+Object.values(modelData).forEach(model => {
+  new modelPrismaData(model);
+});
+
+
+//new modelPrismaData(modelData.diocese);
+
+
+
+/*const seederMain = async () => {
   await prisma.diocese.createMany({
     data: diocesesData,
     skipDuplicates: true,
@@ -29,4 +33,4 @@ const seederMain = async () => {
 
 seederMain().catch((error) => {
   throw error;
-});
+});*/

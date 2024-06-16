@@ -11,9 +11,6 @@ export class RoleRepositoryImpl implements RoleRepository{
     Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
         return this.datasource.Update(nuevo);
     }
-    getOne(id: number|null,name: string|null): Promise<RoleEntity> {
-        return this.datasource.getOne(id,name);
-    }
 
     GetAllPermissions(): Promise<PermissionEntity[]> {
         return this.datasource.GetAllPermissions();
@@ -22,8 +19,8 @@ export class RoleRepositoryImpl implements RoleRepository{
         return this.datasource.create(data);
     }
     
-    getAll(): Promise<RoleEntity[]> {
-        return this.datasource.getAll();
+    getRoleMultiple(id: number|undefined,name: string|undefined): Promise<RoleEntity[]> {
+        return this.datasource.getRoleMultiple(id, name);
     }
     Delete(id: number) {
         return this.datasource.Delete(id);

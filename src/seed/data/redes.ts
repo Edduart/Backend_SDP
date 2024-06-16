@@ -1,28 +1,37 @@
-export const Redes = [
+export const redes = [
     {
-        description: "Facebook" 
+        description: "Facebook",
+        icon: "localhost:3000/images/icons/facebook.png",
     },{
-        description: "X (Twitter)"
+        description: "X (Twitter)",
+        icon: "localhost:3000/images/icons/x.png",
     },{
-        description: "Twitter" 
+        description: "LinkedIn",
+        icon: "localhost:3000/images/icons/link.png",
     },{
-        description: "LinkedIn" 
+        description: "GitHub",
+        icon: "localhost:3000/images/icons/github.png",
     },{
-        description: "GitHub"
+        description: "YouTube",
+        icon: "localhost:3000/images/icons/youtube.png",
     },{
-        description: "YouTube"
+        description: "Tiktok",
+        icon: "localhost:3000/images/icons/tiktok.png",
     },{
-        description: "Tiktok"
+        description: "Pinterest",
+        icon: "localhost:3000/images/icons/pinte.png",
     },{
-        description: "Pinterest"
+        description: "Threads",
+        icon: "localhost:3000/images/icons/threa.png",
     },{
-        description: "Threads"
+        description: "Instagram",
+        icon: "localhost:3000/images/icons/insta.png",
     },{
-        description: "Instagram"
+        description: "Twitch",
+        icon: "localhost:3000/images/icons/twit.png",
     },{
-        description: "Twitch"
-    },{
-        description: "Discord"
+        description: "Discord",
+        icon: "localhost:3000/images/icons/discord.png",
     }
 ]
 

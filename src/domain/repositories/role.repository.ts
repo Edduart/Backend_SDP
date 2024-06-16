@@ -5,8 +5,7 @@ import { RoleEntity } from "../entities/role.entity";
 export abstract class RoleRepository{
     abstract create(data: CreateRoleStruc): Promise<RoleEntity>;
     abstract Update(nuevo: CreateRoleStruc): Promise<RoleEntity>;
-    abstract getAll(): Promise<RoleEntity[]>;
-    abstract getOne(id: number|null,name: string|null): Promise<RoleEntity>;
+    abstract getRoleMultiple(id: number|undefined,name: string|undefined): Promise<RoleEntity[]>;
     abstract Delete(id: number): Promise<null>;
     abstract GetAllPermissions(): Promise <PermissionEntity[]>;
 }
