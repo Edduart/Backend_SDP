@@ -22,6 +22,7 @@ export class Server {
   async start() {
     //* Middlewares
     this.app.use(cors());
+    this.app.use("/images", express.static("images"));
     this.app.use(express.json()); // raw
     this.app.use(express.urlencoded({ extended: true })); // x-www-form-urlencoded
     //this.app.use( compression() )
