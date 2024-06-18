@@ -139,7 +139,7 @@ CREATE TABLE `person` (
     `email` VARCHAR(200) NOT NULL,
     `birthdate` DATE NOT NULL,
     `medical_record` TEXT NULL,
-    `BloodType` ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'UNKNOWN') NULL DEFAULT 'UNKNOWN',
+    `BloodType` ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -227,6 +227,7 @@ CREATE TABLE `social_media` (
 CREATE TABLE `social_media_category` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `description` VARCHAR(100) NOT NULL,
+    `icon` VARCHAR(1000) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
