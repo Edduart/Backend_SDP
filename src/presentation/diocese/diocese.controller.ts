@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import {
   CreateDioceseDto,
-  GetDioceseByNameDto,
   CreateDiocese,
   GetDioceses,
   GetDiocese,
@@ -11,7 +10,6 @@ import {
   DioceseRepository,
   UpdateDioceseDto,
   DeleteDiocese,
-  DioceseEntity,
 } from "../../domain";
 
 export class DioceseController {
@@ -39,20 +37,22 @@ export class DioceseController {
   };
 
   public getDioceseByName = (req: Request, res: Response) => {
-    const [error, getDioceseByNameDto] = GetDioceseByNameDto.getByName({
-      ...req.body,
-    });
-
-    if (error) return res.status(400).json({ error });
+    const name = req.params.name;
 
     new GetDioceseByName(this.dioceseRepository)
-      .execute(getDioceseByNameDto!)
-      .then((diocese) =>
-        res.json({
-          msj: "coincidencias con la palabra: " + getDioceseByNameDto!.name,
-          diocese,
-        })
-      )
+      .execute(name)
+      .then((diocese) => {
+        if (diocese.length == 0) {
+          res.json({
+            msj: "No se encontro ninguna conincidencia con: " + name,
+          });
+        } else {
+          res.json({
+            msj: "coincidencias con la palabra: " + name,
+            diocese,
+          });
+        }
+      })
       .catch((error) => res.status(400).json({ error }));
   };
 

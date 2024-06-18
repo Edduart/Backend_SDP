@@ -4,13 +4,12 @@ import {
   DioceseDatasource,
   DioceseEntity,
   CreateDioceseDto,
-  GetDioceseByNameDto,
 } from "../../domain";
 
 export class DioceseDataSourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
-    const check: DioceseEntity[] = await this.getByName(createDioceseDto);
-    const dioceseExist = check.find(
+    const check: DioceseEntity[] = await this.getByName(createDioceseDto.name);
+    const DioceseExist = check.find(
       (item) => item.name === createDioceseDto.name
     );
     if (dioceseExist)
@@ -37,11 +36,11 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
   }
 
   async getByName(
-    searchDioceseDto: GetDioceseByNameDto
+    name: string
   ): Promise<DioceseEntity[]> {
     const dioceseByName = await prisma.diocese.findMany({
       where: {
-        name: { contains: searchDioceseDto.name },
+        name: { contains: name },
       }
     });
     return dioceseByName.map((diocese) => DioceseEntity.fromObject(diocese));
@@ -49,8 +48,8 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
     await this.findById(updateDioceseDto.id);
-    const check: DioceseEntity[] = await this.getByName(updateDioceseDto);
-    const dioceseExist = check.find(
+    const check: DioceseEntity[] = await this.getByName(updateDioceseDto.name);
+    const DioceseExist = check.find(
       (item) => item.name === updateDioceseDto.name
     );
     if (dioceseExist)

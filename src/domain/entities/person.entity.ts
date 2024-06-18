@@ -23,6 +23,32 @@ export class PersonEntity{
         
         return new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType)
     }
+
+    validate(): Promise<void> {
+        return new Promise((resolve, reject) => {
+          if (!/^[VE]-\d{1,15}$/.test(this.id)) {
+            return reject(new Error("Hubo un error en cedula"));
+          }
+          if (this.forename.length > 100) {
+            return reject(new Error("Nombre muy largo"));
+          }
+          if (this.surname.length > 100) {
+            return reject(new Error("Apellido muy largo"));
+          }
+      
+          const hoy = new Date();
+          const years = hoy.getFullYear() - this.birthdate.getFullYear();
+          if ((years >= 120) || (years <= 16)) {
+            return reject(new Error("Fecha invalida"));
+          }
+          if (!(this.BloodType in BloodType)) {
+            return reject(new Error("Sangre Invalida"));
+          }
+          resolve();
+        });
+      }
+
+
 }
 
 export enum BloodType {

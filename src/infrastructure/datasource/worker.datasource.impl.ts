@@ -1,11 +1,126 @@
 import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
+import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
 
 export class WorkerDataSourceImpl implements WorkerDataSource{
+    async GetSocial(): Promise<SocialMediaCategoryEntity[]> {
+        const socials = await prisma.social_media_category.findMany({});
+        const social_cate: SocialMediaCategoryEntity[] = socials.map(sociales => {
+            return SocialMediaCategoryEntity.fromdb({
+                id:         sociales.id,
+                description:  sociales.description,
+                icon: sociales.icon,
+            });
+        });
+        return social_cate;
+    }
+    async Update(data: CreateWorker): Promise<WorkerEntity> {
+        console.log("Etapa 4");
+        const reslut_trans = await prisma.$transaction(async (tx) => {
+            const exists = await prisma.person.findFirst({
+                where: { id: data.persona.id }
+              })
+              if(exists){
+                
+              }else{
+                throw `Usuario no encontrado`;
+              }
+            const perona_actualizar = await prisma.person.update({
+                where:{
+                    id: data.persona.id
+                },
+                data:{
+                    forename:                   data.persona.forename,
+                    surname:                    data.persona.surname,
+                    birthdate:                  data.persona.birthdate,
+                    profile_picture_path:       data.persona.profile_picture_path,
+                    email:                      data.persona.email,
+                    medical_record:             data.persona.medical_record,
+                    BloodType:                  data.persona.BloodType as person_BloodType,
+                }
+            });
+            
+            if(data.social != null){
+                await prisma.social_media.deleteMany({
+                    where:{
+                        person_id: data.persona.id
+                    }
+                })
+                const data_social = data.social.map(social => {
+                    return {
+                        person_id:              data.persona.id,
+                        social_media_category:  social.social_media_category,
+                        link:                   social.link
+                    }
+                });
+                    await prisma.social_media.createMany({
+                        data: data_social
+                    });
+                }
+
+                if(data.telefono != null){
+                    await prisma.phone_number.deleteMany({
+                        where:{
+                            person_id: data.persona.id,
+                        }
+                    });
+                    const data_telefono = data.telefono.map(celular => {
+                        return{
+                            person_id:              data.persona.id,
+                            phone_number:           celular.phone_numbre,
+                            description:            celular.description,
+                        }
+                    })
+                    await prisma.phone_number.createMany({
+                        data: data_telefono
+                    });
+                }
+                await prisma.basic_worker.update({
+                    where:{
+                        person_id: perona_actualizar.id,
+                    },
+                    data:{
+                        job_position:   data.job_position as basic_worker_job_position
+                    }
+                });
+                return await this.get(perona_actualizar.id, undefined);
+        });
+        return reslut_trans[0];
+    }
+
+    async Delete(id: string): Promise<string> {
+        await prisma.$transaction(async (tx) =>{
+            await prisma.phone_number.deleteMany({
+                where:{
+                    person_id: id
+                }
+            });
+            await prisma.social_media.deleteMany({
+                where:{
+                    person_id: id
+                }
+            })
+            await prisma.basic_worker.delete({
+                where:{
+                    person_id:id
+                }
+            });
+            await prisma.person.delete({
+                where:{
+                    id: id
+                }
+            });
+        })
+        return("Trabajador eliminado");
+    }
     async create(spers: CreateWorker): Promise<WorkerEntity> {
-        try{
-            prisma.$transaction(async (tx) => {
+        const result_individual = await prisma.$transaction(async (tx) => {
+            const exists = await prisma.person.findFirst({
+                where: { id: spers.persona.id }
+              })
+              if(exists){
+                throw `Usuario ya tiene un nombre registrado`;
+              }
                 const presona_realizar = await prisma.person.create({
                     data: {
                         id:                         spers.persona.id,
@@ -47,15 +162,9 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                         job_position:               spers.job_position as basic_worker_job_position
                     }
                 });
-                const result_individual = await this.get(presona_realizar.id, undefined);
-                return result_individual[0];
+                return await this.get(presona_realizar.id, undefined);
             })
-
-        }catch(error: any){
-            throw new Error("Something went wrong" + error);
-        }
-        const result_individual = await this.get(spers.persona.id, undefined);
-        return result_individual[0];
+            return result_individual[0];
     }
 
     async get(id_re: string | undefined, puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]> {

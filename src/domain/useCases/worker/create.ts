@@ -1,6 +1,5 @@
-import { CreateWorker } from "../../dtos";
-import { WorkerEntity } from "../../entities";
-import { WorkerRepository } from "../../repositories";
+import { CreateWorker, WorkerEntity, WorkerRepository } from "../..";
+
 
 
 
@@ -12,7 +11,7 @@ export interface CreateWorkerUseCare{
 export class CreateWorkerUseCase implements CreateWorkerUseCare {
     constructor(private readonly repository: WorkerRepository) {}
   
-    execute(sper: CreateWorker): Promise<WorkerEntity> {
+    async execute(sper: CreateWorker): Promise<WorkerEntity> {
       return this.repository.create(sper);
     }
   }

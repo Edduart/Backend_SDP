@@ -4,7 +4,8 @@ import {
   dioceses as diocesesData,
   redes as redData,
   stages as stageData,
-  instructiorPostions as instructiorPostionsData
+  instructiorPostions as instructiorPostionsData,
+  parishes as parishData
 } from "./";
 
 
@@ -16,4 +17,5 @@ export const modelData = {
   redes: { model: prisma.social_media_category.createMany, data: redData },
   stage: { model: prisma.stage.createMany, data: stageData },
   instructorPosition: { model: prisma.instructor_position.createMany, data: instructiorPostionsData },
+  parishe: { model: prisma.parish.createMany,data: parishData},
 };

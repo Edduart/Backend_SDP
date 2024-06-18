@@ -141,7 +141,7 @@ export const permissions: permisos[] = [
   {
     id:           24,
     name:         "Permiso para eliminar cursos",
-    type:         "R",
+    type:         "D",
     table:        "course"
   },
   {

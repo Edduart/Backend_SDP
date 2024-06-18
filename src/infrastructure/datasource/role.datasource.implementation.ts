@@ -1,4 +1,3 @@
-import { toUSVString } from "util";
 import { prisma } from "../../data/postgres";
 import {
   RoleDataSource,
@@ -38,7 +37,9 @@ export class RoleDataSourceImpl implements RoleDataSource{
     }
     async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
       const exists = await prisma.role.findFirst({
-        where: { name: nuevo.name }
+        where: { AND:[
+          {name: nuevo.name},
+        ], NOT:{id: nuevo.id}}
       })
       if(exists){
         throw `Usuario ya tiene un nombre registrado`;

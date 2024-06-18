@@ -1,5 +1,4 @@
-import { Job_Psotion_Enum, WorkerEntity } from "../../entities";
-import { WorkerRepository } from "../../repositories";
+import { Job_Psotion_Enum, WorkerEntity, WorkerRepository } from "../..";
 
 
 export interface GetWorkerUseCase{

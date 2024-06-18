@@ -1,6 +1,7 @@
 export * from "./diocese.repository";
 export * from "./role.repository";
 export * from "./stage.repository";
+export * from "./parish.repository"
 export * from "./worker.repository";
 export * from "./instructorPosition.repository";
 export * from "./instructor.repostory";

@@ -136,14 +136,14 @@ model permission {
 }
 
 model person {
-  id                   String            @id @db.VarChar(20)
-  profile_picture_path String?           @db.Text
-  forename             String            @db.VarChar(100)
-  surname              String            @db.VarChar(100)
-  email                String            @db.VarChar(200)
-  birthdate            DateTime          @db.Date
-  medical_record       String?           @db.Text
-  BloodType            person_BloodType? @default(UNKNOWN)
+  id                   String           @id @db.VarChar(20)
+  profile_picture_path String?          @db.Text
+  forename             String           @db.VarChar(100)
+  surname              String           @db.VarChar(100)
+  email                String           @db.VarChar(200)
+  birthdate            DateTime         @db.Date
+  medical_record       String?          @db.Text
+  BloodType            person_BloodType @default(UNKNOWN)
   basic_worker         basic_worker?
   professor            professor?        @relation(fields: [professorId], references: [id])
   phone_number         phone_number[]
@@ -232,6 +232,7 @@ model social_media {
 model social_media_category {
   id                                                                     Int            @id @default(autoincrement())
   description                                                            String         @db.VarChar(100)
+  icon                                                                   String         @db.VarChar(1000)
   social_media_social_media_social_media_categoryTosocial_media_category social_media[] @relation("social_media_social_media_categoryTosocial_media_category")
 }
 
