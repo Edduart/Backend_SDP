@@ -145,8 +145,10 @@ model person {
   medical_record       String?           @db.Text
   BloodType            person_BloodType? @default(UNKNOWN)
   basic_worker         basic_worker?
+  professor            professor?        @relation(fields: [professorId], references: [id])
   phone_number         phone_number[]
   social_media         social_media[]
+  professorId          String?           @db.VarChar(20)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -166,6 +168,7 @@ model professor {
   instruction instruction[]
   instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
+  person      person[]
 }
 
 model role {

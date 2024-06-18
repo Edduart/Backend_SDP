@@ -9,3 +9,4 @@ export * from "./social.media.entity";
 export * from "./instructorPosition.entity";
 export * from "./instructor.entity";
 export * from "./course.entity";
+export * from "./professor.entity";

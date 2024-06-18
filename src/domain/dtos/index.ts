@@ -15,4 +15,6 @@ export * from "./course/createCourse.dto";
 export * from "./course/updateCourse.dto";
 
 export * from "./instructor/createInstructor.dto";
-export * from "./instructor/updateInstructor.dto"
+export * from "./instructor/updateInstructor.dto";
+
+export * from "./professor/createProfessor.dto";

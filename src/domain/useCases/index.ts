@@ -5,3 +5,4 @@ export * from "./worker";
 export * from "./instructorPosition";
 export * from "./instructor";
 export * from "./course";
+export * from "./professor";
