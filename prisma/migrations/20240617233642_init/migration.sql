@@ -369,21 +369,3 @@ ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id
 
 -- AddForeignKey
 ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `test` ADD CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `professor_id`, `academic_term_id`) REFERENCES `instruction`(`subject_id`, `professor_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`seminarian_id`, `subject_id`, `academic_term_id`) REFERENCES `enrollment`(`seminarian_id`, `subject_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `Role_id` FOREIGN KEY (`Role_id`) REFERENCES `role`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `fk_user_parish` FOREIGN KEY (`parish_id`) REFERENCES `parish`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `user` ADD CONSTRAINT `fk_user_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

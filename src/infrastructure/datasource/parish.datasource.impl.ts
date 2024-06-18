@@ -1,15 +1,12 @@
 //This is the controller 
-import { error } from "console";
 import { prisma } from "../../data/postgres";
 import {
   UpdateParishDto,
   ParishEntity,
   ParishDataSource,
   CreateParishDto,
-  DeleteParish,
   DioceseEntity
 } from "../../domain";
-import { parish } from "@prisma/client";
 
 
 

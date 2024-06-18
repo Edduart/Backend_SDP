@@ -1,4 +1,3 @@
-import { ParishEntity } from "../../entities/parish.entity";
 import { ParishRepository } from "../../repositories/parish.repository";
 
 export interface DeleteParishUseCase{

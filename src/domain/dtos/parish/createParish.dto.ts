@@ -29,15 +29,6 @@ export class CreateParishDto {
     if (errorarray.length > 0) {
       return [errorarray.join(", "), undefined];
   }
-
-
-
-    //
-    //
-    //make more validations
-    //
-    //
-
     return [undefined, new CreateParishDto( diocese_id ,name, patron)];
   }
 }
