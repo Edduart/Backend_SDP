@@ -15,7 +15,6 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
         return social_cate;
     }
     async Update(data: CreateWorker): Promise<WorkerEntity> {
-        console.log("Etapa 4");
         const reslut_trans = await prisma.$transaction(async (tx) => {
             const exists = await prisma.person.findFirst({
                 where: { id: data.persona.id }
