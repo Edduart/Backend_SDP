@@ -3,13 +3,14 @@ import { actualizar, guardar } from "../services/upload.worker";
 import { WorkerDataSourceImpl, WorkerRepositoryImpl } from "../../infrastructure";
 import { WorkerControler } from "../worker/worker.crontroller";
 import { Request, Response, NextFunction } from 'express';
+import { ValidatorTo } from "../services/TokenValidator";
 const router = Router();
 const datasource = new WorkerDataSourceImpl();
 const Repository = new WorkerRepositoryImpl(datasource);
 const WorkerControl = new WorkerControler(Repository);
 //si el middleware lanza error se cancela toda la ejecicion
 
-router.get('/socials/', WorkerControl.GetSocials);
+router.get('/socials/:token', ValidatorTo.ValidarToken ,WorkerControl.GetSocials);
 router.post('/:id', (req: Request, res: Response, next: NextFunction) => {
     guardar.single('file')(req, res, (err) => {
         if (err) {

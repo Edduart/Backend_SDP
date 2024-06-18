@@ -1,9 +1,10 @@
-import { RoleEntity } from "./role.entity";
+import { PermissionEntity } from "./permission.entity";
+
 
 export class UserEntity{
     constructor(
         public person_id: string,
-        public Role_user: RoleEntity,
+        public Permisos: PermissionEntity[],
         public password: string|null,
         public status: boolean
     ){}

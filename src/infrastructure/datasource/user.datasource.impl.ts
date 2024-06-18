@@ -1,17 +1,21 @@
 import { prisma } from "../../data/postgres";
-import { Login, UserDataSource, UserEntity } from "../../domain";
+import { Login, PermissionEntity, UserDataSource, UserEntity } from "../../domain";
 
 export class UserDataSourceImplementation implements UserDataSource{
     async Login(data: Login): Promise<UserEntity> {
         const Usuario_db = await prisma.user.findMany({
             where:{
-                person_id: data.person_id
+                AND:[
+                    {person_id: data.person_id},
+                    {status: true}
+                ]
             },
             select:{
                 person_id:  true,
                 status:     true,
                 role: {
                     select:{
+                        id: true,
                         role_permission: {
                             select:{
                                 permission:{
@@ -28,7 +32,17 @@ export class UserDataSourceImplementation implements UserDataSource{
                 }
             }
         });
-        
-        throw new Error("Method not implemented.");
+        const resultado: UserEntity[] = Usuario_db.map(usuario =>{
+            const Permisos: PermissionEntity[] = usuario.role.role_permission.map(permiso_vuelta => {
+                return PermissionEntity.fromdb({
+                    id: permiso_vuelta.permission.id, 
+                    name: permiso_vuelta.permission.name,
+                    type: permiso_vuelta.permission.type, 
+                    table: permiso_vuelta.permission.table
+                });
+            });
+            return new UserEntity(usuario.person_id, Permisos, null, true);
+        });
+        return resultado[0];
     }
 }
