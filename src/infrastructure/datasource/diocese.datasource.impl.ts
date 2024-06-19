@@ -9,7 +9,7 @@ import {
 export class DioceseDataSourceImpl implements DioceseDatasource {
   async create(createDioceseDto: CreateDioceseDto): Promise<DioceseEntity> {
     const check: DioceseEntity[] = await this.getByName(createDioceseDto.name);
-    const DioceseExist = check.find(
+    const dioceseExist = check.find(
       (item) => item.name === createDioceseDto.name
     );
     if (dioceseExist)
@@ -49,7 +49,7 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
     await this.findById(updateDioceseDto.id);
     const check: DioceseEntity[] = await this.getByName(updateDioceseDto.name);
-    const DioceseExist = check.find(
+    const dioceseExist = check.find(
       (item) => item.name === updateDioceseDto.name
     );
     if (dioceseExist)

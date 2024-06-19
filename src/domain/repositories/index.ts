@@ -6,4 +6,5 @@ export * from "./worker.repository";
 export * from "./instructorPosition.repository";
 export * from "./instructor.repostory";
 export * from "./course.repository";
-export * from "./professor.repository"
+export * from "./professor.repository";
+export * from "./user.repository";

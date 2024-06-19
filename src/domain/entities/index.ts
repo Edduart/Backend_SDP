@@ -12,3 +12,4 @@ export * from "./instructorPosition.entity";
 export * from "./instructor.entity";
 export * from "./course.entity";
 export * from "./professor.entity";
+export * from "./user.entity"

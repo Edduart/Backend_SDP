@@ -26,7 +26,7 @@ export class ProfessorController {
     let origin = JSON.parse(req.body.data);
     let persona_json = origin.persona;
     let nuevopath;
-    //si es null significa que no
+    //si es null significa que no se envio ninguna imagen
     if (req.body.ayuda != null) {
       //primero procedo a renombrar el archivo imagen
       const origenpath = req.body.ayuda;

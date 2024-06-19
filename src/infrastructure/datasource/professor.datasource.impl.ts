@@ -56,9 +56,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
             status_id: 1,
           },
         });
-        /*const resultIndividual = await this.get(
-          createPerson.id
-        );*/
+        const resultIndividual = await this.get(
+          createPerson.id,
+          undefined
+        );
         return resultIndividual[0];
       });
     } catch (error: any) {

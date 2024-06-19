@@ -140,6 +140,7 @@ CREATE TABLE `person` (
     `birthdate` DATE NOT NULL,
     `medical_record` TEXT NULL,
     `BloodType` ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
+    `professorId` VARCHAR(20) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -336,6 +337,9 @@ ALTER TABLE `instructor` ADD CONSTRAINT `fk_instructor_professor` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `parish` ADD CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `person` ADD CONSTRAINT `person_professorId_fkey` FOREIGN KEY (`professorId`) REFERENCES `professor`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `phone_number` ADD CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
