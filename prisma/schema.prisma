@@ -282,7 +282,7 @@ model test_score {
 
 model user {
   person_id       String            @id @db.VarChar(20)
-  status          Boolean           @default(true)
+  status          Int           @default(1)
   parish_id       Int
   password        String?           @db.Text
   role_id         Int

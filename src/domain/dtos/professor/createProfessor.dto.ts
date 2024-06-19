@@ -7,4 +7,9 @@ export class CreateProfessor {
     public readonly social: SocialMedia[] | null,
     public readonly telefono: CreatePhone[] | null
   ) {}
+
+
+  //validations
+
+
 }

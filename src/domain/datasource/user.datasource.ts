@@ -1,8 +1,8 @@
 import { UserEntity } from "../entities";
-//import { DTOs } from "../dtos";
+import { CreateUserDto } from "../dtos";
 
 export abstract class UserDataSource {
-  //abstract create(dto: ): Promise<UserEntity>;
+  abstract create(dto: CreateUserDto): Promise<UserEntity>;
   abstract getAll(): Promise<UserEntity[]>;
   //abstract findById(id: string): Promise<UserEntity>;
   //abstract updateById(dto: ): Promise<UserEntity>;

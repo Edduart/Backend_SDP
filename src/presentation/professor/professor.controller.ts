@@ -6,24 +6,31 @@ import {
   PersonEntity,
   SocialMedia,
   ProfessorRepository,
+  CreateUserDto,
+  CreateUser,
+  UserRepository,
+  UserEntity,
 } from "../../domain";
 import { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 
 export class ProfessorController {
-  constructor(private readonly repository: ProfessorRepository) {}
+  constructor(
+    private readonly repository: ProfessorRepository,
+    private readonly userRepository: UserRepository
+  ) {}
 
   public get = (req: Request, res: Response) => {
     new GetProfessor(this.repository)
       .execute(req.body.id, req.body.status_id)
-      .then((professor) => res.json(professor)) 
+      .then((professor) => res.json(professor))
       .catch((error) => res.status(400).json({ error }));
   };
 
   public create = (req: Request, res: Response) => {
     //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
-    let origin = JSON.parse(req.body.data);
+    let origin: any = JSON.parse(req.body.data);
     let persona_json = origin.persona;
     let nuevopath;
     //si es null significa que no se envio ninguna imagen
@@ -65,15 +72,29 @@ export class ProfessorController {
         return new CreatePhone(celulares.phone_numbre, celulares.description);
       }
     );
-    //finalmente creo la entidad para crear al trabajador
-    const data = new CreateProfessor(
-      persona,
-      socials,
-      telefonos
+
+    const data = new CreateProfessor(persona, socials, telefonos);
+
+    const userData = new CreateUserDto(
+      persona_json.id,
+      origin.user.status_id,
+      origin.user.password,
+      origin.user.role_id,
+      origin.user.parish_id
     );
-    new CreateProfessorUseCase(this.repository)
-      .execute(data!)
-      .then((professor) => res.json(professor).send) 
+
+    const [error, createUserDto] = CreateUserDto.create(userData);
+    if (error) return res.status(400).json({ error });
+
+    //Esta funcion crea el USUARIO y el Profesor
+
+    new CreateUser(this.userRepository)
+      .execute(createUserDto!)
+      .then((userData) => {
+        new CreateProfessorUseCase(this.repository)
+          .execute(data)
+          .then((professor) => res.json({ userData, professor }).send()); //check why proffesor is empty
+      })
       .catch((error) => res.status(400).json({ error }));
   };
 }
