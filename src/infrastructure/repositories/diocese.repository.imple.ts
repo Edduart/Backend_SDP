@@ -4,8 +4,7 @@ import {
   DioceseEntity,
   DioceseRepository,
   UpdateDioceseDto,
-  GetDioceseByNameDto,
-} from "../../domain";
+  } from "../../domain";
 
 export class DioceseRepositoryImpl implements DioceseRepository {
   constructor(private readonly datasource: DioceseDatasource) {}
@@ -25,8 +24,8 @@ export class DioceseRepositoryImpl implements DioceseRepository {
     return this.datasource.updateById(updateDioceseDto);
   }
 
-  getByName(searchDioceseDto: GetDioceseByNameDto): Promise<DioceseEntity[]> {
-    return this.datasource.getByName(searchDioceseDto);
+  getByName(name: string): Promise<DioceseEntity[]> {
+    return this.datasource.getByName(name);
   }
 
   deleteById(id: number): Promise<DioceseEntity> {

@@ -10,7 +10,7 @@ const dioceseController = new DioceseController(dioceseRepository);
 
 router.post("/", dioceseController.createDiocese);
 router.get("/", dioceseController.getDioceses);
-router.get("/search", dioceseController.getDioceseByName);
+router.get("/search/:name", dioceseController.getDioceseByName);
 router.get("/:id", dioceseController.getDioceseById);
 router.put("/:id", dioceseController.updateDioceseById);
 router.delete("/:id", dioceseController.deleteDiocese);

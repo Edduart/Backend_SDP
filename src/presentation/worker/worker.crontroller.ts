@@ -95,7 +95,7 @@ export class WorkerControler{
         //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
         
 
-        const persona = new PersonEntity(persona_json.id, nuevopath, persona_json.forename, persona_json.surname, persona_json.email, new Date(persona_json.birthdate),persona_json.medical_record, persona_json.BloodType);
+        const persona = new PersonEntity(persona_json.id,'localhost:3000/' + nuevopath, persona_json.forename, persona_json.surname, persona_json.email, new Date(persona_json.birthdate),persona_json.medical_record, persona_json.BloodType);
        
         const social_json = origin.social;
         const socials: SocialMedia[] = social_json.map( (sociales: { social_media_category: number; link: string; }) => {
