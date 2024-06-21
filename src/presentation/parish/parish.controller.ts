@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   DeleteParish,
   GetParish,
-  Getparishes,
+  Getparishes,GetParishByname,
   UpdateParish,
   ParishRepository,
   UpdateParishDto,
@@ -38,6 +38,26 @@ export class ParishController {
     new GetParish(this.parishrepository)
       .execute(id)
       .then((parish) => res.json({ msj: "Parroquia conseguida exitosamente", parish }))
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public getParishByname = (req: Request, res: Response) => {
+    const name = req.params.name;
+
+    new GetParishByname(this.parishrepository)
+      .execute(name)
+      .then((parish) => {
+        if (parish.length == 0) {
+          res.json({
+            msj: "No se encontro ninguna conincidencia con: " + name,
+          });
+        } else {
+          res.json({
+            msj: "coincidencias con la palabra: " + name,
+            parish,
+          });
+        }
+      })
       .catch((error) => res.status(400).json({ error }));
   };
 

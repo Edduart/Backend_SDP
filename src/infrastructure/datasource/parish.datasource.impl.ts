@@ -28,6 +28,17 @@ export class ParishDatasourceimpl implements ParishDataSource {
     return ParishEntity.fromObject(parish);
   }
 
+  async getByName(
+    name: string
+  ): Promise<ParishEntity[]> {
+    const parishByname = await prisma.parish.findMany({
+      where: {
+        name: { contains: name },
+      }
+    });
+    return parishByname.map((parish) => ParishEntity.fromObject(parish));
+  }
+
     async updateById(updateParishDto: UpdateParishDto): Promise<ParishEntity> {
     await this.findById(updateParishDto.id);
     const updateParish = await prisma.parish.update({

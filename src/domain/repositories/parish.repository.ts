@@ -6,6 +6,7 @@ export abstract class ParishRepository {
   abstract create(data: CreateParishDto): Promise<ParishEntity>;
   abstract getAll(): Promise<ParishEntity[]>;
   abstract findById(id: number): Promise<ParishEntity>;
+  abstract getByName(name: string): Promise<ParishEntity[]>;
   abstract updateById( updateDioceseDto: UpdateParishDto): Promise<ParishEntity>;
   abstract Delete(id: number): Promise<null>;
 }

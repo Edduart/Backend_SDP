@@ -11,6 +11,7 @@ const parishController = new ParishController(parishRepository);
 router.post("/", parishController.createParish);
 router.get("/", parishController.getParishes);
 router.get("/:id", parishController.GetParishById);
+router.get("/search/:name", parishController.getParishByname);
 router.put("/:id", parishController.UpdateParishById);
 router.delete("/:id", parishController.deleteParishById);
 module.exports = router;
