@@ -6,6 +6,8 @@ export * from './role/update.role';
 
 export * from "./phone/phone.create";
 export * from "./socialmedia/socialmedia.create";
+export * from "./phone/phone.create";
+export * from "./socialmedia/socialmedia.create";
 export * from "./worker/create.worker";
 
 export * from "./user/login";
@@ -15,4 +17,7 @@ export * from "./worker/create.worker"
 
 export * from "./parish/createParish.dto"
 
+export * from "./parish/updateParish.dto";;
+
+export * from "./user/login";
 export * from "./parish/updateParish.dto";

@@ -3,4 +3,7 @@ export class Login{
         public readonly person_id: string,
         public readonly password: string,
     ){}
+
 }
+
+

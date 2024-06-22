@@ -2,6 +2,7 @@ import { Router } from "express";
 import { DioceseController } from "../diocese/diocese.controller";
 import { DioceseDataSourceImpl } from "../../infrastructure/datasource/";
 import { DioceseRepositoryImpl } from "../../infrastructure/repositories/";
+import { ValidatorTo } from "../services/TokenValidator";
 
 const router = Router();
 const datasource = new DioceseDataSourceImpl();
