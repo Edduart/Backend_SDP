@@ -12,6 +12,7 @@ export class UserDataSourceImplementation implements UserDataSource{
             },
             select:{
                 person_id:  true,
+                password:   true,
                 status:     true,
                 role: {
                     select:{
@@ -41,7 +42,7 @@ export class UserDataSourceImplementation implements UserDataSource{
                     table: permiso_vuelta.permission.table
                 });
             });
-            return new UserEntity(usuario.person_id, Permisos, null, true);
+            return new UserEntity(usuario.person_id, Permisos, usuario.password, true);
         });
         return resultado[0];
     }
