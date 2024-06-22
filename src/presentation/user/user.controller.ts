@@ -22,6 +22,7 @@ export class UserControler{
                     }else{
                         ActualizarFecha(user.person_id);
                         user.password = null;
+                        console.log({...user});
                         const token = jwt.sign({ ...user }, process.env.SECRET as string, {expiresIn: '30m'})
                         res.header('auth',token).json(user).send;
                     }
