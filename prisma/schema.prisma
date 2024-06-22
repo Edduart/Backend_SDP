@@ -64,6 +64,7 @@ model enrollment {
   academic_term     academic_term     @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
   seminarian        seminarian        @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
   subject           subject           @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
+  test_score        test_score[]
 
   @@id([seminarian_id, subject_id, academic_term_id])
   @@index([status_id], map: "fk_enrollment_enrollment_status_idx")
@@ -93,6 +94,7 @@ model instruction {
   academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professo_subject_academic_term")
   professor        professor     @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_professor")
   subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_subject")
+  test             test[]
 
   @@id([professor_id, subject_id, academic_term_id])
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
@@ -123,6 +125,7 @@ model parish {
   name       String  @db.Text
   patron     String  @db.VarChar(100)
   diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")
+  user       user[]
 
   @@index([diocese_id], map: "fk_parish_diocese_idx")
 }
@@ -147,6 +150,7 @@ model person {
   basic_worker         basic_worker?
   phone_number         phone_number[]
   social_media         social_media[]
+  user                 user?
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -173,6 +177,7 @@ model role {
   name            String            @db.VarChar(100)
   description     String?           @db.Text
   role_permission role_permission[]
+  user            user[]
 }
 
 model role_permission {
@@ -256,23 +261,27 @@ model subject {
 }
 
 model test {
-  id               Int     @id @default(autoincrement())
+  id               Int         @id @default(autoincrement())
   subject_id       Int
-  professor_id     String  @db.VarChar(20)
+  professor_id     String      @db.VarChar(20)
   academic_term_id Int
-  description      String  @db.VarChar(200)
+  description      String      @db.VarChar(200)
   status           Boolean
-  maximum_score    Decimal @db.Decimal(5, 2)
+  maximum_score    Decimal     @db.Decimal(5, 2)
+  instruction      instruction @relation(fields: [subject_id, professor_id, academic_term_id], references: [subject_id, professor_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
+  test_score       test_score?
 
   @@index([subject_id, professor_id, academic_term_id], map: "fk_test_subject_idx")
 }
 
 model test_score {
-  test_id          Int     @id
-  seminarian_id    String  @db.VarChar(20)
+  test_id          Int        @id
+  seminarian_id    String     @db.VarChar(20)
   subject_id       Int
   academic_term_id Int
-  score            Decimal @db.Decimal(5, 2)
+  score            Decimal    @db.Decimal(5, 2)
+  enrollment       enrollment @relation(fields: [seminarian_id, subject_id, academic_term_id], references: [seminarian_id, subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
+  test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
 
   @@index([seminarian_id, subject_id, academic_term_id], map: "fk_test_score_enrollment_idx")
 }
@@ -287,6 +296,9 @@ model user {
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?
+  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
+  parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
+  person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
   @@index([Role_id], map: "Role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
