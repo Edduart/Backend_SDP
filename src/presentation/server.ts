@@ -1,8 +1,18 @@
 import express, { Router } from "express";
 import cors from "cors";
-import multer from "multer";
-//import path from "path"; No needed by now, just in case
+//Debido a la necesidad de que el json de tokens este en todo el ambiente del server, se declara el blacklist en el server
+export interface Blacklist_interface {
+  Token: string;
+  time: Date;
+}
+export var BlackList: Blacklist_interface[]=[];
+export function DeleteExpiredTokens(){
+  const horaactual = new Date();
+  const horahace30minutos = new Date(horaactual.getTime() - 30 * 60 * 1000);
 
+  BlackList = BlackList.filter(item => item.time >= horahace30minutos);
+
+}
 interface Options {
   port: number;
   routes: Router;

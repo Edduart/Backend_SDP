@@ -283,6 +283,7 @@ model user {
   parish_id       Int
   password        String?           @db.Text
   Role_id         Int
+  LastIn          DateTime?         @db.Date
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?

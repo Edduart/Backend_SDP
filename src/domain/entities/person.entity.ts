@@ -26,7 +26,7 @@ export class PersonEntity{
 
     validate(): Promise<void> {
         return new Promise((resolve, reject) => {
-          if (!/^[VE]-\d{1,15}$/.test(this.id)) {
+          if (!/^\d{1,15}$/.test(this.id)) {
             return reject(new Error("Hubo un error en cedula"));
           }
           if (this.forename.length > 100) {
