@@ -10,6 +10,7 @@ const Repository = new UserRepositoryImplementation(datasource);
 const UserControl = new UserControler(Repository);
 
 router.post('/Login/', ValidatorLogin, UserControl.Login);
-router.post('/logout', ValidatorTo.Eliminate)
+router.post('/logout', ValidatorTo.Eliminate);
+router.post('/pass', ValidatorTo.ValidarToken, ValidatorLogin, UserControl.ChangePass)
 
 module.exports= router;

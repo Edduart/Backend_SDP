@@ -7,23 +7,25 @@ export class ValidatorTo {
     public static ValidarToken(req: Request, res: Response, next: NextFunction) {
         const Token = req.headers['auth'];
         if (!Token) {
-            return res.status(401).send("Invalid access");
+            return res.status(401).send("Invalid access token not found");
         }
         
         jwt.verify(Token as string, process.env.SECRET as string, (err, decoded) => {
             if (err) {
-                return res.status(401).send("Invalid access");
+                return res.status(401).send("Invalid access token not valid");
             }
             const result = BlackList.find((Blacklist_interface)=>Blacklist_interface.Token == Token);
             if(result == undefined) {
-                return res.status(401).send("Invalid access");
-            } 
-            const data_json: { [key: string]: any } = decoded as { [key: string]: any };
+                const data_json: { [key: string]: any } = decoded as { [key: string]: any };
             req.body.Permisos = data_json.Permisos;
             if(BlackList.length > 0){
                 DeleteExpiredTokens();
             }
             next();
+            } else{
+                return res.status(401).send("Invalid access token in black list");
+            }
+            
         });
     }
     public static ValidarTokenH(req: Request, res: Response, next: NextFunction) {
@@ -37,14 +39,16 @@ export class ValidatorTo {
             }
             const result = BlackList.find((Blacklist_interface)=>Blacklist_interface.Token == Token);
             if(result == undefined) {
+                const data_json: { [key: string]: any } = decoded as { [key: string]: any };
+                req.headers['Permissions'] = data_json.Permisos;
+                if(BlackList.length > 0){
+                    DeleteExpiredTokens();
+                }
+                next();
+            }else{
                 return res.status(401).send("Invalid access");
             }
-            const data_json: { [key: string]: any } = decoded as { [key: string]: any };
-            req.headers['Permissions'] = data_json.Permisos;
-            if(BlackList.length > 0){
-                DeleteExpiredTokens();
-            }
-            next();
+            
         });
     }
     public static Eliminate(req: Request, res: Response) {

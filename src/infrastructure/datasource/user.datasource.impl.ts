@@ -2,6 +2,17 @@ import { prisma } from "../../data/postgres";
 import { Login, PermissionEntity, UserDataSource, UserEntity } from "../../domain";
 
 export class UserDataSourceImplementation implements UserDataSource{
+    async ChangePassword(data: Login): Promise<String> {
+            const actu = await prisma.user.update({
+                where:{
+                    person_id: data.person_id
+                },
+                data:{
+                    password: data.password,
+                }
+            });
+        return actu.person_id;
+    }
     async Login(data: Login): Promise<UserEntity> {
         const Usuario_db = await prisma.user.findMany({
             where:{
@@ -14,6 +25,7 @@ export class UserDataSourceImplementation implements UserDataSource{
                 person_id:  true,
                 password:   true,
                 status:     true,
+                LastIn:     true,
                 role: {
                     select:{
                         id: true,
@@ -42,8 +54,20 @@ export class UserDataSourceImplementation implements UserDataSource{
                     table: permiso_vuelta.permission.table
                 });
             });
-            return new UserEntity(usuario.person_id, Permisos, usuario.password, true);
+            return new UserEntity(usuario.person_id, Permisos, usuario.password, true, usuario.LastIn);
         });
         return resultado[0];
     }
+}
+
+export async function ActualizarFecha(id: string){
+    const fecha = new Date;
+    const actualizacion = await prisma.user.update({
+        where:{
+            person_id: id
+        }
+        ,data:{
+            LastIn: fecha,
+        }
+    });
 }
