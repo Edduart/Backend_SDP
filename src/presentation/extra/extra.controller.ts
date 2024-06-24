@@ -8,7 +8,7 @@ export class ExtraController{
     public Blood(req: Request, res: Response){
         try {
             //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-            const result = ValidatePermission(req.body.Permisos, "user", 'R');
+            //const result = ValidatePermission(req.body.Permisos, "user", 'R');
             //aqui empieza el contenido del controlador
             res.json(BloodType).send;
             } catch (error) {
@@ -19,7 +19,7 @@ export class ExtraController{
     public Work(req: Request, res: Response){
         try {
             //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-                const result = ValidatePermission(req.body.Permisos, "user", 'R');
+                //const result = ValidatePermission(req.body.Permisos, "user", 'R');
             //aqui empieza el contenido del controlador
                 res.json(Job_Psotion_Enum);
             } catch (error) {
