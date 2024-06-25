@@ -16,20 +16,6 @@ const storage_profile_create = multer.diskStorage({
         req.body.ayuda = path.join('./images/seminarian', filename);
     }
 });
-const storage_degree_create = multer.diskStorage({
-    destination: function (req, file, cb){
-        cb(null, './images/seminarian/degree')
-    },
-    filename: function(req, file, cb){
-        const filename = req.params.id +'.' + file.mimetype.split('/')[1];
-        const filePath = path.join('./images/seminarian/degree', filename);
-        if (fs.existsSync(filePath)) {
-            return cb(new Error('File already exists'), '');
-        }
-        cb(null, filename);
-        req.body.ayuda = path.join('./images/seminarian/degree', filename);
-    }
-});
 const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilterCallback) {
     //mando un mensaje en caso de que esté vacio
     if (file === undefined) {
@@ -43,3 +29,13 @@ const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilter
     }
     cb(null, true);
 };
+export const profile = multer({ storage: storage_profile_create, fileFilter: fileFilter });
+export class ImageService{
+    public static Service_Guardar(req: Request, res: Response, next: NextFunction){
+        //try{
+            profile.single('picture')(req, res, next);
+            //next();
+            res.send("ready");
+        //}catch(error){res.status(400).json("error de imagen");}
+    }
+}
