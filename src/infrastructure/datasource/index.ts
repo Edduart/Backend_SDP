@@ -8,3 +8,4 @@ export * from "./instructor.datasource.imple";
 export * from "./course.datasource.impl";
 export * from "./professor.datasource.impl";
 export * from "./user.datasource.impl"
+export * from "./user.datasource.impl"

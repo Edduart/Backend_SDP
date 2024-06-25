@@ -20,4 +20,6 @@ export * from "./instructor/updateInstructor.dto";
 
 export * from "./professor/createProfessor.dto";
 
-export * from "./user/createUser.dto";
+export * from "./user/createUser.dto";;
+
+export * from "./user/login";

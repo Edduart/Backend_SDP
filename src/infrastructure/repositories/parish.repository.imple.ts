@@ -16,9 +16,16 @@ import {
     findById(id: number): Promise<ParishEntity> {
       return this.datasource.findById(id);
     }
+
+    getByName(name: string): Promise<ParishEntity[]> {
+      return this.datasource.getByName(name);
+    }
+
     updateById(updateParishDto:UpdateParishDto): Promise<ParishEntity> {
       return this.datasource.updateById(updateParishDto);
     }
+
+
     create(CreateParishDto:CreateParishDto): Promise<ParishEntity> {
       return this.datasource.create(CreateParishDto);
     }

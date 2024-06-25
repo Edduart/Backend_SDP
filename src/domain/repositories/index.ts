@@ -8,3 +8,4 @@ export * from "./instructor.repostory";
 export * from "./course.repository";
 export * from "./professor.repository";
 export * from "./user.repository";
+export * from "./user.repository"
