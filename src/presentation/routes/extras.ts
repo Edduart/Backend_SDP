@@ -6,6 +6,6 @@ const router = Router();
 const ExtraControl = new ExtraController();
 
 
-router.get("/blood/", ExtraControl.Blood);
-router.get("/work/", ExtraControl.Work);
+router.get("/blood/", ValidatorTo.ValidarToken, ExtraControl.Blood);
+router.get("/work/", ValidatorTo.ValidarToken, ExtraControl.Work);
 module.exports= router;
