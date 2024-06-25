@@ -71,7 +71,7 @@ export class RoleController{
           //aqui empieza el contenido del controlador
           new GetAllPermissions(this.repository)
           .execute()
-          .then((role) => res.json(role)) //check parameter
+          .then((role) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));  
           } catch (error) {
             res.status(400).json("Acces denied");
