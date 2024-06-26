@@ -21,7 +21,7 @@ export class DioceseController {
       //aqui empieza el contenido del controlador
       new GetDioceses(this.dioceseRepository)
       .execute()
-      .then((dioceses) => res.json(dioceses)) //check parameter
+      .then((dioceses) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(dioceses)) //check parameter
       .catch((error) => res.status(400).json({ error }));     
       } catch (error) {
         res.status(400).json("Acces denied");
@@ -39,7 +39,7 @@ export class DioceseController {
       new GetDiocese(this.dioceseRepository)
         .execute(id)
         .then((diocese) =>
-          res.json({
+          res.set({'Access-Control-Expose-Headers': 'auth'}).json({
             mjs: "Diosesis ID:" + diocese.id + ", encontrada exitosamente!",
             diocese,
           })
@@ -63,7 +63,7 @@ export class DioceseController {
             msj: "No se encontro ninguna conincidencia con: " + name,
           });
         } else {
-          res.json({
+          res.set({'Access-Control-Expose-Headers': 'auth'}).json({
             msj: "coincidencias con la palabra: " + name,
             diocese,
           });
@@ -89,7 +89,7 @@ export class DioceseController {
       new UpdateDiocese(this.dioceseRepository)
         .execute(updateDioceseDto!)
         .then((diocese) =>
-          res.json({
+          res.set({'Access-Control-Expose-Headers': 'auth'}).json({
             msj: "Diocese ID:" + diocese.id + ", actualizada correctamente!",
             diocese,
           })
@@ -111,7 +111,7 @@ export class DioceseController {
       new CreateDiocese(this.dioceseRepository)
         .execute(createDioceseDto!)
         .then((diocese) =>
-          res.json({ msj: "Diocese creada exitosamente", diocese })
+          res.set({'Access-Control-Expose-Headers': 'auth'}).json({ msj: "Diocese creada exitosamente", diocese })
         )
         .catch((error) => res.status(400).json({ error }));  
       } catch (error) {
@@ -129,7 +129,7 @@ export class DioceseController {
       new DeleteDiocese(this.dioceseRepository)
         .execute(id)
         .then((diocese) =>
-          res.json({
+          res.set({'Access-Control-Expose-Headers': 'auth'}).json({
             msj: "Diocesis " + diocese.name + " eliminada exitosamente!",
             diocese,
           })
