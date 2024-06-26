@@ -35,17 +35,17 @@ export class UserControler{
             .execute(acces_promts)
             .then((user) => {
                 if(user == undefined) {
-                    res.json("Datos de acceso invalidos").send;
+                    res.status(403).json("Datos de acceso invalidos").send;
                 }else{
                     const result = Compare(acces_promts.password, user.password as string);
                     if(!result) {
-                        res.json("Contraseña invalida").send;
+                        res.status(403).json("Contraseña invalida").send;
                     }else{
                         ActualizarFecha(user.person_id);
                         user.password = null;
                         console.log({...user});
                         const token = jwt.sign({ ...user }, process.env.SECRET as string, {expiresIn: '30m'})
-                        res.header('auth',token).json(user).send;
+                        res.header('auth',token).set({'Access-Control-Expose-Headers': 'auth'}).json(user).send;
                     }
                 }
             }) 
@@ -59,7 +59,7 @@ export class UserControler{
         new Change_use(this.repository)
             .execute(acces_promts)
             .then((result) => {
-                res.json("Contraseña cambiada").send;
+                res.set({'Access-Control-Expose-Headers': 'auth'}).json("Contraseña cambiada").send;
             }) 
             .catch((error) => res.status(400).json({ error }));
     };
