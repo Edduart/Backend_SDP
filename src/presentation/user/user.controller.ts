@@ -14,11 +14,11 @@ export class UserControler{
             .execute(acces_promts)
             .then((user) => {
                 if(user == undefined) {
-                    res.json("Datos de acceso invalidos").send;
+                    res.status(403).json("Datos de acceso invalidos").send;
                 }else{
                     const result = Compare(acces_promts.password, user.password as string);
                     if(!result) {
-                        res.json("Contraseña invalida").send;
+                        res.status(403).json("Contraseña invalida").send;
                     }else{
                         ActualizarFecha(user.person_id);
                         user.password = null;
