@@ -2,6 +2,7 @@ import { DegreeEntity } from "./degree.entity";
 import { PersonEntity } from "./person.entity";
 import { PhoneEntity } from "./phone.entity";
 import { SocialMediaEntity } from "./social.media.entity";
+import { User_Entity } from "./user_entity"
 
 export class SeminarianEntity{
     constructor(
@@ -11,6 +12,7 @@ export class SeminarianEntity{
         public degree:          DegreeEntity[]          | null,
         public foreing_Data:    SeminarianEntity        | null,
         public status:          SeminarianEntity,
+        public user:            User_Entity
     ){}
 
 }
