@@ -1,48 +1,53 @@
 export class CreateUserDto {
   constructor(
     public person_id: string,
-    public status: number,
+    //public status: boolean,
+    public parish_id: number,
     public password: string,
-    public role_id: number,
-    public parish_id: number
-  ) {}
+    public role_id: number
+  ) //public last_login: Date | null
+  {}
 
   static create(props: { [key: string]: any }): [string?, CreateUserDto?] {
-    const { person_id, status, password, role_id, parish_id } = props;
+    //const status: boolean = true;
+    //const last_login = null;
+
+    const { person_id, parish_id, password, role_id } = props;
 
     if (!person_id) {
-      return ["Name is required"];
+      return ["Dto[err]: Person ID is required"];
     } else if (typeof person_id !== "string") {
-      return ["Name must be a string"];
-    }
-
-    if (!status) {
-      return ["Status ID is required"];
-    } else if (isNaN(Number(status))) {
-      return ["Status ID must be a valid ID or number"];
-    }
-
-    if (!password) {
-      return ["Password is required"];
-    } else if (typeof password !== "string") {
-      return ["Password must be a string"];
-    }
-
-    if (!role_id) {
-      return ["Password is required"];
-    } else if (typeof password !== "string") {
-      return ["Password must be a string"];
+      return ["Dto[err]: Person ID must be a string"];
     }
 
     if (!parish_id) {
-      return ["Status ID is required"];
+      return ["Dto[err]: Parish ID is required"];
     } else if (isNaN(Number(parish_id))) {
-      return ["Status ID must be a valid ID or number"];
+      return ["Dto[err]: Parish ID must be a valid ID or number"];
+    }
+
+    if (!password) {
+      return ["Dto[err]: Password is required"];
+    } else if (typeof password !== "string") {
+      return ["Dto[err]: Password must be a string"];
+    }
+
+    if (!role_id) {
+      return ["Dto[err]: Role ID is required"];
+    } else if (isNaN(Number(parish_id))) {
+      return ["Dto[err]: Role ID must be a valid ID or number"];
     }
 
     return [
       undefined,
-      new CreateUserDto(person_id, status, password, role_id, parish_id),
+      new CreateUserDto(
+        person_id,
+        /*status,*/
+        parish_id,
+        password,
+        role_id
+        /*last_login*/
+      ),
     ];
   }
 }

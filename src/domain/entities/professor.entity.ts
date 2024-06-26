@@ -10,7 +10,7 @@ export class ProfessorEntity {
     public status_id: number
   ) {
 
-    this.status_id = 1;
+    //this.status_id = 1;
   }
 
   public static fromObject(

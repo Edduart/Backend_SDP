@@ -285,10 +285,11 @@ CREATE TABLE `user` (
     `person_id` VARCHAR(20) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `parish_id` INTEGER NOT NULL,
-    `password` TEXT NULL,
-    `Role_id` INTEGER NOT NULL,
+    `password` TEXT NOT NULL,
+    `role_id` INTEGER NOT NULL,
+    `last_login` DATE NULL,
 
-    INDEX `Role_id_idx`(`Role_id`),
+    INDEX `role_id_idx`(`role_id`),
     INDEX `fk_user_parish_idx`(`parish_id`),
     PRIMARY KEY (`person_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -373,3 +374,21 @@ ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id
 
 -- AddForeignKey
 ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test` ADD CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `professor_id`, `academic_term_id`) REFERENCES `instruction`(`subject_id`, `professor_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`seminarian_id`, `subject_id`, `academic_term_id`) REFERENCES `enrollment`(`seminarian_id`, `subject_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `fk_user_parish` FOREIGN KEY (`parish_id`) REFERENCES `parish`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `fk_user_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

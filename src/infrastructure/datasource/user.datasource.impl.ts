@@ -1,5 +1,11 @@
 import { prisma } from "../../data/postgres";
-import { CreateUserDto, UserDataSource, UserEntity } from "../../domain";
+import {
+  CreateUserDto,
+  UserDataSource,
+  UserEntity,
+  PermissionEntity,
+  Login,
+} from "../../domain";
 
 export class UserDataSourceImple implements UserDataSource {
   async create(createDto: CreateUserDto): Promise<UserEntity> {
@@ -8,10 +14,12 @@ export class UserDataSourceImple implements UserDataSource {
     });
     return UserEntity.fromObject(createUser);
   }
+
   async getAll(): Promise<UserEntity[]> {
     const getUsers = await prisma.user.findMany();
     return getUsers.map((users) => UserEntity.fromObject(users));
   }
+
   async ChangePassword(data: Login): Promise<String> {
     const actu = await prisma.user.update({
       where: {
@@ -23,7 +31,8 @@ export class UserDataSourceImple implements UserDataSource {
     });
     return actu.person_id;
   }
-  async Login(data: Login): Promise<UserEntity> {
+
+/*  async Login(data: Login): Promise<UserEntity> {
     const Usuario_db = await prisma.user.findMany({
       where: {
         AND: [{ person_id: data.person_id }, { status: true }],
@@ -73,9 +82,9 @@ export class UserDataSourceImple implements UserDataSource {
     });
     return resultado[0];
   }
-}
+}*/
 
-export async function ActualizarFecha(id: string) {
+/*export async function ActualizarFecha(id: string) {
   const fecha = new Date();
   const actualizacion = await prisma.user.update({
     where: {
@@ -84,7 +93,5 @@ export async function ActualizarFecha(id: string) {
     data: {
       LastIn: fecha,
     },
-  });
+  });*/
 }
-
-

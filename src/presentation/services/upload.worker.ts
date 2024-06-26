@@ -2,6 +2,7 @@ import multer, { FileFilterCallback } from "multer";
 import path from 'path';
 import fs from 'fs';
 import { NextFunction, Request, Response } from "express";
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
         cb(null, './images/worker')
@@ -39,6 +40,7 @@ const storage_U = multer.diskStorage({
         req.body.ayuda = path.join('./images/worker', filename);
     }
 });
+
 export const guardar = multer({ storage: storage, fileFilter: fileFilter });
 export const actualizar = multer({storage: storage_U,fileFilter: fileFilter});
 

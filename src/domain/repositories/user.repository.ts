@@ -8,6 +8,6 @@ export abstract class UserRepository {
   //abstract updateById(dto: ): Promise<UserEntity>;
   //abstract deleteById(id: number): Promise<UserEntity>;
 
-  abstract Login(data: Login): Promise<UserEntity>;
-  abstract ChangePassword(data: Login): Promise<String>;
+  //abstract Login(data: Login): Promise<UserEntity>;
+  //abstract ChangePassword(data: Login): Promise<String>;
 }

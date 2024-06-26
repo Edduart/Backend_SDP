@@ -6,29 +6,29 @@ export class UserEntity {
     public status: boolean,
     public parish_id: number,
     public password: string,
-    public Role_id: number,
-    public fecha: Date | null,
+    public role_id: number,
+    public last_login: Date | null,
     public Permisos: PermissionEntity[]
   ) {}
 
   public static fromObject(object: { [key: string]: any }): UserEntity {
-    const { person_id, status, parish_id, password, Role_id, fecha, Permisos } =
+    const { person_id, status, parish_id, password, role_id, fecha, permisos } =
       object;
 
-    if (!person_id) throw "Id is required";
-    if (!status) throw "Stage ID is required";
-    if (!parish_id) throw "Parish ID is required";
-    //if (!password) throw "Password is required";
-    if (!Role_id) throw "Role ID is required";
+    if (!person_id) throw "Ent[Err]: Id is required";
+    if (!status) throw "Ent[Err]: Stage ID is required";
+    if (!parish_id) throw "Ent[Err]: Parish ID is required";
+    if (!password) throw "Ent[Err]: Password is required";
+    if (!role_id) throw "Ent[Err]: Role ID is required";
 
     return new UserEntity(
       person_id,
       status,
       parish_id,
       password,
-      Role_id,
+      role_id,
       fecha,
-      Permisos
+      permisos
     );
   }
 }

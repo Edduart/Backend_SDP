@@ -9,11 +9,8 @@ import {
   CreateUserDto,
   CreateUser,
   UserRepository,
-  UserEntity,
 } from "../../domain";
 import { Request, Response } from "express";
-import fs from "fs";
-import path from "path";
 
 export class ProfessorController {
   constructor(
@@ -32,22 +29,11 @@ export class ProfessorController {
     //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
     let origin: any = JSON.parse(req.body.data);
     let persona_json = origin.persona;
-    let nuevopath;
+
     //si es null significa que no se envio ninguna imagen
-    if (req.body.ayuda != null) {
-      //primero procedo a renombrar el archivo imagen
-      const origenpath = req.body.ayuda;
-      nuevopath = path.join(
-        path.dirname(origenpath),
-        persona_json.id + path.extname(origenpath)
-      );
-      fs.rename(origenpath, nuevopath, (err) => {
-        if (err) {
-          return res.status(500).send(err);
-        }
-      });
-      nuevopath = nuevopath.replace(/\\/g, "/");
-    } else nuevopath = null;
+    const nuevopath = req.body.ayuda
+      ? req.body.ayuda.replace(/\\/g, "/")
+      : null;
 
     //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
     const persona = new PersonEntity(
@@ -77,10 +63,9 @@ export class ProfessorController {
 
     const userData = new CreateUserDto(
       persona_json.id,
-      origin.user.status_id,
+      origin.user.parish_id,
       origin.user.password,
-      origin.user.role_id,
-      origin.user.parish_id
+      origin.user.role_id
     );
 
     const [error, createUserDto] = CreateUserDto.create(userData);

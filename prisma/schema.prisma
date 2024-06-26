@@ -1,3 +1,5 @@
+// para migrar npx prisma migrate dev --name init
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextIndex", "fullTextSearch"]
@@ -291,19 +293,19 @@ model test_score {
 
 model user {
   person_id       String            @id @db.VarChar(20)
-  status          Int           @default(1)
+  status          Boolean           @default(true)
   parish_id       Int
-  password        String?           @db.Text
-  Role_id         Int
-  LastIn          DateTime?         @db.Date
+  password        String           @db.Text
+  role_id         Int
+  last_login      DateTime?         @db.Date
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?
-  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
+  role            role              @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "role_id")
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([role_id], map: "Role_id_idx")
+  @@index([role_id], map: "role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
 }
 
