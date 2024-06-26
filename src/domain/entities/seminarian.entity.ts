@@ -5,10 +5,12 @@ import { SocialMediaEntity } from "./social.media.entity";
 
 export class SeminarianEntity{
     constructor(
-        public person: PersonEntity,
-        public social: SocialMediaEntity[] | null,
-        public phone: PhoneEntity[] | null,
-        public degree: DegreeEntity[] | null,
+        public person:          PersonEntity,
+        public social:          SocialMediaEntity[]     | null,
+        public phone:           PhoneEntity[]           | null,
+        public degree:          DegreeEntity[]          | null,
+        public foreing_Data:    SeminarianEntity        | null,
+        public status:          SeminarianEntity,
     ){}
 
 }
