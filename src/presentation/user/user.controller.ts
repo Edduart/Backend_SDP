@@ -24,7 +24,7 @@ export class UserControler{
                         user.password = null;
                         console.log({...user});
                         const token = jwt.sign({ ...user }, process.env.SECRET as string, {expiresIn: '30m'})
-                        res.header('auth',token).json(user).send;
+                        res.header('auth',token).set({'Access-Control-Expose-Headers': 'auth'}).json(user).send;
                     }
                 }
             }) 
@@ -38,7 +38,7 @@ export class UserControler{
         new Change_use(this.repository)
             .execute(acces_promts)
             .then((result) => {
-                res.json("Contraseña cambiada").send;
+                res.set({'Access-Control-Expose-Headers': 'auth'}).json("Contraseña cambiada").send;
             }) 
             .catch((error) => res.status(400).json({ error }));
     };

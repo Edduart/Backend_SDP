@@ -28,7 +28,7 @@ export class RoleController{
           //aqui empieza el contenido del controlador
           new GetRole(this.repository)
           .execute(id, name)
-          .then((role) => res.json(role)) //check parameter
+          .then((role) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(role)) //check parameter
           .catch((error) => res.status(400).json({ error }));
 
         } catch (error) {
@@ -44,7 +44,7 @@ export class RoleController{
           if ( error ) return res.status( 400 ).json( { error } );
             new CreateRole(this.repository)
               .execute(CreateRole_!)
-              .then((role) => res.json(role)) //check parameter
+              .then((role) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(role)) //check parameter
               .catch((error) => res.status(400).json({ error }));     
           } catch (error) {
             res.status(400).json("Acces denied");
@@ -59,7 +59,7 @@ export class RoleController{
           new DeleteRole(this.repository)
               .execute(id)
               .then((role) => res.json(role)) //check parameter
-              .catch((error) => res.status(400).json({ error }));     
+              .catch((error) => res.set({'Access-Control-Expose-Headers': 'auth'}).status(400).json({ error }));     
           } catch (error) {
             res.status(400).json("Acces denied");
           }
@@ -86,7 +86,7 @@ export class RoleController{
           if ( error ) return res.status( 400 ).json( { error } ); 
           new UpdateRole(this.repository)
             .execute(nuevo!)
-            .then((role) => res.json(role)) //check parameter
+            .then((role) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(role)) //check parameter
             .catch((error) => res.status(400).json({ error }));  
           } catch (error) {
             res.status(400).json("Acces denied");
