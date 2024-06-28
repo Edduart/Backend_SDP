@@ -44,6 +44,7 @@ CREATE TABLE `academic_term` (
   `id` int NOT NULL AUTO_INCREMENT,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
+  `semester` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -221,7 +222,7 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,7 +306,7 @@ CREATE TABLE `role` (
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -438,6 +439,7 @@ CREATE TABLE `subject` (
   `description` varchar(200) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `precedent` int DEFAULT NULL,
+  `semester` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_subject_precedent_idx` (`precedent`),
   KEY `fk_subject_course_idx` (`course_id`),
@@ -519,4 +521,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-24 10:35:53
+-- Dump completed on 2024-06-28 10:56:03

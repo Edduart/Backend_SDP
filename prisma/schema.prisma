@@ -22,6 +22,7 @@ model academic_term {
   id          Int           @id @default(autoincrement())
   start_date  DateTime      @db.Date
   end_date    DateTime      @db.Date
+  semester    Boolean?
   enrollment  enrollment[]
   instruction instruction[]
 }
@@ -250,6 +251,7 @@ model subject {
   description   String        @db.VarChar(200)
   status        Boolean
   precedent     Int?
+  semester      Boolean?
   enrollment    enrollment[]
   instruction   instruction[]
   course        course        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_course")
