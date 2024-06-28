@@ -44,7 +44,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
           profile_picture_path: data.persona.profile_picture_path,
           email: data.persona.email,
           medical_record: data.persona.medical_record,
-          BloodType: data.persona.BloodType as person_BloodType,
+          BloodType: data.persona.bloodType as person_BloodType,
         },
       });
 
@@ -138,7 +138,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
           profile_picture_path: spers.persona.profile_picture_path,
           email: spers.persona.email,
           medical_record: spers.persona.medical_record,
-          BloodType: spers.persona.BloodType as person_BloodType,
+          BloodType: spers.persona.bloodType as person_BloodType,
         },
       });
       if (spers.social != null) {

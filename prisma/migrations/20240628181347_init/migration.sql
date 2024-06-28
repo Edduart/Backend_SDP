@@ -14,6 +14,7 @@ CREATE TABLE `academic_term` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `start_date` DATE NOT NULL,
     `end_date` DATE NOT NULL,
+    `semester` BOOLEAN NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -248,6 +249,7 @@ CREATE TABLE `subject` (
     `description` VARCHAR(200) NOT NULL,
     `status` BOOLEAN NOT NULL,
     `precedent` INTEGER NULL,
+    `semester` BOOLEAN NULL,
 
     INDEX `fk_subject_course_idx`(`course_id`),
     INDEX `fk_subject_precedent_idx`(`precedent`),
@@ -285,9 +287,9 @@ CREATE TABLE `user` (
     `person_id` VARCHAR(20) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `parish_id` INTEGER NOT NULL,
-    `password` TEXT NOT NULL,
+    `password` TEXT NULL,
     `role_id` INTEGER NOT NULL,
-    `last_login` DATE NULL,
+    `LastIn` DATE NULL,
 
     INDEX `role_id_idx`(`role_id`),
     INDEX `fk_user_parish_idx`(`parish_id`),
@@ -340,7 +342,7 @@ ALTER TABLE `instructor` ADD CONSTRAINT `fk_instructor_professor` FOREIGN KEY (`
 ALTER TABLE `parish` ADD CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `person` ADD CONSTRAINT `person_professorId_fkey` FOREIGN KEY (`professorId`) REFERENCES `professor`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `person` ADD CONSTRAINT `person_id_fkey` FOREIGN KEY (`id`) REFERENCES `professor`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `phone_number` ADD CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

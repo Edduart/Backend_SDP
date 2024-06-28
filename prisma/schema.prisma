@@ -149,8 +149,10 @@ model person {
   medical_record       String?          @db.Text
   BloodType            person_BloodType @default(UNKNOWN)
   basic_worker         basic_worker?
+  professor            professor?        @relation(fields: [id], references: [id])
   phone_number         phone_number[]
   social_media         social_media[]
+  professorId          String?           @db.VarChar(20)
   user                 user?
 }
 
@@ -171,6 +173,7 @@ model professor {
   instruction instruction[]
   instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
+  person      person[]
 }
 
 model role {
@@ -293,16 +296,16 @@ model user {
   status          Boolean           @default(true)
   parish_id       Int
   password        String?           @db.Text
-  Role_id         Int
+  role_id         Int
   LastIn          DateTime?         @db.Date
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?
-  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
+  role            role              @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "role_id")
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([Role_id], map: "Role_id_idx")
+  @@index([role_id], map: "role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
 }
 

@@ -30,7 +30,7 @@ router.post("/:id",
     if (err) {
       return next(err);
     }
-    /*professorController.create(req, res);*/
+    professorController.create(req, res);
   });
 });
 

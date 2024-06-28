@@ -7,7 +7,7 @@ export class PersonEntity{
         public email: string,
         public birthdate: Date,
         public medical_record: string|null,
-        public BloodType: BloodType
+        public bloodType: BloodType
 
     ){}
 
@@ -41,7 +41,7 @@ export class PersonEntity{
           if ((years >= 120) || (years <= 16)) {
             return reject(new Error("Fecha invalida"));
           }
-          if (!(this.BloodType in BloodType)) {
+          if (!(this.bloodType in BloodType)) {
             return reject(new Error("Sangre Invalida"));
           }
           resolve();

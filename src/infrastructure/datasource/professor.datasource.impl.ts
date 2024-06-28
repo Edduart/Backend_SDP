@@ -1,8 +1,5 @@
-import { person_BloodType, social_media } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { SocialMedia } from "../../domain/dtos/socialmedia/socialmedia.create";
 import {
-  BloodType,
   CreateProfessor,
   PersonEntity,
   PhoneEntity,
@@ -15,19 +12,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
     prisma.$transaction(async () => {
       const createPerson = await prisma.person.create({
-        data: {
-          id: createDto.persona.id,
-          forename: createDto.persona.forename,
-          surname: createDto.persona.surname,
-          birthdate: createDto.persona.birthdate,
-          profile_picture_path: createDto.persona.profile_picture_path,
-          email: createDto.persona.email,
-          medical_record: createDto.persona.medical_record,
-          BloodType: createDto.persona.BloodType as person_BloodType,
-        },
+        data: createDto.person!
       });
-      if (createDto.social != null) {
-        const dataSocialMedia = createDto.social.map((social) => {
+      if (createDto.socials != null) {
+        const dataSocialMedia = createDto.socials.map((social) => {
           return {
             person_id: createPerson.id,
             social_media_category: social.social_media_category,
@@ -38,8 +26,8 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
           data: dataSocialMedia,
         });
       }
-      if (createDto.telefono != null) {
-        const dataCellPhone = createDto.telefono.map((cellPhone) => {
+      if (createDto.phones != null) {
+        const dataCellPhone = createDto.phones.map((cellPhone) => {
           return {
             person_id: createPerson.id,
             phone_number: cellPhone.phone_numbre,
@@ -57,7 +45,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         },
       });
     });
-    const resultIndividual = await this.get(createDto.persona.id, undefined); //this can be improved => check in future
+    const resultIndividual = await this.get(createDto.person.id, undefined); //this can be improved => check in future
     return resultIndividual[0];
   }
 
@@ -70,7 +58,6 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
           phone_number: true,
           professor: true,
           social_media: {
-            
             include: {
               social_media_category_social_media_social_media_categoryTosocial_media_category:
                 { select: { description: true } },
