@@ -64,7 +64,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async get(id?: string, status_id?: number): Promise<ProfessorEntity[]> {
     let retunrFromDB;
     if (!id && !status_id) {
-      console.log("going for all");
+      //console.log("going for all");
       retunrFromDB = await prisma.person.findMany({
         include: {
           phone_number: true,
