@@ -16,11 +16,15 @@ export class CreatePerson{
     
     public Validate(): string|null{
         let errorarray: string[]= [];
+        let auxiliary = undefined;
         const result_cell = this.cellphone?.map((cell_actual)=>{
-            return cell_actual.Validate();
+            auxiliary = cell_actual.Validate()
+            if(auxiliary != null) return auxiliary;
         })
+        auxiliary = undefined;
         const CreateSocialMedia = this.cellphone?.map((media_actua)=>{
-            return media_actua.Validate();
+            auxiliary = media_actua.Validate()
+            if(auxiliary != null) return auxiliary;
         })
         
         if (!/^\d{1,20}$/.test(this.id))errorarray.push("ID must be only numeric and max 20 digits long");
@@ -38,14 +42,14 @@ export class CreatePerson{
         const hoy = new Date();
         const years = hoy.getFullYear() - birth_date.getFullYear();
         if ((years >= 120) || (years <= 16)) {
-            errorarray.push("fecha invalida")
+            errorarray.push("Birthdate invalid")
         }
-        if(result_cell != null){
-            errorarray.push(result_cell.join(", "));
-        }
-        if(CreateSocialMedia != null){
-            errorarray.push(CreateSocialMedia.join(", "));
-        }
+        result_cell?.forEach(element => {
+            if((element != null)) errorarray.push(","+element);
+        });
+        CreateSocialMedia?.forEach(element => {
+            if((element != null)) errorarray.push(","+element);
+        });
 
         if (errorarray.length > 0) {
             return errorarray.join(", ");

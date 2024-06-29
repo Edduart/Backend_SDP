@@ -1,7 +1,6 @@
 import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
-import { BloodType } from "../../domain/entities/person.entity";
+import { CreateWorker, BloodType,Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
 export class WorkerDataSourceImpl implements WorkerDataSource{
     async GetSocial(): Promise<SocialMediaCategoryEntity[]> {
         const socials = await prisma.social_media_category.findMany({});
@@ -66,7 +65,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                     const data_telefono = data.telefono.map(celular => {
                         return{
                             person_id:              data.persona.id,
-                            phone_number:           celular.phone_numbre,
+                            phone_number:           celular.phone_number,
                             description:            celular.description,
                         }
                     })
@@ -147,7 +146,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                     const data_telefono = spers.telefono.map(celular => {
                         return{
                             person_id:              presona_realizar.id,
-                            phone_number:           celular.phone_numbre,
+                            phone_number:           celular.phone_number,
                             description:            celular.description,
                         }
                     })

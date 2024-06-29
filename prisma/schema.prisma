@@ -290,9 +290,9 @@ model user {
 }
 
 enum seminarian_status {
-  Activo  @map("Activo")
+  Activo    @map("Activo")
   Retirado  @map("Retirado")
-  Pastoral @map("Año Pastoral")
+  Pastoral  @map("Año Pastoral")
   Culminado @map("Culminado")
 }
 

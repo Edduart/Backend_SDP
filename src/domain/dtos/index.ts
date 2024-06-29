@@ -18,3 +18,5 @@ export * from "./parish/updateParish.dto";
 export * from "./person/create.person";
 export * from "./socialmedia/socialmedia.create";
 export * from "./degree/create.degree";
+export * from "./seminarian/create.seminarian";
+export * from "./user/create.user";

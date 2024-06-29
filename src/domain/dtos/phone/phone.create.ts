@@ -1,5 +1,4 @@
 export class CreatePhone{
-    phone_numbre: any;
     constructor(
         public readonly phone_number: string,
         public readonly description: string
@@ -14,7 +13,7 @@ export class CreatePhone{
         if (typeof this.description !== 'string') errorarray.push("link only supports characters");
         
         if (errorarray.length > 0) {
-            return errorarray.join(", ");
+            return errorarray.join(",");
         }
         return null;
     }

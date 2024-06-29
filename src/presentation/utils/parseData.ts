@@ -1,4 +1,4 @@
-import { CreatePhone, CreateSocialMedia, PersonEntity } from "../../domain";
+import { BloodType, CreatePerson, CreatePhone, CreateSocialMedia } from "../../domain";
 import { encode } from "../services/hash_handler";
 
 interface UserData {
@@ -12,24 +12,12 @@ interface UserData {
 
 export async function parsePersonData(req: any) {
   try {
+    console.log(req.body.data);
+    //const origin = req.body.data;
     const origin = await JSON.parse(req.body.data);
     const imageFile = req.body.ayuda
       ? req.body.ayuda.replace(/\\/g, "/")
       : null;
-
-    // Person Data Parsing
-    const personData = new PersonEntity(
-      origin.person.id,
-      imageFile,
-      origin.person.forename,
-      origin.person.surname,
-      origin.person.email,
-      new Date(origin.person.birthdate),
-      origin.person.medical_record,
-      origin.person.bloodType
-    );
-
-    console.log(personData);
     // Social Media Data Parsing
     const socials: CreateSocialMedia[] = origin.social.map(
       (social: { social_media_category: string; link: string }) =>
@@ -40,7 +28,20 @@ export async function parsePersonData(req: any) {
       (phone: { phone_numbre: string; description: string }) =>
         new CreatePhone(phone.phone_numbre, phone.description)
     );
-    return { person: personData, socials, phones };
+    // Person Data Parsing
+    const personData = new CreatePerson(
+      origin.person.id,
+      imageFile,
+      origin.person.forename,
+      origin.person.surname,
+      origin.person.email,
+      new Date(origin.person.birthdate),
+      origin.person.medical_record,
+      origin.person.Blood as BloodType, 
+      phones, socials
+    );
+    //se retorna el dto de persona entero con todo y media/phones
+    return { person: personData };
   } catch (error: unknown) {
     console.error("Error parsing person data:", error);
     throw new Error("An error occurred while processing person data.");

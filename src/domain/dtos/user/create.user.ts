@@ -1,7 +1,7 @@
 import { CreateDegree, CreatePerson } from "../..";
 
 
-export class CreateUser{
+export class CreateUserDTO{
     constructor(
 
         public readonly person: CreatePerson,
