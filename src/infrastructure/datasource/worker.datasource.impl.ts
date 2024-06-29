@@ -1,7 +1,7 @@
 import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { BloodType, CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
-
+import { CreateWorker, Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
+import { BloodType } from "../../domain/entities/person.entity";
 export class WorkerDataSourceImpl implements WorkerDataSource{
     async GetSocial(): Promise<SocialMediaCategoryEntity[]> {
         const socials = await prisma.social_media_category.findMany({});
@@ -35,7 +35,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                     profile_picture_path:       data.persona.profile_picture_path,
                     email:                      data.persona.email,
                     medical_record:             data.persona.medical_record,
-                    BloodType:                  data.persona.BloodType as person_BloodType,
+                    BloodType:                  data.persona.Blood as person_BloodType,
                 }
             });
             
@@ -48,13 +48,13 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 const data_social = data.social.map(social => {
                     return {
                         person_id:              data.persona.id,
-                        social_media_category:  social.social_media_category,
+                        social_media_category:  social.social_Cate,
                         link:                   social.link
                     }
                 });
-                    await prisma.social_media.createMany({
+                    /*await prisma.social_media.createMany({
                         data: data_social
-                    });
+                    });*/
                 }
 
                 if(data.telefono != null){
@@ -129,10 +129,10 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                         profile_picture_path:       spers.persona.profile_picture_path,
                         email:                      spers.persona.email,
                         medical_record:             spers.persona.medical_record,
-                        BloodType:                  spers.persona.BloodType as person_BloodType,
+                        BloodType:                  spers.persona.Blood as person_BloodType,
                     }});
                 if(spers.social != null){
-                const data_social = spers.social.map(social => {
+                /*const data_social = spers.social.map(social => {
                     return {
                         person_id:              presona_realizar.id,
                         social_media_category:  social.social_media_category,
@@ -141,7 +141,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 });
                     await prisma.social_media.createMany({
                         data: data_social
-                    });
+                    });*/
                 }
                 if(spers.telefono != null){
                     const data_telefono = spers.telefono.map(celular => {

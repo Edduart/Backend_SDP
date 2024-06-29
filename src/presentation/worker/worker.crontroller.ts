@@ -1,4 +1,4 @@
-import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository, GetSocials, Job_Psotion_Enum, PermissionEntity } from "../../domain";
+import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, WorkerRepository, GetSocials, Job_Psotion_Enum, PermissionEntity } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { ValidatePermission } from "../services/permissionValidator";
@@ -57,6 +57,7 @@ export class WorkerControler{
     };
 
     public update = (req: Request, res: Response) =>{
+      /*
       const source = req.headers['Permissions'];
       try {
         //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
@@ -110,10 +111,12 @@ export class WorkerControler{
     });
       } catch (error) {
       res.status(400).json("Acces denied");
-      }  
+      }
+      */  
 };
 
     public create = (req: Request, res: Response) =>{
+      /*
       //debido a los comflictos con mutler, todos los permisos seran enviados por header
       const source = req.headers['Permissions'];
         try{
@@ -167,5 +170,6 @@ export class WorkerControler{
         }catch{
           res.status(400).json("Acces denied");
         }
+        */
     };
 }

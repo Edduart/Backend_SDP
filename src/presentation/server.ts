@@ -1,6 +1,5 @@
 import express, { Router } from "express";
 import cors from "cors";
-import { Encode } from "./services/hash_handler";
 //Debido a la necesidad de que el json de tokens este en todo el ambiente del server, se declara el blacklist en el server
 export interface Blacklist_interface {
   Token: string;

@@ -4,3 +4,4 @@ export * from "./stage.datasource"
 export * from "./parish.datasource";
 export * from "./worker.datasource"
 export * from "./user.datasource"
+export * from "./seminarian.datasource";

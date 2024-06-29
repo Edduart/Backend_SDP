@@ -9,4 +9,8 @@ export * from "./phone.entity";
 export * from "./social.media.entity";
 export * from "./social.media.cate.entity";
 export * from "./user.entity";
-export * from "./user_entity"
+export * from "./user_entity";
+export * from "./degree.entity";
+export * from "./foreingseminarian.entity";
+export * from "./person.entity";
+export * from "./seminarian.entity";
