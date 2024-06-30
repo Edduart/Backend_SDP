@@ -20,9 +20,7 @@ export class ValidatorTo {
             const result = BlackList.find((Blacklist_interface)=>Blacklist_interface.Token == Token);
             if(result == undefined) {
                 //si no esta en la black list procede a tomar los permisos y mandarlos en el body 
-                const data_json: { [key: string]: any } = decoded as { [key: string]: any }; 
-                //mando el token de vuelta en la respuesta por el header 
-                res.header('auth',Token)
+                const data_json: { [key: string]: any } = decoded as { [key: string]: any };
                 //mando los permisos por el body
                 req.body.Permisos = data_json.Permisos;
                 if(BlackList.length > 0){
@@ -52,8 +50,6 @@ export class ValidatorTo {
             //verifica si el token esta en la blakclist
             const result = BlackList.find((Blacklist_interface)=>Blacklist_interface.Token == Token);
             if(result == undefined) {
-                //mando el token de vuelta en la respuesta por el header 
-                res.header('auth',Token)
                 //al no estar se decodifica el payload de permisos y se manda por headers
                 const data_json: { [key: string]: any } = decoded as { [key: string]: any };
                 req.headers['Permissions'] = data_json.Permisos;
