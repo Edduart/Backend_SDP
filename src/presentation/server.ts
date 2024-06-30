@@ -12,7 +12,7 @@ const limiter = rateLimit({
 const delayer = slowDown({
 	windowMs: 1 * 60 * 1000, // 15 minutes
 	delayAfter: 1, // Allow 5 requests per 1 minute.
-	delayMs: (hits) => hits * 50, // Add 50 ms of delay after the first request
+	delayMs: (hits) => hits * 200, // Add 50 ms of delay after the first request
 })
 
 //Debido a la necesidad de que el json de tokens este en todo el ambiente del server, se declara el blacklist en el server
