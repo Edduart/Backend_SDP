@@ -5,7 +5,7 @@ export class CreateUserDTO{
     constructor(
 
         public readonly person: CreatePerson,
-        public readonly degree: CreateDegree[]|null,
+        public readonly degree: CreateDegree[]| undefined,
         public readonly parish_name: string,
         public readonly role: string,
         public password?: string,

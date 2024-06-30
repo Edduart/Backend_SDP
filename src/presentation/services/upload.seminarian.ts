@@ -32,10 +32,9 @@ const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilter
 export const profile = multer({ storage: storage_profile_create, fileFilter: fileFilter });
 export class ImageService{
     public static Service_Guardar(req: Request, res: Response, next: NextFunction){
-        //try{
+        try{
             profile.single('picture')(req, res, next);
-            //next();
-            res.send("ready");
-        //}catch(error){res.status(400).json("error de imagen");}
+            next();
+        }catch(error){res.status(400).json("error de imagen");}
     }
 }

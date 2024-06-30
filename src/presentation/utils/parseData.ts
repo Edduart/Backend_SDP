@@ -1,4 +1,4 @@
-import { BloodType, CreatePerson, CreatePhone, CreateSocialMedia } from "../../domain";
+import { BloodType, CreateDegree, CreatePerson, CreatePhone, CreateSocialMedia, CreateUserDTO } from "../../domain";
 import { encode } from "../services/hash_handler";
 
 interface UserData {
@@ -12,9 +12,8 @@ interface UserData {
 
 export async function parsePersonData(req: any) {
   try {
-    console.log(req.body.data);
-    //const origin = req.body.data;
-    const origin = await JSON.parse(req.body.data);
+    console.log(req);
+    const origin = await JSON.parse(req);
     const imageFile = req.body.ayuda
       ? req.body.ayuda.replace(/\\/g, "/")
       : null;
@@ -41,24 +40,24 @@ export async function parsePersonData(req: any) {
       phones, socials
     );
     //se retorna el dto de persona entero con todo y media/phones
-    return { person: personData };
+    return personData ;
   } catch (error: unknown) {
     console.error("Error parsing person data:", error);
     throw new Error("An error occurred while processing person data.");
   }
 }
 // User Data Parsing
-export async function parseUserData(req: any) {
+export async function parseUserData(req: any, person: CreatePerson) {
   try {
-    const origin = await JSON.parse(req.body.data); // check that is only a string
-    const hashedPasword = await encode(origin.user.password);
+    console.log(req);
+    const origin = await JSON.parse(req); // check that is only a string
+    const hashedPasword = await encode(origin.person_id);
 
-    const userData: UserData = {
-      person_id: origin.person.id,
-      parish_id: origin.user.parish_id,
-      password: hashedPasword,
-      role_id: origin.user.role_id,
-    };
+    const degrees: CreateDegree[] | undefined = origin.Degree?.map((degree_Actual: { description: string; link: string }) =>
+        new CreateDegree(origin.person.id, degree_Actual.description, degree_Actual.link)
+    );
+
+    const userData = new CreateUserDTO(person, degrees, origin.parish_name, origin.role, hashedPasword); 
 
     return userData
   } catch (error) {

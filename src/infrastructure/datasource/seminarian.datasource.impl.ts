@@ -1,4 +1,4 @@
-import { seminarian_Location, seminarian_Ministery, seminarian_status } from "@prisma/client";
+import { foreigner_seminarian_stage, seminarian_Location, seminarian_Ministery, seminarian_status } from "@prisma/client";
 import { CreateUser } from ".";
 import { prisma } from "../../data/postgres";
 import { CreateSeminarian, SeminarianDataSource } from "../../domain";
@@ -8,26 +8,41 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
         try{
             await CreateUser(data.user);
             //si es foraneo se crea la data
-            const foreing_json = {
-                seminary_name: data.foreing_Data?.seminary_name,
-
-            };
+            if(data.foreing_Data != undefined){
+                const result = await prisma.seminarian.create({
+                    data:{
+                        id: data.user.person.id,
+                        apostleships: data.apostleships,
+                        status: seminarian_status.Activo,
+                        Location: data.location as seminarian_Location,
+                        Ministery: data.ministery as seminarian_Ministery,
+                        foreigner_seminarian:{
+                            connectOrCreate:{
+                                where:{
+                                    id: data.user.person.id,
+                                }, create:{
+                                    seminary_name: data.foreing_Data.seminary_name,
+                                    stage: data.foreing_Data.stage as unknown as foreigner_seminarian_stage,
+                                    stage_year: data.foreing_Data.stage_year,
+                                }
+                            }
+                        }
+                    },include:{
+                        foreigner_seminarian: true,
+                    }
+                });
+                return result.id;
+            }
             const result = await prisma.seminarian.create({
                 data:{
                     id: data.user.person.id,
                     apostleships: data.apostleships,
-                    status: data.status as seminarian_status,
+                    status: seminarian_status.Activo,
                     Location: data.location as seminarian_Location,
                     Ministery: data.ministery as seminarian_Ministery,
-                    foreigner_seminarian:{
-                    }
-                },include:{
-                    foreigner_seminarian: data.foreing_Data != null,
-                }
+                },
             });
-
-
-            throw new Error("Unable to create seminarian");
+            return result.id;
         }catch(error){
             throw new Error("Unable to create seminarian" + error);
         }

@@ -1,14 +1,13 @@
-import { ForeingSeminarianEntity, Locations_enum, seminarianMinistery_ENUM, CreateUserDTO, seminarian_status_enum  } from "../..";
+import { Locations_enum, seminarianMinistery_ENUM, CreateUserDTO, CreateForeingSeminarian  } from "../..";
 
 
 
 
 export class CreateSeminarian{
     constructor(
-        public readonly foreing_Data:    ForeingSeminarianEntity | null,
-        public readonly status:          seminarian_status_enum,
+        public readonly foreing_Data:    CreateForeingSeminarian | undefined,
         public readonly location:        Locations_enum,
-        public readonly apostleships:    string | null,
+        public readonly apostleships:    string | undefined,
         public readonly user:            CreateUserDTO,
         public readonly ministery:      seminarianMinistery_ENUM
     ){}
@@ -17,7 +16,6 @@ export class CreateSeminarian{
         let errorarray: string[]= [];
         const result_user = this.user.Validate();
         const result_foreing = this.foreing_Data?.Validate();
-        if (!(this.status in seminarian_status_enum))errorarray.push("Invalid status");
         if (!(this.ministery in seminarianMinistery_ENUM))errorarray.push("Invalid ministery");
         if (!(this.location in Locations_enum))errorarray.push("Invalid location")
         if(result_user != null){
