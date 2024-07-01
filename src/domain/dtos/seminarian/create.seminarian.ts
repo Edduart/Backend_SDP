@@ -22,6 +22,7 @@ export class CreateSeminarian{
             errorarray.push(result_user);
         }
         
+        
         if(result_foreing != null){
             errorarray.push(result_foreing);
         }

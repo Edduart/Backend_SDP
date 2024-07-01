@@ -10,33 +10,32 @@ interface UserData {
 
 
 
-export async function parsePersonData(req: any) {
+export async function parsePersonData(req: any, path: any) {
   try {
-    console.log(req);
     const origin = await JSON.parse(req);
-    const imageFile = req.body.ayuda
-      ? req.body.ayuda.replace(/\\/g, "/")
+    const imageFile = path
+      ? path.replace(/\\/g, "/")
       : null;
     // Social Media Data Parsing
-    const socials: CreateSocialMedia[] = origin.social.map(
+    const socials: CreateSocialMedia[] | null  = origin.persona.social?.map(
       (social: { social_media_category: string; link: string }) =>
         new CreateSocialMedia(social.social_media_category, social.link)
     );
     // Phone Data Parsing
-    const phones: CreatePhone[] = origin.phone.map(
+    const phones: CreatePhone[] | null  = origin.persona.phone?.map(
       (phone: { phone_numbre: string; description: string }) =>
         new CreatePhone(phone.phone_numbre, phone.description)
     );
     // Person Data Parsing
     const personData = new CreatePerson(
-      origin.person.id,
+      origin.persona.id,
       imageFile,
-      origin.person.forename,
-      origin.person.surname,
-      origin.person.email,
-      new Date(origin.person.birthdate),
-      origin.person.medical_record,
-      origin.person.Blood as BloodType, 
+      origin.persona.forename,
+      origin.persona.surname,
+      origin.persona.email,
+      new Date(origin.persona.birthdate),
+      origin.persona.medical_record,
+      origin.persona.BloodType as BloodType, 
       phones, socials
     );
     //se retorna el dto de persona entero con todo y media/phones
@@ -49,15 +48,14 @@ export async function parsePersonData(req: any) {
 // User Data Parsing
 export async function parseUserData(req: any, person: CreatePerson) {
   try {
-    console.log(req);
     const origin = await JSON.parse(req); // check that is only a string
-    const hashedPasword = await encode(origin.person_id);
+    const hashedPasword = await encode(origin.persona.id);
 
-    const degrees: CreateDegree[] | undefined = origin.Degree?.map((degree_Actual: { description: string; link: string }) =>
-        new CreateDegree(origin.person.id, degree_Actual.description, degree_Actual.link)
+    const degrees: CreateDegree[] | undefined = origin.user.Degree?.map((degree_Actual: { description: string; link: string }) =>
+        new CreateDegree(origin.persona.id, degree_Actual.description, degree_Actual.link)
     );
 
-    const userData = new CreateUserDTO(person, degrees, origin.parish_name, origin.role, hashedPasword); 
+    const userData = new CreateUserDTO(person, degrees, origin.user.parish_id, origin.user.role, hashedPasword); 
 
     return userData
   } catch (error) {

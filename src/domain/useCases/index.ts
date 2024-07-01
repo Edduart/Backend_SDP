@@ -7,5 +7,5 @@ export * from "./user"
 
 export * from "./parish"
 export * from "./user"
-
+export * from "./seminarian"
 export * from "./worker"

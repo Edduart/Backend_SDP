@@ -7,8 +7,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
     async create(data: CreateSeminarian): Promise<string> {
         try{
             await CreateUser(data.user);
-            //si es foraneo se crea la data
+            //creating foreing
             if(data.foreing_Data != undefined){
+                //call to create if foreing data 
+                console.log("creating foreing user:" + data.foreing_Data)
                 const result = await prisma.seminarian.create({
                     data:{
                         id: data.user.person.id,
@@ -33,6 +35,8 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
                 });
                 return result.id;
             }
+            //create for not foreing seminarians
+            console.log("creating normal user:" + data.foreing_Data)
             const result = await prisma.seminarian.create({
                 data:{
                     id: data.user.person.id,
@@ -40,7 +44,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
                     status: seminarian_status.Activo,
                     Location: data.location as seminarian_Location,
                     Ministery: data.ministery as seminarian_Ministery,
-                },
+                }
             });
             return result.id;
         }catch(error){

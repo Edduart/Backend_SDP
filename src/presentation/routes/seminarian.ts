@@ -10,8 +10,8 @@ const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
 
-router.post('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction) => {
-    profile.single('picture')(req, res, (err) => {
+router.post('/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
+    profile.single('picture')(req, res, async (err) => {
         if (err) {
             return next(err);
         }
@@ -19,6 +19,4 @@ router.post('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, nex
     });
 });
 
-
-//router.post('/', )
 module.exports= router;
