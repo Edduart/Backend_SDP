@@ -4,6 +4,44 @@ import { prisma } from "../../data/postgres";
 import { CreateSeminarian, SeminarianDataSource, UpdateSeminarian } from "../../domain";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource{
+    async Delete(id: string): Promise<string | null | undefined> {
+        const check_exist = await prisma.seminarian.findFirst({
+            where:{
+                id: id
+            },select:{
+                id: true,
+        }});
+        if(check_exist == null) throw new Error("seminarian does not exists");
+        const path = await prisma.person.findFirst({
+            where:{
+                id: id
+            }, select:{
+                profile_picture_path: true,
+            }
+        })
+        try{
+            const result_u = await prisma.user.update({
+                where:{
+                    person_id: id
+                }, data:{
+                    status: false,
+                }
+            });
+            const result_s = await prisma.seminarian.update({
+                where:{
+                    id: id,
+                }, data:{
+                    status: seminarian_status.Retirado
+                }
+            })
+            return path?.profile_picture_path;
+        }catch(error){
+            throw new Error("Unable to delete seminarian" + error);
+        }
+
+
+        throw new Error("Method not implemented.");
+    }
     async Update(data: UpdateSeminarian): Promise<string> {
         const check_exist = await prisma.seminarian.findFirst({
             where:{

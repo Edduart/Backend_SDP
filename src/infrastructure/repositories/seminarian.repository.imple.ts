@@ -15,10 +15,10 @@ export class SeminarianRepositoryImpl implements SeminarianRepository{
     Update(data: UpdateSeminarian): Promise<string> {
         return this.datasource.Update(data);
     }
-    /*
-    Delete(id: string): Promise<string> {
+    Delete(id: string): Promise<string| null| undefined> {
         return this.datasource.Delete(id);
     }
+    /*
     get(id_re: string | undefined, puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]> {
         return this.datasource.get(id_re,puesto);
     }*/

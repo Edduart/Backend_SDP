@@ -3,8 +3,27 @@ import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
+import { DeleteSeminarianUseCase } from "../../domain/useCases/seminarian/delete.seminarian";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
+    public delete = async (req: Request, res: Response) => {
+        try{
+            const result = ValidatePermission(req.body.Permisos, "seminarian", 'D');
+            new DeleteSeminarianUseCase(this.repository).execute(req.params.id).then((result) =>{
+                if(typeof result !== 'string'){
+                    if (req.body.ayuda != null) {
+                        fs.unlinkSync(req.body.ayuda);
+                    }
+                }
+                res.json({message: "seminarian deleted"}).send;
+            }).catch((error) => {
+                res.status(418).send("Error deleting seminarian: " + error);
+            })
+        }catch(error){
+            res.status(418).send("Error: " + error);
+        }
+    }
+
     public update = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
@@ -46,7 +65,7 @@ export class SeminarianControler{
             // errores de verificacion
             if (req.body.ayuda != null) {
                 fs.unlinkSync(req.body.ayuda);
-              }
+            }
               res.status(418).send("Error: " + error);
         }
     }
