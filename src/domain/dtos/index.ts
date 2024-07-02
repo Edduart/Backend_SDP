@@ -20,4 +20,6 @@ export * from "./socialmedia/socialmedia.create";
 export * from "./degree/create.degree";
 export * from "./seminarian/create.seminarian";
 export * from "./user/create.user";
-export * from "./seminarian/create.Foreing.seminarian"
+export * from "./seminarian/create.Foreing.seminarian";
+export * from "./user/update.user";
+export * from "./seminarian/update.seminarian";

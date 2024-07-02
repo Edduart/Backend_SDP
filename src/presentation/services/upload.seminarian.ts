@@ -29,12 +29,15 @@ const fileFilter = function (req: any, file: Express.Multer.File, cb: FileFilter
     }
     cb(null, true);
 };
-export const profile = multer({ storage: storage_profile_create, fileFilter: fileFilter });
-export class ImageService{
-    public static Service_Guardar(req: Request, res: Response, next: NextFunction){
-        try{
-            profile.single('picture')(req, res, next);
-            next();
-        }catch(error){res.status(400).json("error de imagen");}
+const storage_U = multer.diskStorage({
+    destination: function (req, file, cb){
+        cb(null, './images/seminarian')
+    },
+    filename: function(req, file, cb){
+        const filename = req.params.id +'.' + file.mimetype.split('/')[1];
+        cb(null, filename);
+        req.body.ayuda = path.join('./images/seminarian', filename);
     }
-}
+});
+export const profile = multer({ storage: storage_profile_create, fileFilter: fileFilter });
+export const profileU = multer({ storage: storage_U, fileFilter: fileFilter });

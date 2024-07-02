@@ -1,16 +1,62 @@
 import { foreigner_seminarian_stage, seminarian_Location, seminarian_Ministery, seminarian_status } from "@prisma/client";
-import { CreateUser } from ".";
+import { User_utilities } from ".";
 import { prisma } from "../../data/postgres";
-import { CreateSeminarian, SeminarianDataSource } from "../../domain";
+import { CreateSeminarian, SeminarianDataSource, UpdateSeminarian } from "../../domain";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource{
+    async Update(data: UpdateSeminarian): Promise<string> {
+        const check_exist = await prisma.seminarian.findFirst({
+            where:{
+                id: data.person.id
+            },select:{
+                id: true,
+        }});
+        if(check_exist == null) throw new Error("seminarian does not exists");
+        try{
+            //updating the person data
+            await User_utilities.UpdatePersonFunc(data.person);
+           try{
+            await prisma.foreigner_seminarian.delete({where:{id: data.person.id}});
+           }catch(error){
+
+           }
+            
+            //create de foreing data
+            if(data.foreing_Data != undefined){
+                 //deleting old foreing data
+                 console.log(data.person.id)
+                
+                await prisma.foreigner_seminarian.create({
+                    data:{
+                        id: data.person.id,
+                        seminary_name: data.foreing_Data.seminary_name,
+                        stage: data.foreing_Data.stage as unknown as foreigner_seminarian_stage,
+                        stage_year: data.foreing_Data.stage_year,
+                    }
+                });
+            }
+            //now updating the seminarian data
+            const result = await prisma.seminarian.update({
+                where:{
+                    id: data.person.id, 
+                },
+                data:{
+                    apostleships: data.apostleships,
+                    Location: data.location as seminarian_Location,
+                    Ministery: data.ministery as seminarian_Ministery,
+                }
+            });
+            return result.id;
+        }catch(error){
+            throw new Error("Unable to update seminarian" + error);
+        }
+    }
     async create(data: CreateSeminarian): Promise<string> {
         try{
-            await CreateUser(data.user);
+            await User_utilities.CreateUser(data.user);
             //creating foreing
             if(data.foreing_Data != undefined){
                 //call to create if foreing data 
-                console.log("creating foreing user:" + data.foreing_Data)
                 const result = await prisma.seminarian.create({
                     data:{
                         id: data.user.person.id,
@@ -36,7 +82,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
                 return result.id;
             }
             //create for not foreing seminarians
-            console.log("creating normal user:" + data.foreing_Data)
             const result = await prisma.seminarian.create({
                 data:{
                     id: data.user.person.id,

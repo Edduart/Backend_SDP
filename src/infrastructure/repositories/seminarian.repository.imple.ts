@@ -1,4 +1,4 @@
-import { SeminarianDataSource, SeminarianRepository, CreateSeminarian } from "../../domain";
+import { SeminarianDataSource, SeminarianRepository, CreateSeminarian, UpdateSeminarian } from "../../domain";
 
 export class SeminarianRepositoryImpl implements SeminarianRepository{
     constructor (
@@ -11,10 +11,11 @@ export class SeminarianRepositoryImpl implements SeminarianRepository{
     /*
     GetSocial(): Promise<SocialMediaCategoryEntity[]> {
         return this.datasource.GetSocial();
-    }
-    Update(data: CreateWorker): Promise<WorkerEntity> {
+    }*/
+    Update(data: UpdateSeminarian): Promise<string> {
         return this.datasource.Update(data);
     }
+    /*
     Delete(id: string): Promise<string> {
         return this.datasource.Delete(id);
     }

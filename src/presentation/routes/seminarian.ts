@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { ValidatorTo } from "../services/TokenValidator";
 import { Request, Response, NextFunction } from 'express';
-import { ImageService, profile } from "../services/upload.seminarian";
+import { profile, profileU } from "../services/upload.seminarian";
 import { SeminarianDataSourceImpl, SeminarianRepositoryImpl } from "../../infrastructure";
 import { SeminarianControler } from "../seminarian/seminarian.controller";
 
@@ -16,6 +16,14 @@ router.post('/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next
             return next(err);
         }
         SeminarianControl.Create(req, res);
+    });
+});
+router.put('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
+    profileU.single('picture')(req, res, async (err) => {
+        if (err) {
+            return next(err);
+        }
+        SeminarianControl.update(req, res);
     });
 });
 
