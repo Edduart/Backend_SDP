@@ -1,11 +1,38 @@
-import { CreateForeingSeminarian, CreateSeminarian, UpdateSeminarian, CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, StageEnum, UpdateSeminarianUseCase } from "../../domain";
+import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian, CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, seminarian_status_enum, GetSeminarianUseCase } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
-import { DeleteSeminarianUseCase } from "../../domain/useCases/seminarian/delete.seminarian";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
+    public get = async (req: Request, res: Response) => {
+        try{
+            const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');
+            const datelow = new Date(req.body?.first_Date)
+            const dateup = new Date(req.body?.second_Date);
+            const get_dto =new GetSeminarianDTO(
+                req.body?.id,
+                req.body?.forename,
+                req.body?.surname,
+                req.body?.parish_id,
+                req.body?.diocese_id,
+                isNaN(datelow.getTime()) ? undefined : datelow,
+                isNaN(dateup.getTime()) ? undefined : dateup,
+                req.body?.ministery as seminarianMinistery_ENUM,
+                req.body?.foreing,
+                req.body?.location as Locations_enum,
+                req.body?.status as seminarian_status_enum
+             );
+             const result_v = get_dto.Validate();
+            new GetSeminarianUseCase(this.repository).execute(get_dto).then((seminarians)=>{
+                res.json(seminarians).send;
+            }).catch((error)=>{
+                res.status(418).send("unable to get seminarians: " + error);
+            })
+        }catch(error){
+            res.status(418).send("Error: " + error);
+        }
+    }
     public delete = async (req: Request, res: Response) => {
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'D');

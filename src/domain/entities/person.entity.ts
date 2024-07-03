@@ -1,13 +1,17 @@
+import { PhoneEntity, SocialMediaEntity } from ".";
+
 export class PersonEntity{
     constructor(
-        public id: string,
-        public profile_picture_path: string|null,
-        public forename: string,
-        public surname: string,
-        public email: string,
-        public birthdate: Date,
-        public medical_record: string|null,
-        public BloodType: BloodType
+        public id:                      string,
+        public profile_picture_path:    string|null,
+        public forename:                string,
+        public surname:                 string,
+        public email:                   string,
+        public birthdate:               Date,
+        public medical_record:          string|null,
+        public BloodType:               BloodType,
+        public cellpones?:              PhoneEntity[],
+        public medias?:                 SocialMediaEntity[]
 
     ){}
     public static fromdb(object: {[key: string]: any}){
