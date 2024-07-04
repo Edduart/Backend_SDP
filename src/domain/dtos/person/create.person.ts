@@ -2,16 +2,16 @@ import { CreatePhone, BloodType, CreateSocialMedia } from "../..";
 export class CreatePerson{
 
     constructor(
-        public readonly id: string,
-        public profile_picture_path: string|null,
-        public readonly forename: string,
-        public readonly surname: string,
-        public readonly email: string,
-        public readonly birthdate: Date,
+        public readonly id:             string,
+        public profile_picture_path:    string|null,
+        public readonly forename:       string,
+        public readonly surname:        string,
+        public readonly email:          string,
+        public readonly birthdate:      Date,
         public readonly medical_record: string|null,
-        public readonly Blood: BloodType,
-        public readonly cellphone: CreatePhone[] |null,
-        public readonly media: CreateSocialMedia[] |null,
+        public readonly Blood:          BloodType,
+        public readonly cellphone:      CreatePhone[] |null,
+        public readonly media:          CreateSocialMedia[] |null,
     ){}
     
     public Validate(): string|null{

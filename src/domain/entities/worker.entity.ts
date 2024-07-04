@@ -5,14 +5,12 @@ import { SocialMediaEntity } from "./social.media.entity";
 
 export class WorkerEntity{
     constructor(
-        public person: PersonEntity,
-        public social: SocialMediaEntity[] | null,
-        public phone: PhoneEntity[] | null,
-        public position: Job_Psotion_Enum,
+        public position:    Job_Psotion_Enum,
+        public person?:     PersonEntity
     ){}
-    public static fromdb(person: PersonEntity, social: SocialMediaEntity[] | null, phone: PhoneEntity[] | null, position: Job_Psotion_Enum){
+    public static fromdb(person: PersonEntity, position: Job_Psotion_Enum){
         
-        return new WorkerEntity(person, social, phone, position)
+        return new WorkerEntity(position)
     }
 }
 
