@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
-import { guardar } from "../services/upload.worker";
 import { updateFile } from "../services/upload.service";
 import {
   ProfessorDataSourceImpl,
@@ -21,9 +20,6 @@ const professorController = new ProfessorController(repository, userRepostory);
 //router.post("/", guardar.single("file"), professorController.create);
 router.get("/", professorController.get);
 
-
-
-
 router.post("/:id",
   (req: Request, res: Response, next: NextFunction) => {
   updateFile.single("file")(req, res, (err) => {
@@ -33,7 +29,5 @@ router.post("/:id",
     professorController.create(req, res);
   });
 });
-
-
 
 module.exports = router;
