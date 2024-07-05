@@ -14,15 +14,15 @@ const WorkerControl = new WorkerControler(Repository);
 router.get('/socials', ValidatorTo.ValidarToken ,WorkerControl.GetSocials);
 //el ValidarTokenH es la variante del middleware para situaciones como la del multer donde los resultados de la verificacion se manda por header
 router.post('/:id',ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction) => {
-    updateFile.single("file")(req, res, (err) => {
-      if (err) {
-        return next(err);
-      }
-      WorkerControl.create(req, res);
+    guardar.single('file')(req, res, async (err) => {
+        if (err) {
+            return next(err);
+        }
+        WorkerControl.create(req, res);
     });
 });
 router.put('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction) => {
-    actualizar.single('file')(req, res, (err) => {
+    actualizar.single('file')(req, res, async (err) => {
         if (err) {
             return next(err);
         }

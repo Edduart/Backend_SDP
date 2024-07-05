@@ -8,3 +8,5 @@ export * from "./instructor.repository.imple"
 export * from "./course.repository.imple"
 export * from "./professor.repository.imple"
 export * from "./user.repository.imple"
+
+export * from "./seminarian.repository.imple"

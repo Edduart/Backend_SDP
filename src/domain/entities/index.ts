@@ -13,3 +13,8 @@ export * from "./instructor.entity";
 export * from "./course.entity";
 export * from "./professor.entity";
 export * from "./user.entity"
+export * from "./user_entity";
+export * from "./degree.entity";
+export * from "./foreingseminarian.entity";
+export * from "./person.entity";
+export * from "./seminarian.entity";

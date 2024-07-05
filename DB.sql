@@ -337,43 +337,11 @@ DROP TABLE IF EXISTS `seminarian`;
 CREATE TABLE `seminarian` (
   `id` varchar(20) NOT NULL,
   `apostleships` text,
-  `status_id` tinyint NOT NULL,
-  `location_id` tinyint NOT NULL,
+  `status` enum('Activo','Retirado','Año Pastoral','Culminado') NOT NULL,
+  `Location` enum('Externo','Interno') NOT NULL,
   `Ministery` enum('Unkown','Admisión','Lectorado','Acolitado') DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fl_seminarian_seminarian_status_idx` (`status_id`),
-  KEY `fk_seminarian_seminarian_location_idx` (`location_id`),
-  CONSTRAINT `fk_seminarian_seminarian_location` FOREIGN KEY (`location_id`) REFERENCES `seminarian_location` (`id`),
-  CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user` (`person_id`),
-  CONSTRAINT `fl_seminarian_seminarian_status` FOREIGN KEY (`status_id`) REFERENCES `seminarian_status` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `seminarian_location`
---
-
-DROP TABLE IF EXISTS `seminarian_location`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `seminarian_location` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `description` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `seminarian_status`
---
-
-DROP TABLE IF EXISTS `seminarian_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `seminarian_status` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `description` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
+  CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -521,4 +489,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-28 10:56:03
+-- Dump completed on 2024-06-28 21:43:57
