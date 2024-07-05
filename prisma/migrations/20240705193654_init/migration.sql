@@ -188,27 +188,9 @@ CREATE TABLE `role_permission` (
 CREATE TABLE `seminarian` (
     `id` VARCHAR(20) NOT NULL,
     `apostleships` TEXT NULL,
-    `status_id` TINYINT NOT NULL,
-    `location_id` TINYINT NOT NULL,
+    `status` ENUM('Activo', 'Retirado', 'Año Pastoral', 'Culminado') NOT NULL,
+    `Location` ENUM('Externo', 'Interno') NOT NULL,
     `Ministery` ENUM('Unkown', 'Admisión', 'Lectorado', 'Acolitado') NULL,
-
-    INDEX `fk_seminarian_seminarian_location_idx`(`location_id`),
-    INDEX `fl_seminarian_seminarian_status_idx`(`status_id`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `seminarian_location` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(50) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `seminarian_status` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -357,13 +339,7 @@ ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_permission` FOREIGN KEY (
 ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_role` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_seminarian_location` FOREIGN KEY (`location_id`) REFERENCES `seminarian_location`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user`(`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `seminarian` ADD CONSTRAINT `fl_seminarian_seminarian_status` FOREIGN KEY (`status_id`) REFERENCES `seminarian_status`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `social_media` ADD CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

@@ -12,6 +12,7 @@ export class User_Entity{
         public role: RoleEntity,
         public fecha: Date|null
     ){}
+
     public static FromDbAccess(object: {[key: string]: any}){
         const {person_id, status, parish, password, role, fecha} = object;
         const parish_obj = ParishEntity.fromObject(parish);
@@ -22,3 +23,4 @@ export class User_Entity{
 
 
 }
+ 

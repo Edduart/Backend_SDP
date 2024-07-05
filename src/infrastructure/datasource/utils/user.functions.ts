@@ -140,7 +140,7 @@ export async function UpdatePersonFunc(data:CreatePerson){
                         person_id: user.person.id,
                         parish_id: user.parish_id,
                         status: true,
-                        Role_id: user.role,
+                        role_id: user.role,
                         password: user.password,
                         LastIn: null,
                     }
@@ -196,7 +196,7 @@ export async function UpdatePersonFunc(data:CreatePerson){
                     }, data:{
                         parish_id: user.parish_id,
                         status: true,
-                        Role_id: user.role,
+                        role_id: user.role,
                         password: user.password,
                     }
                 });
