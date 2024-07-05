@@ -2,9 +2,7 @@ import { CreatePerson, CreateUserDTO, UpdateUser } from "../../../domain";
 import { prisma } from "../../../data/postgres";
 import { person_BloodType } from "@prisma/client";
 import { redes } from "../../../seed/data";
-
-export class User_utilities{
-    static UpdatePersonFunc = async (data:CreatePerson) => {
+export async function UpdatePersonFunc(data:CreatePerson){
         const check_exist = await prisma.person.findFirst({
             where:{
                 id: data.id
@@ -71,7 +69,7 @@ export class User_utilities{
             }
     }
     
-    static CreatePersonFunc = async (data:CreatePerson) => {
+    export async function CreatePersonFunc(data:CreatePerson){
         const check_exist = await prisma.person.findFirst({
             where:{
                 id: data.id
@@ -124,7 +122,7 @@ export class User_utilities{
             }
     }
     
-    static CreateUser = async (user: CreateUserDTO) => {
+    export async function CreateUser(user: CreateUserDTO){
         const check_exist = await prisma.user.findFirst({
             where:{
                 person_id: user.person.id
@@ -135,7 +133,7 @@ export class User_utilities{
         try{
             await prisma.$transaction(async (tx) =>{
                 //start with creating the person
-                await this.CreatePersonFunc(user.person);
+                await CreatePersonFunc(user.person);
                 //create the user
                 const result_op = await prisma.user.create({
                     data:{
@@ -165,7 +163,7 @@ export class User_utilities{
         }
     }
     
-    static UpdateUserFunc = async (user: UpdateUser) => {
+    export async function UpdateUserFunc(user: UpdateUser){
         //check if user exist
         const check_exist = await prisma.user.findFirst({
             where:{
@@ -207,4 +205,3 @@ export class User_utilities{
                 throw new Error("Error updating user" + error);
             }
     }
-}

@@ -10,7 +10,7 @@ export class WorkerEntity{
     ){}
     public static fromdb(person: PersonEntity, position: Job_Psotion_Enum){
         
-        return new WorkerEntity(position)
+        return new WorkerEntity(position, person)
     }
 }
 

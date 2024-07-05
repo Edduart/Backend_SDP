@@ -1,7 +1,9 @@
 import { foreigner_seminarian_stage, seminarian_Location, seminarian_Ministery, seminarian_status } from "@prisma/client";
-import { User_utilities } from ".";
 import { prisma } from "../../data/postgres";
-import { BloodType, CreateSeminarian, ForeingSeminarianEntity, GetSeminarianDTO, Locations_enum, PersonEntity, PhoneEntity, seminarian_status_enum, SeminarianDataSource, SeminarianEntity, seminarianMinistery_ENUM, SocialMediaEntity, UpdateSeminarian } from "../../domain";
+import { BloodType, CreateSeminarian, ForeingSeminarianEntity, GetSeminarianDTO, Locations_enum, 
+    PersonEntity, PhoneEntity, seminarian_status_enum, SeminarianDataSource, SeminarianEntity, 
+    seminarianMinistery_ENUM, SocialMediaEntity, UpdateSeminarian } from "../../domain";
+import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource{
     async get(data: GetSeminarianDTO): Promise<SeminarianEntity[]> {
@@ -142,9 +144,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
         }catch(error){
             throw new Error("Unable to delete seminarian" + error);
         }
-
-
-        throw new Error("Method not implemented.");
     }
     async Update(data: UpdateSeminarian): Promise<string> {
         const check_exist = await prisma.seminarian.findFirst({
@@ -156,7 +155,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
         if(check_exist == null) throw new Error("seminarian does not exists");
         try{
             //updating the person data
-            await User_utilities.UpdatePersonFunc(data.person);
+            await UpdatePersonFunc(data.person);
            try{
             await prisma.foreigner_seminarian.delete({where:{id: data.person.id}});
            }catch(error){
@@ -195,7 +194,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource{
     }
     async create(data: CreateSeminarian): Promise<string> {
         try{
-            await User_utilities.CreateUser(data.user);
+            await CreateUser(data.user);
             //creating foreing
             if(data.foreing_Data != undefined){
                 //call to create if foreing data 

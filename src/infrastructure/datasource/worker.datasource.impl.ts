@@ -1,7 +1,8 @@
 import { basic_worker_job_position, person_BloodType } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import { CreateWorker, BloodType,Job_Psotion_Enum, PersonEntity, PhoneEntity, SocialMediaCategoryEntity, SocialMediaEntity, WorkerDataSource, WorkerEntity } from "../../domain";
-import { User_utilities } from "..";
+import { CreatePersonFunc, UpdatePersonFunc } from "./utils/user.functions";
+
 export class WorkerDataSourceImpl implements WorkerDataSource{
     async GetSocial(): Promise<SocialMediaCategoryEntity[]> {
         const socials = await prisma.social_media_category.findMany({});
@@ -19,7 +20,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
             const exists = await prisma.person.findFirst({
                 where: { id: data.persona.id }});
             if(exists){}else{throw `worker not found`;}
-            await User_utilities.UpdatePersonFunc(data.persona);
+            await UpdatePersonFunc(data.persona);
             const perona_actualizar = prisma.basic_worker.update({
                 where: {
                     person_id: data.persona.id,
@@ -67,7 +68,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 throw `Usuario ya tiene un nombre registrado`;
               }
               //now i create the person
-              await User_utilities.CreatePersonFunc(spers.persona);
+              await CreatePersonFunc(spers.persona);
               //now i create the basic worker
                 await prisma.basic_worker.create({
                     data:{
