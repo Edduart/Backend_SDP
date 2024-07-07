@@ -9,10 +9,11 @@ import {
 
 export class UserDataSourceImple implements UserDataSource {
   async create(createDto: CreateUserDto): Promise<UserEntity> {
-    const createUser = await prisma.user.create({
+    throw 'no implemented'
+    /*const createUser = await prisma.user.create({
       data: createDto,
     });
-    return UserEntity.fromObject(createUser);
+    return UserEntity.fromObject(createUser);*/
   }
 
   async getAll(): Promise<UserEntity[]> {

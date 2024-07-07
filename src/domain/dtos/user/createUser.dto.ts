@@ -1,18 +1,20 @@
+import { CreateDegree, CreatePerson } from "../..";
+
 export class CreateUserDto {
   constructor(
-    public person_id: string,
-    //public status: boolean,
+    public readonly person: CreatePerson,
+    public readonly degree: CreateDegree[] | undefined,
     public parish_id: number,
     public password: string,
-    public role_id: number
-  ) //public last_login: Date | null
-  {}
+    public role: number //public last_login: Date | null
+  ) {}
+}
 
-  static create(props: { [key: string]: any }): [string?, CreateUserDto?] {
+/*static create(props: { [key: string]: any }): [string?, CreateUserDto?] {
     //const status: boolean = true;
     //const last_login = null;
 
-    const { person_id, parish_id, password, role_id } = props;
+ const { person_id, parish_id, password, role_id } = props;
 
     if (!person_id) {
       return ["Dto[err]: Person ID is required"];
@@ -42,12 +44,12 @@ export class CreateUserDto {
       undefined,
       new CreateUserDto(
         person_id,
-        /*status,*/
+
         parish_id,
         password,
         role_id
-        /*last_login*/
+
       ),
     ];
   }
-}
+}*/

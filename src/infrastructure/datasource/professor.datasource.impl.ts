@@ -8,39 +8,26 @@ import {
   ProfessorEntity,
 } from "../../domain";
 
+import { CreatePersonFunc, UpdatePersonFunc } from "./utils/user.functions";
+
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
     prisma.$transaction(async () => {
-      const createPerson = await prisma.person.create({
-        data: createDto.person!
+      
+      //await CreateUser(data.user); //create user frist
+
+      const exists = await prisma.person.findFirst({
+        where: { id: createDto.person.id },
       });
-      if (createDto.socials != null) {
-        const dataSocialMedia = createDto.socials.map((social) => {
-          return {
-            person_id: createPerson.id,
-            social_media_category: social.social_media_category,
-            link: social.link,
-          };
-        });
-        await prisma.social_media.createMany({
-          data: dataSocialMedia,
-        });
+      if (exists) {
+        throw `Usuario ya tiene un nombre registrado`;
       }
-      if (createDto.phones != null) {
-        const dataCellPhone = createDto.phones.map((cellPhone) => {
-          return {
-            person_id: createPerson.id,
-            phone_number: cellPhone.phone_numbre,
-            description: cellPhone.description,
-          };
-        });
-        await prisma.phone_number.createMany({
-          data: dataCellPhone,
-        });
-      }
+      //now i create the person
+      await CreatePersonFunc(createDto.person);
+
       await prisma.professor.create({
         data: {
-          id: createPerson.id,
+          id: createDto.person.id,
           status_id: 1,
         },
       });
