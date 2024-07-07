@@ -15,7 +15,7 @@ export class WorkerControler{
 
         new GetSocials(this.repository).execute()
         .then((worker) => {
-            res.json(worker);
+            res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker);
         })
         .catch((error) => {
             console.error(error);
@@ -37,7 +37,7 @@ export class WorkerControler{
         const result = ValidatePermission(req.body.Permisos, "instructor", 'R');
         new GetWorker(this.repository)
             .execute(id, job as Job_Psotion_Enum|undefined)
-            .then((worker) => res.json(worker)) //check parameter
+            .then((worker) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker)) //check parameter
             .catch((error) => res.status(400).json({ error }));    
       } catch (error) {
       res.status(400).json("Acces denied");
@@ -50,7 +50,7 @@ export class WorkerControler{
         const result = ValidatePermission(req.body.Permisos, "instructor", 'D');
         new DeleteWorker(this.repository)
           .execute(req.params.id)
-          .then((worker) => res.json(worker))
+          .then((worker) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker))
           .catch((error) => res.status(400).json({ error }));
     } catch (error) {
       res.status(400).json("Acces denied");
