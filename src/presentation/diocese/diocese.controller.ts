@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import {
   CreateDioceseDto,
   CreateDiocese,
@@ -103,7 +104,7 @@ export class DioceseController {
   public createDiocese = (req: Request, res: Response) => {
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-        const result = ValidatePermission(req.body.Permisos, "user", 'C');
+      const result = ValidatePermission(req.body.Permisos, "user", 'C');
       //aqui empieza el contenido del controlador
       const [error, createDioceseDto] = CreateDioceseDto.create(req.body);
       if (error) return res.status(400).json({ error });
@@ -141,3 +142,5 @@ export class DioceseController {
    
   };
 }
+
+

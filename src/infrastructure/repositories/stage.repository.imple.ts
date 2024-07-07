@@ -1,4 +1,4 @@
-import { StageDataSource, StageEntity, StageRepository } from "../../domain";
+import { StageDataSource, StageEntity, StageRepository, Login } from "../../domain";
 
 
 export class StageRepositoryImpl implements StageRepository {
@@ -10,4 +10,10 @@ export class StageRepositoryImpl implements StageRepository {
   findById(id: number): Promise<StageEntity> {
     return this.datasource.findById(id);
   }
+  /*ChangePassword(data: Login): Promise<String> {
+    return this.datasource.ChangePassword(data);
+  }
+  Login(data: Login): Promise<UserEntity> {
+    return this.datasource.Login(data);
+  }*/
 }

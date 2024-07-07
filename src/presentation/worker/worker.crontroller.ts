@@ -1,7 +1,9 @@
-import { CreatePhone, CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, PersonEntity, SocialMedia, WorkerRepository, GetSocials, Job_Psotion_Enum, PermissionEntity } from "../../domain";
+import { CreateWorker, UpdateWorkerUseCase, DeleteWorker, CreateWorkerUseCase, GetWorker, 
+  WorkerRepository, GetSocials, Job_Psotion_Enum } from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { ValidatePermission } from "../services/permissionValidator";
+import { parsePersonData } from "../utils/parseData";
 
 
 export class WorkerControler{
@@ -46,7 +48,6 @@ export class WorkerControler{
       try {
         //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
         const result = ValidatePermission(req.body.Permisos, "instructor", 'D');
-
         new DeleteWorker(this.repository)
           .execute(req.params.id)
           .then((worker) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker))
@@ -56,116 +57,56 @@ export class WorkerControler{
     }
     };
 
-    public update = (req: Request, res: Response) =>{
+    public update = async (req: Request, res: Response) =>{
       const source = req.headers['Permissions'];
       try {
         //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
         const result = ValidatePermission(source, "instructor", 'U');
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
         let origin = JSON.parse(req.body.data);
-        let persona_json = origin.persona;
-        let  nuevopath;
-      //si es null significa que no se envio imagenes
-        if(req.body.ayuda != null){
-            nuevopath = req.body.ayuda.replace(/\\/g, "/");
-        }else nuevopath = null;
-        
-        //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
-        
-        const persona = new PersonEntity(persona_json.id, nuevopath, persona_json.forename, persona_json.surname, persona_json.email, new Date(persona_json.birthdate),persona_json.medical_record, persona_json.BloodType);
-      
-        const social_json = origin.social;
-        const socials: SocialMedia[] = social_json.map( (sociales: { social_media_category: number; link: string; }) => {
-            return new SocialMedia(sociales.social_media_category, sociales.link);
-        });
-        const phone_json = origin.telefono;
-        const telefonos: CreatePhone[] = phone_json.map((celulares: { phone_numbre: string; description: string; }) => {
-            return new CreatePhone(celulares.phone_numbre, celulares.description);
-        });
-        //finalmente creo la entidad para crear al trabajador
-        const data = new CreateWorker(persona, origin.job_position, socials, telefonos);
-        data.validate()
-          .then(() => {
-             // si pasa el validador se prosigue
-          new UpdateWorkerUseCase(this.repository)
-            .execute(data)
-            .then((worker) => {
-              console.log("Etapa 2");
-              res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker);
-            })
-            .catch((error) => {
-              // errores de proceso
-              if (nuevopath != null) {
-                  fs.unlinkSync(nuevopath);
-                }
-                res.status(400).json({ error });
-            });
+        const persondto = await parsePersonData(req.body.data, req.body.ayuda);
+        const workerdto = new CreateWorker(persondto, origin.job_position as Job_Psotion_Enum);
+        const result_validations = workerdto.Validate();
+        if(result_validations == null){
+          new UpdateWorkerUseCase(this.repository).execute(workerdto).then((worker)=>{res.json(worker).send})
+          .catch((error) => {
+              res.status(400).send("Unexpected error: " + error)
           })
-      .catch((error) => {
-  // errores de verificacion
-    if (nuevopath != null) {
-      fs.unlinkSync(nuevopath);
-    }
-    res.status(418).send("Error de validaciones " + error);
-    });
+      }else{
+          //validation errors
+          res.status(400).send("Validation error: " + result_validations);
+      }
       } catch (error) {
-      res.status(400).json("Acces denied");
-      }  
+      res.status(401).json("Acces denied");
+      }
 };
 
-    public create = (req: Request, res: Response) =>{
+    public create = async (req: Request, res: Response) =>{
       //debido a los comflictos con mutler, todos los permisos seran enviados por header
       const source = req.headers['Permissions'];
         try{
           const result = ValidatePermission(source, "instructor", 'C');
-          //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
           let origin = JSON.parse(req.body.data);
-          let persona_json = origin.persona;
-          let  nuevopath;
-          //si es null significa que no se envio imagenes
-          if(req.body.ayuda != null){
-            nuevopath = req.body.ayuda.replace(/\\/g, "/");
-          }else nuevopath = null;
-
-
-          //empiezo a separar todos los sub json que necesito y a crear sus respectivas entidades
-          const persona = new PersonEntity(persona_json.id,'localhost:3000/' + nuevopath, persona_json.forename, persona_json.surname, persona_json.email, new Date(persona_json.birthdate),persona_json.medical_record, persona_json.BloodType);
-       
-          const social_json = origin.social;
-          const socials: SocialMedia[] = social_json.map( (sociales: { social_media_category: number; link: string; }) => {
-              return new SocialMedia(sociales.social_media_category, sociales.link);
-          });
-          const phone_json = origin.telefono;
-          const telefonos: CreatePhone[] = phone_json.map((celulares: { phone_numbre: string; description: string; }) => {
-              return new CreatePhone(celulares.phone_numbre, celulares.description);
-          });
-          //finalmente creo la entidad para crear al trabajador
-          const data = new CreateWorker(persona, origin.job_position, socials, telefonos);
-          data.validate()
-          .then(() => {
-            // si pasa el validador se prosigue
-              new CreateWorkerUseCase(this.repository)
-              .execute(data)
-                .then((worker) => {
-                res.set({'Access-Control-Expose-Headers': 'auth'}).json(worker);
-                })
+          const persondto = await parsePersonData(req.body.data, req.body.ayuda);
+          const workerdto = new CreateWorker(persondto, origin.job_position as Job_Psotion_Enum);
+          const result_validations = workerdto.Validate();
+          if(result_validations == null){
+            new CreateWorkerUseCase(this.repository).execute(workerdto).then((worker)=>{res.json(worker).send})
             .catch((error) => {
-            // errores de proceso
-              if (nuevopath != null) {
-                fs.unlinkSync(nuevopath);
-              }
-              res.status(400).json({ error });
-            });
-          })
-          .catch((error) => {
-            // errores de verificacion
-            if (nuevopath != null) {
-                fs.unlinkSync(nuevopath);
-              }
-              res.status(418).send("Error de validaciones " + error);
-          });
+                res.status(400).send("Unexpected error: " + error)
+            })
+        }else{
+          if (req.body.ayuda != null) {
+            fs.unlinkSync(req.body.ayuda);
+        }
+            //validation errors
+            res.status(400).send("Validation error: " + result_validations);
+        }
         }catch{
-          res.status(400).json("Acces denied");
+          if (req.body.ayuda != null) {
+            fs.unlinkSync(req.body.ayuda);
+        }
+          res.status(401).json("Acces denied");
         }
     };
 }

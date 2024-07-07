@@ -1,4 +1,4 @@
-import { Login } from "../../dtos";
+/*import { Login } from "../../dtos";
 import { UserEntity } from "../../entities";
 import { UserRepository } from "../../repositories";
 
@@ -12,4 +12,4 @@ export class Login_Use implements LoginUseCase {
     execute(data: Login): Promise<UserEntity> {
       return this.repository.Login(data);
     }
-}
+}*/

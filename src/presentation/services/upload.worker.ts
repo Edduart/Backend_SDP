@@ -2,6 +2,7 @@ import multer, { FileFilterCallback } from "multer";
 import path from 'path';
 import fs from 'fs';
 import { NextFunction, Request, Response } from "express";
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb){
         cb(null, './images/worker')
@@ -39,21 +40,6 @@ const storage_U = multer.diskStorage({
         req.body.ayuda = path.join('./images/worker', filename);
     }
 });
+
 export const guardar = multer({ storage: storage, fileFilter: fileFilter });
 export const actualizar = multer({storage: storage_U,fileFilter: fileFilter});
-
-
-export class ImageService{
-
-
-    public static Service_Guardar(req: Request, res: Response, next: NextFunction){
-        try{
-            console.log(req.body);
-            guardar.single('file')
-            next();
-        }catch(error){
-            res.status(400).json("error de imagen");
-        }
-        
-    }
-}
