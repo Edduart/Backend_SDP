@@ -9,14 +9,14 @@ import {
 import { ProfessorController } from "../professor/professor.controller";
 const router = Router();
 
-const userDatasource = new UserDataSourceImple();
-const userRepostory = new UserRepositoryImpl(userDatasource);
+//const userDatasource = new UserDataSourceImple();
+//const userRepostory = new UserRepositoryImpl(userDatasource);
 
 const datasource = new ProfessorDataSourceImpl();
 const repository = new ProfessorRepositoryImpl(datasource);
-const professorController = new ProfessorController(repository, userRepostory);
+const professorController = new ProfessorController(repository,);
 
-//router.post("/", guardar.single("file"), professorController.create);
+router.post("/", updateFile.single("file"), professorController.create);
 //router.get("/", professorController.get);
 /*
 router.post("/:id",
@@ -24,7 +24,7 @@ router.post("/:id",
   updateFile.single("file")(req, res, (err) => {
     if (err) {
       return next(err);
-    }
+      }
     professorController.create(req, res);
   });
 });
