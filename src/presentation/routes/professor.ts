@@ -4,18 +4,18 @@ import { updateFile } from "../services/upload.service";
 import {
   ProfessorDataSourceImpl,
   ProfessorRepositoryImpl,
-  UserDataSourceImple,
+  
   UserRepositoryImpl,
 } from "../../infrastructure";
 import { ProfessorController } from "../professor/professor.controller";
 const router = Router();
 
-const userDatasource = new UserDataSourceImple();
-const userRepostory = new UserRepositoryImpl(userDatasource);
+/*const userDatasource = new UserDataSourceImple();
+const userRepostory = new UserRepositoryImpl(userDatasource);*/
 
 const datasource = new ProfessorDataSourceImpl();
 const repository = new ProfessorRepositoryImpl(datasource);
-const professorController = new ProfessorController(repository, userRepostory);
+const professorController = new ProfessorController(repository);
 
 //router.post("/", guardar.single("file"), professorController.create);
 router.get("/", professorController.get);

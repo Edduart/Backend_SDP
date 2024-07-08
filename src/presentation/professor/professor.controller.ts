@@ -14,7 +14,7 @@ import { CreateUser, UpdatePersonFunc } from "../../infrastructure";
 export class ProfessorController {
   constructor(
     private readonly repository: ProfessorRepository,
-    private readonly userRepository: UserRepository
+    //private readonly userRepository: UserRepository
   ) {}
 
   public get = (req: Request, res: Response) => {
