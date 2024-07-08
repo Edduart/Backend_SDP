@@ -98,7 +98,6 @@ model instruction {
   test             test[]
 
   @@id([professor_id, subject_id, academic_term_id])
-  @@unique([professor_id, subject_id, academic_term_id], name: "instruction_unique")
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
 }
@@ -277,17 +276,17 @@ model user {
   status          Boolean           @default(true)
   parish_id       Int
   password        String?           @db.Text
-  role_id         Int
+  Role_id         Int
   LastIn          DateTime?         @db.Date
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?
-  role            role              @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "role_id")
+  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([role_id], map: "role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
+  @@index([Role_id], map: "Role_id_idx")
 }
 
 enum seminarian_status {
