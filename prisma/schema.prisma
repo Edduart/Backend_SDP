@@ -170,6 +170,7 @@ model professor {
   status_id   Int           @db.TinyInt
   instruction instruction[]
   instructor  instructor?
+  user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
 }
 
 model role {
@@ -278,6 +279,7 @@ model user {
   Role_id         Int
   LastIn          DateTime?         @db.Date
   academic_degree academic_degree[]
+  professor       professor?
   seminarian      seminarian?
   role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
