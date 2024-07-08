@@ -16,25 +16,13 @@ import { ValidatePermission } from "../services/permissionValidator";
 export class DioceseController {
   constructor(private readonly dioceseRepository: DioceseRepository) {}
   public getDioceses = (req: Request, res: Response) => {
-    try {
-      //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-        const result = ValidatePermission(req.body.Permisos, "user", 'R');
-      //aqui empieza el contenido del controlador
       new GetDioceses(this.dioceseRepository)
       .execute()
       .then((dioceses) => res.set({'Access-Control-Expose-Headers': 'auth'}).json(dioceses)) //check parameter
-      .catch((error) => res.status(400).json({ error }));     
-      } catch (error) {
-        res.status(400).json("Acces denied");
-      }
-    
+      .catch((error) => res.status(400).json({ error }));         
   };
 
   public getDioceseById = (req: Request, res: Response) => {
-    try {
-      //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-        const result = ValidatePermission(req.body.Permisos, "user", 'R');
-      //aqui empieza el contenido del controlador
       const id = +req.params.id;
 
       new GetDiocese(this.dioceseRepository)
@@ -45,10 +33,7 @@ export class DioceseController {
             diocese,
           })
         )
-        .catch((error) => res.status(400).json({ error }));    
-      } catch (error) {
-        res.status(400).json("Acces denied");
-      }
+        .catch((error) => res.status(400).json({ error }));
   };
 
   public getDioceseByName = (req: Request, res: Response) => {
@@ -74,9 +59,6 @@ export class DioceseController {
   };
 
   public updateDioceseById = (req: Request, res: Response) => {
-    try {
-      //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-        const result = ValidatePermission(req.body.Permisos, "user", 'U');
 
       //aqui empieza el contenido del controlador
       const id = +req.params.id;
@@ -95,17 +77,10 @@ export class DioceseController {
             diocese,
           })
         )
-        .catch((error) => res.status(400).json({ error }));    
-      } catch (error) {
-        res.status(400).json("Acces denied");
-      }
+        .catch((error) => res.status(400).json({ error }));  
   };
 
   public createDiocese = (req: Request, res: Response) => {
-    try {
-      //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      const result = ValidatePermission(req.body.Permisos, "user", 'C');
-      //aqui empieza el contenido del controlador
       const [error, createDioceseDto] = CreateDioceseDto.create(req.body);
       if (error) return res.status(400).json({ error });
   
@@ -114,17 +89,10 @@ export class DioceseController {
         .then((diocese) =>
           res.set({'Access-Control-Expose-Headers': 'auth'}).json({ msj: "Diocese creada exitosamente", diocese })
         )
-        .catch((error) => res.status(400).json({ error }));  
-      } catch (error) {
-        res.status(400).json("Acces denied");
-      }
+        .catch((error) => res.status(400).json({ error }));
   };
 
   public deleteDiocese = (req: Request, res: Response) => {
-    try {
-      //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-        const result = ValidatePermission(req.body.Permisos, "user", 'D');
-      //aqui empieza el contenido del controlador
       const id = +req.params.id;
 
       new DeleteDiocese(this.dioceseRepository)
@@ -135,11 +103,7 @@ export class DioceseController {
             diocese,
           })
         )
-        .catch((error) => res.status(400).json({ error })); 
-      } catch (error) {
-        res.status(400).json("Acces denied");
-      }
-   
+        .catch((error) => res.status(400).json({ error }));
   };
 }
 
