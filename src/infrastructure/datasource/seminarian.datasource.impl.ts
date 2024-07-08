@@ -48,7 +48,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
         user: {
           parish_id: data.parish_id,
-          role_id: 5,
+          Role_id: 5,
           parish: {
             diocese_id: data.diocese_id,
           },

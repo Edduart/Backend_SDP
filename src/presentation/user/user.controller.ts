@@ -1,4 +1,4 @@
-import { Change_use, Login, Login_Use, UserRepository } from "../../domain";
+import { Change_use, Login, Login_Use, UserRepository, UserTrans } from "../../domain";
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import "dotenv/config";
@@ -21,9 +21,9 @@ export class UserControler{
                         res.status(403).json("Contraseña invalida").send;
                     }else{
                         ActualizarFecha(user.person_id);
-                        user.password = null;
-                        const token = jwt.sign({ ...user }, process.env.SECRET as string, {expiresIn: '30m'})
-                        res.header('auth',token).set({'Access-Control-Expose-Headers': 'auth'}).json(user).send;
+                        const user_to_send = new UserTrans(user.person_id, user.role.premissions, user.fecha);
+                        const token = jwt.sign({ ...user_to_send }, process.env.SECRET as string, {expiresIn: '30m'})
+                        res.header('auth',token).set({'Access-Control-Expose-Headers': 'auth'}).json(user_to_send).send;
                     }
                 }
             }) 

@@ -155,7 +155,7 @@ export async function CreateUser(user: CreateUserDTO) {
           person_id: user.person.id,
           parish_id: user.parish_id,
           status: true,
-          role_id: user.role,
+          Role_id: user.role,
           password: user.password,
           LastIn: null,
         },
@@ -217,7 +217,7 @@ export async function UpdateUserFunc(user: UpdateUser) {
       data: {
         parish_id: user.parish_id,
         status: true,
-        role_id: user.role,
+        Role_id: user.role,
         password: user.password,
       },
     });
