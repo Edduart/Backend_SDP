@@ -39,7 +39,7 @@ export class DioceseController {
   public getDioceseByName = (req: Request, res: Response) => {
     const name = req.params.name;
 
-    const result = ValidatePermission(req.body.Permisos, "user", "R");
+    //const result = ValidatePermission(req.body.Permisos, "user", "R");
 
     new GetDioceseByName(this.dioceseRepository)
       .execute(name)
