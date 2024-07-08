@@ -1,7 +1,5 @@
 import express, { Router } from 'express';
 import fs from 'fs';
-
-
 export class AppRoutes{
   static get routes(): Router{
     const router = express.Router();
@@ -20,22 +18,3 @@ export class AppRoutes{
     return router;
   }
 }
-/*
-router viejo
-
-
-import { Router } from "express";
-import { RoleRoute } from "./role/role.routes";
-import { DioceseRoutes } from "./diocese/diocese.routes";
-
-export class AppRoutes {
-  static get routes(): Router {
-    const router = Router();
-
-    router.use("/api/Dioceses", DioceseRoutes.routes);
-    router.use("/api/Role", RoleRoute.routes);
-    console.log('Running');
-    return router;
-  }
-}
-*/

@@ -4,6 +4,7 @@ import { WorkerDataSourceImpl, WorkerRepositoryImpl } from "../../infrastructure
 import { WorkerControler } from "../worker/worker.crontroller";
 import { Request, Response, NextFunction } from 'express';
 import { ValidatorTo } from "../services/TokenValidator";
+import { updateFile} from "../services/upload.service";
 const router = Router();
 const datasource = new WorkerDataSourceImpl();
 const Repository = new WorkerRepositoryImpl(datasource);
@@ -13,7 +14,7 @@ const WorkerControl = new WorkerControler(Repository);
 router.get('/socials', ValidatorTo.ValidarToken ,WorkerControl.GetSocials);
 //el ValidarTokenH es la variante del middleware para situaciones como la del multer donde los resultados de la verificacion se manda por header
 router.post('/:id',ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction) => {
-    guardar.single('file')(req, res, (err) => {
+    guardar.single('file')(req, res, async (err) => {
         if (err) {
             return next(err);
         }
@@ -21,7 +22,7 @@ router.post('/:id',ValidatorTo.ValidarTokenH, (req: Request, res: Response, next
     });
 });
 router.put('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction) => {
-    actualizar.single('file')(req, res, (err) => {
+    actualizar.single('file')(req, res, async (err) => {
         if (err) {
             return next(err);
         }

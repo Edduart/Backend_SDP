@@ -14,6 +14,7 @@ CREATE TABLE `academic_term` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `start_date` DATE NOT NULL,
     `end_date` DATE NOT NULL,
+    `semester` BOOLEAN NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -87,6 +88,7 @@ CREATE TABLE `instruction` (
 
     INDEX `fk_professo_subject_academic_term_idx`(`academic_term_id`),
     INDEX `fk_professor_subject_subject_idx`(`subject_id`),
+    UNIQUE INDEX `instruction_professor_id_subject_id_academic_term_id_key`(`professor_id`, `subject_id`, `academic_term_id`),
     PRIMARY KEY (`professor_id`, `subject_id`, `academic_term_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -186,27 +188,9 @@ CREATE TABLE `role_permission` (
 CREATE TABLE `seminarian` (
     `id` VARCHAR(20) NOT NULL,
     `apostleships` TEXT NULL,
-    `status_id` TINYINT NOT NULL,
-    `location_id` TINYINT NOT NULL,
+    `status` ENUM('Activo', 'Retirado', 'Año Pastoral', 'Culminado') NOT NULL,
+    `Location` ENUM('Externo', 'Interno') NOT NULL,
     `Ministery` ENUM('Unkown', 'Admisión', 'Lectorado', 'Acolitado') NULL,
-
-    INDEX `fk_seminarian_seminarian_location_idx`(`location_id`),
-    INDEX `fl_seminarian_seminarian_status_idx`(`status_id`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `seminarian_location` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(50) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `seminarian_status` (
-    `id` TINYINT NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -247,6 +231,7 @@ CREATE TABLE `subject` (
     `description` VARCHAR(200) NOT NULL,
     `status` BOOLEAN NOT NULL,
     `precedent` INTEGER NULL,
+    `semester` BOOLEAN NULL,
 
     INDEX `fk_subject_course_idx`(`course_id`),
     INDEX `fk_subject_precedent_idx`(`precedent`),
@@ -285,9 +270,10 @@ CREATE TABLE `user` (
     `status` BOOLEAN NOT NULL DEFAULT true,
     `parish_id` INTEGER NOT NULL,
     `password` TEXT NULL,
-    `Role_id` INTEGER NOT NULL,
+    `role_id` INTEGER NOT NULL,
+    `LastIn` DATE NULL,
 
-    INDEX `Role_id_idx`(`Role_id`),
+    INDEX `role_id_idx`(`role_id`),
     INDEX `fk_user_parish_idx`(`parish_id`),
     PRIMARY KEY (`person_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -350,13 +336,7 @@ ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_permission` FOREIGN KEY (
 ALTER TABLE `role_permission` ADD CONSTRAINT `Relation_role` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_seminarian_location` FOREIGN KEY (`location_id`) REFERENCES `seminarian_location`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE `seminarian` ADD CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user`(`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `seminarian` ADD CONSTRAINT `fl_seminarian_seminarian_status` FOREIGN KEY (`status_id`) REFERENCES `seminarian_status`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `social_media` ADD CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -369,3 +349,21 @@ ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id
 
 -- AddForeignKey
 ALTER TABLE `subject` ADD CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test` ADD CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `professor_id`, `academic_term_id`) REFERENCES `instruction`(`subject_id`, `professor_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`seminarian_id`, `subject_id`, `academic_term_id`) REFERENCES `enrollment`(`seminarian_id`, `subject_id`, `academic_term_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `test_score` ADD CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `fk_user_parish` FOREIGN KEY (`parish_id`) REFERENCES `parish`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `user` ADD CONSTRAINT `fk_user_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
