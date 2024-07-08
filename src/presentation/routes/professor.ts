@@ -8,13 +8,13 @@ import {
 } from "../../infrastructure";
 import { ProfessorController } from "../professor/professor.controller";
 const router = Router();
-/*
+
 const userDatasource = new UserDataSourceImple();
-const userRepostory = new UserRepositoryImpl(userDatasource);*/
+const userRepostory = new UserRepositoryImpl(userDatasource);
 
 const datasource = new ProfessorDataSourceImpl();
 const repository = new ProfessorRepositoryImpl(datasource);
-//const professorController = new ProfessorController(repository, userRepostory);
+const professorController = new ProfessorController(repository, userRepostory);
 
 //router.post("/", guardar.single("file"), professorController.create);
 //router.get("/", professorController.get);

@@ -3,9 +3,6 @@ import {
   CreateProfessorUseCase,
   GetProfessor,
   ProfessorRepository,
-  /*CreateUserDto,
-  CreateUser,*/
-  UserRepository,
 } from "../../domain";
 import { Request, Response } from "express";
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -13,8 +10,7 @@ import { CreateUser, UpdatePersonFunc } from "../../infrastructure";
 
 export class ProfessorController {
   constructor(
-    private readonly repository: ProfessorRepository,
-    private readonly userRepository: UserRepository
+    private readonly repository: ProfessorRepository
   ) {}
 
   public get = (req: Request, res: Response) => {
