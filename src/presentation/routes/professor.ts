@@ -18,7 +18,7 @@ const professorController = new ProfessorController(repository,);
 
 router.post("/", updateFile.single("file"), professorController.create);
 //router.get("/", professorController.get);
-/*
+
 router.post("/:id",
   (req: Request, res: Response, next: NextFunction) => {
   updateFile.single("file")(req, res, (err) => {
@@ -28,5 +28,5 @@ router.post("/:id",
     professorController.create(req, res);
   });
 });
-*/
+
 module.exports = router;
