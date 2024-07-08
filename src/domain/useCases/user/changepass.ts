@@ -1,4 +1,4 @@
-/*import { Login } from "../../dtos";
+import { Login } from "../../dtos";
 import { UserEntity } from "../../entities";
 import { UserRepository } from "../../repositories";
 
@@ -11,4 +11,4 @@ export class Change_use implements ChangeUseCase {
     execute(data: Login): Promise<String> {
       return this.repository.ChangePassword(data);
     }
-}*/
+}

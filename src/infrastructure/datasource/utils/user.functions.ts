@@ -83,6 +83,8 @@ export async function CreatePersonFunc(data: CreatePerson) {
     },
   });
   if (check_exist != null) return;
+
+  console.log(data)
   try {
     //creating person
     const result_op = await prisma.person.create({
@@ -144,7 +146,9 @@ export async function CreateUser(user: CreateUserDTO) {
   try {
     await prisma.$transaction(async (tx) => {
       //start with creating the person
-      await CreatePersonFunc(user.person);
+
+      //await CreatePersonFunc(user.person);
+
       //create the user
       const result_op = await prisma.user.create({
         data: {

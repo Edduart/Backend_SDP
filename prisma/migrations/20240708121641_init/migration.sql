@@ -88,6 +88,7 @@ CREATE TABLE `instruction` (
 
     INDEX `fk_professo_subject_academic_term_idx`(`academic_term_id`),
     INDEX `fk_professor_subject_subject_idx`(`subject_id`),
+    UNIQUE INDEX `instruction_professor_id_subject_id_academic_term_id_key`(`professor_id`, `subject_id`, `academic_term_id`),
     PRIMARY KEY (`professor_id`, `subject_id`, `academic_term_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -141,7 +142,6 @@ CREATE TABLE `person` (
     `birthdate` DATE NOT NULL,
     `medical_record` TEXT NULL,
     `BloodType` ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'UNKNOWN') NOT NULL DEFAULT 'UNKNOWN',
-    `professorId` VARCHAR(20) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -322,9 +322,6 @@ ALTER TABLE `instructor` ADD CONSTRAINT `fk_instructor_professor` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `parish` ADD CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `person` ADD CONSTRAINT `person_id_fkey` FOREIGN KEY (`id`) REFERENCES `professor`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `phone_number` ADD CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

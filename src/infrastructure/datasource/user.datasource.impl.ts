@@ -1,26 +1,22 @@
 import { prisma } from "../../data/postgres";
 import {
   CreateUserDto,
+  Login,
+  PermissionEntity,
   UserDataSource,
   UserEntity,
-  PermissionEntity,
-  Login,
+  RoleEntity,
 } from "../../domain";
 
-export class UserDataSourceImple implements UserDataSource {
-  async create(createDto: CreateUserDto): Promise<UserEntity> {
-    throw 'no implemented'
-    /*const createUser = await prisma.user.create({
-      data: createDto,
-    });
-    return UserEntity.fromObject(createUser);*/
-  }
+import {RoleDataSourceImpl} from "./role.datasource.implementation"
 
-  async getAll(): Promise<UserEntity[]> {
-    const getUsers = await prisma.user.findMany();
-    return getUsers.map((users) => UserEntity.fromObject(users));
+export class UserDataSourceImplementation implements UserDataSource {
+  create(dto: CreateUserDto): Promise<UserEntity> {
+    throw new Error("Method not implemented.");
   }
-
+  getAll(): Promise<UserEntity[]> {
+    throw new Error("Method not implemented.");
+  }
   async ChangePassword(data: Login): Promise<String> {
     const actu = await prisma.user.update({
       where: {
@@ -32,8 +28,10 @@ export class UserDataSourceImple implements UserDataSource {
     });
     return actu.person_id;
   }
+  async Login(data: Login): Promise<UserEntity> {
 
-/*  async Login(data: Login): Promise<UserEntity> {
+    const getRol = new RoleDataSourceImpl().getRoleMultiple()
+
     const Usuario_db = await prisma.user.findMany({
       where: {
         AND: [{ person_id: data.person_id }, { status: true }],
@@ -75,17 +73,17 @@ export class UserDataSourceImple implements UserDataSource {
       );
       return new UserEntity(
         usuario.person_id,
-        Permisos,
-        usuario.password,
         true,
+        usuario.password,
+        Permisos,
         usuario.LastIn
       );
     });
     return resultado[0];
   }
-}*/
+}
 
-/*export async function ActualizarFecha(id: string) {
+export async function ActualizarFecha(id: string) {
   const fecha = new Date();
   const actualizacion = await prisma.user.update({
     where: {
@@ -94,5 +92,5 @@ export class UserDataSourceImple implements UserDataSource {
     data: {
       LastIn: fecha,
     },
-  });*/
+  });
 }

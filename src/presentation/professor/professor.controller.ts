@@ -26,17 +26,21 @@ export class ProfessorController {
 
   public create = async (req: Request, res: Response) => {
     
+    //await CreateUser(data.user);
+
     //const personData = await parseUserData(req);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
 
+    const userData = await parseUserData(req.body.data, personData);
+    const professorData = new CreateProfessor(personData, userData);
 
-    //await CreateUser(data.user);
+    userData.role = 5;
 
-    const newUser = await parseUserData(req.body.data, personData);
-    const professorData = new CreateProfessor(personData, newUser);
     const newProfessor = await new CreateProfessorUseCase(
       this.repository
     ).execute(professorData);
+
+    console.log(newProfessor);
 
     /*const [error, createUserDto] = CreateUserDto.create(userData);
     if (error) return res.status(400).json({ error });
@@ -48,6 +52,6 @@ export class ProfessorController {
         professorData
       );*/
 
-    res.json({ professor: newProfessor });
+    res.json(newProfessor);
   };
 }

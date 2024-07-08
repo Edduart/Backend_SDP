@@ -8,13 +8,18 @@ import {
   ProfessorEntity,
 } from "../../domain";
 
-import { CreatePersonFunc, UpdatePersonFunc } from "./utils/user.functions";
+import {
+  CreateUser,
+  CreatePersonFunc,
+  UpdatePersonFunc,
+} from "./utils/user.functions";
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
     prisma.$transaction(async () => {
+      //create user frist
       
-      //await CreateUser(data.user); //create user frist
+      await CreateUser(createDto.user);
 
       const exists = await prisma.person.findFirst({
         where: { id: createDto.person.id },
@@ -43,7 +48,6 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       retunrFromDB = await prisma.person.findMany({
         include: {
           phone_number: true,
-          professor: true,
           social_media: {
             include: {
               social_media_category_social_media_social_media_categoryTosocial_media_category:
@@ -57,16 +61,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         where: {
           OR: [
             { id: id },
-            {
-              professor: {
-                status_id: status_id,
-              },
-            },
           ],
         },
         include: {
           phone_number: true,
-          professor: true,
           social_media: {
             include: {
               social_media_category_social_media_social_media_categoryTosocial_media_category:
@@ -92,12 +90,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
           });
         }
       );
-      return ProfessorEntity.fromObject(
-        person,
-        socials,
-        phones,
-        professor.professor?.status_id! // check this status must be !null, never
-      );
+
+      const status = 1; //check for id in database
+
+      return ProfessorEntity.fromObject(person, socials, phones, status);
     });
     return professors;
   }

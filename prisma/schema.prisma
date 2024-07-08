@@ -98,6 +98,7 @@ model instruction {
   test             test[]
 
   @@id([professor_id, subject_id, academic_term_id])
+  @@unique([professor_id, subject_id, academic_term_id], name: "instruction_unique")
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
 }
@@ -149,10 +150,8 @@ model person {
   medical_record       String?          @db.Text
   BloodType            person_BloodType @default(UNKNOWN)
   basic_worker         basic_worker?
-  professor            professor?        @relation(fields: [id], references: [id])
   phone_number         phone_number[]
   social_media         social_media[]
-  professorId          String?           @db.VarChar(20)
   user                 user?
 }
 
@@ -173,7 +172,6 @@ model professor {
   instruction instruction[]
   instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
-  person      person[]
 }
 
 model role {
