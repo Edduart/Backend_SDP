@@ -147,7 +147,7 @@ export async function CreateUser(user: CreateUserDTO) {
     await prisma.$transaction(async (tx) => {
       //start with creating the person
 
-      //await CreatePersonFunc(user.person);
+      await CreatePersonFunc(user.person);
 
       //create the user
       const result_op = await prisma.user.create({
