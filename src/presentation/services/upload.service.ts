@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     const filename = req.params.id + "." + file.mimetype.split("/")[1];
     const filePath = path.join(getDestination(req), filename);
     if (fs.existsSync(filePath)) {
-      return cb(new Error("File already exists"), "");
+      cb(new Error("File already exist"), "");
     }
     cb(null, filename);
     req.body.ayuda = path.join(getDestination(req), filename);
@@ -40,6 +40,11 @@ const fileFilter = function (
     req.fileValidationError = "Solo archivos de imagen";
     return cb(null, false);
   }
+      const filename = req.params.id + "." + file.mimetype.split("/")[1];
+      const filePath = path.join(getDestination(req), filename);
+      if (fs.existsSync(filePath)) {
+        cb(new Error("I don't have a clue!"));
+      }
   cb(null, true);
 };
 const storage_U = multer.diskStorage({

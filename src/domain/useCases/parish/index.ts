@@ -4,3 +4,4 @@ export * from "./usecase.getParish";
 export * from "./usecase.getParishes";
 export * from "./usecase.updateParish";
 export * from "./GetParishByName";
+export * from "./getParishByDiocese";

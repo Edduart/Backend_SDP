@@ -26,8 +26,8 @@ export async function parsePersonData(req: any, path: any) {
     );
     // Phone Data Parsing
     const phones: CreatePhone[] | null = origin.persona.phone?.map(
-      (phone: { phone_numbre: string; description: string }) =>
-        new CreatePhone(phone.phone_numbre, phone.description)
+      (phone: { phone_number: string; description: string }) =>
+        new CreatePhone(phone.phone_number, phone.description)
     );
     // Person Data Parsing
     const personData = new CreatePerson(
@@ -73,6 +73,24 @@ export async function parseUserData(req: any, person: CreatePerson) {
     );
 
     return userData;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function parseInstructoData(req: any) {
+  try {
+    const origin = await JSON.parse(req);
+    const { is_instructor, starting_date, instructor_position } =
+      origin.instructor;
+    if (is_instructor != true) return null;
+    const professor_id  = origin.persona.id;
+    const instructorData = {
+      professor_id,
+      starting_date,
+      instructor_position,
+    };
+    return instructorData;
   } catch (error) {
     throw error;
   }

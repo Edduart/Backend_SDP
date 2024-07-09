@@ -105,24 +105,23 @@ model instruction {
 model instructor {
   professor_id        String              @id @db.VarChar(20)
   starting_date       DateTime            @db.Date
-  position_id         Int                 @db.TinyInt
+  status              Boolean?             @default(true)
   course              course[]
-  instructor_position instructor_position @relation(fields: [position_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_instructor_position")
+  instructor_position instructor_position 
   professor           professor           @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_professor")
-
-  @@index([position_id], map: "fk_instructor_instructor_position_idx")
+  
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
 
-model instructor_position {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  instructor  instructor[]
-}
+//model instructor_position {
+//  id          Int          @id @default(autoincrement()) @db.TinyInt
+//  description String       @db.VarChar(50)
+//  instructor  instructor[]
+//}
 
 model parish {
   id         Int     @id @default(autoincrement())
-  diocese_id Int
+  diocese_id Int     
   name       String  @db.Text
   patron     String  @db.VarChar(100)
   diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")
@@ -330,4 +329,13 @@ enum person_BloodType {
   O_POSITIVO  @map("O+")
   O_NEGATIVO  @map("O-")
   UNKNOWN
+}
+
+enum instructor_position {
+  RECTOR  @map("RECTOR")
+  VICERECTOR   @map("VICERECTOR")
+  ACADEMICO @map("ACADEMICO")
+  ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
+  DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
+  ECONOMO @map("ECONOMO")
 }

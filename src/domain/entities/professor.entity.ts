@@ -6,24 +6,22 @@ export class ProfessorEntity {
   constructor(
     public person: PersonEntity,
     public social: SocialMediaEntity[] | null,
-    public phone: PhoneEntity[] | null,
+    public phone_number: PhoneEntity[] | null,
     public status_id: number
   ) {
-
     //this.status_id = 1;
   }
 
   public static fromObject(
     person: PersonEntity,
     social: SocialMediaEntity[] | null,
-    phone: PhoneEntity[] | null,
+    phone_number: PhoneEntity[] | null,
     status_id: number
   ) {
-    
     // validations
 
     // validations
 
-    return new ProfessorEntity(person, social, phone, status_id);
+    return new ProfessorEntity(person, social, phone_number, status_id);
   }
 }

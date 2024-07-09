@@ -16,52 +16,63 @@ import {
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
-    prisma.$transaction(async () => {
-      //create user frist
-      
-      await CreateUser(createDto.user);
-
-      const exists = await prisma.person.findFirst({
-        where: { id: createDto.person.id },
-      });
-      if (exists) {
-        throw `Usuario ya tiene un nombre registrado`;
-      }
-      //now i create the person
-      await CreatePersonFunc(createDto.person);
-
-      await prisma.professor.create({
-        data: {
-          id: createDto.person.id,
-          status_id: 1,
-        },
-      });
+    //check if user exists
+    console.log(createDto.user.person.id);
+    const exists = await prisma.user.findUnique({
+      where: { person_id: createDto.user.person.id },
     });
-    const resultIndividual = await this.get(createDto.person.id, undefined); //this can be improved => check in future
+    if (exists) throw "Persona ya existe!";
+    //create user frist
+    await CreateUser(createDto.user);
+
+    //now i create the person
+    //console.log(createDto.person);
+    //await CreatePersonFunc(createDto.person);
+    // then professor
+
+    await prisma.professor.create({
+      data: {
+        id: createDto.user.person.id,
+        status_id: 1,
+      },
+    });
+    const resultIndividual = await this.get(
+      createDto.user.person.id,
+      undefined
+    ); //this can be improved => check in future
     return resultIndividual[0];
   }
 
   async get(id?: string, status_id?: number): Promise<ProfessorEntity[]> {
     let retunrFromDB;
-    if (!id && !status_id) {
-      //console.log("going for all");
-      retunrFromDB = await prisma.person.findMany({
-        include: {
-          phone_number: true,
-          social_media: {
-            include: {
-              social_media_category_social_media_social_media_categoryTosocial_media_category:
-                { select: { description: true } },
+    //if (!id && !status_id) {
+    //console.log("going for all");
+
+    retunrFromDB = await prisma.professor.findMany({
+      select: {
+        id: true,
+        status_id: true,
+        user: {
+          include: {
+            person: {
+              include: {
+                phone_number: true,
+                social_media: {
+                  include: {
+                    social_media_category_social_media_social_media_categoryTosocial_media_category:
+                      { select: { description: true } },
+                  },
+                },
+              },
             },
           },
         },
-      });
-    } else {
+      },
+    });
+    /* } else {
       retunrFromDB = await prisma.person.findMany({
         where: {
-          OR: [
-            { id: id },
-          ],
+          OR: [{ id: id }],
         },
         include: {
           phone_number: true,
@@ -73,25 +84,26 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
           },
         },
       });
-    }
+    }*/
     //mapeo de los datos
+    //console.log(retunrFromDB);
+
     const professors: ProfessorEntity[] = retunrFromDB.map((professor) => {
-      const person: PersonEntity = PersonEntity.fromdb(professor); //datos de persona
-      const phones: PhoneEntity[] = professor.phone_number.map(
+      const person: PersonEntity = PersonEntity.fromdb(professor.user.person); //datos de persona
+      const status = professor.status_id;
+      const phones: PhoneEntity[] = professor.user.person.phone_number.map(
         (phoneatributer) => {
           return PhoneEntity.fromdb(phoneatributer);
         }
       );
-      const socials: SocialMediaEntity[] = professor.social_media.map(
-        (sociales) => {
+      const socials: SocialMediaEntity[] =
+        professor.user.person.social_media.map((sociales) => {
           return SocialMediaEntity.fromdb({
             link: sociales.link,
-            social_media_category: sociales.social_media_category_social_media_social_media_categoryTosocial_media_category
+            social_media_category:
+              sociales.social_media_category_social_media_social_media_categoryTosocial_media_category,
           });
-        }
-      );
-
-      const status = 1; //check for id in database
+        });
 
       return ProfessorEntity.fromObject(person, socials, phones, status);
     });
