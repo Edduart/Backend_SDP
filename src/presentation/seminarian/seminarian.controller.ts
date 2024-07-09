@@ -100,7 +100,7 @@ export class SeminarianControler{
     public Create = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
-            const result = ValidatePermission(source, "seminarian", 'C');
+            //const result = ValidatePermission(source, "seminarian", 'C');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
             const persondto = await parsePersonData(data, req.body.ayuda);

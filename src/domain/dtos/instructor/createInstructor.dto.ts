@@ -1,21 +1,23 @@
+import { InstructorPostion } from "../../entities/instructor.entity";
+
 export class CreateInstructorDto {
   private constructor(
     public readonly professor_id: string,
     public readonly starting_date: Date,
-    public readonly position_id: number
+    public readonly instructor_position: InstructorPostion
   ) {}
 
   static create(props: {
     [key: string]: any;
   }): [string?, CreateInstructorDto?] {
-    const { professor_id, starting_date, position_id } = props;
+    const { professor_id, starting_date, instructor_position } = props;
 
     if (!professor_id) {
       return ["Instructor ID is required"];
     } else if (typeof professor_id !== "string") {
       return ["Instructor ID must be a string"];
     }
-    
+
     let newStartingDate = new Date(starting_date);
     if (!starting_date) {
       throw "starting date is required";
@@ -23,15 +25,11 @@ export class CreateInstructorDto {
       throw "starting date is not a valid date";
     }
 
-    if (!position_id) {
-      return ["Professor ID is required"];
-    } else if (isNaN(Number(position_id))) {
-      return ["Professor ID must be a valid ID or number"];
-    }
+    if (!instructor_position) return ["Professor ID is required"];
 
     return [
       undefined,
-      new CreateInstructorDto(professor_id, starting_date, position_id),
+      new CreateInstructorDto(professor_id, starting_date, instructor_position),
     ];
   }
 }
