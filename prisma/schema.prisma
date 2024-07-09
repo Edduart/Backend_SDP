@@ -121,7 +121,7 @@ model instructor {
 
 model parish {
   id         Int     @id @default(autoincrement())
-  diocese_id Int
+  diocese_id Int     
   name       String  @db.Text
   patron     String  @db.VarChar(100)
   diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")

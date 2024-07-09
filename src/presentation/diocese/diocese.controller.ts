@@ -15,6 +15,7 @@ import { ValidatePermission } from "../services/permissionValidator";
 
 export class DioceseController {
   constructor(private readonly dioceseRepository: DioceseRepository) {}
+
   public getDioceses = (req: Request, res: Response) => {
     new GetDioceses(this.dioceseRepository)
       .execute()

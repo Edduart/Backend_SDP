@@ -2,16 +2,28 @@ import { Request, Response } from "express";
 import {
   DeleteParish,
   GetParish,
-  Getparishes,GetParishByname,
+  Getparishes,
+  GetParishByname,
   UpdateParish,
   ParishRepository,
   UpdateParishDto,
   CreateParishDto,
-  CreateParish
+  CreateParish,
+  GetByDiocese,
 } from "../../domain";
 
 export class ParishController {
   constructor(private readonly parishrepository: ParishRepository) {}
+
+  public getByDioceseId = (req: Request, res: Response) => {
+    const id = +req.params.id;
+    new GetByDiocese(this.parishrepository)
+      .execute(id)
+      .then((parishes) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json(parishes)
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
 
   public createParish = (req: Request, res: Response) => {
     const [error, createParishDto] = CreateParishDto.create(req.body);
@@ -28,7 +40,9 @@ export class ParishController {
   public getParishes = (req: Request, res: Response) => {
     new Getparishes(this.parishrepository)
       .execute()
-      .then((parishrepository) => res.json({ msj: "Lista de parroquias existentes: ", parishrepository })) //check parameter
+      .then((parishrepository) =>
+        res.json({ msj: "Lista de parroquias existentes: ", parishrepository })
+      ) //check parameter
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -37,7 +51,9 @@ export class ParishController {
 
     new GetParish(this.parishrepository)
       .execute(id)
-      .then((parish) => res.json({ msj: "Parroquia conseguida exitosamente", parish }))
+      .then((parish) =>
+        res.json({ msj: "Parroquia conseguida exitosamente", parish })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -72,7 +88,12 @@ export class ParishController {
 
     new UpdateParish(this.parishrepository)
       .execute(updateParishDto!)
-      .then((parish) => res.json({msj:" Parroquia id:"+id+" actualizada correctamente",parish}))
+      .then((parish) =>
+        res.json({
+          msj: " Parroquia id:" + id + " actualizada correctamente",
+          parish,
+        })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 
@@ -80,7 +101,12 @@ export class ParishController {
     const id = parseInt(req.params.id);
     new DeleteParish(this.parishrepository)
       .execute(id)
-      .then((parish) => res.json({msj:" Parroquia"+ id+" eliminada correctamente",parish}))
+      .then((parish) =>
+        res.json({
+          msj: " Parroquia" + id + " eliminada correctamente",
+          parish,
+        })
+      )
       .catch((error) => res.status(400).json({ error }));
   };
 }
