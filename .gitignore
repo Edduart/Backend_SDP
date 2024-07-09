@@ -2,3 +2,4 @@
 /dist
 /postgres
 backup.data/
+migrations/
