@@ -1,15 +1,12 @@
 import { PersonEntity } from "../../entities";
-import { SocialMedia, CreatePhone } from "../";
+import { CreatePerson, CreateUserDTO } from "../";
 
 export class CreateProfessor {
   constructor(
-    public readonly person: PersonEntity,
-    public readonly socials: SocialMedia[] | null,
-    public readonly phones: CreatePhone[] | null
-  ) {}
-
+    //public readonly person: PersonEntity,
+    public readonly user: CreateUserDTO //public readonly phones: CreatePhone[] | null
+  ) //public readonly socials: CreateSocialMedia[] | null,
+  {}
 
   //validations
-
-
 }

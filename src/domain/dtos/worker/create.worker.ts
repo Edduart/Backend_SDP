@@ -4,7 +4,8 @@ export class CreateWorker{
     constructor(
         public readonly persona:      CreatePerson,
         public readonly job_position: Job_Psotion_Enum,
-    ){}
+    ){
+    }
 
     public Validate(): string|null{
       let errorarray: string[]= [];

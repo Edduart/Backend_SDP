@@ -2,17 +2,15 @@ import {
   UserEntity,
   UserRepository,
   UserDataSource,
-  CreateUserDto
+  Login
 } from "../../domain";
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly datasource: UserDataSource) {}
-
-  create(dto: CreateUserDto): Promise<UserEntity> {
-    return this.datasource.create(dto);
+  Login(data: Login): Promise<UserEntity> {
+    return this.datasource.Login(data);
   }
-
-  getAll(): Promise<UserEntity[]> {
-    return this.datasource.getAll();
+  ChangePassword(data: Login): Promise<String> {
+    return this.datasource.ChangePassword(data);
   }
 }

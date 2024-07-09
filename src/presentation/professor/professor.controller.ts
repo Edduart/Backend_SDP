@@ -1,22 +1,23 @@
 import {
-  CreatePhone,
   CreateProfessor,
   CreateProfessorUseCase,
   GetProfessor,
-  PersonEntity,
-  SocialMedia,
   ProfessorRepository,
-  CreateUserDto,
-  CreateUser,
-  UserRepository,
+  InstructorRepository,
+  CreateInstructor,
+  CreateInstructorDto,
 } from "../../domain";
 import { Request, Response } from "express";
-import { parsePersonData, parseUserData } from "../utils/parseData";
+import {
+  parsePersonData,
+  parseUserData,
+  parseInstructoData,
+} from "../utils/parseData";
 
 export class ProfessorController {
   constructor(
     private readonly repository: ProfessorRepository,
-    private readonly userRepository: UserRepository
+    private readonly instructorPositionRepo: InstructorRepository
   ) {}
 
   public get = (req: Request, res: Response) => {
@@ -27,23 +28,26 @@ export class ProfessorController {
   };
 
   public create = async (req: Request, res: Response) => {
-
-      const userData = await parseUserData(req);
-      const { person, socials, phones } = await parsePersonData(req);
-      const professorData = new CreateProfessor(person, socials, phones);
-
-      const [error, createUserDto] = CreateUserDto.create(userData);
+    const isIsntructor = await parseInstructoData(req.body.data);
+    const personData = await parsePersonData(req.body.data, req.body.ayuda);
+    const userData = await parseUserData(req.body.data, personData);
+    const professorData = new CreateProfessor(userData);
+    userData.role = 5;
+    await new CreateProfessorUseCase(this.repository)
+      .execute(professorData)
+      .then((professor) =>
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ msj: "Profesor creado correctamente", professor })
+      )
+      .catch((error) => res.status(400).json({ error }));
+    if (isIsntructor) {
+      const [error, createInstructor] =
+        CreateInstructorDto.create(isIsntructor);
       if (error) return res.status(400).json({ error });
-
-      const newUserData = await new CreateUser(this.userRepository).execute(
-        createUserDto!
+      new CreateInstructor(this.instructorPositionRepo).execute(
+        createInstructor!
       );
-
-      const newProfessor = await new CreateProfessorUseCase(this.repository).execute(
-        professorData
-      );
-
-      res.json({ user: newUserData, professor: newProfessor });
+    }
   };
-
 }

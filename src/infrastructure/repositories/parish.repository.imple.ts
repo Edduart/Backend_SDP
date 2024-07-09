@@ -8,6 +8,10 @@ import {
   
   export class ParishRepositoryImpl implements ParishRepository {
     constructor(private readonly datasource: ParishDataSource) {}
+
+    getByDioceseId(id: number): Promise<ParishEntity[]> {
+      return this.datasource.getByDioceseId(id);
+    }
   
     getAll(): Promise<ParishEntity[]> {
       return this.datasource.getAll();

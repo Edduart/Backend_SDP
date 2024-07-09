@@ -4,29 +4,31 @@ import { updateFile } from "../services/upload.service";
 import {
   ProfessorDataSourceImpl,
   ProfessorRepositoryImpl,
-  UserDataSourceImple,
-  UserRepositoryImpl,
+  InstructorDataSourceImple,
+  InstructorRepositoryImpl
 } from "../../infrastructure";
 import { ProfessorController } from "../professor/professor.controller";
 const router = Router();
 
-const userDatasource = new UserDataSourceImple();
-const userRepostory = new UserRepositoryImpl(userDatasource);
+const instructorDatasource = new InstructorDataSourceImple();
+const instructorRepostory = new InstructorRepositoryImpl(instructorDatasource);
 
 const datasource = new ProfessorDataSourceImpl();
 const repository = new ProfessorRepositoryImpl(datasource);
-const professorController = new ProfessorController(repository, userRepostory);
+const professorController = new ProfessorController(
+  repository,
+  instructorRepostory
+);
 
-//router.post("/", guardar.single("file"), professorController.create);
 router.get("/", professorController.get);
 
-router.post("/:id",
-  (req: Request, res: Response, next: NextFunction) => {
+router.post("/:id", (req: Request, res: Response, next: NextFunction) => {
   updateFile.single("file")(req, res, (err) => {
     if (err) {
-      return next(err);
+      return res.status(500).json({msj: "Unexpected error on the image file" ,error: err });
+    } else {
+      professorController.create(req, res);
     }
-    professorController.create(req, res);
   });
 });
 

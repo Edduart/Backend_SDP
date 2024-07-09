@@ -22,7 +22,7 @@ export * from "./instructor/updateInstructor.dto";
 export * from "./professor/createProfessor.dto";
 
 export * from "./user/createUser.dto";;
-
+export * from "./user/user.trans";
 export * from "./user/login";
 export * from "./parish/updateParish.dto";
 export * from "./person/create.person";

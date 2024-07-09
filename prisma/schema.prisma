@@ -105,24 +105,23 @@ model instruction {
 model instructor {
   professor_id        String              @id @db.VarChar(20)
   starting_date       DateTime            @db.Date
-  position_id         Int                 @db.TinyInt
+  status              Boolean?             @default(true)
   course              course[]
-  instructor_position instructor_position @relation(fields: [position_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_instructor_position")
+  instructor_position instructor_position 
   professor           professor           @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_professor")
-
-  @@index([position_id], map: "fk_instructor_instructor_position_idx")
+  
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
 
-model instructor_position {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  instructor  instructor[]
-}
+//model instructor_position {
+//  id          Int          @id @default(autoincrement()) @db.TinyInt
+//  description String       @db.VarChar(50)
+//  instructor  instructor[]
+//}
 
 model parish {
   id         Int     @id @default(autoincrement())
-  diocese_id Int
+  diocese_id Int     
   name       String  @db.Text
   patron     String  @db.VarChar(100)
   diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")
@@ -149,10 +148,8 @@ model person {
   medical_record       String?          @db.Text
   BloodType            person_BloodType @default(UNKNOWN)
   basic_worker         basic_worker?
-  professor            professor?        @relation(fields: [id], references: [id])
   phone_number         phone_number[]
   social_media         social_media[]
-  professorId          String?           @db.VarChar(20)
   user                 user?
 }
 
@@ -173,7 +170,6 @@ model professor {
   instruction instruction[]
   instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
-  person      person[]
 }
 
 model role {
@@ -279,17 +275,17 @@ model user {
   status          Boolean           @default(true)
   parish_id       Int
   password        String?           @db.Text
-  role_id         Int
+  Role_id         Int
   LastIn          DateTime?         @db.Date
   academic_degree academic_degree[]
   professor       professor?
   seminarian      seminarian?
-  role            role              @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "role_id")
+  role            role              @relation(fields: [Role_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Role_id")
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([role_id], map: "role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
+  @@index([Role_id], map: "Role_id_idx")
 }
 
 enum seminarian_status {
@@ -333,4 +329,13 @@ enum person_BloodType {
   O_POSITIVO  @map("O+")
   O_NEGATIVO  @map("O-")
   UNKNOWN
+}
+
+enum instructor_position {
+  RECTOR  @map("RECTOR")
+  VICERECTOR   @map("VICERECTOR")
+  ACADEMICO @map("ACADEMICO")
+  ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
+  DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
+  ECONOMO @map("ECONOMO")
 }
