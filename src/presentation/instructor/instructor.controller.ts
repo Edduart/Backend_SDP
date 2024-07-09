@@ -21,14 +21,18 @@ export class InstructorController {
       .then((instructor) =>
         res.json({ msj: "Instructor creado exitosamente", instructor })
       )
-      .catch((error) => res.status(400).json({ error }));
+      .catch((error) => {
+        console.log("unexpected error while executing" + error);
+        res.status(400).json({ error })});
   };
 
   public getInstructors = (req: Request, res: Response) => {
     new GetInstructors(this.instructorRepository)
       .execute()
       .then((instructors) => res.json(instructors))
-      .catch((error: unknown) => res.status(400).json({ error }));
+      .catch((error: unknown) => {
+        console.log("unexpected error while executing" + error);
+        res.status(400).json({ error })});
   };
 
   public getinstructorById = (req: Request, res: Response) => {
@@ -67,7 +71,9 @@ export class InstructorController {
           instructor,
         })
       )
-      .catch((error) => res.status(400).json({ error }));
+      .catch((error) => {
+        console.log("unexpected error while executing" + error);
+        res.status(400).json({ error })});
   };
 
   public deleteInstructor = (req: Request, res: Response) => {
