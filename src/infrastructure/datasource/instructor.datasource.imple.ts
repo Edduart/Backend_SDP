@@ -14,15 +14,22 @@ export class InstructorDataSourceImple implements InstructorDataSource {
         professor_id: createDto.professor_id,
         status: createDto.status,
         starting_date: createDto.starting_date,
-        instructor_position: createDto.instructor_position as instructor_position,
+        instructor_position:
+          createDto.instructor_position as instructor_position,
       },
     });
     return InstructorEntity.fromObject(createInstructor);
   }
   async updateById(updateDto: UpdateInstructorDto): Promise<InstructorEntity> {
+    console.log(updateDto);
     const updateInstructor = await prisma.instructor.update({
       where: { professor_id: updateDto.professor_id },
-      data: updateDto!.values,
+      data: {
+        starting_date: updateDto.starting_date,
+        instructor_position:
+          updateDto.instructor_position as instructor_position,
+        status: updateDto.status,
+      },
     });
     return InstructorEntity.fromObject(updateInstructor);
   }
@@ -41,8 +48,8 @@ export class InstructorDataSourceImple implements InstructorDataSource {
   }
   async deleteById(id: string): Promise<InstructorEntity> {
     const deteleInstructor = await prisma.instructor.delete({
-      where: {professor_id: id}
-    })
+      where: { professor_id: id },
+    });
     return InstructorEntity.fromObject(deteleInstructor);
   }
 }
