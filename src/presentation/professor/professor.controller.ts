@@ -33,7 +33,7 @@ export class ProfessorController {
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
     userData.role = 5;
-    await new CreateProfessorUseCase(this.repository)
+    const createProfesor = await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
       .then((professor) =>
         res
@@ -41,7 +41,7 @@ export class ProfessorController {
           .json({ msj: "Profesor creado correctamente", professor })
       )
       .catch((error) => res.status(400).json({ error }));
-    if (isIsntructor) {
+    if (isIsntructor && createProfesor) {
       const [error, createInstructor] =
         CreateInstructorDto.create(isIsntructor);
       if (error) return res.status(400).json({ error });

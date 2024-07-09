@@ -55,7 +55,9 @@ export async function parseUserData(req: any, person: CreatePerson) {
     const origin = await JSON.parse(req); // check that is only a string
     const hashedPasword = await encode(origin.persona.id);
 
-    const degrees: CreateDegree[] | undefined = origin.user.Degree?.map(
+    
+
+    const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
           origin.persona.id,

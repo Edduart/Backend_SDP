@@ -103,10 +103,9 @@ model instruction {
 }
 
 model instructor {
-  professor_id        String               @id @db.VarChar(20)
-  starting_date       DateTime             @db.Date
-  status              Boolean
-  instructor_position instructor_position?
+  professor_id        String              @id @db.VarChar(20)
+  starting_date       DateTime            @db.Date
+  status              Boolean?            @default(true)
   course              course[]
   professor           professor            @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
 
