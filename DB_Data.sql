@@ -272,7 +272,8 @@ CREATE TABLE `instructor` (
   `status` tinyint NOT NULL,
   `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO') DEFAULT NULL,
   PRIMARY KEY (`professor_id`),
-  KEY `fk_instructor_professor_idx` (`professor_id`)
+  KEY `fk_instructor_professor_idx` (`professor_id`),
+  CONSTRAINT `instructor_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -594,7 +595,7 @@ CREATE TABLE `subject` (
   `description` varchar(200) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `precedent` int DEFAULT NULL,
-  `semester` tinyint(1) DEFAULT NULL,
+  `semester` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_subject_precedent_idx` (`precedent`),
   KEY `fk_subject_course_idx` (`course_id`),
@@ -713,4 +714,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-09 15:10:02
+-- Dump completed on 2024-07-09 18:38:29
