@@ -103,11 +103,11 @@ model instruction {
 }
 
 model instructor {
-  professor_id        String              @id @db.VarChar(20)
-  starting_date       DateTime            @db.Date
-  status              Boolean?            @default(true)
+  professor_id        String                          @id @db.VarChar(20)
+  starting_date       DateTime                        @db.Date
+  status              Int                             @default(1) @db.TinyInt
+  instructor_position instructor_position?
   course              course[]
-  professor           professor            @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
 
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
@@ -161,7 +161,6 @@ model professor {
   id          String        @id @db.VarChar(20)
   status_id   Int           @db.TinyInt
   instruction instruction[]
-  instructor  instructor?
   user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
 }
 
@@ -226,7 +225,7 @@ model subject {
   description   String        @db.VarChar(200)
   status        Boolean
   precedent     Int?
-  semester      Int
+  semester      Int?
   enrollment    enrollment[]
   instruction   instruction[]
   course        course        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_course")
@@ -325,10 +324,10 @@ enum person_BloodType {
 }
 
 enum instructor_position {
-  RECTOR              @map("RECTOR")
-  VICERECTOR          @map("VICERECTOR")
-  ACADEMICO           @map("ACADEMICO")
+  RECTOR
+  VICERECTOR
+  ACADEMICO
   ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
   DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
-  ECONOMO             @map("ECONOMO")
+  ECONOMO
 }

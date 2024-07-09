@@ -5,7 +5,7 @@ export class CreateInstructorDto {
     public readonly professor_id: string,
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
-    public readonly status: boolean,
+    public readonly status: number,
   ) {}
 
   static create(props: {
@@ -30,7 +30,7 @@ export class CreateInstructorDto {
 
     return [
       undefined,
-      new CreateInstructorDto(professor_id, starting_date, instructor_position, true),
+      new CreateInstructorDto(professor_id, starting_date, instructor_position, 1),
     ];
   }
 }
