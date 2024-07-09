@@ -17,3 +17,4 @@ export * from "./degree.entity";
 export * from "./foreingseminarian.entity";
 export * from "./person.entity";
 export * from "./seminarian.entity";
+export * from "./subject.entity";

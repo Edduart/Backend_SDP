@@ -44,9 +44,11 @@ export class SeminarianControler{
                 }
                 res.json({message: "seminarian deleted"}).send;
             }).catch((error) => {
-                res.status(418).send("Error deleting seminarian: " + error);
+                console.log("unexpected error while executing" + error);
+                res.status(400).send("Error deleting seminarian: " + error);
             })
         }catch(error){
+            console.log("unexpected error while executing");
             res.status(418).send("Error: " + error);
         }
     }
@@ -79,6 +81,7 @@ export class SeminarianControler{
                     if (req.body.ayuda != null) {
                         fs.unlinkSync(req.body.ayuda);
                       }
+                      console.log("unexpected error while executing" + error);
                     res.status(400).send("Unexpected error: " + error)
                 })
             }else{
@@ -86,6 +89,7 @@ export class SeminarianControler{
                     fs.unlinkSync(req.body.ayuda);
                 }
                 //validation errors
+                console.log(errores);
                 res.status(400).send("Validation error: " + errores);
             }
         }catch(error){
@@ -93,6 +97,7 @@ export class SeminarianControler{
             if (req.body.ayuda != null) {
                 fs.unlinkSync(req.body.ayuda);
             }
+            console.log("unexpected error while executing");
               res.status(418).send("Error: " + error);
         }
     }
@@ -136,6 +141,7 @@ export class SeminarianControler{
                     fs.unlinkSync(req.body.ayuda);
                 }
                 //validation errors
+                console.log(errores);
                 res.status(400).send("Validation error: " + errores);
             }
         }catch(error){
@@ -143,6 +149,7 @@ export class SeminarianControler{
             if (req.body.ayuda != null) {
                 fs.unlinkSync(req.body.ayuda);
               }
+              console.log("unexpected error while executing");
               res.status(418).send("Error: " + error);
         }
     }

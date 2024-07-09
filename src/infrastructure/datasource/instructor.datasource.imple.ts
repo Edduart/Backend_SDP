@@ -1,3 +1,4 @@
+import { instructor_position } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import {
   CreateInstructorDto,
@@ -9,7 +10,12 @@ import {
 export class InstructorDataSourceImple implements InstructorDataSource {
   async create(createDto: CreateInstructorDto): Promise<InstructorEntity> {
     const createInstructor = await prisma.instructor.create({
-      data: createDto!,
+      data: {
+        professor_id: createDto.professor_id,
+        status: createDto.status,
+        starting_date: createDto.starting_date,
+        instructor_position: createDto.instructor_position as instructor_position,
+      },
     });
     return InstructorEntity.fromObject(createInstructor);
   }

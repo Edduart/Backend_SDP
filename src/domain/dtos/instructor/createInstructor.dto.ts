@@ -4,7 +4,8 @@ export class CreateInstructorDto {
   private constructor(
     public readonly professor_id: string,
     public readonly starting_date: Date,
-    public readonly instructor_position: InstructorPostion
+    public readonly instructor_position: InstructorPostion,
+    public readonly status: boolean,
   ) {}
 
   static create(props: {
@@ -29,7 +30,7 @@ export class CreateInstructorDto {
 
     return [
       undefined,
-      new CreateInstructorDto(professor_id, starting_date, instructor_position),
+      new CreateInstructorDto(professor_id, starting_date, instructor_position, true),
     ];
   }
 }
