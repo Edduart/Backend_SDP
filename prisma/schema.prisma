@@ -105,24 +105,23 @@ model instruction {
 model instructor {
   professor_id        String              @id @db.VarChar(20)
   starting_date       DateTime            @db.Date
-  position_id         Int                 @db.TinyInt
+  status              Boolean?             @default(true)
   course              course[]
-  instructor_position instructor_position @relation(fields: [position_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_instructor_position")
+  instructor_position instructor_position 
   professor           professor           @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_instructor_professor")
-
-  @@index([position_id], map: "fk_instructor_instructor_position_idx")
+  
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
 
-model instructor_position {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  instructor  instructor[]
-}
+//model instructor_position {
+//  id          Int          @id @default(autoincrement()) @db.TinyInt
+//  description String       @db.VarChar(50)
+//  instructor  instructor[]
+//}
 
 model parish {
   id         Int     @id @default(autoincrement())
-  diocese_id Int
+  diocese_id Int     
   name       String  @db.Text
   patron     String  @db.VarChar(100)
   diocese    diocese @relation(fields: [diocese_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parish_diocese")
@@ -195,29 +194,12 @@ model role_permission {
 model seminarian {
   id                   String                @id @db.VarChar(20)
   apostleships         String?               @db.Text
-  status_id            Int                   @db.TinyInt
-  location_id          Int                   @db.TinyInt
+  status               seminarian_status
+  Location             seminarian_Location
   Ministery            seminarian_Ministery?
   enrollment           enrollment[]
   foreigner_seminarian foreigner_seminarian?
-  seminarian_location  seminarian_location   @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_seminarian_location")
   user                 user                  @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_user")
-  seminarian_status    seminarian_status     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fl_seminarian_seminarian_status")
-
-  @@index([location_id], map: "fk_seminarian_seminarian_location_idx")
-  @@index([status_id], map: "fl_seminarian_seminarian_status_idx")
-}
-
-model seminarian_location {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  seminarian  seminarian[]
-}
-
-model seminarian_status {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  seminarian  seminarian[]
 }
 
 model social_media {
@@ -302,14 +284,26 @@ model user {
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([Role_id], map: "Role_id_idx")
   @@index([parish_id], map: "fk_user_parish_idx")
+  @@index([Role_id], map: "Role_id_idx")
+}
+
+enum seminarian_status {
+  Activo    @map("Activo")
+  Retirado  @map("Retirado")
+  Pastoral  @map("Año Pastoral")
+  Culminado @map("Culminado")
+}
+
+enum seminarian_Location {
+  Externo
+  Interno
 }
 
 enum basic_worker_job_position {
-  Mantenimiento @map("Mantenimiento")
-  Cocinero      @map("Cocinero")
-  Transportista @map("Transportista")
+  Mantenimiento
+  Cocinero
+  Transportista
 }
 
 enum seminarian_Ministery {

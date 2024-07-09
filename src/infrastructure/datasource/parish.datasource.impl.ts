@@ -1,17 +1,21 @@
-//This is the controller 
+//This is the controller
 import { prisma } from "../../data/postgres";
 import {
   UpdateParishDto,
   ParishEntity,
   ParishDataSource,
   CreateParishDto,
-  DioceseEntity
+  DioceseEntity,
 } from "../../domain";
 
-
-
 export class ParishDatasourceimpl implements ParishDataSource {
-
+  async getByDioceseId(id: number): Promise<ParishEntity[]> {
+    const parishes = await prisma.parish.findMany({
+      where: { diocese_id: id },
+    });
+    if (parishes.length == 0) throw "No parishes found with the given ID found";
+    return parishes.map((parishes) => ParishEntity.fromObject(parishes));
+  }
 
   async getAll(): Promise<ParishEntity[]> {
     const parishes = await prisma.parish.findMany();
@@ -28,53 +32,48 @@ export class ParishDatasourceimpl implements ParishDataSource {
     return ParishEntity.fromObject(parish);
   }
 
-  async getByName(
-    name: string
-  ): Promise<ParishEntity[]> {
+  async getByName(name: string): Promise<ParishEntity[]> {
     const parishByname = await prisma.parish.findMany({
       where: {
         name: { contains: name },
-      }
+      },
     });
     return parishByname.map((parish) => ParishEntity.fromObject(parish));
   }
 
-    async updateById(updateParishDto: UpdateParishDto): Promise<ParishEntity> {
+  async updateById(updateParishDto: UpdateParishDto): Promise<ParishEntity> {
     await this.findById(updateParishDto.id);
     const updateParish = await prisma.parish.update({
       where: { id: updateParishDto.id },
-      data:  updateParishDto!.values,
+      data: updateParishDto!.values,
     });
     return ParishEntity.fromObject(updateParish);
   }
 
-  async create(created:CreateParishDto): Promise<ParishEntity> {
-    
-      const searchDiocese: DioceseEntity[] = await prisma.diocese.findMany({
-        where: {id: created.diocese_id}
-      });
-      if(searchDiocese.length==0) throw "No diocesis found";
-      
-      const result = await prisma.parish.create({
-        data: {
-          name: created.name,
-          patron: created.patron,
-          diocese_id: searchDiocese[0].id,
-        },
-      });
-    
+  async create(created: CreateParishDto): Promise<ParishEntity> {
+    const searchDiocese: DioceseEntity[] = await prisma.diocese.findMany({
+      where: { id: created.diocese_id },
+    });
+    if (searchDiocese.length == 0) throw "No diocesis found";
+
+    const result = await prisma.parish.create({
+      data: {
+        name: created.name,
+        patron: created.patron,
+        diocese_id: searchDiocese[0].id,
+      },
+    });
+
     const result_i = this.findById(result.id);
-    return (result_i);
+    return result_i;
   }
 
-  async delete(id:number): Promise<null> {
+  async delete(id: number): Promise<null> {
     await prisma.parish.delete({
-      where:{
-        id:id
-      }
-    })
+      where: {
+        id: id,
+      },
+    });
     return null;
   }
-
-
 }

@@ -16,4 +16,3 @@ router.get("/:id", dioceseController.getDioceseById);
 router.put("/:id", dioceseController.updateDioceseById);
 router.delete("/:id", dioceseController.deleteDiocese);
 module.exports = router;
-

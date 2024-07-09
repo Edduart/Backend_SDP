@@ -1,5 +1,5 @@
 import { CreateWorker } from "../dtos";
-import { Job_Psotion_Enum, PersonEntity, SocialMediaCategoryEntity } from "../entities";
+import { Job_Psotion_Enum, SocialMediaCategoryEntity } from "../entities";
 import { WorkerEntity } from "../entities";
 
 

@@ -1,73 +1,79 @@
 import { prisma } from "../../data/postgres";
-import { Login, PermissionEntity, UserDataSource, UserEntity } from "../../domain";
+import {
+  CreateUserDto,
+  Login,
+  PermissionEntity,
+  UserDataSource,
+  UserEntity,
+  RoleEntity,
+} from "../../domain";
 
-export class UserDataSourceImplementation implements UserDataSource{
-    async ChangePassword(data: Login): Promise<String> {
-            const actu = await prisma.user.update({
-                where:{
-                    person_id: data.person_id
-                },
-                data:{
-                    password: data.password,
-                }
-            });
-        return actu.person_id;
-    }
-    async Login(data: Login): Promise<UserEntity> {
-        const Usuario_db = await prisma.user.findMany({
-            where:{
-                AND:[
-                    {person_id: data.person_id},
-                    {status: true}
-                ]
-            },
-            select:{
-                person_id:  true,
-                password:   true,
-                status:     true,
-                LastIn:     true,
-                role: {
-                    select:{
-                        id: true,
-                        role_permission: {
-                            select:{
-                                permission:{
-                                    select:{
-                                        id:     true,
-                                        name:   true,
-                                        table:  true,
-                                        type:   true,
-                                    }
-                                }
-                            }
-                        }
+export class UserDataSourceImplementation implements UserDataSource {
+  async ChangePassword(data: Login): Promise<String> {
+    const actu = await prisma.user.update({
+      where: {
+        person_id: data.person_id,
+      },
+      data: {
+        password: data.password,
+      },
+    });
+    return actu.person_id;
+  }
+  async Login(data: Login): Promise<UserEntity> {
+    //get the user
+    const Usuario_db = await prisma.user.findMany({
+      where: {
+        AND: [{ person_id: data.person_id }, { status: true }],
+      },
+      include:{
+        role:{
+            include:{
+                role_permission:{
+                    include:{
+                        permission: true,
                     }
                 }
             }
-        });
-        const resultado: UserEntity[] = Usuario_db.map(usuario =>{
-            const Permisos: PermissionEntity[] = usuario.role.role_permission.map(permiso_vuelta => {
-                return PermissionEntity.fromdb({
-                    id: permiso_vuelta.permission.id, 
-                    name: permiso_vuelta.permission.name,
-                    type: permiso_vuelta.permission.type, 
-                    table: permiso_vuelta.permission.table
-                });
+        }
+      }
+    });
+    
+    const resultado: UserEntity[] = Usuario_db.map((usuario) => {      
+        const permissions: PermissionEntity[] = usuario.role.role_permission.map((permission_actual)=>{
+            return PermissionEntity.fromdb({
+                id:     permission_actual.permission.id, 
+                name:   permission_actual.permission.name,
+                type:   permission_actual.permission.type, 
+                table:  permission_actual.permission.table
             });
-            return new UserEntity(usuario.person_id, Permisos, usuario.password, true, usuario.LastIn);
+        }); 
+        const role = RoleEntity.fromdb({
+            id:             usuario.role.id, 
+            name:           usuario.role.name, 
+            description:    usuario.role.description,
+            premissions:    permissions
         });
-        return resultado[0];
-    }
+      return new UserEntity(
+        usuario.person_id,
+        true,
+        usuario.password,
+        role,
+        usuario.LastIn
+      );
+    });
+    return resultado[0];
+  }
 }
 
-export async function ActualizarFecha(id: string){
-    const fecha = new Date;
-    const actualizacion = await prisma.user.update({
-        where:{
-            person_id: id
-        }
-        ,data:{
-            LastIn: fecha,
-        }
-    });
+export async function ActualizarFecha(id: string) {
+  const fecha = new Date();
+  const actualizacion = await prisma.user.update({
+    where: {
+      person_id: id,
+    },
+    data: {
+      LastIn: fecha,
+    },
+  });
 }
