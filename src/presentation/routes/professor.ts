@@ -32,4 +32,6 @@ router.post("/:id", (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+router.delete("/:id", professorController.delete);
+
 module.exports = router;

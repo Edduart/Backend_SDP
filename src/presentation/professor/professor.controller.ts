@@ -6,6 +6,7 @@ import {
   InstructorRepository,
   CreateInstructor,
   CreateInstructorDto,
+  DeleteProfessor,
 } from "../../domain";
 import { Request, Response } from "express";
 import {
@@ -13,6 +14,7 @@ import {
   parseUserData,
   parseInstructoData,
 } from "../utils/parseData";
+import fs from "fs";
 
 export class ProfessorController {
   constructor(
@@ -50,5 +52,20 @@ export class ProfessorController {
         createInstructor!
       ).catch((error) => res.status(400).json({ error }));
     }
+  };
+
+  public delete = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    new DeleteProfessor(this.repository)
+      .execute(id)
+      .then((Professor) => {
+        if (req.body.ayuda != null) {
+          fs.unlinkSync(req.body.ayuda);
+        }
+        res.json({ Professor }).send;
+      })
+      .catch((error) => {
+        res.status(418).send({ error });
+      });
   };
 }

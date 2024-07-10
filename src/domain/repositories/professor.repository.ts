@@ -7,4 +7,5 @@ export abstract class ProfessorRepository {
     id: string | undefined,
     status_id: number | undefined
   ): Promise<ProfessorEntity[]>;
+  abstract delete(id: string): Promise<object>;
 }
