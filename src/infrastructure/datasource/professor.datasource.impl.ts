@@ -15,21 +15,42 @@ import {
 } from "./utils/user.functions";
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
+
+  async delete(id: string): Promise<object> {
+    const professorExist = await prisma.professor.findUnique({
+      where: { id: id}
+    });
+    if (professorExist == null) throw("Professor no existe!");
+    const userExist = await prisma.user.findUnique({
+      where: {person_id: id}
+    })
+    if (userExist == null) throw("Professor no existe!");
+    await prisma.user.update({
+      where: {person_id: id},
+      data: {status: false}
+    })
+    const deleteProfessor = await prisma.professor.update({
+      where: {id: id}, 
+      data: {status_id: 0}
+    })
+    const isInstrutor = await prisma.instructor.findUnique({
+      where: {professor_id: id}
+    })
+    if(isInstrutor != null) {
+      await prisma.instructor.update({
+        where: {professor_id: id},
+        data: {status: 0}
+      })
+    }
+    return { success: true , msj: "Profesor desactivado" };
+  }
+
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
-    //check if user exists
-    console.log(createDto.user.person.id);
     const exists = await prisma.user.findUnique({
       where: { person_id: createDto.user.person.id },
     });
     if (exists) throw "Persona ya existe!";
-    //create user frist
     await CreateUser(createDto.user);
-
-    //now i create the person
-    //console.log(createDto.person);
-    //await CreatePersonFunc(createDto.person);
-    // then professor
-
     await prisma.professor.create({
       data: {
         id: createDto.user.person.id,
@@ -39,8 +60,8 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     const resultIndividual = await this.get(
       createDto.user.person.id,
       undefined
-    ); //this can be improved => check in future
-    return resultIndividual[0];
+    ); 
+    return resultIndividual[0]; // check error in get
   }
 
   async get(id?: string, status_id?: number): Promise<ProfessorEntity[]> {

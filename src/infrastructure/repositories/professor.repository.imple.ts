@@ -7,6 +7,9 @@ import {
 
 export class ProfessorRepositoryImpl implements ProfessorRepository {
   constructor(private readonly datasource: ProfessorDataSource) {}
+  delete(id: string): Promise<object> {
+    return this.datasource.delete(id)
+  }
   create(createDto: CreateProfessor): Promise<ProfessorEntity> {
     return this.datasource.create(createDto);
   }

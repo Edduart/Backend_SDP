@@ -5,7 +5,7 @@ export class UpdateInstructorDto {
     public readonly professor_id: string,
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
-    public readonly status?: boolean
+    public readonly status?: number
   ) {}
 
   get values() {
