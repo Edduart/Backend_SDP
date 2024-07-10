@@ -9,6 +9,22 @@ import {
 } from "../../domain";
 
 export class UserDataSourceImplementation implements UserDataSource {
+  async getAll(): Promise<object> {
+    const users = await prisma.user.findMany({
+      select: {
+        person: { select: { id: true, forename: true, surname: true } },
+        seminarian: {
+          where: { status: { not: undefined } },
+          select: { status: true },
+        },
+        professor: {
+          where: { status_id: { not: undefined } },
+          select: { status_id: true },
+        },
+      },
+    });
+    return users;
+  }
   async ChangePassword(data: Login): Promise<String> {
     const actu = await prisma.user.update({
       where: {
@@ -26,34 +42,36 @@ export class UserDataSourceImplementation implements UserDataSource {
       where: {
         AND: [{ person_id: data.person_id }, { status: true }],
       },
-      include:{
-        role:{
-            include:{
-                role_permission:{
-                    include:{
-                        permission: true,
-                    }
-                }
-            }
-        }
-      }
+      include: {
+        role: {
+          include: {
+            role_permission: {
+              include: {
+                permission: true,
+              },
+            },
+          },
+        },
+      },
     });
-    
-    const resultado: UserEntity[] = Usuario_db.map((usuario) => {      
-        const permissions: PermissionEntity[] = usuario.role.role_permission.map((permission_actual)=>{
-            return PermissionEntity.fromdb({
-                id:     permission_actual.permission.id, 
-                name:   permission_actual.permission.name,
-                type:   permission_actual.permission.type, 
-                table:  permission_actual.permission.table
-            });
-        }); 
-        const role = RoleEntity.fromdb({
-            id:             usuario.role.id, 
-            name:           usuario.role.name, 
-            description:    usuario.role.description,
-            premissions:    permissions
-        });
+
+    const resultado: UserEntity[] = Usuario_db.map((usuario) => {
+      const permissions: PermissionEntity[] = usuario.role.role_permission.map(
+        (permission_actual) => {
+          return PermissionEntity.fromdb({
+            id: permission_actual.permission.id,
+            name: permission_actual.permission.name,
+            type: permission_actual.permission.type,
+            table: permission_actual.permission.table,
+          });
+        }
+      );
+      const role = RoleEntity.fromdb({
+        id: usuario.role.id,
+        name: usuario.role.name,
+        description: usuario.role.description,
+        premissions: permissions,
+      });
       return new UserEntity(
         usuario.person_id,
         true,

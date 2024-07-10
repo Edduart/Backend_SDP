@@ -7,6 +7,9 @@ import {
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly datasource: UserDataSource) {}
+  getAll(): Promise<object> {
+    return this.datasource.getAll();
+  }
   Login(data: Login): Promise<UserEntity> {
     return this.datasource.Login(data);
   }
