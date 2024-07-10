@@ -19,7 +19,7 @@ export class UserDataSourceImplementation implements UserDataSource {
         },
         professor: {
           where: { status_id: { not: undefined } },
-          select: { status_id: true },
+          select: { status_id: true, instructor: { select: { status: true } } },
         },
       },
     });
