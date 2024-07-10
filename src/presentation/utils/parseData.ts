@@ -85,7 +85,7 @@ export async function parseInstructoData(req: any) {
     const origin = await JSON.parse(req);
     const { is_instructor, starting_date, instructor_position } =
       origin.instructor;
-    if (is_instructor != true) return null;
+    if (is_instructor == false) return null;
     const professor_id  = origin.persona.id;
     const instructorData = {
       professor_id,

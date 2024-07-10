@@ -29,6 +29,7 @@ export class ProfessorController {
 
   public create = async (req: Request, res: Response) => {
     const isIsntructor = await parseInstructoData(req.body.data);
+    console.log(isIsntructor);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
@@ -41,13 +42,13 @@ export class ProfessorController {
           .json({ msj: "Profesor creado correctamente", professor })
       )
       .catch((error) => res.status(400).json({ error }));
-    if (isIsntructor && createProfesor) {
+    if (isIsntructor != null && createProfesor) {
       const [error, createInstructor] =
         CreateInstructorDto.create(isIsntructor);
       if (error) return res.status(400).json({ error });
       new CreateInstructor(this.instructorPositionRepo).execute(
         createInstructor!
-      );
+      ).catch((error) => res.status(400).json({ error }));
     }
   };
 }
