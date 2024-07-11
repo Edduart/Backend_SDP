@@ -1,4 +1,5 @@
 import { prisma } from "../../data/postgres";
+import { filterNullValues } from "../../presentation/utils/FilterNullObject";
 import {
   CreateUserDto,
   Login,
@@ -22,8 +23,8 @@ export class UserDataSourceImplementation implements UserDataSource {
           select: { status_id: true, instructor: { select: { status: true } } },
         },
       },
-    });
-    return users;
+    }); 
+    return filterNullValues(users);;
   }
   async ChangePassword(data: Login): Promise<String> {
     const actu = await prisma.user.update({
