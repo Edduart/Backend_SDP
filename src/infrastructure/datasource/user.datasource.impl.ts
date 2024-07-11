@@ -24,7 +24,9 @@ export class UserDataSourceImplementation implements UserDataSource {
         },
       },
     }); 
-    return filterNullValues(users);;
+
+    
+    return users.map(filterNullValues);
   }
   async ChangePassword(data: Login): Promise<String> {
     const actu = await prisma.user.update({
