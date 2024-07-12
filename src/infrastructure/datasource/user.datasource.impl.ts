@@ -20,12 +20,14 @@ export class UserDataSourceImplementation implements UserDataSource {
         },
         professor: {
           where: { status_id: { not: undefined } },
-          select: { status_id: true, instructor: { select: { status: true } } },
+          select: {
+            status_id: true,
+            instructor: { select: { status: true, instructor_position: true } },
+          },
         },
       },
-    }); 
+    });
 
-    
     return users.map(filterNullValues);
   }
   async ChangePassword(data: Login): Promise<String> {
