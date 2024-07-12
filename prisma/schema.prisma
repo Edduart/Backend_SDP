@@ -57,7 +57,7 @@ model diocese {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model enrollment {
-  seminarian_id     String            @db.VarChar(20)
+  seminarian_id     String            @db.VarChar(20) @unique
   subject_id        Int
   academic_term_id  Int
   status_id         Int               @db.TinyInt
@@ -100,6 +100,8 @@ model instruction {
   @@id([professor_id, subject_id, academic_term_id])
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
+  @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
+  @@unique([subject_id, academic_term_id])
 }
 
 model instructor {
@@ -216,52 +218,54 @@ model social_media_category {
 }
 
 model stage {
-  id          Int      @id @default(autoincrement()) @db.TinyInt
-  description String   @db.VarChar(45)
-  course      course[]
+  id             Int              @id @default(autoincrement()) @db.TinyInt
+  description    String           @db.VarChar(45)
+  academic_field academic_field[]
+  course         course[]
 }
 
 model subject {
-  id            Int           @id @default(autoincrement())
-  course_id     Int
-  description   String        @db.VarChar(200)
-  status        Boolean
-  precedent     Int?
-  semester      Int
-  enrollment    enrollment[]
-  instruction   instruction[]
-  course        course        @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_course")
-  subject       subject?      @relation("subjectTosubject", fields: [precedent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_precedent")
-  other_subject subject[]     @relation("subjectTosubject")
+  id                Int            @id @default(autoincrement())
+  course_id         Int
+  description       String         @db.VarChar(200)
+  status            Boolean
+  precedent         Int?
+  semester          Int
+  academic_field_id Int
+  enrollment        enrollment[]
+  instruction       instruction[]
+  academic_field    academic_field @relation(fields: [academic_field_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_academicfield")
+  course            course         @relation(fields: [course_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_course")
+  subject           subject?       @relation("subjectTosubject", fields: [precedent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_precedent")
+  other_subject     subject[]      @relation("subjectTosubject")
 
   @@index([course_id], map: "fk_subject_course_idx")
   @@index([precedent], map: "fk_subject_precedent_idx")
+  @@index([academic_field_id], map: "fk_subject_academicfield_idx")
 }
 
 model test {
   id               Int         @id @default(autoincrement())
   subject_id       Int
-  professor_id     String      @db.VarChar(20)
   academic_term_id Int
   description      String      @db.VarChar(200)
   status           Boolean
   maximum_score    Decimal     @db.Decimal(5, 2)
-  instruction      instruction @relation(fields: [subject_id, professor_id, academic_term_id], references: [subject_id, professor_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
+  instruction      instruction @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
   test_score       test_score?
 
-  @@index([subject_id, professor_id, academic_term_id], map: "fk_test_subject_idx")
+  @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
+  @@index([subject_id, academic_term_id], map: "fk_test_instructor_idx")
 }
 
 model test_score {
-  test_id          Int        @id
-  seminarian_id    String     @db.VarChar(20)
-  subject_id       Int
-  academic_term_id Int
-  score            Decimal    @db.Decimal(5, 2)
-  enrollment       enrollment @relation(fields: [seminarian_id, subject_id, academic_term_id], references: [seminarian_id, subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
-  test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
+  test_id       Int        @id
+  seminarian_id String     @db.VarChar(20)
+  score         Decimal    @db.Decimal(5, 2)
+  test          test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
+  enrollment    enrollment @relation(fields: [seminarian_id], references: [seminarian_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_text_enrrolment")
 
-  @@index([seminarian_id, subject_id, academic_term_id], map: "fk_test_score_enrollment_idx")
+  @@index([seminarian_id], map: "fk_test_score_enrollment_idx")
 }
 
 model user {
@@ -280,6 +284,16 @@ model user {
 
   @@index([parish_id], map: "fk_user_parish_idx")
   @@index([Role_id], map: "Role_id_idx")
+}
+
+model academic_field {
+  id          Int       @id @default(autoincrement())
+  stage_id    Int       @db.TinyInt
+  description String?   @db.VarChar(100)
+  stage       stage     @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_acadmicfield_stage")
+  subject     subject[]
+
+  @@index([stage_id], map: "fk_acadmicfield_stage_idx")
 }
 
 enum seminarian_status {
