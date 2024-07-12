@@ -1,6 +1,6 @@
 import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian,
     CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, 
-    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase } from "../../domain";
+    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -9,7 +9,6 @@ export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public get = async (req: Request, res: Response) => {
         try{
-
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');
             const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
             if(error != undefined){
