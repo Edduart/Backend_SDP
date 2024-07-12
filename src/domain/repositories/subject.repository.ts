@@ -1,6 +1,6 @@
 import { CreateSubjectDTO, SubjectEntity } from "..";
 
-export abstract class SubjectDataSource{
+export abstract class SubjectRepository{
     abstract create(data: CreateSubjectDTO): Promise<SubjectEntity>;
     abstract get(): Promise<SubjectEntity[]>;
     //abstract Delete(id: string): Promise<string| null| undefined>;

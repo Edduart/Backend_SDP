@@ -10,3 +10,4 @@ export * from "./professor.repository";
 export * from "./user.repository";
 export * from "./user.repository"
 export * from "./seminarian.repository"
+export * from "./subject.repository";
