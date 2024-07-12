@@ -34,6 +34,23 @@ CREATE TABLE `academic_degree` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `academic_field`
+--
+
+DROP TABLE IF EXISTS `academic_field`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `academic_field` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `stage_id` tinyint NOT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_acadmicfield_stage_idx` (`stage_id`),
+  CONSTRAINT `fk_acadmicfield_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `academic_term`
 --
 
@@ -167,7 +184,8 @@ CREATE TABLE `instruction` (
   `academic_term_id` int NOT NULL,
   PRIMARY KEY (`professor_id`,`subject_id`,`academic_term_id`),
   KEY `fk_professor_subject_subject_idx` (`subject_id`),
-  KEY `fk_professo_subject_academic_term_idx` (`academic_term_id`),
+  KEY `fk_professo_subject_academic_term_idx` (`academic_term_id`) /*!80000 INVISIBLE */,
+  KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   CONSTRAINT `fk_professo_subject_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `fk_professor_subject_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`),
   CONSTRAINT `fk_professor_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
@@ -184,7 +202,7 @@ DROP TABLE IF EXISTS `instructor`;
 CREATE TABLE `instructor` (
   `professor_id` varchar(20) NOT NULL,
   `starting_date` date NOT NULL,
-  `status` tinyint NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO') DEFAULT NULL,
   PRIMARY KEY (`professor_id`),
   KEY `fk_instructor_professor_idx` (`professor_id`),
@@ -393,9 +411,12 @@ CREATE TABLE `subject` (
   `status` tinyint(1) NOT NULL,
   `precedent` int DEFAULT NULL,
   `semester` int NOT NULL,
+  `academic_field_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_subject_precedent_idx` (`precedent`),
   KEY `fk_subject_course_idx` (`course_id`),
+  KEY `fk_subject_academicfield_idx` (`academic_field_id`),
+  CONSTRAINT `fk_subject_academicfield` FOREIGN KEY (`academic_field_id`) REFERENCES `academic_field` (`id`),
   CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -411,14 +432,14 @@ DROP TABLE IF EXISTS `test`;
 CREATE TABLE `test` (
   `id` int NOT NULL AUTO_INCREMENT,
   `subject_id` int NOT NULL,
-  `professor_id` varchar(20) NOT NULL,
   `academic_term_id` int NOT NULL,
   `description` varchar(200) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `maximum_score` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_test_subject_idx` (`subject_id`,`professor_id`,`academic_term_id`),
-  CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `professor_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `professor_id`, `academic_term_id`)
+  KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
+  KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
+  CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `academic_term_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -432,13 +453,11 @@ DROP TABLE IF EXISTS `test_score`;
 CREATE TABLE `test_score` (
   `test_id` int NOT NULL,
   `seminarian_id` varchar(20) NOT NULL,
-  `subject_id` int NOT NULL,
-  `academic_term_id` int NOT NULL,
   `score` decimal(5,2) NOT NULL,
   PRIMARY KEY (`test_id`),
-  KEY `fk_test_score_enrollment_idx` (`seminarian_id`,`subject_id`,`academic_term_id`),
-  CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`seminarian_id`, `subject_id`, `academic_term_id`) REFERENCES `enrollment` (`seminarian_id`, `subject_id`, `academic_term_id`),
-  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`)
+  KEY `fk_test_score_enrollment_idx` (`seminarian_id`),
+  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`),
+  CONSTRAINT `fk_text_enrrolment` FOREIGN KEY (`seminarian_id`) REFERENCES `enrollment` (`seminarian_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -474,4 +493,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-09 18:38:48
+-- Dump completed on 2024-07-11 19:01:36

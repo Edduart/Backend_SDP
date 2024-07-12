@@ -127,10 +127,8 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         id: person_actual.user?.seminarian?.id,
         apostleships: person_actual.user?.seminarian?.apostleships,
         location: person_actual.user?.seminarian?.Location as Locations_enum,
-        Ministery: person_actual.user?.seminarian
-          ?.Ministery as seminarianMinistery_ENUM,
-        status: person_actual.user?.seminarian
-          ?.Ministery as seminarian_status_enum,
+        Ministery: person_actual.user?.seminarian?.Ministery as seminarianMinistery_ENUM,
+        status: person_actual.user?.seminarian?.status as seminarian_status_enum,
       }); //seminarian creator
       seminarian.person = person;
       seminarian.foreing_Data = foreing;
@@ -201,7 +199,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       //create de foreing data
       if (data.foreing_Data != undefined) {
         //deleting old foreing data
-        console.log(data.person.id);
 
         await prisma.foreigner_seminarian.create({
           data: {

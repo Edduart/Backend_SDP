@@ -11,7 +11,6 @@ export class SeminarianEntity{
     ){}
     public static fromdb(object: {[key: string]: any}){
         const {id, apostleships, location, Ministery, status} = object;
-        
         return new SeminarianEntity(id, apostleships, location as Locations_enum, Ministery as seminarianMinistery_ENUM, 
             status as seminarian_status_enum);
     }
