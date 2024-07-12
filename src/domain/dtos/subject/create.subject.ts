@@ -6,16 +6,33 @@ export class CreateSubjectDTO{
         public readonly semester:           number,
         public readonly academic_field_id:  number,
         public readonly status:            boolean,
+        public readonly homologado:        boolean,
         public readonly precedent?:         number,
     ){}
 
     static CreateDTO(object: { [key: string]: any }): [string?, CreateSubjectDTO?]{
-        const { course_id, description, semester, academic_field_id, precedent} = object;
+        const { course_id, description, semester, academic_field_id, precedent, homologado} = object;
+        let bool_homo = false;
         let precedent_numberl = undefined;
         let academic_id = 1;
         let semester_number = 1
         let course = 1;
         let errorarray: string[]= [];
+        if(homologado != undefined){
+            if(/^[01]*$/.test(homologado)){
+                const number_aux = Number(homologado);
+                switch (number_aux) {
+                    case 0:
+                        bool_homo = false;
+                        break;
+                
+                    case 1:
+                        bool_homo = true;
+                        break;
+                }
+            }errorarray.push("This field must contain only '0' or '1' ");
+
+        }errorarray.push(" homologado is requerided ");
         if (academic_field_id !== undefined) {
             academic_id = Number(academic_field_id);
             if (Number.isNaN(academic_id) || !Number.isInteger(academic_id) || academic_id < 0) {
@@ -47,7 +64,7 @@ export class CreateSubjectDTO{
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
         }
-        return [undefined, new CreateSubjectDTO(course, description, semester_number, academic_id, true, precedent_numberl)];
+        return [undefined, new CreateSubjectDTO(course, description, semester_number, academic_id, true, bool_homo, precedent_numberl)];
     }
 
 

@@ -412,6 +412,7 @@ CREATE TABLE `subject` (
   `precedent` int DEFAULT NULL,
   `semester` int NOT NULL,
   `academic_field_id` int NOT NULL,
+  `homologada` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_subject_precedent_idx` (`precedent`),
   KEY `fk_subject_course_idx` (`course_id`),
@@ -493,4 +494,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-11 19:01:36
+-- Dump completed on 2024-07-12 17:17:17
