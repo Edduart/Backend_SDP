@@ -6,43 +6,59 @@ import {
   SocialMediaEntity,
   ProfessorDataSource,
   ProfessorEntity,
+  UpdateProfessorDto,
+  UpdateUserDto,
 } from "../../domain";
 
 import {
   CreateUser,
   CreatePersonFunc,
   UpdatePersonFunc,
+  UpdateUserFunc,
 } from "./utils/user.functions";
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
+  async update(data: UpdateProfessorDto): Promise<object> {
+    const professorExist = await prisma.professor.findUnique({
+      where: { id: data.person.id },
+    });
+    if (professorExist == null) throw "Professor doesn't exist!";
+    await UpdatePersonFunc(data.person);
+    await UpdateUserFunc(data.user);
+    await prisma.professor.update({
+      where: { id: data.person.id },
+      data: { status_id: data.status_id },
+    });
+    return { msj: "Professor Updated!" };
+  }
 
   async delete(id: string): Promise<object> {
     const professorExist = await prisma.professor.findUnique({
-      where: { id: id}
+      where: { id: id },
     });
-    if (professorExist == null) throw("Professor no existe!");
+    if (professorExist == null) throw "Professor doesn't exist!!";
     const userExist = await prisma.user.findUnique({
-      where: {person_id: id}
-    })
-    if (userExist == null) throw("Professor no existe!");
+      where: { person_id: id },
+    });
+    if (userExist == null) throw "User doesn't exist!";
     await prisma.user.update({
-      where: {person_id: id},
-      data: {status: false}
-    })
-    const deleteProfessor = await prisma.professor.update({
-      where: {id: id}, 
-      data: {status_id: 0}
-    })
+      where: { person_id: id },
+      data: { status: false },
+    });
+    await prisma.professor.update({
+      where: { id: id },
+      data: { status_id: 0 },
+    });
     const isInstrutor = await prisma.instructor.findUnique({
-      where: {professor_id: id}
-    })
-    if(isInstrutor != null) {
+      where: { professor_id: id },
+    });
+    if (isInstrutor != null) {
       await prisma.instructor.update({
-        where: {professor_id: id},
-        data: {status: 0}
-      })
+        where: { professor_id: id },
+        data: { status: 0 },
+      });
     }
-    return { success: true , msj: "Profesor desactivado" };
+    return { success: true, msj: "Profesor desactivado" };
   }
 
   async create(createDto: CreateProfessor): Promise<ProfessorEntity> {
@@ -60,7 +76,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     const resultIndividual = await this.get(
       createDto.user.person.id,
       undefined
-    ); 
+    );
     return resultIndividual[0]; // check error in get
   }
 
