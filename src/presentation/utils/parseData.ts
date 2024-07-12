@@ -94,9 +94,9 @@ export async function parseInstructoData(req: any) {
   }
 }
 
-export async function parseUserDataUpdate(req: any, person: CreatePerson) {
+export async function parseUserDataUpdate(req: any) {
   try {
-    const origin = await JSON.parse(req); // check that is only a string
+    const origin = await JSON.parse(req); 
     const hashedPasword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
@@ -106,15 +106,21 @@ export async function parseUserDataUpdate(req: any, person: CreatePerson) {
           degree_Actual.link
         )
     );
+
+
+    console.log("data desde origen", origin);
+
+    const statusUpdate = origin.professor.status_id
+
     const userData = new UpdateUserDto(
-      origin.user.id,
+      origin.persona.id,
       origin.user.status,
       degrees,
       origin.user.parish_id,
       origin.user.role,
       hashedPasword
     );
-    return userData;
+    return { userData, statusUpdate };
   } catch (error) {
     throw error;
   }

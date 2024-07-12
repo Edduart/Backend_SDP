@@ -7,7 +7,8 @@ import {
   CreateInstructor,
   CreateInstructorDto,
   DeleteProfessor,
-  UpdateProfessorDto
+  UpdateProfessorDto,
+  UpdateProfessor
 } from "../../domain";
 import { Request, Response } from "express";
 import {
@@ -27,23 +28,24 @@ export class ProfessorController {
   public update = async (req: Request, res: Response) => {
     const isIsntructor = await parseInstructoData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
-    const userData = await parseUserDataUpdate(req.body.data, personData);
+    const {userData, statusUpdate} = await parseUserDataUpdate(req.body.data);
+    console.log(userData);
     const professorData = new UpdateProfessorDto(
-      userData,
       personData,
-      req.body.data.professor.status_id
+      userData,
+      statusUpdate
     );
     
-    /*userData.role = 5;
-    const createProfesor = await new CreateProfessorUseCase(this.repository)
+    const updateProfesor = await new UpdateProfessor(this.repository)
       .execute(professorData)
       .then((professor) =>
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor creado correctamente", professor })
+          .json({ msj: "Profesor actualizado correctamente", professor })
       )
       .catch((error) => res.status(400).json({ error }));
-    if (isIsntructor && createProfesor) {
+
+    /*if (isIsntructor && createProfesor) {
       const [error, createInstructor] =
         CreateInstructorDto.create(isIsntructor);
       if (error) return res.status(400).json({ error });

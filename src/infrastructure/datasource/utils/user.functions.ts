@@ -198,6 +198,7 @@ export async function UpdateUserFunc(user: UpdateUserDto) {
         user_id: user.person_id,
       },
     });
+    console.log("user", user);
     //if there is degree we create it
     if (user.degree != undefined) {
       const degree_json = user.degree.map((actual) => {
@@ -207,6 +208,7 @@ export async function UpdateUserFunc(user: UpdateUserDto) {
           link: actual.link,
         };
       });
+      console.log("user degree", degree_json);
       await prisma.academic_degree.createMany({
         data: degree_json,
       });

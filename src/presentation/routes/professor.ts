@@ -31,7 +31,17 @@ router.post("/:id", (req: Request, res: Response, next: NextFunction) => {
     }
   });
 });
-
+router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
+  updateFile.single("file")(req, res, (err) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ msj: "Unexpected error on the image file", error: err });
+    } else {
+      professorController.update(req, res);
+    }
+  });
+});
 router.delete("/:id", professorController.delete);
 
 module.exports = router;

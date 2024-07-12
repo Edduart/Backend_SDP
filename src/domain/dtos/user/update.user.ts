@@ -9,4 +9,5 @@ export class UpdateUserDto{
         public role: number,
         public password?: string,
     ){}
+
 }
