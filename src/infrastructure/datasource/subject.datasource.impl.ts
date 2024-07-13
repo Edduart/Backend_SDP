@@ -1,7 +1,16 @@
 import { prisma } from "../../data/postgres";
-import { CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectEntity } from "../../domain";
+import { CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
+    async Update(data: UpdateSubjectDTO): Promise<SubjectEntity> {
+        const result_u = await prisma.subject.update({
+            where:{
+                id: data.id,
+            },data: data,
+        });
+        const subjet_created = await this.get(GetSubjectDTO.FindDto(result_u.id));
+        return subjet_created[0];
+    }
     async get(data: GetSubjectDTO): Promise<SubjectEntity[]> {
         const result = await prisma.subject.findMany({
             where:{

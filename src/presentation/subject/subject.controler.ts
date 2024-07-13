@@ -1,4 +1,6 @@
-import { CreateSubjectDTO, CreateSubjectUseCase, GetSubjectDTO, GetSubjectUseCase, SubjectRepository } from "../../domain";
+import { CreateSubjectDTO, CreateSubjectUseCase, GetSubjectDTO, 
+    GetSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
+    UpdateSubjectUseCase} from "../../domain";
 import { Request, Response } from "express";
 export class SubjectControler{
     constructor(private readonly repository: SubjectRepository){}
@@ -13,14 +15,32 @@ export class SubjectControler{
                     new GetSubjectUseCase(this.repository).execute(get_dto).then((subjects)=>{
                         res.json(subjects).send;
                     })
-                    .catch((error)=>{res.status(418).send("unable to get subjects: " + error);})
+                    .catch((error)=>{res.status(400).send("unable to get subjects: " + error);})
                 }
             }
         }catch(error){
             res.status(418).send("Error: " + error);
         }
     }
-
+    public Update = async (req: Request, res: Response) => {
+        try{
+            const [error, get_dto] = UpdateSubjectDTO.CreateDTO(req.body);
+            if(error != undefined){
+                console.log("verification errors:" + error);
+            res.json({error}).send();
+            }else{
+                if(get_dto != undefined){
+                    new UpdateSubjectUseCase(this.repository).execute(get_dto).then((subject)=>{
+                        res.json(subject).send;
+                    }).catch((error)=>{
+                        res.status(400).send("unable to create subject: " + error);
+                    })
+                }
+            }
+        }catch(error){
+            res.status(418).send("Error: " + error);
+        }
+    }
     public Create = async (req: Request, res: Response) => {
         try{
             const [errores, createsubdto] = CreateSubjectDTO.CreateDTO(req.body);
@@ -32,7 +52,7 @@ export class SubjectControler{
                     new CreateSubjectUseCase(this.repository).execute(createsubdto).then((subject)=>{
                         res.json(subject).send;
                     }).catch((error)=>{
-                        res.status(418).send("unable to create subject: " + error);
+                        res.status(400).send("unable to create subject: " + error);
                     })
                 }
             }
