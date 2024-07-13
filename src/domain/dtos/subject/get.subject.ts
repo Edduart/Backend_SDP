@@ -60,8 +60,8 @@ export class GetSubjectDTO{
         }
         return [undefined, new GetSubjectDTO(description, course_id_number, academic_field_id_number, stage_id_number, status_aux)];
     }
-    static FindDto(id: number): GetSubjectDTO{
+    static FindDto(id: number, status?: boolean): GetSubjectDTO{
 
-        return new GetSubjectDTO(undefined, undefined, undefined, undefined, true, id);
+        return new GetSubjectDTO(undefined, undefined, undefined, undefined, status == undefined ?  true : status, id);
     }
 }

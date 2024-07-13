@@ -2,6 +2,15 @@ import { prisma } from "../../data/postgres";
 import { CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
+    async Delete(id: number): Promise<SubjectEntity> {
+        const result = await prisma.subject.findMany({where:{id: id}});
+        if (result.length == 0) throw new Error("Subject does not exists");
+        const result_p = await prisma.subject.findMany({where:{precedent: id}});
+        if (result_p.length > 0) throw new Error("can not delete as it precents: " + result_p[0].description);
+        const delete_u = await prisma.subject.update({where:{id:id},data:{status: false}});
+        const subjet_deleted = await this.get(GetSubjectDTO.FindDto(delete_u.id, false));
+        return subjet_deleted[0];
+    }
     async Update(data: UpdateSubjectDTO): Promise<SubjectEntity> {
         const result_u = await prisma.subject.update({
             where:{

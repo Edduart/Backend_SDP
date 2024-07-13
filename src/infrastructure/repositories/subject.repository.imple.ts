@@ -4,6 +4,9 @@ export class SubjectRepositoryImpl implements SubjectRepository{
     constructor (
         private readonly datasource: SubjectDataSource,
     ){}
+    Delete(id: number): Promise<SubjectEntity> {
+        return this.datasource.Delete(id);
+    }
     Update(data: UpdateSubjectDTO): Promise<SubjectEntity> {
         return this.datasource.Update(data);
     }

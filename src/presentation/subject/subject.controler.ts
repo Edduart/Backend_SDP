@@ -1,15 +1,31 @@
-import { CreateSubjectDTO, CreateSubjectUseCase, GetSubjectDTO, 
+import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetSubjectDTO, 
     GetSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
     UpdateSubjectUseCase} from "../../domain";
 import { Request, Response } from "express";
 export class SubjectControler{
     constructor(private readonly repository: SubjectRepository){}
+    public Delete = async (req: Request, res: Response) => {
+        try{
+            const number_aux = Number(req.params.id);
+            if(Number.isNaN(number_aux)){
+                console.log("verification errors: id must be a number");
+                res.json("verification errors: id must be a number").send();
+            }else{
+                new DeleteSubjectUseCase(this.repository).execute(number_aux).then((subject)=>{
+                    res.json(subject).send;
+                })
+                .catch((error)=>{res.status(403).send("unable to get subjects: " + error);})
+            }
+        }catch(error){
+            res.status(401).send("Error: " + error);
+        }
+    }
     public Get = async (req: Request, res: Response) => {
         try{
             const [error, get_dto] = GetSubjectDTO.CreateDTO(req.query);
             if(error != undefined){
                 console.log("verification errors:" +error);
-            res.json({error}).send();
+                res.json({error}).send();
             }else{
                 if(get_dto != undefined){
                     new GetSubjectUseCase(this.repository).execute(get_dto).then((subjects)=>{
@@ -19,7 +35,7 @@ export class SubjectControler{
                 }
             }
         }catch(error){
-            res.status(418).send("Error: " + error);
+            res.status(401).send("Error: " + error);
         }
     }
     public Update = async (req: Request, res: Response) => {
@@ -38,7 +54,7 @@ export class SubjectControler{
                 }
             }
         }catch(error){
-            res.status(418).send("Error: " + error);
+            res.status(401).send("Error: " + error);
         }
     }
     public Create = async (req: Request, res: Response) => {
@@ -58,7 +74,7 @@ export class SubjectControler{
             }
 
         }catch(error){
-            res.status(418).send("Error: " + error);
+            res.status(401).send("Error: " + error);
         }
     }
 }

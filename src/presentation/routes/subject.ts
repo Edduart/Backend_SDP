@@ -10,4 +10,5 @@ const subControl = new SubjectControler(Repository);
 router.put('/', subControl.Update);
 router.post('/', subControl.Create);
 router.get('/', subControl.Get);
+router.delete('/:id', subControl.Delete);
 module.exports= router;
