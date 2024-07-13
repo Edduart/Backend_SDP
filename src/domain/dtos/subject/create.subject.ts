@@ -6,7 +6,7 @@ export class CreateSubjectDTO{
         public readonly semester:           number,
         public readonly academic_field_id:  number,
         public readonly status:            boolean,
-        public readonly homologado:        boolean,
+        public readonly homologada:        boolean,
         public readonly precedent?:         number,
     ){}
 
@@ -14,13 +14,10 @@ export class CreateSubjectDTO{
         const { course_id, description, semester, academic_field_id, precedent, homologado} = object;
         let bool_homo = false;
         let precedent_numberl = undefined;
-        let academic_id = 1;
-        let semester_number = 1
-        let course = 1;
+        
         let errorarray: string[]= [];
-        if(homologado != undefined){
-            if(/^[01]*$/.test(homologado)){
-                const number_aux = Number(homologado);
+        if(!Number.isNaN(homologado)){
+            const number_aux = Number(homologado);
                 switch (number_aux) {
                     case 0:
                         bool_homo = false;
@@ -29,42 +26,37 @@ export class CreateSubjectDTO{
                     case 1:
                         bool_homo = true;
                         break;
-                }
-            }errorarray.push("This field must contain only '0' or '1' ");
+                    default:
+                        errorarray.push("homologado can only contain 0 and 1");
+                        break;
+            }} else {errorarray.push(" homologado must be a number");}
 
-        }errorarray.push(" homologado is requerided ");
-        if (academic_field_id !== undefined) {
-            academic_id = Number(academic_field_id);
-            if (Number.isNaN(academic_id) || !Number.isInteger(academic_id) || academic_id < 0) {
+            if (Number.isNaN(academic_field_id) || !Number.isInteger(academic_field_id) || academic_field_id < 0) {
                 errorarray.push("academic_id id must be a non-negative integer");
             }
-        }errorarray.push("course id can not be undefined");
-        if (course_id !== undefined) {
-            course = Number(course_id);
-            if (Number.isNaN(course) || !Number.isInteger(course) || course < 0) {
-                errorarray.push("course id must be a non-negative integer");
-            }
-        }errorarray.push("course id can not be undefined");
+            
+        if (Number.isNaN(course_id) || !Number.isInteger(course_id) || course_id < 0) {
+           errorarray.push("course id must be a non-negative integer");
+        }
+        console.log(description + " description: " + (description != undefined))
         if(description != undefined){
             if((description.length >= 200) || (description.length < 5))errorarray.push("description must be between 5 and 200 char");
-        }errorarray.push("description is required");
-        if (semester !== undefined) {
-            semester_number = Number(semester);
-            if (Number.isNaN(semester_number) || !Number.isInteger(semester_number) || semester_number < 0) {
-                errorarray.push("semester id must be a non-negative integer");
-            }
-        }errorarray.push("semester id can not be undefined");
-        if (precedent !== undefined) {
+        } else {errorarray.push("description is required");}
+        
+        if (Number.isNaN(semester) || !Number.isInteger(semester) || semester < 0) {
+            errorarray.push("semester id must be a non-negative integer");
+        }
+
+        if (precedent != undefined) {
             precedent_numberl = Number(precedent);
             if (Number.isNaN(precedent_numberl) || !Number.isInteger(precedent_numberl) || precedent_numberl < 0) {
                 errorarray.push("precedent number id must be a non-negative integer");
             }
         }
-
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
         }
-        return [undefined, new CreateSubjectDTO(course, description, semester_number, academic_id, true, bool_homo, precedent_numberl)];
+        return [undefined, new CreateSubjectDTO(course_id, description, semester, academic_field_id, true, bool_homo, precedent_numberl)];
     }
 
 
