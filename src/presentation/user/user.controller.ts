@@ -17,10 +17,10 @@ import { ActualizarFecha } from "../../infrastructure";
 export class UserControler {
   constructor(private readonly repository: UserRepository) {}
 
-  public getByType = (req: Request, res: Response) => {
-    const type: string = req.params.type.trim();
+  public getByType = async (req: Request, res: Response) => {
+    const {type} = req.query;
     new GetUsersByType(this.repository)
-      .execute(type)
+      .execute(String(type))
       .then((users) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
       )
