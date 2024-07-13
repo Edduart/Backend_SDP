@@ -15,6 +15,7 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
         const result = await prisma.subject.findMany({
             where:{
                 AND:{
+                    status: data.status,
                     description: {
                         contains: data.description
                     },
