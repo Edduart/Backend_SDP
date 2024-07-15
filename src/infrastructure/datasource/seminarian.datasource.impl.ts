@@ -178,14 +178,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     }
   }
   async Update(data: UpdateSeminarian): Promise<string> {
-    const check_exist = await prisma.seminarian.findFirst({
-      where: {
-        id: data.person.id,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const check_exist = await prisma.seminarian.findFirst({where: {id: data.person.id,},select: {id: true,},});
     if (check_exist == null) throw new Error("seminarian does not exists");
     try {
       //updating the person data
@@ -228,7 +221,11 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   }
   async create(data: CreateSeminarian): Promise<string> {
     try {
-      await CreateUser(data.user);
+      const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
+      if(user != undefined){throw new Error("Someone with the same id already exits");}
+
+      const result = await prisma.$transaction(async (tx) => {
+        await CreateUser(data.user);
       //creating foreing
       if (data.foreing_Data != undefined) {
         //call to create if foreing data
@@ -270,6 +267,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
       });
       return result.id;
+      });
+      
+      return result;
+      
     } catch (error) {
       throw new Error("Unable to create seminarian" + error);
     }
