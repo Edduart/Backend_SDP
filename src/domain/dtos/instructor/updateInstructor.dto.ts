@@ -1,15 +1,19 @@
+import { InstructorPostion } from "../../entities/instructor.entity";
+
 export class UpdateInstructorDto {
   private constructor(
     public readonly professor_id: string,
     public readonly starting_date: Date,
-    public readonly position_id: number
+    public readonly instructor_position: InstructorPostion,
+    public readonly status?: number
   ) {}
 
   get values() {
     const returnObj: { [key: string]: any } = {};
 
     if (this.starting_date) returnObj.starting_date = this.starting_date;
-    if (this.position_id) returnObj.position_id = this.position_id;
+    if (this.instructor_position) returnObj.position_id = this.instructor_position;
+    if (this.status) returnObj.status = this.status;
 
     return returnObj;
   }
@@ -17,7 +21,7 @@ export class UpdateInstructorDto {
   static update(props: {
     [key: string]: any;
   }): [string?, UpdateInstructorDto?] {
-    const { professor_id, starting_date, position_id } = props;
+    const { professor_id, starting_date, instructor_position, status } = props;
 
     if (!professor_id) {
       return ["Instructor ID is required"];
@@ -32,15 +36,16 @@ export class UpdateInstructorDto {
       throw "starting date is not a valid date";
     }
 
-    if (!position_id) {
-      return ["Professor ID is required"];
-    } else if (isNaN(Number(position_id))) {
-      return ["Professor ID must be a valid ID or number"];
-    }
+    if (!instructor_position) return ["Professor ID is required"];
 
     return [
       undefined,
-      new UpdateInstructorDto(professor_id, starting_date, position_id),
+      new UpdateInstructorDto(
+        professor_id,
+        starting_date,
+        instructor_position,
+        status
+      ),
     ];
   }
 }

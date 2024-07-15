@@ -107,7 +107,7 @@ model instruction {
 model instructor {
   professor_id        String               @id @db.VarChar(20)
   starting_date       DateTime             @db.Date
-  status              Boolean
+  status              Int
   instructor_position instructor_position?
   course              course[]
   instruction         instruction[]
