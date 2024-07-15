@@ -107,7 +107,7 @@ model instruction {
 model instructor {
   professor_id        String               @id @db.VarChar(20)
   starting_date       DateTime             @db.Date
-  status              Boolean
+  status              Int
   instructor_position instructor_position?
   course              course[]
   professor           professor            @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
@@ -232,7 +232,6 @@ model subject {
   precedent         Int?
   semester          Int
   academic_field_id Int
-  homologada        Boolean
   enrollment        enrollment[]
   instruction       instruction[]
   academic_field    academic_field @relation(fields: [academic_field_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_academicfield")
@@ -341,10 +340,10 @@ enum person_BloodType {
 }
 
 enum instructor_position {
-  RECTOR              @map("RECTOR")
-  VICERECTOR          @map("VICERECTOR")
-  ACADEMICO           @map("ACADEMICO")
+  RECTOR
+  VICERECTOR
+  ACADEMICO
   ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
   DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
-  ECONOMO             @map("ECONOMO")
+  ECONOMO
 }
