@@ -62,12 +62,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       },
       include: {
         phone_number: true,
-        social_media: {
-          include: {
-            social_media_category_social_media_social_media_categoryTosocial_media_category:
-              true,
-          },
-        },
+        social_media: true,
         user: {
           include: {
             parish:{
@@ -109,10 +104,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       const media: SocialMediaEntity[] = person_actual.social_media.map(
         (social_Actual) => {
           return SocialMediaEntity.fromdb({
-            social_Cate:
-              social_Actual
-                .social_media_category_social_media_social_media_categoryTosocial_media_category
-                .description,
+            social_media_category:social_Actual.social_media_category,
             link: social_Actual.link,
           });
         }
