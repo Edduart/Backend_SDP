@@ -5,6 +5,7 @@ import {
   CreatePhone,
   CreateSocialMedia,
   CreateUserDTO,
+  UpdateUserDto
 } from "../../domain";
 import { encode } from "../services/hash_handler";
 
@@ -54,9 +55,6 @@ export async function parseUserData(req: any, person: CreatePerson) {
   try {
     const origin = await JSON.parse(req); // check that is only a string
     const hashedPasword = await encode(origin.persona.id);
-
-    
-
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
@@ -65,7 +63,6 @@ export async function parseUserData(req: any, person: CreatePerson) {
           degree_Actual.link
         )
     );
-
     const userData = new CreateUserDTO(
       person,
       degrees,
@@ -73,7 +70,6 @@ export async function parseUserData(req: any, person: CreatePerson) {
       origin.user.role,
       hashedPasword
     );
-
     return userData;
   } catch (error) {
     throw error;
@@ -93,6 +89,38 @@ export async function parseInstructoData(req: any) {
       instructor_position,
     };
     return instructorData;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function parseUserDataUpdate(req: any) {
+  try {
+    const origin = await JSON.parse(req); 
+    const hashedPasword = await encode(origin.persona.id);
+    const degrees: CreateDegree[] | undefined = origin.user.degree.map(
+      (degree_Actual: { description: string; link: string }) =>
+        new CreateDegree(
+          origin.persona.id,
+          degree_Actual.description,
+          degree_Actual.link
+        )
+    );
+
+
+    console.log("data desde origen", origin);
+
+    const statusUpdate = origin.professor.status_id
+
+    const userData = new UpdateUserDto(
+      origin.persona.id,
+      origin.user.status,
+      degrees,
+      origin.user.parish_id,
+      origin.user.role,
+      hashedPasword
+    );
+    return { userData, statusUpdate };
   } catch (error) {
     throw error;
   }

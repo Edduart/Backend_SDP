@@ -1,4 +1,4 @@
-import { CreateProfessor } from "../dtos";
+import { CreateProfessor, UpdateProfessorDto } from "../dtos";
 import { ProfessorEntity } from "../entities"; 
 
 export abstract class ProfessorDataSource {
@@ -8,4 +8,5 @@ export abstract class ProfessorDataSource {
     status_id: number
   ): Promise<ProfessorEntity[]>;
   abstract delete(id: string): Promise<object>;
+  abstract update(data: UpdateProfessorDto): Promise<object>;
 }

@@ -1,7 +1,8 @@
-import { CreatePerson, CreateUserDTO, UpdateUser } from "../../../domain";
+import { CreatePerson, CreateUserDTO, UpdateUserDto } from "../../../domain";
 import { prisma } from "../../../data/postgres";
 import { person_BloodType } from "@prisma/client";
 import { redes } from "../../../seed/data";
+
 export async function UpdatePersonFunc(data: CreatePerson) {
   const check_exist = await prisma.person.findFirst({
     where: {
@@ -179,7 +180,7 @@ export async function CreateUser(user: CreateUserDTO) {
   }
 }
 
-export async function UpdateUserFunc(user: UpdateUser) {
+export async function UpdateUserFunc(user: UpdateUserDto) {
   //check if user exist
   const check_exist = await prisma.user.findFirst({
     where: {
@@ -197,6 +198,7 @@ export async function UpdateUserFunc(user: UpdateUser) {
         user_id: user.person_id,
       },
     });
+    console.log("user", user);
     //if there is degree we create it
     if (user.degree != undefined) {
       const degree_json = user.degree.map((actual) => {
@@ -206,6 +208,7 @@ export async function UpdateUserFunc(user: UpdateUser) {
           link: actual.link,
         };
       });
+      console.log("user degree", degree_json);
       await prisma.academic_degree.createMany({
         data: degree_json,
       });

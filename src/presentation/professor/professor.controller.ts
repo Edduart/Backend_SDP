@@ -7,12 +7,15 @@ import {
   CreateInstructor,
   CreateInstructorDto,
   DeleteProfessor,
+  UpdateProfessorDto,
+  UpdateProfessor
 } from "../../domain";
 import { Request, Response } from "express";
 import {
   parsePersonData,
   parseUserData,
   parseInstructoData,
+  parseUserDataUpdate
 } from "../utils/parseData";
 import fs from "fs";
 
@@ -21,6 +24,35 @@ export class ProfessorController {
     private readonly repository: ProfessorRepository,
     private readonly instructorPositionRepo: InstructorRepository
   ) {}
+
+  public update = async (req: Request, res: Response) => {
+    const isIsntructor = await parseInstructoData(req.body.data);
+    const personData = await parsePersonData(req.body.data, req.body.ayuda);
+    const {userData, statusUpdate} = await parseUserDataUpdate(req.body.data);
+    console.log(userData);
+    const professorData = new UpdateProfessorDto(
+      personData,
+      userData,
+      statusUpdate
+    );
+    
+    const updateProfesor = await new UpdateProfessor(this.repository)
+      .execute(professorData)
+      .then((professor) =>
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ msj: "Profesor actualizado correctamente", professor })
+      )
+      .catch((error) => res.status(400).json({ error }));
+
+    /*if (isIsntructor && createProfesor) {
+      const [error, createInstructor] =
+        CreateInstructorDto.create(isIsntructor);
+      if (error) return res.status(400).json({ error });
+      new CreateInstructor(this.instructorPositionRepo).execute(
+        createInstructor!
+      );*/
+    };
 
   public get = (req: Request, res: Response) => {
     new GetProfessor(this.repository)

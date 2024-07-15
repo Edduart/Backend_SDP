@@ -3,10 +3,15 @@ import {
   ProfessorDataSource,
   ProfessorEntity,
   ProfessorRepository,
+  UpdateProfessorDto,
 } from "../../domain";
 
 export class ProfessorRepositoryImpl implements ProfessorRepository {
   constructor(private readonly datasource: ProfessorDataSource) {}
+  
+  update(data: UpdateProfessorDto): Promise<object> {
+    return this.datasource.update(data);
+  }
   delete(id: string): Promise<object> {
     return this.datasource.delete(id)
   }
