@@ -70,6 +70,11 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
         user: {
           include: {
+            parish:{
+              include:{
+                diocese:true,
+              }
+            },
             seminarian: {
               include: {
                 foreigner_seminarian: true,
@@ -91,6 +96,8 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         fecha: person_actual.birthdate,
         medical_record: person_actual.medical_record,
         BloodType: person_actual.BloodType as BloodType,
+        parish_id: person_actual.user?.parish_id,
+        diocesi_id: person_actual.user?.parish.diocese_id
       }); //person creator
       person.date_String = person.birthdate.toISOString().split('T')[0]
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(

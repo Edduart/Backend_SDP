@@ -102,7 +102,6 @@ export class GetSeminarianDTO{
 
     public GetForeing(){
         if(this.foreing){
-            console.log("Foreing");
             return null
         } return undefined
     }

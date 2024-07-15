@@ -10,13 +10,15 @@ export class PersonEntity{
         public birthdate:               Date,
         public medical_record:          string|null,
         public BloodType:               BloodType,
+        public parish_id :              number,
+        public diocesi_id:              number,
         public cellpones?:              PhoneEntity[],
         public medias?:                 SocialMediaEntity[],
         public date_String?:            string
 
     ){}
     public static fromdb(object: {[key: string]: any}){
-        const {id, profile_picture_path, forename, surname, email, birthdate, medical_record, BloodType} = object;
+        const {id, profile_picture_path, forename, surname, email, birthdate, medical_record, BloodType, parish_id, diocesi_id} = object;
         let fecha = new Date()
         if(birthdate instanceof Date){
             fecha = new Date(birthdate);
@@ -24,7 +26,7 @@ export class PersonEntity{
             console.log(birthdate);
         }
         
-        return new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType)
+        return new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType, parish_id,diocesi_id);
     }
 }
 
