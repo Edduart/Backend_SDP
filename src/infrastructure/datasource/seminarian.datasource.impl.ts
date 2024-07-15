@@ -8,6 +8,7 @@ import { prisma } from "../../data/postgres";
 import {
   BloodType,
   CreateSeminarian,
+  DegreeEntity,
   ForeingSeminarianEntity,
   GetSeminarianDTO,
   Locations_enum,
@@ -65,6 +66,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         social_media: true,
         user: {
           include: {
+            academic_degree:true,
             parish:{
               include:{
                 diocese:true,
@@ -92,7 +94,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         medical_record: person_actual.medical_record,
         BloodType: person_actual.BloodType as BloodType
       }); //person creator
-      person.date_String = person.birthdate.toISOString().split('T')[0]
+      person.date_String = person.birthdate.toISOString().split('T')[0];
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(
         (cellphone_actual) => {
           return PhoneEntity.fromdb({
@@ -132,6 +134,12 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       }); //seminarian creator
       seminarian.person = person;
       seminarian.foreing_Data = foreing;
+      if(person_actual.user?.academic_degree != null){
+        const degrees: DegreeEntity[] = person_actual.user.academic_degree.map((degree_actual)=>{
+          return DegreeEntity.fromdb(degree_actual);
+        });
+        seminarian.degrees = degrees;
+      }
       return seminarian;
     });
 

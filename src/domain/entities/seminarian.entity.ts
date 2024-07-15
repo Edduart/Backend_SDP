@@ -1,4 +1,4 @@
-import { ForeingSeminarianEntity, PersonEntity } from "..";
+import { DegreeEntity, ForeingSeminarianEntity, PersonEntity } from "..";
 export class SeminarianEntity{
     constructor(
         public id:              string,
@@ -8,6 +8,7 @@ export class SeminarianEntity{
         public status:          seminarian_status_enum,
         public parish_id:       number,
         public diocesi_id:      number,
+        public degrees?:        DegreeEntity[],
         public person?:         PersonEntity,
         public foreing_Data?:   ForeingSeminarianEntity,
     ){}
