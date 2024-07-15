@@ -31,10 +31,10 @@ export class UserControler {
     const id: string = req.params.id;
     new GetUserbyId(this.repository)
       .execute(id)
-      .then((user) =>
+      .then((user) =>{
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Usuario encontrado", user })
+          .json({ msj: "Usuario encontrado", user })}
       )
       .catch((error) => res.status(400).json({ error }));
   };
@@ -42,10 +42,9 @@ export class UserControler {
   public getAll = (req: Request, res: Response) => {
     new GetUsers(this.repository)
       .execute()
-      .then((users) =>
+      .then((users) =>{
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
-      )
-      .catch((error) => res.status(400).json({ error }));
+    }).catch((error) => res.status(400).json({ error }));
   };
 
   public Login = (req: Request, res: Response) => {
