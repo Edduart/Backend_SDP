@@ -1,7 +1,50 @@
 import { prisma } from "../../data/postgres";
-import { CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectEntity, UpdateSubjectDTO } from "../../domain";
+import { CreateSubjectDTO, GetSubjectDTO, instruction_dto, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
+    async get_instruction(data: GetSubjectDTO): Promise<SubjectDeliver[]> {
+        const result = await prisma.subject.findMany({
+            where:{
+                AND:{
+                    status: data.status,
+                    description: {
+                        contains: data.description
+                    },
+                    id: data.id,
+                    course_id: data.course_id,
+                    academic_field:{
+                        id: data.academic_field_id,
+                        stage_id: data.stage_id,
+                    }
+                }
+            },
+            include:{
+                instruction: true,
+                course:true,
+                academic_field: {
+                    include: {
+                        stage: true,
+                    }
+                },
+                subject:{
+                    include:{
+                        academic_field: {
+                            include:{
+                                stage: true
+                            }
+                        }
+                    }
+                }}});
+        const results: SubjectDeliver[] = result.map((subject)=>{
+            const subject_actual = SubjectDeliver.fromObject(subject);
+            subject_actual.instruction = subject.instruction.map((instructions)=>{
+                return instruction_dto.fromObject(instructions);
+            });
+            return subject_actual;
+        });
+        
+        return results;
+    }
     async Delete(id: number): Promise<SubjectEntity> {
         const result = await prisma.subject.findMany({where:{id: id}});
         if (result.length == 0) throw new Error("Subject does not exists");
@@ -52,8 +95,6 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
                         }
                     }
                 }}});
-                console.log(result.length)
-                console.log(result)
             const results: SubjectEntity[] = result.map((subject)=>{
                 return SubjectEntity.fromObject(subject);
             });

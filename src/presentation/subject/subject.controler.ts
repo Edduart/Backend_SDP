@@ -1,4 +1,4 @@
-import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetSubjectDTO, 
+import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetSubjecInsttUseCase, GetSubjectDTO, 
     GetSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
     UpdateSubjectUseCase} from "../../domain";
 import { Request, Response } from "express";
@@ -84,6 +84,26 @@ export class SubjectControler{
 
         }catch(error){
             res.status(401).send("Error: " + error);
+        }
+    }
+    public Get_inst = async (req: Request, res: Response) => {
+        try{
+            //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
+            //const result = ValidatePermission(req.body.Permisos, "subject", 'R');
+            const [error, get_dto] = GetSubjectDTO.CreateDTO(req.query);
+            if(error != undefined){
+                console.log("verification errors:" +error);
+                res.json({error}).send();
+            }else{
+                if(get_dto != undefined){
+                    new GetSubjecInsttUseCase(this.repository).execute(get_dto).then((subjects)=>{
+                        res.json(subjects).send;
+                    })
+                    //.catch((error)=>{res.status(400).send("unable to get subjects: " + error);})
+                }
+            }
+        }catch(error){
+            //res.status(401).send("Error: " + error);
         }
     }
 }
