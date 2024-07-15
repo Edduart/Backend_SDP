@@ -11,7 +11,8 @@ export class PersonEntity{
         public medical_record:          string|null,
         public BloodType:               BloodType,
         public cellpones?:              PhoneEntity[],
-        public medias?:                 SocialMediaEntity[]
+        public medias?:                 SocialMediaEntity[],
+        public date_String?:            string
 
     ){}
     public static fromdb(object: {[key: string]: any}){
