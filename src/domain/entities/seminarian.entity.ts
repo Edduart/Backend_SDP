@@ -6,13 +6,15 @@ export class SeminarianEntity{
         public location:        Locations_enum,
         public Ministery:       seminarianMinistery_ENUM,
         public status:          seminarian_status_enum,
+        public parish_id:       number,
+        public diocesi_id:      number,
         public person?:         PersonEntity,
         public foreing_Data?:   ForeingSeminarianEntity,
     ){}
     public static fromdb(object: {[key: string]: any}){
-        const {id, apostleships, location, Ministery, status} = object;
+        const {id, apostleships, location, Ministery, status, parish_id, diocesi_id} = object;
         return new SeminarianEntity(id, apostleships, location as Locations_enum, Ministery as seminarianMinistery_ENUM, 
-            status as seminarian_status_enum);
+            status as seminarian_status_enum, parish_id, diocesi_id);
     }
 }
 

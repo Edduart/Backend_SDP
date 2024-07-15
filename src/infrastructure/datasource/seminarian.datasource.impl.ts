@@ -95,9 +95,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         email: person_actual.email,
         fecha: person_actual.birthdate,
         medical_record: person_actual.medical_record,
-        BloodType: person_actual.BloodType as BloodType,
-        parish_id: person_actual.user?.parish_id,
-        diocesi_id: person_actual.user?.parish.diocese_id
+        BloodType: person_actual.BloodType as BloodType
       }); //person creator
       person.date_String = person.birthdate.toISOString().split('T')[0]
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(
@@ -128,7 +126,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             person_actual.user?.seminarian?.foreigner_seminarian.seminary_name,
           stage: person_actual.user?.seminarian?.foreigner_seminarian.stage,
           stage_year:
-            person_actual.user?.seminarian?.foreigner_seminarian.stage_year,
+            person_actual.user?.seminarian?.foreigner_seminarian.stage_year
         });
       }
       const seminarian = SeminarianEntity.fromdb({
@@ -137,6 +135,8 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         location: person_actual.user?.seminarian?.Location as Locations_enum,
         Ministery: person_actual.user?.seminarian?.Ministery as seminarianMinistery_ENUM,
         status: person_actual.user?.seminarian?.status as seminarian_status_enum,
+        parish_id: person_actual.user?.parish_id,
+        diocesi_id: person_actual.user?.parish.diocese_id
       }); //seminarian creator
       seminarian.person = person;
       seminarian.foreing_Data = foreing;
