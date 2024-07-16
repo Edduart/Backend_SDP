@@ -8,14 +8,16 @@ import {
   CreateInstructorDto,
   DeleteProfessor,
   UpdateProfessorDto,
-  UpdateProfessor
+  UpdateProfessor,
+  UpdateInstructorDto,
+  UpdateInstructor
 } from "../../domain";
 import { Request, Response } from "express";
 import {
   parsePersonData,
   parseUserData,
   parseInstructoData,
-  parseUserDataUpdate
+  parseUserDataUpdate,
 } from "../utils/parseData";
 import fs from "fs";
 
@@ -26,33 +28,33 @@ export class ProfessorController {
   ) {}
 
   public update = async (req: Request, res: Response) => {
-    const isIsntructor = await parseInstructoData(req.body.data);
+    const isInstructor = await parseInstructoData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
-    const {userData, statusUpdate} = await parseUserDataUpdate(req.body.data);
-    console.log(userData);
+    const { userData, statusUpdate } = await parseUserDataUpdate(req.body.data);
+    //console.log(userData);
     const professorData = new UpdateProfessorDto(
       personData,
       userData,
       statusUpdate
     );
-    
+    console.log("instructor data:", isInstructor);
     const updateProfesor = await new UpdateProfessor(this.repository)
       .execute(professorData)
-      .then((professor) =>
+      .then((professor) => {
+        if (isInstructor != null) {
+          const [error, updateInstructor] =
+            UpdateInstructorDto.update(isInstructor);
+          if (error) return res.status(400).json({ error });
+          new UpdateInstructor(this.instructorPositionRepo).execute(
+            updateInstructor!
+          );
+        }
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor actualizado correctamente", professor })
-      )
+          .json({ msj: "Profesor actualizado correctamente", professor });
+      })
       .catch((error) => res.status(400).json({ error }));
-
-    /*if (isIsntructor && createProfesor) {
-      const [error, createInstructor] =
-        CreateInstructorDto.create(isIsntructor);
-      if (error) return res.status(400).json({ error });
-      new CreateInstructor(this.instructorPositionRepo).execute(
-        createInstructor!
-      );*/
-    };
+  };
 
   public get = (req: Request, res: Response) => {
     new GetProfessor(this.repository)
@@ -73,16 +75,17 @@ export class ProfessorController {
       .then((professor) =>
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor creado correctamente", professor }).send()
+          .json({ msj: "Profesor creado correctamente", professor })
+          .send()
       )
       .catch((error) => res.status(400).json({ error }));
     if (isIsntructor != null && createProfesor) {
       const [error, createInstructor] =
         CreateInstructorDto.create(isIsntructor);
       if (error) return res.status(400).json({ error });
-      new CreateInstructor(this.instructorPositionRepo).execute(
-        createInstructor!
-      ).catch((error) => res.status(400).json({ error }));
+      new CreateInstructor(this.instructorPositionRepo)
+        .execute(createInstructor!)
+        .catch((error) => res.status(400).json({ error })); // this could generate error
     }
   };
 

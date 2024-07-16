@@ -1,5 +1,5 @@
 import { prisma } from "../../data/postgres";
-import { filterNullValues } from "../../presentation/utils/FilterNullObject";
+import { filterNullValues } from "../../presentation/utils/filterNullObject";
 import {
   CreateUserDto,
   Login,

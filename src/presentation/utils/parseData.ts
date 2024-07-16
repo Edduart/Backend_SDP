@@ -79,7 +79,7 @@ export async function parseUserData(req: any, person: CreatePerson) {
 export async function parseInstructoData(req: any) {
   try {
     const origin = await JSON.parse(req);
-    const { is_instructor, starting_date, instructor_position } =
+    const { is_instructor, starting_date, instructor_position, status } =
       origin.instructor;
     if (is_instructor == false) return null;
     const professor_id  = origin.persona.id;
@@ -87,6 +87,7 @@ export async function parseInstructoData(req: any) {
       professor_id,
       starting_date,
       instructor_position,
+      status
     };
     return instructorData;
   } catch (error) {
@@ -106,12 +107,7 @@ export async function parseUserDataUpdate(req: any) {
           degree_Actual.link
         )
     );
-
-
-    console.log("data desde origen", origin);
-
     const statusUpdate = origin.professor.status_id
-
     const userData = new UpdateUserDto(
       origin.persona.id,
       origin.user.status,

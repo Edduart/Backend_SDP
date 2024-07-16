@@ -1,5 +1,4 @@
-import { PersonEntity } from "./person.entity";
-import { PhoneEntity } from "./phone.entity";
+import { PersonEntity, DegreeEntity, PhoneEntity, InstructorEntity } from "../";
 import { SocialMediaEntity } from "./social.media.entity";
 
 export class ProfessorEntity {
@@ -7,7 +6,9 @@ export class ProfessorEntity {
     public person: PersonEntity,
     public social: SocialMediaEntity[] | null,
     public phone_number: PhoneEntity[] | null,
-    public status_id: number
+    public status_id: number,
+    public degrees?: DegreeEntity[],
+    public instructor?: InstructorEntity
   ) {
     //this.status_id = 1;
   }

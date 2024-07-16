@@ -3,6 +3,8 @@ import {
   CreateProfessor,
   PersonEntity,
   PhoneEntity,
+  DegreeEntity,
+  InstructorEntity,
   SocialMediaEntity,
   ProfessorDataSource,
   ProfessorEntity,
@@ -73,31 +75,28 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         status_id: 1,
       },
     });
-    const resultIndividual = await this.get(
-      createDto.user.person.id,
-      undefined
-    );
+    const resultIndividual = await this.get();
     return resultIndividual[0]; // check error in get
   }
 
-  async get(id?: string, status_id?: number): Promise<ProfessorEntity[]> {
-    let retunrFromDB;
-    //if (!id && !status_id) {
-    //console.log("going for all");
-
-    retunrFromDB = await prisma.professor.findMany({
+  async get(): Promise<ProfessorEntity[]> {
+    const retunrFromDB = await prisma.professor.findMany({
       select: {
         id: true,
         status_id: true,
+        instructor: { include: { professor: true } },
         user: {
           include: {
+            academic_degree: true,
+            parish: { select: { diocese_id: true } },
             person: {
               include: {
+                user: true,
                 phone_number: true,
                 social_media: {
                   include: {
                     social_media_category_social_media_social_media_categoryTosocial_media_category:
-                      { select: { description: true } },
+                      { select: { id: true } },
                   },
                 },
               },
@@ -106,24 +105,8 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         },
       },
     });
-    /* } else {
-      retunrFromDB = await prisma.person.findMany({
-        where: {
-          OR: [{ id: id }],
-        },
-        include: {
-          phone_number: true,
-          social_media: {
-            include: {
-              social_media_category_social_media_social_media_categoryTosocial_media_category:
-                { select: { description: true } },
-            },
-          },
-        },
-      });
-    }*/
-    //mapeo de los datos
-    //console.log(retunrFromDB);
+
+    console.log(retunrFromDB[0], retunrFromDB[0].user.person);
 
     const professors: ProfessorEntity[] = retunrFromDB.map((professor) => {
       const person: PersonEntity = PersonEntity.fromdb(professor.user.person); //datos de persona
@@ -138,10 +121,13 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
           return SocialMediaEntity.fromdb({
             link: sociales.link,
             social_media_category:
-              sociales.social_media_category_social_media_social_media_categoryTosocial_media_category,
+              sociales.id,
           });
         });
-
+              /*const degrees: DegreeEntity[] =
+                professor.user.academic_degree.map((phoneatributer) => {
+                  return PhoneEntity.fromdb(phoneatributer);
+                });*/
       return ProfessorEntity.fromObject(person, socials, phones, status);
     });
     return professors;
