@@ -27,7 +27,7 @@ export class InstructorDataSourceImple implements InstructorDataSource {
       data: {
         starting_date: updateDto.starting_date,
         instructor_position:
-          updateDto.instructor_position as instructor_position,
+        updateDto.instructor_position as instructor_position,
         status: updateDto.status,
       },
     });

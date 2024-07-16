@@ -1,5 +1,6 @@
 import { prisma } from "../../data/postgres"
 import {
+  academics as academicData,
   permissions as permsData,
   dioceses as diocesesData,
   redes as redData,
@@ -16,4 +17,5 @@ export const modelData = {
   redes: { model: prisma.social_media_category.createMany, data: redData },
   stage: { model: prisma.stage.createMany, data: stageData },
   parishe: { model: prisma.parish.createMany,data: parishData},
+  academic_field: {model: prisma.academic_field.createMany, data: academicData},
 };

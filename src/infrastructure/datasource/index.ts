@@ -11,3 +11,4 @@ export * from "./user.datasource.impl"
 export * from "./user.datasource.impl"
 export * from "./utils/user.functions"
 export * from "./seminarian.datasource.impl"
+export * from "./subject.datasource.impl";

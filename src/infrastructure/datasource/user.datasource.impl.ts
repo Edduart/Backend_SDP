@@ -10,16 +10,59 @@ import {
 } from "../../domain";
 
 export class UserDataSourceImplementation implements UserDataSource {
+  async getById(id: string): Promise<object> {
+    const userById = await prisma.user.findUnique({
+      where: { person_id: id },
+      select: {
+        person: { select: { id: true, forename: true, surname: true } },
+        seminarian: {
+          select: { status: true },
+        },
+        professor: {
+          select: {
+            status_id: true,
+            instructor: { select: { status: true, instructor_position: true } },
+          },
+        },
+      },
+    });
+    if (userById == null) throw ("No se encontraron coincidencias!")
+    return filterNullValues(userById);
+  }
+  async getByType(type: string): Promise<object> {
+    if (type === "professor" || type === "seminarian") {
+      const userByType = await prisma.user.findMany({
+        where: {
+          [type]: { isNot: null },
+        },
+        select: {
+          person: { select: { id: true, forename: true, surname: true } },
+          seminarian: {
+            select: { status: true },
+          },
+          professor: {
+            select: {
+              status_id: true,
+              instructor: {
+                select: { status: true, instructor_position: true },
+              },
+            },
+          },
+        },
+      });
+      return userByType.map(filterNullValues);
+    } else {
+      throw "Debe enviar un tipo de usuario valido!";
+    }
+  }
   async getAll(): Promise<object> {
     const users = await prisma.user.findMany({
       select: {
         person: { select: { id: true, forename: true, surname: true } },
         seminarian: {
-          where: { status: { not: undefined } },
           select: { status: true },
         },
         professor: {
-          where: { status_id: { not: undefined } },
           select: {
             status_id: true,
             instructor: { select: { status: true, instructor_position: true } },

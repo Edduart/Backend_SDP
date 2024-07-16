@@ -9,3 +9,4 @@ export * from "./course.repository.imple"
 export * from "./professor.repository.imple"
 export * from "./seminarian.repository.imple"
 export * from "./user.repository.imple"
+export * from "./subject.repository.imple";

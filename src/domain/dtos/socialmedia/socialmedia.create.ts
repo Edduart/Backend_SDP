@@ -10,7 +10,6 @@ export class CreateSocialMedia{
         if (!this.social_media_category) errorarray.push ("Category is required");
         if (!this.link) errorarray.push ("link is required");
 
-        if (typeof this.social_media_category !== 'string') errorarray.push("category must be a string")
         if (typeof this.link !== 'string') errorarray.push("link only supports characters");
 
         if (errorarray.length > 0) {

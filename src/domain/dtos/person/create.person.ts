@@ -22,7 +22,7 @@ export class CreatePerson{
             if(auxiliary != null) return auxiliary;
         })
         auxiliary = undefined;
-        const CreateSocialMedia = this.cellphone?.map((media_actua)=>{
+        const CreateSocialMedia = this.media?.map((media_actua)=>{
             auxiliary = media_actua.Validate()
             if(auxiliary != null) return auxiliary;
         })

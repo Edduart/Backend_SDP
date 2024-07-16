@@ -7,6 +7,12 @@ import {
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly datasource: UserDataSource) {}
+  getById(id: string): Promise<object> {
+    return this.datasource.getById(id);
+  }
+  getByType(type: string): Promise<object> {
+    return this.datasource.getByType(type);
+  }
   getAll(): Promise<object> {
     return this.datasource.getAll();
   }

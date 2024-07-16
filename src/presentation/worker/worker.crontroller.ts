@@ -64,7 +64,7 @@ export class WorkerControler{
         const result = ValidatePermission(source, "instructor", 'U');
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
         let origin = JSON.parse(req.body.data);
-        const persondto = await parsePersonData(req.body.data, req.body.ayuda);
+        const persondto = await parsePersonData(req.body.data, "http://127.0.0.1:3000/"+req.body.ayuda);
         const workerdto = new CreateWorker(persondto, origin.job_position as Job_Psotion_Enum);
         const result_validations = workerdto.Validate();
         if(result_validations == null){
@@ -87,7 +87,7 @@ export class WorkerControler{
         try{
           const result = ValidatePermission(source, "instructor", 'C');
           let origin = JSON.parse(req.body.data);
-          const persondto = await parsePersonData(req.body.data, req.body.ayuda);
+          const persondto = await parsePersonData(req.body.data, "http://127.0.0.1:3000/"+req.body.ayuda);
           const workerdto = new CreateWorker(persondto, origin.job_position as Job_Psotion_Enum);
           const result_validations = workerdto.Validate();
           if(result_validations == null){

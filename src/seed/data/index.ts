@@ -4,3 +4,4 @@ export * from "./redes";
 export * from "./stages"
 export * from "./parish";
 export * from "./instructorPosition";
+export * from "./academicField";

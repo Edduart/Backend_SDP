@@ -1,17 +1,16 @@
-
-export class CreateSubjectDTO{
+export class UpdateSubjectDTO{
     constructor(
+        public readonly id :                number,
         public readonly course_id:          number,
         public readonly description:        string,
         public readonly semester:           number,
         public readonly academic_field_id:  number,
-        public readonly status:            boolean,
         public readonly homologada:        boolean,
         public readonly precedent?:         number,
     ){}
 
-    static CreateDTO(object: { [key: string]: any }): [string?, CreateSubjectDTO?]{
-        const { course_id, description, semester, academic_field_id, precedent, homologado} = object;
+    static CreateDTO(object: { [key: string]: any }): [string?, UpdateSubjectDTO?]{
+        const { id, course_id, description, semester, academic_field_id, precedent, homologado} = object;
         let bool_homo = false;
         let precedent_numberl = undefined;
         
@@ -34,7 +33,9 @@ export class CreateSubjectDTO{
             if (Number.isNaN(academic_field_id) || !Number.isInteger(academic_field_id) || academic_field_id < 0) {
                 errorarray.push("academic_id id must be a non-negative integer");
             }
-            
+        if (Number.isNaN(id) || !Number.isInteger(id) || id < 0) {
+            errorarray.push("id must be a non-negative integer");
+        } 
         if (Number.isNaN(course_id) || !Number.isInteger(course_id) || course_id < 0) {
            errorarray.push("course id must be a non-negative integer");
         }
@@ -53,26 +54,11 @@ export class CreateSubjectDTO{
                 errorarray.push("precedent number id must be a non-negative integer");
             }
         }
+        if(id == precedent)errorarray.push("a subject can not precer itselft");
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
         }
-        return [undefined, new CreateSubjectDTO(course_id, description, semester, academic_field_id, true, bool_homo, precedent_numberl)];
-    }
-
-
-
-    public Validate(): string|null{
-        let errorarray: string[]= [];
-        if( this.academic_field_id <= 0 ) errorarray.push("course id must be positive");
-        if( this.course_id <= 0 ) errorarray.push("course id must be positive");
-        if( this.description. length > 200 ) errorarray.push("description is too long");
-        if( this.precedent != undefined &&  this. precedent <= 0 ) errorarray.push("precedent must be positive");
-        if( this.semester <= 0 ) errorarray.push("semester must be positive");
-        
-        if (errorarray.length > 0) {
-            return errorarray.join(", ");
-        }
-        return null;
+        return [undefined, new UpdateSubjectDTO(id, course_id, description, semester, academic_field_id, bool_homo, precedent_numberl)];
     }
 
 

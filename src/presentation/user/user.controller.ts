@@ -5,6 +5,8 @@ import {
   UserRepository,
   UserTrans,
   GetUsers,
+  GetUserbyId,
+  GetUsersByType
 } from "../../domain";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -15,13 +17,34 @@ import { ActualizarFecha } from "../../infrastructure";
 export class UserControler {
   constructor(private readonly repository: UserRepository) {}
 
-  public getAll = (req: Request, res: Response) => {
-    new GetUsers(this.repository)
-      .execute()
+  public getByType = async (req: Request, res: Response) => {
+    const {type} = req.query;
+    new GetUsersByType(this.repository)
+      .execute(String(type))
       .then((users) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
       )
       .catch((error) => res.status(400).json({ error }));
+  };
+
+  public getById = (req: Request, res: Response) => {
+    const id: string = req.params.id;
+    new GetUserbyId(this.repository)
+      .execute(id)
+      .then((user) =>{
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ msj: "Usuario encontrado", user })}
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public getAll = (req: Request, res: Response) => {
+    new GetUsers(this.repository)
+      .execute()
+      .then((users) =>{
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
+    }).catch((error) => res.status(400).json({ error }));
   };
 
   public Login = (req: Request, res: Response) => {

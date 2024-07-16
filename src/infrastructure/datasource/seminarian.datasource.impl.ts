@@ -8,6 +8,7 @@ import { prisma } from "../../data/postgres";
 import {
   BloodType,
   CreateSeminarian,
+  DegreeEntity,
   ForeingSeminarianEntity,
   GetSeminarianDTO,
   Locations_enum,
@@ -62,14 +63,15 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       },
       include: {
         phone_number: true,
-        social_media: {
-          include: {
-            social_media_category_social_media_social_media_categoryTosocial_media_category:
-              true,
-          },
-        },
+        social_media: true,
         user: {
           include: {
+            academic_degree:true,
+            parish:{
+              include:{
+                diocese:true,
+              }
+            },
             seminarian: {
               include: {
                 foreigner_seminarian: true,
@@ -90,8 +92,9 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         email: person_actual.email,
         fecha: person_actual.birthdate,
         medical_record: person_actual.medical_record,
-        BloodType: person_actual.BloodType as BloodType,
+        BloodType: person_actual.BloodType as BloodType
       }); //person creator
+      person.date_String = person.birthdate.toISOString().split('T')[0];
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(
         (cellphone_actual) => {
           return PhoneEntity.fromdb({
@@ -103,10 +106,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       const media: SocialMediaEntity[] = person_actual.social_media.map(
         (social_Actual) => {
           return SocialMediaEntity.fromdb({
-            social_Cate:
-              social_Actual
-                .social_media_category_social_media_social_media_categoryTosocial_media_category
-                .description,
+            social_media_category:social_Actual.social_media_category,
             link: social_Actual.link,
           });
         }
@@ -120,20 +120,26 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             person_actual.user?.seminarian?.foreigner_seminarian.seminary_name,
           stage: person_actual.user?.seminarian?.foreigner_seminarian.stage,
           stage_year:
-            person_actual.user?.seminarian?.foreigner_seminarian.stage_year,
+            person_actual.user?.seminarian?.foreigner_seminarian.stage_year
         });
       }
       const seminarian = SeminarianEntity.fromdb({
         id: person_actual.user?.seminarian?.id,
         apostleships: person_actual.user?.seminarian?.apostleships,
         location: person_actual.user?.seminarian?.Location as Locations_enum,
-        Ministery: person_actual.user?.seminarian
-          ?.Ministery as seminarianMinistery_ENUM,
-        status: person_actual.user?.seminarian
-          ?.Ministery as seminarian_status_enum,
+        Ministery: person_actual.user?.seminarian?.Ministery as seminarianMinistery_ENUM,
+        status: person_actual.user?.seminarian?.status as seminarian_status_enum,
+        parish_id: person_actual.user?.parish_id,
+        diocesi_id: person_actual.user?.parish.diocese_id
       }); //seminarian creator
       seminarian.person = person;
       seminarian.foreing_Data = foreing;
+      if(person_actual.user?.academic_degree != null){
+        const degrees: DegreeEntity[] = person_actual.user.academic_degree.map((degree_actual)=>{
+          return DegreeEntity.fromdb(degree_actual);
+        });
+        seminarian.degrees = degrees;
+      }
       return seminarian;
     });
 
@@ -180,14 +186,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     }
   }
   async Update(data: UpdateSeminarian): Promise<string> {
-    const check_exist = await prisma.seminarian.findFirst({
-      where: {
-        id: data.person.id,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const check_exist = await prisma.seminarian.findFirst({where: {id: data.person.id,},select: {id: true,},});
     if (check_exist == null) throw new Error("seminarian does not exists");
     try {
       //updating the person data
@@ -201,7 +200,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       //create de foreing data
       if (data.foreing_Data != undefined) {
         //deleting old foreing data
-        console.log(data.person.id);
 
         await prisma.foreigner_seminarian.create({
           data: {
@@ -231,7 +229,11 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   }
   async create(data: CreateSeminarian): Promise<string> {
     try {
-      await CreateUser(data.user);
+      const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
+      if(user != undefined){throw new Error("Someone with the same id already exits");}
+
+      const result = await prisma.$transaction(async (tx) => {
+        await CreateUser(data.user);
       //creating foreing
       if (data.foreing_Data != undefined) {
         //call to create if foreing data
@@ -273,6 +275,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
       });
       return result.id;
+      });
+      
+      return result;
+      
     } catch (error) {
       throw new Error("Unable to create seminarian" + error);
     }
