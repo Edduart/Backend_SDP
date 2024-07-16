@@ -1,6 +1,7 @@
 import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian,
     CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, 
-    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase} from "../../domain";
+    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase,
+    seminarian_status_enum} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -65,7 +66,8 @@ export class SeminarianControler{
             //assembling de seminarian
             const seminarian = new UpdateSeminarian(foreingdata,
                 user_origin.location as Locations_enum, user_origin.apostleships, persondto, 
-                user_origin.ministery as seminarianMinistery_ENUM
+                user_origin.ministery as seminarianMinistery_ENUM,
+                user_origin.status as seminarian_status_enum
             );
             //now check if there are errors
             const errores = seminarian.Validate();
