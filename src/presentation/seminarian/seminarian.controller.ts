@@ -8,6 +8,7 @@ import { ValidatePermission } from "../services/permissionValidator";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public get = async (req: Request, res: Response) => {
+        console.log("get");
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');
             const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
@@ -24,10 +25,11 @@ export class SeminarianControler{
                 }
             }
         }catch(error){
-            res.status(418).send("Error: " + error);
+            res.status(418).json({error})
         }
     }
     public delete = async (req: Request, res: Response) => {
+        console.log("delete");
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'D');
             new DeleteSeminarianUseCase(this.repository).execute(req.params.id).then((result) =>{
@@ -48,6 +50,7 @@ export class SeminarianControler{
     }
 
     public update = async (req: Request, res: Response) => {
+        console.log("upd");
         const source = req.headers['Permissions'];
         try{
             const result = ValidatePermission(source, "seminarian", 'U');
@@ -95,11 +98,12 @@ export class SeminarianControler{
               res.status(418).send("Error: " + error);
         }
     }
-
     public Create = async (req: Request, res: Response) => {
+        console.log("create");
         const source = req.headers['Permissions'];
         try{
             const result = ValidatePermission(source, "seminarian", 'C');
+            console.log(req.body);
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
             const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);
@@ -123,27 +127,26 @@ export class SeminarianControler{
             const errores = seminarian.Validate();
             //if there is any error, it send error
             if(errores == null){
-                new CreateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian)=>{res.json({message: "ready"}).send})
-                .catch((error) => {
-                    if (req.body.ayuda != null) {
-                        fs.unlinkSync(req.body.ayuda);
+                new CreateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian)=>{
+                    res.json({message: "ready"}).send})
+                .catch((error) => {if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);
                       }
-                    res.status(400).send("Unexpected error: " + error)
+                console.log("voy a enviar error dentro del catch de usecase");
+                res.status(400).send("Unexpected error: " + error)
                 })
             }else{
-                if (req.body.ayuda != null) {
-                    fs.unlinkSync(req.body.ayuda);
-                }
+                if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);}
                 //validation errors
                 console.log(errores);
-                res.status(400).send("Validation error: " + errores);
-            }
+                console.log("voy a enviar error dentro del catch de validacion");
+                res.status(400).send("Validation error: " + errores);}
         }catch(error){
             // permissions errores
             if (req.body.ayuda != null) {
                 fs.unlinkSync(req.body.ayuda);
               }
               console.log("unexpected error while executing");
+              console.log("error mientrs se ejecuta");
               res.status(418).send("Error: " + error);
         }
     }
