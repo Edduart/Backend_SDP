@@ -17,14 +17,11 @@ export class PersonEntity{
     ){}
     public static fromdb(object: {[key: string]: any}){
         const {id, profile_picture_path, forename, surname, email, birthdate, medical_record, BloodType} = object;
-        let fecha = new Date()
-        if(birthdate instanceof Date){
-            fecha = new Date(birthdate);
-        }else{
-            console.log(birthdate);
-        }
-        
-        return new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType);
+        let fecha = new Date(birthdate);
+        const date_tocreate = fecha.toISOString().split('T')[0];
+        const person = new PersonEntity(id, profile_picture_path, forename, surname, email, fecha, medical_record, BloodType);
+        person.date_String = date_tocreate;
+        return person;
     }
 }
 

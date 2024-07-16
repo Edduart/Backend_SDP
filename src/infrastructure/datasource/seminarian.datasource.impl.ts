@@ -90,11 +90,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         forename: person_actual.forename,
         surname: person_actual.surname,
         email: person_actual.email,
-        fecha: person_actual.birthdate,
+        birthdate: person_actual.birthdate,
         medical_record: person_actual.medical_record,
         BloodType: person_actual.BloodType as BloodType
       }); //person creator
-      person.date_String = person.birthdate.toISOString().split('T')[0];
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(
         (cellphone_actual) => {
           return PhoneEntity.fromdb({
