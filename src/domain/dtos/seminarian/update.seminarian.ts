@@ -11,6 +11,7 @@ export class UpdateSeminarian{
     ){}
     
     public Validate(): string|null{
+        console.log(this.status);
         let errorarray: string[]= [];
         const result_user = this.person.Validate();
         const result_foreing = this.foreing_Data?.Validate();
