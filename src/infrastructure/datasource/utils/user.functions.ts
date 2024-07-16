@@ -30,10 +30,7 @@ export async function UpdatePersonFunc(data: CreatePerson) {
       const media_json = data.media.map((actual) => {
         return {
           person_id: data.id,
-          social_media_category:
-            redes.find(
-              (item) => item.description === actual.social_media_category
-            )?.id || 1,
+          social_media_category: actual.social_media_category,
           link: actual.link,
         };
       });
@@ -105,10 +102,7 @@ export async function CreatePersonFunc(data: CreatePerson) {
       const media_json = data.media.map((actual) => {
         return {
           person_id: data.id,
-          social_media_category:
-            redes.find(
-              (item) => item.description === actual.social_media_category
-            )?.id || 1,
+          social_media_category: actual.social_media_category,
           link: actual.link,
         };
       });

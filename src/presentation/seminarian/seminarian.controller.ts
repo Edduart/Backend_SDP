@@ -8,7 +8,6 @@ import { ValidatePermission } from "../services/permissionValidator";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public get = async (req: Request, res: Response) => {
-        console.log("get");
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');
             const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
@@ -29,7 +28,6 @@ export class SeminarianControler{
         }
     }
     public delete = async (req: Request, res: Response) => {
-        console.log("delete");
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'D');
             new DeleteSeminarianUseCase(this.repository).execute(req.params.id).then((result) =>{
@@ -50,7 +48,6 @@ export class SeminarianControler{
     }
 
     public update = async (req: Request, res: Response) => {
-        console.log("upd");
         const source = req.headers['Permissions'];
         try{
             const result = ValidatePermission(source, "seminarian", 'U');
@@ -99,7 +96,6 @@ export class SeminarianControler{
         }
     }
     public Create = async (req: Request, res: Response) => {
-        console.log("create");
         const source = req.headers['Permissions'];
         try{
             const result = ValidatePermission(source, "seminarian", 'C');

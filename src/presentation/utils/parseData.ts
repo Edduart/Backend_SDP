@@ -22,7 +22,7 @@ export async function parsePersonData(req: any, path: any) {
     const imageFile = path ? path.replace(/\\/g, "/") : null;
     // Social Media Data Parsing
     const socials: CreateSocialMedia[] | null = origin.persona.social?.map(
-      (social: { social_media_category: string; link: string }) =>
+      (social: { social_media_category: number; link: string }) =>
         new CreateSocialMedia(social.social_media_category, social.link)
     );
     // Phone Data Parsing
