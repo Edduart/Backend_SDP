@@ -65,7 +65,7 @@ export const academics = [
         description: "Investigación"
     },{
         id: 16,
-        stage_id: 1,
+        stage_id: 2,
         description: "Instrumentales"
     },{
         id: 17,
