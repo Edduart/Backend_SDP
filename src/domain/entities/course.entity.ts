@@ -3,7 +3,7 @@ export class CourseEntity {
     public id: number,
     public stage_id: number,
     public description: string,
-    public instructor_id: string
+    public instructor_id: string|null
   ) {}
 
   public static fromObject(object: { [key: string]: any }): CourseEntity {
@@ -11,7 +11,6 @@ export class CourseEntity {
     if (!id) throw "Id is required";
     if (!stage_id) throw "Stage ID is required";
     if (!description) throw "Description is required";
-    if (!instructor_id) throw "Instructor ID is required";
 
     return new CourseEntity(id, stage_id, description, instructor_id);
   }

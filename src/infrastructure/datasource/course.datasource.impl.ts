@@ -16,7 +16,10 @@ export class CourseDataSourceImpl implements CourseDatasource {
 
   async getAll(): Promise<CourseEntity[]> {
     const courses = await prisma.course.findMany();
-    return courses.map((courses) => CourseEntity.fromObject(courses));
+    console.log(courses);
+    const result: CourseEntity[] = courses.map((courses) =>CourseEntity.fromObject(courses));
+    console.log(result);
+    return result
   }
 
   async findById(id: number): Promise<CourseEntity> {
