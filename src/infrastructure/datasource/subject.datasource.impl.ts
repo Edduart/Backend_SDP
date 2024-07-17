@@ -1,7 +1,17 @@
 import { prisma } from "../../data/postgres";
-import { CreateSubjectDTO, GetSubjectDTO, instruction_dto, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
+import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
+    async Get_fields(): Promise<academicFieldEntity[]> {
+        const results = await prisma.academic_field.findMany({
+            include:{
+                stage:true,
+            }
+        });
+        const fields: academicFieldEntity[] = results.map((field_actual)=> academicFieldEntity.fromObject(field_actual))
+        return fields;
+    }
+    
     async get_instruction(data: GetSubjectDTO): Promise<SubjectDeliver[]> {
         const result = await prisma.subject.findMany({
             where:{

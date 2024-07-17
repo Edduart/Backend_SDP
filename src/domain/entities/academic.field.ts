@@ -11,7 +11,6 @@ export class academicFieldEntity{
 
     public static fromObject(object: { [key: string]: any }): academicFieldEntity {
         const { id, stage, description } = object;
-        console.log(object);
         const stage_obj = StageEntity.fromObject(stage);
         return new academicFieldEntity(id, stage_obj, description);
     }

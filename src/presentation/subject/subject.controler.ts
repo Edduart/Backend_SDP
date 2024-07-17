@@ -1,4 +1,4 @@
-import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetSubjecInsttUseCase, GetSubjectDTO, 
+import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetFieldstUseCase, GetSubjecInsttUseCase, GetSubjectDTO, 
     GetSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
     UpdateSubjectUseCase} from "../../domain";
 import { Request, Response } from "express";
@@ -19,6 +19,14 @@ export class SubjectControler{
                 })
                 .catch((error)=>{res.status(403).send("unable to get subjects: " + error);})
             }
+        }catch(error){
+            res.status(401).send("Error: " + error);
+        }
+    }
+    public Get_Field = async (req: Request, res: Response) => {
+        try{
+            new GetFieldstUseCase(this.repository).execute().then((subjects)=>{res.json(subjects).send;})
+                .catch((error)=>{res.status(400).send("unable to get fields: " + error);})
         }catch(error){
             res.status(401).send("Error: " + error);
         }
