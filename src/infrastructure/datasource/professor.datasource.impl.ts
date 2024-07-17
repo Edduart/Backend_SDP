@@ -1,3 +1,4 @@
+import { instructor_position } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import {
   CreateProfessor,
@@ -10,6 +11,7 @@ import {
   ProfessorEntity,
   UpdateProfessorDto,
   UpdateUserDto,
+  GetProfessorDto
 } from "../../domain";
 
 import {
@@ -18,6 +20,8 @@ import {
   UpdatePersonFunc,
   UpdateUserFunc,
 } from "./utils/user.functions";
+
+import { parseProfessorGet } from '../../presentation/utils/parseData';
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async update(data: UpdateProfessorDto): Promise<object> {
@@ -51,10 +55,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       where: { id: id },
       data: { status_id: 0 },
     });
-    const isInstrutor = await prisma.instructor.findUnique({
+    const isInstructor = await prisma.instructor.findUnique({
       where: { professor_id: id },
     });
-    if (isInstrutor != null) {
+    if (isInstructor != null) {
       await prisma.instructor.update({
         where: { professor_id: id },
         data: { status: 0 },
@@ -75,16 +79,20 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         status_id: 1,
       },
     });
-    const resultIndividual = await this.get();
+    const DtoForResponse = new GetProfessorDto(
+      createDto.user.person.id
+    );
+    const resultIndividual = await this.get(DtoForResponse);
     return resultIndividual[0]; // check error in get
   }
 
-  async get(): Promise<ProfessorEntity[]> {
-    const retunrFromDB = await prisma.professor.findMany({
+  async get(filter: GetProfessorDto): Promise<ProfessorEntity[]> {
+    const returnFromDB = await prisma.professor.findMany({
+      where: {id: filter.id, status_id: filter.status},
       select: {
         id: true,
         status_id: true,
-        instructor: { include: { professor: true } },
+        instructor: true,
         user: {
           include: {
             academic_degree: true,
@@ -96,7 +104,12 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
                 social_media: {
                   include: {
                     social_media_category_social_media_social_media_categoryTosocial_media_category:
-                      { select: { id: true } },
+                      {
+                        select: {
+                          social_media_social_media_social_media_categoryTosocial_media_category:
+                            { select: { id: true } },
+                        },
+                      },
                   },
                 },
               },
@@ -105,31 +118,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         },
       },
     });
-
-    console.log(retunrFromDB[0], retunrFromDB[0].user.person);
-
-    const professors: ProfessorEntity[] = retunrFromDB.map((professor) => {
-      const person: PersonEntity = PersonEntity.fromdb(professor.user.person); //datos de persona
-      const status = professor.status_id;
-      const phones: PhoneEntity[] = professor.user.person.phone_number.map(
-        (phoneatributer) => {
-          return PhoneEntity.fromdb(phoneatributer);
-        }
-      );
-      const socials: SocialMediaEntity[] =
-        professor.user.person.social_media.map((sociales) => {
-          return SocialMediaEntity.fromdb({
-            link: sociales.link,
-            social_media_category:
-              sociales.id,
-          });
-        });
-              /*const degrees: DegreeEntity[] =
-                professor.user.academic_degree.map((phoneatributer) => {
-                  return PhoneEntity.fromdb(phoneatributer);
-                });*/
-      return ProfessorEntity.fromObject(person, socials, phones, status);
-    });
-    return professors;
+    if (returnFromDB.length === 0) throw "No se encontraron coincidencias con los parametros especificados!"  
+    return parseProfessorGet(returnFromDB);;
   }
 }

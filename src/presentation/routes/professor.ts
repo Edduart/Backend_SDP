@@ -10,15 +10,17 @@ import {
 import { ProfessorController } from "../professor/professor.controller";
 const router = Router();
 
-const instructorDatasource = new InstructorDataSourceImple();
-const instructorRepostory = new InstructorRepositoryImpl(instructorDatasource);
+const instructorDataSource = new InstructorDataSourceImple();
+const instructorRepository = new InstructorRepositoryImpl(instructorDataSource);
 
-const datasource = new ProfessorDataSourceImpl();
-const repository = new ProfessorRepositoryImpl(datasource);
+const dataSource = new ProfessorDataSourceImpl();
+const repository = new ProfessorRepositoryImpl(dataSource);
 const professorController = new ProfessorController(
   repository,
-  instructorRepostory
+  instructorRepository
 );
+
+// TODO check token and permissions
 
 router.get("/", professorController.get);
 

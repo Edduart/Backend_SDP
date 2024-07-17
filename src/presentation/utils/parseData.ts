@@ -1,20 +1,20 @@
+import { instructor_position } from "@prisma/client";
 import {
+  ProfessorEntity,
   BloodType,
   CreateDegree,
   CreatePerson,
   CreatePhone,
   CreateSocialMedia,
   CreateUserDTO,
-  UpdateUserDto
+  UpdateUserDto,
+  PersonEntity,
+  PhoneEntity,
+  DegreeEntity,
+  SocialMediaEntity,
 } from "../../domain";
 import { encode } from "../services/hash_handler";
-
-interface UserData {
-  person_id: string;
-  parish_id: number;
-  password: string;
-  role_id: number;
-}
+import { formatDate } from "../../presentation/utils/formatDate";
 
 export async function parsePersonData(req: any, path: any) {
   try {
@@ -54,7 +54,7 @@ export async function parsePersonData(req: any, path: any) {
 export async function parseUserData(req: any, person: CreatePerson) {
   try {
     const origin = await JSON.parse(req); // check that is only a string
-    const hashedPasword = await encode(origin.persona.id);
+    const hashedPassword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
@@ -68,7 +68,7 @@ export async function parseUserData(req: any, person: CreatePerson) {
       degrees,
       origin.user.parish_id,
       origin.user.role,
-      hashedPasword
+      hashedPassword
     );
     return userData;
   } catch (error) {
@@ -76,7 +76,7 @@ export async function parseUserData(req: any, person: CreatePerson) {
   }
 }
 
-export async function parseInstructoData(req: any) {
+export async function parseInstructorData(req: any) {
   try {
     const origin = await JSON.parse(req);
     const { is_instructor, starting_date, instructor_position, status } =
@@ -98,7 +98,7 @@ export async function parseInstructoData(req: any) {
 export async function parseUserDataUpdate(req: any) {
   try {
     const origin = await JSON.parse(req); 
-    const hashedPasword = await encode(origin.persona.id);
+    const hashedPassword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
@@ -114,10 +114,66 @@ export async function parseUserDataUpdate(req: any) {
       degrees,
       origin.user.parish_id,
       origin.user.role,
-      hashedPasword
+      hashedPassword
     );
     return { userData, statusUpdate };
   } catch (error) {
     throw error;
   }
+}
+
+export async function parseProfessorGet(returnFromDB: Array<any>) {
+  const professors: ProfessorEntity[] = returnFromDB.map((professor) => {
+    let person: PersonEntity = PersonEntity.fromdb(professor.user.person); //datos de persona
+    person.date_String = formatDate(person.birthdate.toISOString())!;
+    const status = professor.status_id;
+    const Role_id = professor.user.Role_id;
+    const userStatus = professor.user.status;
+
+    const phones: PhoneEntity[] = professor.user.person.phone_number.map(
+      (phone: any) => {
+        return PhoneEntity.fromdb(phone);
+      }
+    );
+    const socials: SocialMediaEntity[] = professor.user.person.social_media.map(
+      (socials: any) => {
+        return SocialMediaEntity.fromdb({
+          link: socials.link,
+          social_media_category: socials.social_media_category,
+        });
+      }
+    );
+    //if (professor.user?.academic_degree != null)
+    const degrees: DegreeEntity[] = professor.user.academic_degree.map(
+      (degrees: any) => {
+        return DegreeEntity.fromdb(degrees);
+      }
+    );
+    let instructor;
+    if (professor.instructor != null) {
+      instructor = {
+        professor_id: professor.instructor?.professor_id,
+        starting_date: professor.instructor?.starting_date,
+        instructor_position: professor.instructor
+          ?.instructor_position as instructor_position,
+        status: professor.instructor.status,
+        starting_date_string: formatDate(
+          professor.instructor.starting_date.toISOString()
+        ),
+      };
+    } else {
+      instructor = { is_instructor: false };
+    }
+    return ProfessorEntity.fromObject(
+      person,
+      socials,
+      phones,
+      status,
+      userStatus,
+      degrees,
+      instructor,
+      Role_id
+    );
+  });
+  return professors;
 }

@@ -4,24 +4,21 @@ import {
   ProfessorEntity,
   ProfessorRepository,
   UpdateProfessorDto,
+  GetProfessorDto
 } from "../../domain";
 
 export class ProfessorRepositoryImpl implements ProfessorRepository {
-  constructor(private readonly datasource: ProfessorDataSource) {}
-  
+  constructor(private readonly dataSource: ProfessorDataSource) {}
   update(data: UpdateProfessorDto): Promise<object> {
-    return this.datasource.update(data);
+    return this.dataSource.update(data);
   }
   delete(id: string): Promise<object> {
-    return this.datasource.delete(id)
+    return this.dataSource.delete(id);
   }
   create(createDto: CreateProfessor): Promise<ProfessorEntity> {
-    return this.datasource.create(createDto);
+    return this.dataSource.create(createDto);
   }
-  get(
-    id: string | undefined,
-    status_id: number | undefined
-  ): Promise<ProfessorEntity[]> {
-    return this.datasource.get(id, status_id!);
-  } // check this status must be !null, never
+  get(dto: GetProfessorDto): Promise<ProfessorEntity[]> {
+    return this.dataSource.get(dto);
+  }
 }

@@ -8,5 +8,5 @@ export class UpdateProfessorDto {
     public readonly status_id: number
   ) {}
 
-  //validations
+  // TODO validations
 }

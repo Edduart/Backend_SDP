@@ -1,3 +1,5 @@
+// TODO IMPORTANT; check in all controllers data validation mostly IDs
+
 import {
   CreateProfessor,
   CreateProfessorUseCase,
@@ -10,17 +12,17 @@ import {
   UpdateProfessorDto,
   UpdateProfessor,
   UpdateInstructorDto,
-  UpdateInstructor
+  UpdateInstructor,
+  GetProfessorDto,
 } from "../../domain";
 import { Request, Response } from "express";
 import {
   parsePersonData,
   parseUserData,
-  parseInstructoData,
+  parseInstructorData,
   parseUserDataUpdate,
 } from "../utils/parseData";
 import fs from "fs";
-
 export class ProfessorController {
   constructor(
     private readonly repository: ProfessorRepository,
@@ -28,7 +30,7 @@ export class ProfessorController {
   ) {}
 
   public update = async (req: Request, res: Response) => {
-    const isInstructor = await parseInstructoData(req.body.data);
+    const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const { userData, statusUpdate } = await parseUserDataUpdate(req.body.data);
     //console.log(userData);
@@ -37,8 +39,8 @@ export class ProfessorController {
       userData,
       statusUpdate
     );
-    console.log("instructor data:", isInstructor);
-    const updateProfesor = await new UpdateProfessor(this.repository)
+    //console.log("user data:", userData);
+    const updateProfessor = await new UpdateProfessor(this.repository)
       .execute(professorData)
       .then((professor) => {
         if (isInstructor != null) {
@@ -56,21 +58,31 @@ export class ProfessorController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public get = (req: Request, res: Response) => {
+  public get = async (req: Request, res: Response) => {
+    const [error, getDto] = GetProfessorDto.GetDto(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({
+          msj: "There are some validation errors in the given params!",
+          error,
+        });
     new GetProfessor(this.repository)
-      .execute(req.body.id, req.body.status_id)
+      .execute(getDto!)
       .then((professor) => res.json(professor))
       .catch((error) => res.status(400).json({ error }));
   };
 
   public create = async (req: Request, res: Response) => {
-    const isIsntructor = await parseInstructoData(req.body.data);
-    console.log(isIsntructor);
+
+    // TODO check operations order, check role, validations
+
+    const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
     userData.role = 5;
-    const createProfesor = await new CreateProfessorUseCase(this.repository)
+    const createProfessor = await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
       .then((professor) =>
         res
@@ -79,9 +91,9 @@ export class ProfessorController {
           .send()
       )
       .catch((error) => res.status(400).json({ error }));
-    if (isIsntructor != null && createProfesor) {
+    if (isInstructor != null && createProfessor) {
       const [error, createInstructor] =
-        CreateInstructorDto.create(isIsntructor);
+        CreateInstructorDto.create(isInstructor);
       if (error) return res.status(400).json({ error });
       new CreateInstructor(this.instructorPositionRepo)
         .execute(createInstructor!)
