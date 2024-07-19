@@ -14,7 +14,7 @@ const instructorController = new InstructorController(
 
 router.post("/", instructorController.createInstructor);
 router.get("/", instructorController.getInstructors);
-router.get("/:id", instructorController.getinstructorById);
+router.get("/:id", instructorController.getInstructorById);
 router.put("/:id", instructorController.updateInstructorById);
 router.delete("/:id", instructorController.deleteInstructor);
 module.exports = router;
