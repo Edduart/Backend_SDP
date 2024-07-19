@@ -99,7 +99,7 @@ export async function parseInstructorData(req: any) {
 export async function parseUserDataUpdate(req: any) {
   try {
     const origin = await JSON.parse(req); 
-    const hashedPassword = await encode(origin.persona.id);
+    //const hashedPassword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
@@ -108,16 +108,16 @@ export async function parseUserDataUpdate(req: any) {
           degree_Actual.link
         )
     );
-    const statusUpdate = origin.professor.status_id
+    //const statusUpdate = origin.professor.status_id
     const userData = new UpdateUserDto(
       origin.persona.id,
-      origin.user.status,
+      //origin.user.status,
       degrees,
       origin.user.parish_id,
       origin.user.role,
-      hashedPassword
+      //hashedPassword
     );
-    return { userData, statusUpdate };
+    return { userData };
   } catch (error) {
     throw error;
   }

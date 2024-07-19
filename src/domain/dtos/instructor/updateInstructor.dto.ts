@@ -5,7 +5,7 @@ export class UpdateInstructorDto {
     public readonly professor_id: string,
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
-    public readonly status: number
+    public readonly status?: number
   ) {}
 
   get values() {
@@ -44,8 +44,8 @@ export class UpdateInstructorDto {
     }
     if (!instructor_position) return ["instructor position is required"];
 
-    if (typeof status !== "number" || (status !== 0 && status !== 1))
-      return ["status is required"];
+    /*if (typeof status !== "number" || (status !== 0 && status !== 1))
+      return ["status is required"];*/
     
     return [
       undefined,

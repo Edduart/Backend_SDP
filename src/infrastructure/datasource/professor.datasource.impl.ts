@@ -31,10 +31,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     if (professorExist == null) throw "Professor doesn't exist!";
     await UpdatePersonFunc(data.person);
     await UpdateUserFunc(data.user);
-    await prisma.professor.update({
+    /*await prisma.professor.update({
       where: { id: data.person.id },
       data: { status_id: data.status_id },
-    });
+    });*/
     return { msj: "Professor Updated!" };
   }
 

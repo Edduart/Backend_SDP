@@ -1,3 +1,4 @@
+
 import { compareSync, hashSync } from "bcrypt";
 const saltRounds = 10;
 //se llama esta funcion para encriptar la contraseña
@@ -10,6 +11,7 @@ export async function encode(PassToEncode: string): Promise<string> {
     throw error;
   }
 }
+
 //compara las contraseñas
 //primero va la contraseña ingresada en plano
 //luego va la contraseña encriptada desde la base de datos

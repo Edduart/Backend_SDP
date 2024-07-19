@@ -32,12 +32,11 @@ export class ProfessorController {
   public update = async (req: Request, res: Response) => {
     const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
-    const { userData, statusUpdate } = await parseUserDataUpdate(req.body.data);
+    const { userData } = await parseUserDataUpdate(req.body.data);
     //console.log(userData);
     const professorData = new UpdateProfessorDto(
       personData,
       userData,
-      statusUpdate
     );
     //console.log("user data:", userData);
     const updateProfessor = await new UpdateProfessor(this.repository)
