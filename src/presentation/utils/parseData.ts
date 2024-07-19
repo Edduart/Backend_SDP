@@ -12,6 +12,7 @@ import {
   PhoneEntity,
   DegreeEntity,
   SocialMediaEntity,
+  ParishEntity
 } from "../../domain";
 import { encode } from "../services/hash_handler";
 import { formatDate } from "../../presentation/utils/formatDate";
@@ -130,6 +131,8 @@ export async function parseProfessorGet(returnFromDB: Array<any>) {
     const Role_id = professor.user.Role_id;
     const userStatus = professor.user.status;
 
+    let user: ParishEntity = professor.user.parish;
+
     const phones: PhoneEntity[] = professor.user.person.phone_number.map(
       (phone: any) => {
         return PhoneEntity.fromdb(phone);
@@ -172,7 +175,8 @@ export async function parseProfessorGet(returnFromDB: Array<any>) {
       userStatus,
       degrees,
       instructor,
-      Role_id
+      Role_id,
+      user
     );
   });
   return professors;
