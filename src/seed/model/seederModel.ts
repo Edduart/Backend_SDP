@@ -9,9 +9,9 @@ export class modelPrismaData {
   constructor(
     public model: modelType 
   ) {
-    this.callSedder(this.model);
+    this.callSeeder(this.model);
   }
-  callSedder = async (data: modelType) => {
+  callSeeder = async (data: modelType) => {
     await data.model({
       data: data.data,
       skipDuplicates: true,
