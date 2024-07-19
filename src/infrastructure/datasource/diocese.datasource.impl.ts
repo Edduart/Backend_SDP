@@ -1,4 +1,4 @@
-import { prisma } from "../../data/postgres";
+  import { prisma } from "../../data/postgres";
 import {
   UpdateDioceseDto,
   DioceseDatasource,

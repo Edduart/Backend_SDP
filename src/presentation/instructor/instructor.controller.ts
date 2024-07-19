@@ -53,10 +53,10 @@ export class InstructorController {
   };
 
   public updateInstructorById = (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const professor_id = req.params.id;
     const [error, updateInstructorDto] = UpdateInstructorDto.update({
       ...req.body,
-      id,
+      professor_id,
     });
 
     if (error) return res.status(400).json({ error });
