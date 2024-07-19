@@ -91,7 +91,7 @@ export async function CreatePersonFunc(data: CreatePerson) {
         forename: data.forename,
         surname: data.surname,
         birthdate: data.birthdate,
-        profile_picture_path: data.profile_picture_path,
+        profile_picture_path: "http://localhost:3000/" + data.profile_picture_path,
         email: data.email,
         medical_record: data.medical_record,
         BloodType: data.Blood as person_BloodType,
@@ -192,7 +192,6 @@ export async function UpdateUserFunc(user: UpdateUserDto) {
         user_id: user.person_id,
       },
     });
-    console.log("user", user);
     //if there is degree we create it
     if (user.degree != undefined) {
       const degree_json = user.degree.map((actual) => {
@@ -202,19 +201,21 @@ export async function UpdateUserFunc(user: UpdateUserDto) {
           link: actual.link,
         };
       });
-      console.log("user degree", degree_json);
+      //console.log("user degree", degree_json);
       await prisma.academic_degree.createMany({
         data: degree_json,
       });
     }
+
+    console.log("user in fuction", user.role_id);
     await prisma.user.update({
       where: {
         person_id: user.person_id,
       },
       data: {
         parish_id: user.parish_id,
-        status: true,
-        Role_id: user.role,
+        status: user.status,
+        Role_id: user.role_id,
         password: user.password,
       },
     });
