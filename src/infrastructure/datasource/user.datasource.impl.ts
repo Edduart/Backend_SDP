@@ -57,6 +57,9 @@ export class UserDataSourceImplementation implements UserDataSource {
   }
   async getAll(): Promise<object> {
     const users = await prisma.user.findMany({
+      where:{
+        person_id: {notIn:["1"]}
+      },
       select: {
         person: { select: { id: true, forename: true, surname: true } },
         seminarian: {
