@@ -101,7 +101,6 @@ export class SeminarianControler{
         const source = req.headers['Permissions'];
         try{
             const result = ValidatePermission(source, "seminarian", 'C');
-            console.log(req.body);
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
             const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);
@@ -129,14 +128,12 @@ export class SeminarianControler{
                     res.json({message: "ready"}).send})
                 .catch((error) => {if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);
                       }
-                console.log("voy a enviar error dentro del catch de usecase");
                 res.status(400).send("Unexpected error: " + error)
                 })
             }else{
                 if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);}
                 //validation errors
                 console.log(errores);
-                console.log("voy a enviar error dentro del catch de validacion");
                 res.status(400).send("Validation error: " + errores);}
         }catch(error){
             // permissions errores

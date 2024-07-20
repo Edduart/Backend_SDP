@@ -27,13 +27,13 @@ export enum seminarian_status_enum {
 }
 
 export enum Locations_enum {
-    Externo = "EXTERNO",
-    Interno = "INTERNO"
+    EXTERNO = "EXTERNO",
+    INTERNO = "INTERNO"
 }
 
 export enum seminarianMinistery_ENUM {
-    Unkown   = "UNKOWN",
-    Admision  = "ADMISIÓN",
-    Lectorado = "LECTORADO",
-    Acolitado = "ACOLITADO"
+    UNKOWN   = "UNKOWN",
+    ADMISION  = "ADMISIÓN",
+    LECTORADO = "LECTORADO",
+    ACOLITADO = "ACOLITADO"
   }

@@ -111,10 +111,24 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
             return results;
     }
     async create(data: CreateSubjectDTO): Promise<SubjectEntity> {
+        if(data.precedent != null){
+            //await this.CheckPrecedent(data.precedent, data.course_id, data.semester);
+        }
         const result = await prisma.subject.create({
             data: data,
         });
+        
         const subjet_created = await this.get(GetSubjectDTO.FindDto(result.id));
         return subjet_created[0];
+    }
+    async CheckPrecedent(id: number, course: number, semester: number): Promise<boolean>{
+        const subjet_pre = await prisma.subject.findFirst({where: {id: id}});
+        if(subjet_pre != null){
+            if(subjet_pre.course_id < course){
+                if(subjet_pre.semester < semester){
+                    return true;
+                }else throw new Error("La materia que prela no puede ser de un semestre mayor")
+            }else throw new Error("La materia que prela no puede ser de un curso mayor")
+        }else throw new Error("La materia que prela no existe")
     }
 }
