@@ -1,14 +1,14 @@
 export const stages = [
   {
     id: 1,
-    description: "I  Etapa Propedéutico"
+    description: "I  ETAPA PROPEDÉUTICO"
   },
   {
     id: 2,
-    description: "II Etapa Discipular"
+    description: "II ETAPA DISCIPULAR"
   },
   {
     id: 3,
-    description: "III Etapa Configurativa"
+    description: "III ETAPA CONFIGURATIVA"
   },
 ];

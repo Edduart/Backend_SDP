@@ -1,33 +1,33 @@
 export const roles = [
     {
         id: 5,
-        name: "Seminarian",
-        description: "Perfil de seminarista común"
+        name: "SEMINARIAN",
+        description: "PERFIL DE SEMINARISTA COMÚN"
     },
     {
         id: 2,
-        name: "Rector",
-        description: "Rector principal"
+        name: "RECTOR",
+        description: "RECTOR PRINCIPAL"
     },
     {
         id: 3,
-        name: "Vice Rector",
-        description: "Usuario encargado del apartado academico"
+        name: "VICE RECTOR",
+        description: "USUARIO ENCARGADO DEL APARTADO ACADEMICO"
     },
     {
         id: 4,
-        name: "Profesor",
-        description: "Usuario con capacidad para asignar notas a los tests"
+        name: "PROFESOR",
+        description: "USUARIO CON CAPACIDAD PARA ASIGNAR NOTAS A LOS TESTS"
     },
     {
         id: 6,
-        name: "Instructor",
-        description: "Profesor e instructor"
+        name: "INSTRUCTOR",
+        description: "PROFESOR E INSTRUCTOR"
     },
     {
         id: 1,
-        name: "SuperAdmin",
-        description: "Administrador con acceso total"
+        name: "SUPERADMIN",
+        description: "ADMINISTRADOR CON ACCESO TOTAL"
     },
 
 ]
