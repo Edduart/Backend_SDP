@@ -232,7 +232,6 @@ model subject {
   precedent         Int?
   semester          Int
   academic_field_id Int
-  homologada        Boolean
   enrollment        enrollment[]
   instruction       instruction[]
   academic_field    academic_field @relation(fields: [academic_field_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_academicfield")

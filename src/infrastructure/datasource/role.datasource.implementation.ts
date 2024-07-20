@@ -32,7 +32,10 @@ export class RoleDataSourceImpl implements RoleDataSource{
         return result_individual[0];
     }
     async GetAllPermissions(): Promise<PermissionEntity[]> {
-        const from_db = await prisma.permission.findMany();
+        const from_db = await prisma.permission.findMany({
+          where:{ id: {
+            notIn:[29, 30]}}
+        });
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
     async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
@@ -46,7 +49,12 @@ export class RoleDataSourceImpl implements RoleDataSource{
       }
       await prisma.role_permission.deleteMany({
         where:{
-          role_id: nuevo.id
+          AND:[
+            {role_id: nuevo.id},
+            {permission_id: {
+              notIn: [29, 30]
+            }}
+          ]
         }
       })
       const result = await prisma.role.update({

@@ -51,11 +51,11 @@ export class UserControler {
     const acces_promts = new Login(req.body.id, req.body.password);
     new Login_Use(this.repository)
       .execute(acces_promts)
-      .then((user) => {
+      .then(async (user) => {
         if (user == undefined) {
           res.status(403).json("Datos de acceso invalidos").send;
         } else {
-          const result = compare(
+          const result = await compare(
             acces_promts.password,
             user.password as string
           );
