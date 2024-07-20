@@ -62,6 +62,8 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
   }
 
   async deleteById(id: number): Promise<DioceseEntity> {
+    const user_with_parish = await prisma.parish.findMany({where: {diocese_id: id}});
+    if(user_with_parish.length > 0)throw `Unable to delete this record, there are parishes with this diocesis`;
     await this.findById(id);
     const deleteDiocese = await prisma.diocese.delete({
       where: { id: id }
