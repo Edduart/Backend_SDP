@@ -11,7 +11,8 @@ export class CreateInstructorDto {
   static create(props: {
     [key: string]: any;
   }): [string?, CreateInstructorDto?] {
-    const { professor_id, starting_date, instructor_position } = props;
+    let { professor_id, starting_date, instructor_position } = props;
+    console.log("🚀 ~ CreateInstructorDto ~ professor_id:", professor_id)
 
     if (!professor_id) {
       return ["Instructor ID is required"];
@@ -19,14 +20,15 @@ export class CreateInstructorDto {
       return ["Instructor ID must be a string"];
     }
 
-    let newStartingDate = new Date(starting_date);
-    if (!starting_date) {
-      throw "starting date is required";
-    } else if (newStartingDate.toString() === "Invalid Date") {
+    const completeDate = starting_date.toString() + "T00:00:00.000Z";
+    let newStartingDate = new Date(completeDate);
+    starting_date = completeDate;
+    console.log(starting_date);
+    if (newStartingDate.toString() === "Invalid Date") {
       throw "starting date is not a valid date";
     }
 
-    if (!instructor_position) return ["Professor ID is required"];
+    if (!instructor_position) return ["Instructor position is required"];
 
     return [
       undefined,

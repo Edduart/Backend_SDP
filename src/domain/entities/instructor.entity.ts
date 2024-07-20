@@ -1,13 +1,26 @@
+import { formatDate } from "../../presentation/utils/formatDate";
+
 export class InstructorEntity {
   constructor(
     public professor_id: string,
     public starting_date: Date,
     public instructor_position: InstructorPostion,
-    public status? : Boolean,
+    public status?: Boolean,
+    public starting_date_string?: string
   ) {}
 
   public static fromObject(object: { [key: string]: any }): InstructorEntity {
-    const { professor_id, starting_date, instructor_position, status } = object;
+
+    let {
+      professor_id,
+      starting_date,
+      instructor_position,
+      status,
+      starting_date_string,
+    } = object;
+
+    if (starting_date_string == undefined) starting_date_string = formatDate(starting_date.toISOString());
+
     if (!professor_id) throw "professor id is required";
     if (!starting_date) {
       throw "starting date is required";
@@ -20,7 +33,8 @@ export class InstructorEntity {
       professor_id,
       starting_date,
       instructor_position,
-      status
+      status,
+      starting_date_string
     );
   }
 }

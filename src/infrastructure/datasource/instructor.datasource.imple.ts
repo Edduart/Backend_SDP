@@ -47,9 +47,10 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     return InstructorEntity.fromObject(getInstructorById);
   }
   async deleteById(id: string): Promise<InstructorEntity> {
-    const deteleInstructor = await prisma.instructor.delete({
+    const deleteInstructor = await prisma.instructor.update({
       where: { professor_id: id },
+      data: {status: 0}
     });
-    return InstructorEntity.fromObject(deteleInstructor);
+    return InstructorEntity.fromObject(deleteInstructor);
   }
 }

@@ -5,8 +5,7 @@ export class UpdateProfessorDto {
   constructor(
     public readonly person: CreatePerson,
     public readonly user: UpdateUserDto,
-    public readonly status_id: number
   ) {}
 
-  //validations
+  // TODO validations
 }

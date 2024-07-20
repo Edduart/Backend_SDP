@@ -1,13 +1,17 @@
+import { instructor_position } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import {
   CreateProfessor,
   PersonEntity,
   PhoneEntity,
+  DegreeEntity,
+  InstructorEntity,
   SocialMediaEntity,
   ProfessorDataSource,
   ProfessorEntity,
   UpdateProfessorDto,
   UpdateUserDto,
+  GetProfessorDto
 } from "../../domain";
 
 import {
@@ -17,6 +21,8 @@ import {
   UpdateUserFunc,
 } from "./utils/user.functions";
 
+import { parseProfessorGet } from '../../presentation/utils/parseData';
+
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async update(data: UpdateProfessorDto): Promise<object> {
     const professorExist = await prisma.professor.findUnique({
@@ -25,10 +31,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     if (professorExist == null) throw "Professor doesn't exist!";
     await UpdatePersonFunc(data.person);
     await UpdateUserFunc(data.user);
-    await prisma.professor.update({
+    /*await prisma.professor.update({
       where: { id: data.person.id },
       data: { status_id: data.status_id },
-    });
+    });*/
     return { msj: "Professor Updated!" };
   }
 
@@ -49,10 +55,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       where: { id: id },
       data: { status_id: 0 },
     });
-    const isInstrutor = await prisma.instructor.findUnique({
+    const isInstructor = await prisma.instructor.findUnique({
       where: { professor_id: id },
     });
-    if (isInstrutor != null) {
+    if (isInstructor != null) {
       await prisma.instructor.update({
         where: { professor_id: id },
         data: { status: 0 },
@@ -73,31 +79,37 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         status_id: 1,
       },
     });
-    const resultIndividual = await this.get(
-      createDto.user.person.id,
-      undefined
+    const DtoForResponse = new GetProfessorDto(
+      createDto.user.person.id
     );
+    const resultIndividual = await this.get(DtoForResponse);
     return resultIndividual[0]; // check error in get
   }
 
-  async get(id?: string, status_id?: number): Promise<ProfessorEntity[]> {
-    let retunrFromDB;
-    //if (!id && !status_id) {
-    //console.log("going for all");
-
-    retunrFromDB = await prisma.professor.findMany({
+  async get(filter: GetProfessorDto): Promise<ProfessorEntity[]> {
+    const returnFromDB = await prisma.professor.findMany({
+      where: { id: filter.id, status_id: filter.status },
       select: {
         id: true,
         status_id: true,
+        instructor: true,
         user: {
           include: {
+            academic_degree: true,
+            parish: { select: { id: true, diocese_id: true } },
             person: {
               include: {
+                user: true,
                 phone_number: true,
                 social_media: {
                   include: {
                     social_media_category_social_media_social_media_categoryTosocial_media_category:
-                      { select: { description: true } },
+                      {
+                        select: {
+                          social_media_social_media_social_media_categoryTosocial_media_category:
+                            { select: { id: true } },
+                        },
+                      },
                   },
                 },
               },
@@ -106,44 +118,8 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         },
       },
     });
-    /* } else {
-      retunrFromDB = await prisma.person.findMany({
-        where: {
-          OR: [{ id: id }],
-        },
-        include: {
-          phone_number: true,
-          social_media: {
-            include: {
-              social_media_category_social_media_social_media_categoryTosocial_media_category:
-                { select: { description: true } },
-            },
-          },
-        },
-      });
-    }*/
-    //mapeo de los datos
-    //console.log(retunrFromDB);
-
-    const professors: ProfessorEntity[] = retunrFromDB.map((professor) => {
-      const person: PersonEntity = PersonEntity.fromdb(professor.user.person); //datos de persona
-      const status = professor.status_id;
-      const phones: PhoneEntity[] = professor.user.person.phone_number.map(
-        (phoneatributer) => {
-          return PhoneEntity.fromdb(phoneatributer);
-        }
-      );
-      const socials: SocialMediaEntity[] =
-        professor.user.person.social_media.map((sociales) => {
-          return SocialMediaEntity.fromdb({
-            link: sociales.link,
-            social_media_category:
-              sociales.social_media_category_social_media_social_media_categoryTosocial_media_category,
-          });
-        });
-
-      return ProfessorEntity.fromObject(person, socials, phones, status);
-    });
-    return professors;
+    if (returnFromDB.length === 0) throw "No se encontraron coincidencias con los parametros especificados!"  
+    console.log(returnFromDB);
+    return parseProfessorGet(returnFromDB);;
   }
 }
