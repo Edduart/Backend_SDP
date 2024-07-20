@@ -116,7 +116,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 forename:               Worker.forename,
                 surname:                Worker.surname,
                 email:                  Worker.email,
-                fecha:                  Worker.birthdate,
+                birthdate:                  Worker.birthdate,
                 medical_record:         Worker.medical_record,
                 BloodType:              Worker.BloodType as BloodType
             });
