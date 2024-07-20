@@ -51,6 +51,7 @@ export class SeminarianControler{
     public update = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
+            console.log("entro")
             const result = ValidatePermission(source, "seminarian", 'U');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);

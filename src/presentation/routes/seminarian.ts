@@ -19,6 +19,7 @@ router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Respons
     });
 });
 router.put('/update/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
+    console.log("holi")
     profileU.single('picture')(req, res, async (err) => {
         if (err) {
             return next(err);
