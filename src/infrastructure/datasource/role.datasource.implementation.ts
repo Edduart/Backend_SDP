@@ -49,7 +49,12 @@ export class RoleDataSourceImpl implements RoleDataSource{
       }
       await prisma.role_permission.deleteMany({
         where:{
-          role_id: nuevo.id
+          AND:[
+            {role_id: nuevo.id},
+            {permission_id: {
+              notIn: [29, 30]
+            }}
+          ]
         }
       })
       const result = await prisma.role.update({

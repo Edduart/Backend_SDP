@@ -8,3 +8,4 @@ export * from "./academicField";
 export * from "./course";
 export * from "./role";
 export * from "./role_permissions"
+export * from "./user";

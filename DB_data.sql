@@ -30,7 +30,7 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `academic_degree` (
 
 LOCK TABLES `academic_degree` WRITE;
 /*!40000 ALTER TABLE `academic_degree` DISABLE KEYS */;
-INSERT INTO `academic_degree` VALUES (1,'2845764444','Ingenieria quimica','hhtpppp.dsfdslkglkdsf');
+INSERT INTO `academic_degree` VALUES (4,'7776553435','test of description','www.facebook.com'),(5,'55535635','politico','link.com'),(6,'9847020','ninguna','sadfdsaf');
 /*!40000 ALTER TABLE `academic_degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +57,7 @@ CREATE TABLE `academic_field` (
   PRIMARY KEY (`id`),
   KEY `fk_acadmicfield_stage_idx` (`stage_id`),
   CONSTRAINT `fk_acadmicfield_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +66,7 @@ CREATE TABLE `academic_field` (
 
 LOCK TABLES `academic_field` WRITE;
 /*!40000 ALTER TABLE `academic_field` DISABLE KEYS */;
+INSERT INTO `academic_field` VALUES (1,1,'Catequético Vocacional'),(2,1,'Comunitario Pastoral'),(3,1,'Humano-Cultural'),(4,1,'Iniciación Pastoral'),(5,2,'Filosofía del Hombre'),(6,2,'Filosofía del Conocimiento'),(7,2,'Filosofía Ética'),(8,2,'Filosofía de la Naturaleza y de la Ciencia'),(9,2,'Filosofía del Ser'),(10,2,'Filosofía de la Religión'),(11,2,'Historia de la Cultura'),(12,2,'Historia de la Filosofía'),(13,2,'Síntesis'),(14,2,'Lenguas clásicas'),(15,2,'Investigación'),(16,2,'Instrumentales'),(17,2,'Filosofía social y política'),(18,2,'Filosofía de la Cultura'),(19,2,'Idiomas modernos'),(20,3,'Teología Bíblica'),(21,3,'Teología Fundamental'),(22,3,'Teología Dogmática'),(23,3,'Teología Moral'),(24,3,'Teología Espiritual'),(25,3,'Teología pastoral'),(26,3,'Liturgia'),(27,3,'Historia Eclesiástica'),(28,3,'Derecho Canónico ');
 /*!40000 ALTER TABLE `academic_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +117,7 @@ CREATE TABLE `basic_worker` (
 
 LOCK TABLES `basic_worker` WRITE;
 /*!40000 ALTER TABLE `basic_worker` DISABLE KEYS */;
-INSERT INTO `basic_worker` VALUES ('667435764','Cocinero'),('67555432','Cocinero');
+INSERT INTO `basic_worker` VALUES ('27984286','Cocinero');
 /*!40000 ALTER TABLE `basic_worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +138,7 @@ CREATE TABLE `course` (
   KEY `fk_course_instructor_idx` (`instructor_id`),
   CONSTRAINT `fk_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`professor_id`),
   CONSTRAINT `fk_course_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,6 +147,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
+INSERT INTO `course` VALUES (1,1,'prueba 1',NULL),(2,2,'prueba 2',NULL);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +163,7 @@ CREATE TABLE `diocese` (
   `name` varchar(200) NOT NULL,
   `holder` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +172,7 @@ CREATE TABLE `diocese` (
 
 LOCK TABLES `diocese` WRITE;
 /*!40000 ALTER TABLE `diocese` DISABLE KEYS */;
-INSERT INTO `diocese` VALUES (1,'Arquidiócesis de Barquisimeto','Monseñor. Víctor Hugo Basabe'),(2,'Arquidiócesis de Bolívar ','Monseñor. Ulises Antonio Gutiérrez Reyes'),(3,'Arquidiócesis de Calabozo','Monseñor. Manuel Felipe Díaz'),(4,'Arquidiócesis de Caracas','Cardenal. Baltazar Enrique Porras Cardozo'),(5,'Arquidiócesis de Coro','Monseñor. Mariano Parra'),(6,'Arquidiócesis de Cumaná','Monseñor. Jesús González De Zárate'),(7,'Arquidiócesis de Maracaibo','Monseñor. José Luis Azuaje Ayala'),(8,'Arquidiócesis de Mérida','Emmo. Cardenal. Baltazar Porras Cardozo'),(9,'Arquidiócesis de Valencia ','Monseñor. Saúl Figueroa Albornoz'),(10,'Diócesis de Acarigua','Monseñor. Gerardo Ernesto Salas Arjona'),(11,'Diócesis de Barcelona','Monseñor. Jorge Aníbal Quintero'),(12,'Diócesis de Barinas','Monseñor. Alfonso Guerrero Contreras'),(13,'Diócesis de Cabimas','Monseñor. Ángel Francisco Caraballo Fermín'),(14,'Diócesis de Carora','Monseñor. Carlos Enrique Curiel Herrera'),(15,'Diócesis de Carúpano','Monseñor. Jaime Villarroel Rodríguez'),(16,'Diócesis de Ciudad Guayana','Obispo. Presbítero. Jorge Aníbal Quintero'),(17,'Diócesis de El Tigre','Monseñor. José Manuel Romero Barrios '),(18,'Diócesis de El Vigía - San Carlos del Zulia','Monseñor. Juan de Dios Peña'),(19,'Diócesis de Guanare','Monseñor. José de la Trinidad Valera Angulo'),(20,'Diócesis de Guarenas','Monseñor. Tulio Luis Ramírez Padilla'),(21,'Diócesis de Guasdualito','Monseñor. Pablo Modesto González Pérez'),(22,'Diócesis de La Guaira','Monseñor. Raúl Biord Castillo'),(23,'Diócesis de Los Teques','Monseñor. Freddy Fuenmayor Suárez'),(24,'Diócesis de Machiques','Monseñor. Nicolás Gregorio Nava Rojas'),(25,'Diócesis de Maracay','Monseñor. Enrique José Parravano Marino'),(26,'Diócesis de Margarita','Monseñor. Fernando Castro Aguayo'),(27,'Diócesis de Maturín','Monseñor. Enrique Pérez Lavado'),(28,'Diócesis de Petare','Monseñor. Juan Carlos Bravo Salazar'),(29,'Diócesis de Puerto Cabello','Monseñor. Saúl Figueroa Albornoz'),(30,'Diócesis de Punto Fijo','Monseñor. Carlos Alfredo Cabezas Mendoza'),(31,'Diócesis de San Carlos','Monseñor. Polito Rodríguez Méndez'),(32,'Diócesis de San Cristóbal','Monseñor. Mario del Valle Moronta Rodríguez'),(33,'Diócesis de San Felipe','Monseñor. Víctor Hugo Basabe'),(34,'Diócesis de San Fernando de Apure','Monseñor. Alfredo Enrique Torres Rondón'),(35,'Diócesis de Trujillo','Monseñor. José Trinidad Valera Angulo'),(36,'Diócesis de Valle de la Pascua','Monseñor. Ramón José Aponte Fernández');
+INSERT INTO `diocese` VALUES (1,'Prueba de edición','Polito Rodriguez'),(2,'Arquidiócesis de Bolívar ','Monseñor. Ulises Antonio Gutiérrez Reyes'),(3,'Arquidiócesis de Calabozo','Monseñor. Manuel Felipe Díaz'),(4,'Arquidiócesis de Caracas','Cardenal. Baltazar Enrique Porras Cardozo'),(5,'Arquidiócesis de Coro','Monseñor. Mariano Parra'),(6,'Arquidiócesis de Cumaná','Monseñor. Jesús González De Zárate'),(7,'Arquidiócesis de Maracaibo','Monseñor. José Luis Azuaje Ayala'),(8,'Arquidiócesis de Mérida','Emmo. Cardenal. Baltazar Porras Cardozo'),(9,'Arquidiócesis de Valencia ','Monseñor. Saúl Figueroa Albornoz'),(10,'Diócesis de Acarigua','Monseñor. Gerardo Ernesto Salas Arjona'),(11,'Diócesis de Barcelona','Monseñor. Jorge Aníbal Quintero'),(12,'Diócesis de Barinas','Monseñor. Alfonso Guerrero Contreras'),(13,'Diócesis de Cabimas','Monseñor. Ángel Francisco Caraballo Fermín'),(14,'Diócesis de Carora','Monseñor. Carlos Enrique Curiel Herrera'),(15,'Diócesis de Carúpano','Monseñor. Jaime Villarroel Rodríguez'),(16,'Diócesis de Ciudad Guayana','Obispo. Presbítero. Jorge Aníbal Quintero'),(17,'Diócesis de El Tigre','Monseñor. José Manuel Romero Barrios '),(18,'Diócesis de El Vigía - San Carlos del Zulia','Monseñor. Juan de Dios Peña'),(19,'Diócesis de Guanare','Monseñor. José de la Trinidad Valera Angulo'),(20,'Diócesis de Guarenas','Monseñor. Tulio Luis Ramírez Padilla'),(21,'Diócesis de Guasdualito','Monseñor. Pablo Modesto González Pérez'),(22,'Diócesis de La Guaira','Monseñor. Raúl Biord Castillo'),(23,'Diócesis de Los Teques','Monseñor. Freddy Fuenmayor Suárez'),(24,'Diócesis de Machiques','Monseñor. Nicolás Gregorio Nava Rojas'),(25,'Diócesis de Maracay','Monseñor. Enrique José Parravano Marino'),(26,'Diócesis de Margarita','Monseñor. Fernando Castro Aguayo'),(27,'Diócesis de Maturín','Monseñor. Enrique Pérez Lavado'),(28,'Diócesis de Petare','Monseñor. Juan Carlos Bravo Salazar'),(29,'Diócesis de Puerto Cabello','Monseñor. Saúl Figueroa Albornoz'),(30,'Diócesis de Punto Fijo','Monseñor. Carlos Alfredo Cabezas Mendoza'),(31,'Diócesis de San Carlos','Monseñor. Polito Rodríguez Méndez'),(32,'Diócesis de San Cristóbal','Monseñor. Mario del Valle Moronta Rodríguez'),(33,'Diócesis de San Felipe','Monseñor. Víctor Hugo Basabe'),(34,'Diócesis de San Fernando de Apure','Monseñor. Alfredo Enrique Torres Rondón'),(35,'Diócesis de Trujillo','Monseñor. José Trinidad Valera Angulo'),(36,'Diócesis de Valle de la Pascua','Monseñor. Ramón José Aponte Fernández');
 /*!40000 ALTER TABLE `diocese` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,7 +254,7 @@ CREATE TABLE `foreigner_seminarian` (
 
 LOCK TABLES `foreigner_seminarian` WRITE;
 /*!40000 ALTER TABLE `foreigner_seminarian` DISABLE KEYS */;
-INSERT INTO `foreigner_seminarian` VALUES ('2845764444','Seminario de petare','1',4),('566456774','Seminario Extranjero','1',2),('777855755','Seminario Extranjero','1',2);
+INSERT INTO `foreigner_seminarian` VALUES ('7776553435','Seminario Extranjero','1',2);
 /*!40000 ALTER TABLE `foreigner_seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,15 +266,16 @@ DROP TABLE IF EXISTS `instruction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `instruction` (
-  `professor_id` varchar(20) NOT NULL,
+  `professor_id` varchar(20) DEFAULT NULL,
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
-  PRIMARY KEY (`professor_id`,`subject_id`,`academic_term_id`),
+  PRIMARY KEY (`subject_id`,`academic_term_id`),
   KEY `fk_professor_subject_subject_idx` (`subject_id`),
   KEY `fk_professo_subject_academic_term_idx` (`academic_term_id`) /*!80000 INVISIBLE */,
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
+  KEY `fk_professor_instructor_idx` (`professor_id`),
   CONSTRAINT `fk_professo_subject_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
-  CONSTRAINT `fk_professor_subject_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`),
+  CONSTRAINT `fk_professor_instructor` FOREIGN KEY (`professor_id`) REFERENCES `instructor` (`professor_id`),
   CONSTRAINT `fk_professor_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -328,7 +331,7 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,7 +340,7 @@ CREATE TABLE `parish` (
 
 LOCK TABLES `parish` WRITE;
 /*!40000 ALTER TABLE `parish` DISABLE KEYS */;
-INSERT INTO `parish` VALUES (1,1,'prueba','test');
+INSERT INTO `parish` VALUES (1,1,'Barquisimeto','holder'),(2,2,'BEATA MARÍA DE SAN JOSÉ','EL NAZARENO'),(3,3,'CRISTO REDENTOR','NUESTRA SEÑORA DE COROMOTO'),(4,4,'CRISTO REY','SANTOS APÓSTOLES'),(5,5,'DIVINA PASTORA','SANTÍSIMO SACRAMENTO'),(6,6,'DIVINO NIÑO (EL TRIGAL)','SAGRADO CORAZÓN DE JESÚS'),(7,7,'EL SALVADOR','NUESTRA SEÑORA DE COROMOTO'),(8,8,'ESPÍRITU SANTO (BQTO)','ESPÍRITU SANTO'),(9,9,'INMACULADA CONCEPCIÓN (BUENA VISTA)','NTRA SRA DE ALTAGRACIA'),(10,10,'INMACULADA CONCEPCIÓN (CUARA)','NTRA SRA DE ALTAGRACIA'),(11,11,'JESÚS DE NAZARET','SANTÍSIMA TRINIDAD'),(12,12,'LA MEDALLA MILAGROSA','SANTÍSIMO SACRAMENTO'),(14,14,'MARÍA AUXILIADORA','ESPÍRITU SANTO'),(15,15,'MARÍA AUXILIADORA (LA MIEL)','EL NAZARENO'),(16,16,'MARÍA REINA DE TODOS LOS SANTOS','NUESTRA SEÑORA DE COROMOTO'),(49,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ'),(67,31,'Jesus','Angel rodriguez');
 /*!40000 ALTER TABLE `parish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +396,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('27984286','null','Angel Edurado','Rodriguez Torrealba','angelerodriguezt03@gmail.com','2023-03-29','null','O+'),('2845764444','images/seminarian/2845764444.jpeg','Joese antonio','Bidon de lata','No lo voy a poner','2001-04-27',NULL,'O+'),('28765455','images/seminarian/28765455.jpeg','Joe','mama','No lo voy a poner','2001-04-27',NULL,'O+'),('56645674','images/seminarian/56645674.jpeg','Joe','mama','No lo voy a poner','2001-04-27',NULL,'O+'),('566456774','images/seminarian/566456774.jpeg','Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+'),('667435764','images/worker/667435764.jpeg','Olga','Pernalete','thegodneko@gmail.com','2001-04-27','Estoy bien','O+'),('67555432',NULL,'Miguel','Ochoa','thegodneko@gmail.com','2001-04-27','Estoy bien','O+'),('777855755',NULL,'Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+');
+INSERT INTO `person` VALUES ('10203040','http://127.0.0.1:3000/images/seminarian/10203040.png','Aquiles Salto','mendoza','thegodneko@gmail.com','2000-01-01','ftftft','B-'),('1020304050','http://127.0.0.1:3000/images/seminarian/1020304050.png','Angel Rodriguez','caadad','thegodneko@gmail.com','2000-11-01','sfsdf','A-'),('27984286','http://127.0.0.1:3000/images/worker/27984286.jpeg','Angel Eduardo','Rodiguez Torrealba','thegodneko@gmail.com','2001-03-29','Estoy bien','O+'),('30266948','http://127.0.0.1:3000/images/seminarian/30266948.png','Angel Rodriguez','caadad','thegodneko@gmail.com','2000-11-01','sfsdf','A-'),('55535635','images/professor/55535635.jpeg','Donald ','Trump','edduar13@gmail.com','1999-12-27','sin una oreja','UNKNOWN'),('7776553435','http://127.0.0.1:3000/undefined','Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+'),('7776754886744','http://127.0.0.1:3000/undefined','Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+'),('9847020','http://127.0.0.1:3000/images/seminarian/9847020.jpeg','Marby ','Rodriguez','thegodneko@gmail.com','2000-02-02','bien','AB-');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +415,7 @@ CREATE TABLE `phone_number` (
   PRIMARY KEY (`id`),
   KEY `fk_phone_number_person_idx` (`person_id`),
   CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -421,7 +424,7 @@ CREATE TABLE `phone_number` (
 
 LOCK TABLES `phone_number` WRITE;
 /*!40000 ALTER TABLE `phone_number` DISABLE KEYS */;
-INSERT INTO `phone_number` VALUES (59,'0416334324','28765455','0416334324'),(60,'04125565','28765455','04125565'),(61,'0416334324','56645674','0416334324'),(62,'04125565','56645674','04125565'),(63,'0416334324','566456774','0416334324'),(64,'04125565','566456774','04125565'),(73,'0416334324','2845764444','0416334324'),(74,'04125565','2845764444','04125565'),(75,'0416334324','777855755','0416334324'),(76,'04125565','777855755','04125565');
+INSERT INTO `phone_number` VALUES (83,'321312321','10203040','321312321'),(84,'321312321','10203040','321312321'),(85,'2323242','1020304050','2323242'),(86,'2323242','1020304050','2323242'),(87,'2323242','30266948','2323242'),(88,'2323242','30266948','2323242'),(89,'0533345224','55535635','0533345224'),(90,'0533345224','55535635','0533345224'),(91,'0424049943','9847020','0424049943'),(92,'0424049943','9847020','0424049943');
 /*!40000 ALTER TABLE `phone_number` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -446,6 +449,7 @@ CREATE TABLE `professor` (
 
 LOCK TABLES `professor` WRITE;
 /*!40000 ALTER TABLE `professor` DISABLE KEYS */;
+INSERT INTO `professor` VALUES ('55535635',1);
 /*!40000 ALTER TABLE `professor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -461,7 +465,7 @@ CREATE TABLE `role` (
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -470,7 +474,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'Rector','Rector principal'),(5,'seminarian','seminarista'),(13,'Vicerrector','Supervisa');
+INSERT INTO `role` VALUES (5,'seminarista','seminarista'),(14,'Rector','rector'),(15,'Vice rector','Vice rector'),(16,'Coordinador de baja categoria','Coordina a los seminaristas de primer curso');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,7 +502,7 @@ CREATE TABLE `role_permission` (
 
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(13,1),(13,2),(13,3),(13,4),(13,5),(13,6),(13,7),(13,8),(13,9),(13,10),(13,11),(13,12),(13,13),(13,14),(13,15),(13,16);
+INSERT INTO `role_permission` VALUES (14,1),(14,2),(14,3),(14,4),(14,5),(14,6),(14,7),(14,8),(14,9),(14,10),(14,11),(14,12),(14,13),(14,14),(14,15),(14,16),(14,17),(14,18),(14,19),(14,20),(14,21),(14,22),(14,23),(14,24),(14,25),(14,26),(14,27),(14,28),(15,1),(15,2),(15,3),(15,4),(15,9),(15,10),(15,11),(15,12),(15,17),(15,18),(15,19),(15,20),(15,21),(15,22),(15,23),(15,24),(16,5),(16,6),(16,7),(16,8);
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -526,7 +530,7 @@ CREATE TABLE `seminarian` (
 
 LOCK TABLES `seminarian` WRITE;
 /*!40000 ALTER TABLE `seminarian` DISABLE KEYS */;
-INSERT INTO `seminarian` VALUES ('2845764444','no se que va aqui','Retirado','Externo','Unkown'),('28765455','no se que va aqui','Activo','Externo','Unkown'),('56645674','no se que va aqui','Activo','Externo','Unkown'),('566456774','no se que va aqui','Activo','Externo','Unkown'),('777855755','no se que va aqui','Activo','Externo','Unkown');
+INSERT INTO `seminarian` VALUES ('7776553435','no se que va aqui','Activo','Externo','Unkown'),('9847020','asdfdsaf','Activo','Interno','Unkown');
 /*!40000 ALTER TABLE `seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -547,7 +551,7 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,7 +560,7 @@ CREATE TABLE `social_media` (
 
 LOCK TABLES `social_media` WRITE;
 /*!40000 ALTER TABLE `social_media` DISABLE KEYS */;
-INSERT INTO `social_media` VALUES (31,'28765455',1,'ya lo mando'),(32,'56645674',1,'ya lo mando'),(33,'566456774',1,'ya lo mando'),(38,'2845764444',1,'ya lo mando'),(39,'67555432',1,'ya lo mando 2'),(41,'667435764',1,'ya lo mando 2'),(42,'777855755',1,'ya lo mando');
+INSERT INTO `social_media` VALUES (50,'27984286',3,'ya lo mando 2'),(51,'10203040',1,'sdasdaddsa'),(52,'1020304050',2,'sadddad'),(53,'30266948',2,'sadddad'),(54,'7776754886744',2,'ya lo mando'),(55,'7776754886744',3,'ya lo mando'),(56,'7776553435',2,'ya lo mando'),(57,'7776553435',3,'ya lo mando'),(58,'9847020',10,'link');
 /*!40000 ALTER TABLE `social_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -631,7 +635,7 @@ CREATE TABLE `subject` (
   CONSTRAINT `fk_subject_academicfield` FOREIGN KEY (`academic_field_id`) REFERENCES `academic_field` (`id`),
   CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -640,6 +644,7 @@ CREATE TABLE `subject` (
 
 LOCK TABLES `subject` WRITE;
 /*!40000 ALTER TABLE `subject` DISABLE KEYS */;
+INSERT INTO `subject` VALUES (5,1,'instrumentalizacion',1,NULL,2,4),(6,1,'Trinidad 1',1,NULL,1,1);
 /*!40000 ALTER TABLE `subject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -729,7 +734,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('27984286',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-07-09'),('2845764444',0,1,'$2b$10$wMdgTeuXPWV5zcjMrT.o0epy252SpFcEaTRx4lw4XL9EIH/WeiDSW',5,NULL),('28765455',1,1,'$2b$10$mZAYtJH3oj4WuVx7c27dpOGFbYmVK1ppJuLALRpVWwXLxzqbnAUoK',5,NULL),('56645674',1,1,'$2b$10$w4H74yDAHM7Xe3XKtARXPOyBjPwcJfZQ2e1TV4X7hXabDQzNJxfWS',5,NULL),('566456774',1,1,'$2b$10$4LwKlUlXzwHFz9CNfQacNOg/namD51BUNg4qmYpQ7oCbANHwBFyiG',5,NULL),('777855755',1,1,'$2b$10$zhps2Og58A/gvKOtinisiOZTx9AAFTwjUwr5OxQJYqV3eaWSagQD6',5,NULL);
+INSERT INTO `user` VALUES ('27984286',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',14,'2024-07-18'),('55535635',1,1,'$2b$10$YhnXyItgcT6YW.7cYHsyXONafPAMtJ0MMZ1KG1FW9BlVkcDQPh80S',5,NULL),('7776553435',1,1,'$2b$10$oBrkTGY0uVL/hcCjtYT9VOpVxlfr/2CenVqaFRR63hKVyvDtodUmK',5,NULL),('9847020',1,1,'$2b$10$6rJ1/DX8nbVvCVSsnCGeI.T4lrJFLuylPoAdBg9oJRPT2vyMH9z96',5,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -742,4 +747,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-11 19:01:20
+-- Dump completed on 2024-07-20  9:30:38

@@ -25,7 +25,7 @@ export const roles = [
         description: "Profesor e instructor"
     },
     {
-        id: 5,
+        id: 1,
         name: "SuperAdmin",
         description: "Administrador con acceso total"
     },
