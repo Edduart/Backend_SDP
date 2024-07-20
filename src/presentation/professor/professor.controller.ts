@@ -80,7 +80,7 @@ export class ProfessorController {
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
-    userData.role = 5;
+    userData.role = 4;
     const createProfessor = await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
       .then((professor) =>
