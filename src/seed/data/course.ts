@@ -1,4 +1,4 @@
-export const course = [
+export const course: Course_i[]= [
     {
         id: 1,
         stage_id: 1,
@@ -49,3 +49,9 @@ export const course = [
     },
 ]
 
+interface Course_i{
+    id:         number,
+    stage_id:   number,
+    description: string,
+    instructor_id: null
+}
