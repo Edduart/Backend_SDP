@@ -1,5 +1,4 @@
 import { prisma } from "../../data/postgres";
-import { filterNullValues } from "../../presentation/utils/filterNullObject";
 import {
   CreateUserDto,
   Login,
@@ -8,6 +7,7 @@ import {
   UserEntity,
   RoleEntity,
 } from "../../domain";
+import { filterNullValues } from "../../presentation/utils/FilterNullObject";
 
 export class UserDataSourceImplementation implements UserDataSource {
   async getById(id: string): Promise<object> {
