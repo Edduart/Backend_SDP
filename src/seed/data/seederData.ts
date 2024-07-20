@@ -5,7 +5,10 @@ import {
   dioceses as diocesesData,
   redes as redData,
   stages as stageData,
-  parishes as parishData
+  parishes as parishData,
+  roles as rolesData,
+  course as couserData,
+  role_permissions as RP_Data
 } from "./";
 
 
@@ -18,4 +21,7 @@ export const modelData = {
   stage: { model: prisma.stage.createMany, data: stageData },
   parishe: { model: prisma.parish.createMany,data: parishData},
   academic_field: {model: prisma.academic_field.createMany, data: academicData},
+  course: {model: prisma.course.createMany, data: couserData},
+  role: {model: prisma.role.createMany, data: rolesData},
+  role_permission: {model: prisma.role_permission.createMany, data: RP_Data}
 };

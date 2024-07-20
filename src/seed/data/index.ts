@@ -5,3 +5,6 @@ export * from "./stages"
 export * from "./parish";
 export * from "./instructorPosition";
 export * from "./academicField";
+export * from "./course";
+export * from "./role";
+export * from "./role_permissions"

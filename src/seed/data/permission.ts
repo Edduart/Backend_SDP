@@ -168,6 +168,18 @@ export const permissions: permisos[] = [
     type:         "D",
     table:        "subject"
   },
+  {
+    id:           29,
+    name:         "Permiso para ver las notas propias unicamente",
+    type:         "R",
+    table:        "Tests"
+  },
+  {
+    id:           30,
+    name:         "Acceso total al sistema",
+    type:         "A",
+    table:        "Admin"
+  },
 ];
 
 interface permisos{
