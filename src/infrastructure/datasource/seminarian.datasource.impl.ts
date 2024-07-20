@@ -176,7 +176,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           id: id,
         },
         data: {
-          status: seminarian_status.Retirado,
+          status: seminarian_status.RETIRADO,
         },
       });
       return path?.profile_picture_path;
@@ -241,7 +241,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           data: {
             id: data.user.person.id,
             apostleships: data.apostleships,
-            status: seminarian_status.Activo,
+            status: seminarian_status.ACTIVO,
             Location: data.location as seminarian_Location,
             Ministery: data.ministery as seminarian_Ministery,
             foreigner_seminarian: {
@@ -269,7 +269,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         data: {
           id: data.user.person.id,
           apostleships: data.apostleships,
-          status: seminarian_status.Activo,
+          status: seminarian_status.ACTIVO,
           Location: data.location as seminarian_Location,
           Ministery: data.ministery as seminarian_Ministery,
         },

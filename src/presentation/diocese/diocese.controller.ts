@@ -40,7 +40,7 @@ export class DioceseController {
   };
 
   public getDioceseByName = (req: Request, res: Response) => {
-    const name = req.params.name;
+    const name = req.params.name.toUpperCase();
 
     //const result = ValidatePermission(req.body.Permisos, "user", "R");
 

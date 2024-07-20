@@ -6,7 +6,6 @@ export class CreateSocialMedia{
     
     public Validate(): string|null{
         let errorarray: string[]= [];
-        console.log(this.social_media_category);
         if (!this.social_media_category) errorarray.push ("Category is required");
         if (!this.link) errorarray.push ("link is required");
 

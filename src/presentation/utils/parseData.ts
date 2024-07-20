@@ -29,14 +29,14 @@ export async function parsePersonData(req: any, path: any) {
     // Phone Data Parsing
     const phones: CreatePhone[] | null = origin.persona.phone?.map(
       (phone: { phone_number: string; description: string }) =>
-        new CreatePhone(phone.phone_number, phone.description)
+        new CreatePhone(phone.phone_number, phone.description.toUpperCase())
     );
     // Person Data Parsing
     const personData = new CreatePerson(
       origin.persona.id,
       imageFile,
-      origin.persona.forename,
-      origin.persona.surname,
+      origin.persona.forename.toUpperCase(),
+      origin.persona.surname.toUpperCase(),
       origin.persona.email,
       new Date(origin.persona.birthdate),
       origin.persona.medical_record,
@@ -104,7 +104,7 @@ export async function parseUserDataUpdate(req: any) {
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
           origin.persona.id,
-          degree_Actual.description,
+          degree_Actual.description.toUpperCase(),
           degree_Actual.link
         )
     );

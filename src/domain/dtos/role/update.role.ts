@@ -19,9 +19,9 @@ static Create(props: {[key:string]: any} ): [string?, UpdateRoleStruc?]{
     if(name == ''){
         return [ 'Name is requered' ];
     }
+    let descri_i = description.toUpperCase()
 
-
-    return [undefined, new UpdateRoleStruc(id, name, description, numbers)]
+    return [undefined, new UpdateRoleStruc(id, name, descri_i, numbers)]
 }
     
 }

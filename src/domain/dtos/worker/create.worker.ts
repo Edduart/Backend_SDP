@@ -11,7 +11,7 @@ export class CreateWorker{
       let errorarray: string[]= [];
       const result = this.persona.Validate();
       if (result != null ) errorarray.push(result);
-      if (!(this.job_position in Job_Psotion_Enum))errorarray.push("Invalid type of blood");
+      if (!(this.job_position in Job_Psotion_Enum))errorarray.push("Invalid work position");
       if (errorarray.length > 0) {
           return errorarray.join(", ");
       }

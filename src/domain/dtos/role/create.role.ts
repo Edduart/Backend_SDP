@@ -9,9 +9,9 @@ export class CreateRoleStruc{
         const { name, description, numbers } = props;
 
         if ( !name ) return ['Name property is required', undefined];
-
-
-        return [undefined, new CreateRoleStruc(name, description, numbers)];
+        let descri_i = description.toUpperCase()
+        let name_u = name.toUpperCase()
+        return [undefined, new CreateRoleStruc(name_u, descri_i, numbers)];
     }
 
 }

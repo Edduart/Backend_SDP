@@ -9,7 +9,7 @@ export class UpdateSubjectDTO{
     ){}
 
     static CreateDTO(object: { [key: string]: any }): [string?, UpdateSubjectDTO?]{
-        const { id, course_id, description, semester, academic_field_id, precedent} = object;
+        let { id, course_id, description, semester, academic_field_id, precedent} = object;
         let bool_homo = false;
         let precedent_numberl = undefined;
         
@@ -43,6 +43,7 @@ export class UpdateSubjectDTO{
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
         }
+        description = description.toUpperCase();
         return [undefined, new UpdateSubjectDTO(id, course_id, description, semester, academic_field_id, precedent_numberl)];
     }
 

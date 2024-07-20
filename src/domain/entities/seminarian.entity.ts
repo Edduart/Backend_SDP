@@ -20,20 +20,20 @@ export class SeminarianEntity{
 }
 
 export enum seminarian_status_enum {
-    Activo = "Activo",
-    Retirado = "Retirado",
-    Pastoral = "Año Pastoral",
-    Culminado = "Culminado"
+    ACTIVO = "ACTIVO",
+    RETIRADO = "RETIRADO",
+    PASTORAL = "AÑO PASTORAL",
+    CULMINADO = "CULMINADO"
 }
 
 export enum Locations_enum {
-    Externo = "Externo",
-    Interno = "Interno"
+    Externo = "EXTERNO",
+    Interno = "INTERNO"
 }
 
 export enum seminarianMinistery_ENUM {
-    Unkown   = "Unkown",
-    Admision  = "Admisión",
-    Lectorado = "Lectorado",
-    Acolitado = "Acolitado"
+    Unkown   = "UNKOWN",
+    Admision  = "ADMISIÓN",
+    Lectorado = "LECTORADO",
+    Acolitado = "ACOLITADO"
   }

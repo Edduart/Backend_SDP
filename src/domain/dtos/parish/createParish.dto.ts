@@ -28,8 +28,10 @@ export class CreateParishDto {
     if (patron.length < 5 && patron) errorarray.push("Patron name is too short");
     if (errorarray.length > 0) {
       return [errorarray.join(", "), undefined];
-  }
-    return [undefined, new CreateParishDto( diocese_id ,name, patron)];
+    }
+    let name_u = name.toUpperCase();
+    let patron_u = patron.toUpperCase();
+    return [undefined, new CreateParishDto( diocese_id ,name_u, patron_u)];
   }
 }
 

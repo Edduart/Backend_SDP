@@ -58,7 +58,7 @@ export class ParishController {
   };
 
   public getParishByname = (req: Request, res: Response) => {
-    const name = req.params.name;
+    const name = req.params.name.toUpperCase();
 
     new GetParishByname(this.parishrepository)
       .execute(name)

@@ -75,7 +75,7 @@ DROP TABLE IF EXISTS `basic_worker`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `basic_worker` (
   `person_id` varchar(20) NOT NULL,
-  `job_position` enum('Mantenimiento','Cocinero','Transportista') NOT NULL,
+  `job_position` enum('MANTENIMIENTO','COCINERO','TRANSPORTISTA') NOT NULL,
   PRIMARY KEY (`person_id`),
   KEY `fk_basic_worker_position_idx` (`job_position`),
   CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
@@ -99,7 +99,7 @@ CREATE TABLE `course` (
   KEY `fk_course_instructor_idx` (`instructor_id`),
   CONSTRAINT `fk_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`professor_id`),
   CONSTRAINT `fk_course_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,7 +226,7 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,9 +341,9 @@ DROP TABLE IF EXISTS `seminarian`;
 CREATE TABLE `seminarian` (
   `id` varchar(20) NOT NULL,
   `apostleships` text,
-  `status` enum('Activo','Retirado','Año Pastoral','Culminado') NOT NULL,
-  `Location` enum('Externo','Interno') NOT NULL,
-  `Ministery` enum('Unkown','Admisión','Lectorado','Acolitado') DEFAULT NULL,
+  `status` enum('ACTIVO','RETIRADO','AÑO PASTORAL','CULMINADO') NOT NULL,
+  `Location` enum('EXTERNO','INTERNO') NOT NULL,
+  `Ministery` enum('UNKOWN','ADMISIÓN','LECTORADO','ACOLITADO') DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -494,4 +494,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-20  9:30:56
+-- Dump completed on 2024-07-20 15:36:30
