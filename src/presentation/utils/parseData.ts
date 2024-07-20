@@ -114,7 +114,7 @@ export async function parseUserDataUpdate(req: any) {
       //origin.user.status,
       degrees,
       origin.user.parish_id,
-      origin.user.role,
+      origin.user?.role,
       //hashedPassword
     );
     return { userData };
