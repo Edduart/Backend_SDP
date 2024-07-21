@@ -7,8 +7,8 @@ export class GetProfessorDto {
     let dataErrors: string[] = [];
     let statusToNumber: number | undefined;
     if (id != undefined) {
-      if (!/^\d{1,20}$/.test(id))
-        dataErrors.push("ID must be only numeric and no more than 20 digits ");
+      /*if (!/^\d{1,20}$/.test(id))
+        dataErrors.push("ID must be only numeric and no more than 20 digits ");*/
     }
     if (status != undefined) {
       statusToNumber = +status;
