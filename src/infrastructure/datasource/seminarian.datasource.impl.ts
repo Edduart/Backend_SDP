@@ -250,8 +250,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
                 },
                 create: {
                   seminary_name: data.foreing_Data.seminary_name,
-                  stage: data.foreing_Data
-                    .stage as unknown as foreigner_seminarian_stage,
+                  stage: data.foreing_Data.stage as unknown as foreigner_seminarian_stage,
                   stage_year: data.foreing_Data.stage_year,
                 },
               },
