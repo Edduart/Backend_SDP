@@ -91,7 +91,7 @@ export async function CreatePersonFunc(data: CreatePerson) {
         forename: data.forename,
         surname: data.surname,
         birthdate: data.birthdate,
-        profile_picture_path: "http://localhost:3000/" + data.profile_picture_path,
+        profile_picture_path: data.profile_picture_path,
         email: data.email,
         medical_record: data.medical_record,
         BloodType: data.Blood as person_BloodType,

@@ -228,10 +228,9 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     }
   }
   async create(data: CreateSeminarian): Promise<string> {
-    try {
-      const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
+    const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
       if(user != undefined){throw new Error("Someone with the same id already exits");}
-
+    try {
       const result = await prisma.$transaction(async (tx) => {
         await CreateUser(data.user);
       //creating foreing

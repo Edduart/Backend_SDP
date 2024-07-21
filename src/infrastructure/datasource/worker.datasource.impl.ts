@@ -59,6 +59,8 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
         return("worker deleted");
     }
     async create(spers: CreateWorker): Promise<WorkerEntity> {
+        const user = await prisma.person.findFirst({where:{id: spers.persona.id,}});
+      if(user != undefined){throw new Error("Someone with the same id already exits");}
         try{
         const result_individual = await prisma.$transaction(async (tx) => {
             //first i check if the person exist, if exist throw error
