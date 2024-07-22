@@ -31,7 +31,10 @@ export class ProfessorController {
 
   public update = async (req: Request, res: Response) => {
     const isInstructor = await parseInstructorData(req.body.data);
-    const personData = await parsePersonData(req.body.data, req.body.ayuda);
+    const personData = await parsePersonData(
+      req.body.data,
+      "http://127.0.0.1:3000/" + req.body.ayuda
+    );
     const { userData } = await parseUserDataUpdate(req.body.data);
     //console.log(userData);
     const professorData = new UpdateProfessorDto(
@@ -77,7 +80,10 @@ export class ProfessorController {
     // TODO check operations order, check role, validations
 
     const isInstructor = await parseInstructorData(req.body.data);
-    const personData = await parsePersonData(req.body.data, req.body.ayuda);
+    const personData = await parsePersonData(
+      req.body.data,
+      "http://127.0.0.1:3000/" + req.body.ayuda
+    );
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
     userData.role = 4;
