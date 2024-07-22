@@ -68,7 +68,7 @@ model diocese {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model enrollment {
   seminarian_id     String            @db.VarChar(20) @unique
-  subject_id        Int
+  subject_id        Int               @unique
   academic_term_id  Int
   status_id         Int               @db.TinyInt
   enrollment_status enrollment_status @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_enrollment_enrollment_status")

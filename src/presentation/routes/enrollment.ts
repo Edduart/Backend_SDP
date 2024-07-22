@@ -1,0 +1,16 @@
+import { Router } from "express";
+import { EnrollmentController } from "../enrollment/enrollment.controller";
+import { EnrollmentDataSourceImpl } from "../../infrastructure/datasource/";
+import { EnrollmentRepositoryImpl } from "../../infrastructure/repositories/";
+import { ValidatorTo } from "../services/TokenValidator";
+
+const router = Router();
+const dataSource = new EnrollmentDataSourceImpl();
+const enrollmentRepository = new EnrollmentRepositoryImpl(dataSource);
+const enrollmentController = new EnrollmentController(enrollmentRepository);
+
+router.post("/", enrollmentController.create);
+router.get("/", enrollmentController.get);
+router.put("/:id", enrollmentController.update);
+router.delete("/:id", enrollmentController.delete);
+module.exports = router;
