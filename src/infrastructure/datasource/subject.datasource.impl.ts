@@ -124,7 +124,8 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
     async CheckPrecedent(id: number, course: number, semester: number): Promise<boolean>{
         const subjet_pre = await prisma.subject.findFirst({where: {id: id}});
         if(subjet_pre != null){
-            if(subjet_pre.course_id <= course){
+            if(subjet_pre.course_id < course) return true
+            if(subjet_pre.course_id == course){
                 if(subjet_pre.semester < semester){
                     return true;
                 }else throw new Error("La materia que prela no puede ser de un semestre mayor o igual")
