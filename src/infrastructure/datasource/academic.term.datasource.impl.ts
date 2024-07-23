@@ -3,7 +3,43 @@ import { prisma } from "../../data/postgres";
 import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm, UpdateAcademicTerm } from "../../domain";
 
 export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
+    async PassSemester(id: number): Promise<AcademicTermEntityt> {
+        const find = await prisma.academic_term.findFirst({where:{id:id}});
+        if(find == null) throw new Error("El periodo academico no existe");
+        const result = await prisma.academic_term.update({
+            where:{id: id},
+            data:{
+                semester: 2
+            }
+        });
+        return AcademicTermEntityt.fromObject(result);
+    }
+    async EndAcademicTerm(id: number): Promise<AcademicTermEntityt> {
+        const find = await prisma.academic_term.findFirst({where:{id:id}});
+        console.log(find);
+        if(find == null) throw new Error("El periodo academico no existe");
+        const result = await prisma.academic_term.update({
+            where:{id: id},
+            data:{
+                status: academic_term_status.CULMINADO
+            }
+        });
+        return AcademicTermEntityt.fromObject(result);
+    }
+    async ActivateAcademicTerm(id: number): Promise<AcademicTermEntityt> {
+        const find = await prisma.academic_term.findFirst({where:{id:id}});
+        if(find == null) throw new Error("El periodo academico no existe");
+        const result = await prisma.academic_term.update({
+            where:{id: id},
+            data:{
+                status: academic_term_status.ACTIVO
+            }
+        });
+        return AcademicTermEntityt.fromObject(result);
+    }
     async Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
+        const find = await prisma.academic_term.findFirst({where:{id:data.id}});
+        if(find == null) throw new Error("El periodo academico no existe");
         const result = await prisma.academic_term.update({
             where:{
                 id: data.id

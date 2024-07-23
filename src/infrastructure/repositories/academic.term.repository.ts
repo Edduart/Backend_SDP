@@ -2,6 +2,15 @@ import { AcademicTermDatasource, AcademicTermEntityt, AcademicTermRepository, Cr
 
 export class AcademicTermRepositoryImpl implements AcademicTermRepository {
     constructor(private readonly datasource: AcademicTermDatasource) {}
+    PassSemester(id: number): Promise<AcademicTermEntityt> {
+        return this.datasource.PassSemester(id);
+    }
+    EndAcademicTerm(id: number): Promise<AcademicTermEntityt> {
+        return this.datasource.EndAcademicTerm(id);
+    }
+    ActivateAcademicTerm(id: number): Promise<AcademicTermEntityt> {
+        return this.datasource.ActivateAcademicTerm(id);
+    }
     Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
         return this.datasource.Update(data);
     }

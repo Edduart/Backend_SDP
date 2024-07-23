@@ -10,4 +10,7 @@ const Controller = new AcademicTermController(courseRepository);
 router.post("/", Controller.Create);
 router.get("/", Controller.Get);
 router.put("/", Controller.Update);
+router.delete("/delete/:id", Controller.Deactivate);
+router.put("/activate/:id", Controller.Activate);
+router.put("/pass/:id", Controller.PassSemester);
 module.exports = router;

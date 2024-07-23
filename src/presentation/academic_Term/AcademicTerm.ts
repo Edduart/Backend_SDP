@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicTermRepository, CreateAcademicTerm, CreateAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, UpdateAcademicTerm, updateAcademicTermUseCase } from "../../domain";
+import { AcademicTermRepository, ActivateAcademicTermUseCase, CreateAcademicTerm, CreateAcademicTermUseCase, EndAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, PassAcademicTermSemesterUseCase, UpdateAcademicTerm, updateAcademicTermUseCase } from "../../domain";
 
 export class AcademicTermController {
     constructor(private readonly repository: AcademicTermRepository) {}
@@ -33,5 +33,27 @@ export class AcademicTermController {
             console.log(error_Arr);
             res.status(400).json({ error_Arr }).send();
         } 
+    }
+    public PassSemester = (req: Request, res: Response) => {
+        const id = +req.params.id;
+        if(id == undefined){res.status(400).json("el id es requerido").send()}
+        new PassAcademicTermSemesterUseCase(this.repository).execute(id)
+        .then((academic)=>{res.status(200).json(academic).send();})
+        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
+    }
+    public Activate = (req: Request, res: Response) => {
+        const id = +req.params.id;
+        if(id == undefined){res.status(400).json("el id es requerido").send()}
+        new ActivateAcademicTermUseCase(this.repository).execute(id)
+        .then((academic)=>{res.status(200).json(academic).send();})
+        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
+    }
+    public Deactivate = (req: Request, res: Response) => {
+        const id = +req.params.id;
+        console.log(id)
+        if(id == undefined){res.status(400).json("el id es requerido").send()}
+        new EndAcademicTermUseCase(this.repository).execute(id)
+        .then((academic)=>{res.status(200).json(academic).send();})
+        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
     }
 }
