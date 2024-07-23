@@ -32,7 +32,7 @@ model academic_term {
   id          Int                  @id @default(autoincrement())
   start_date  DateTime             @db.Date
   end_date    DateTime             @db.Date
-  semester    Boolean?
+  semester    Int                 @default(1)
   status      academic_term_status @default(ACTIVO)
   enrollment  enrollment[]
   instruction instruction[]

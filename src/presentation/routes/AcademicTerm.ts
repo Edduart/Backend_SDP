@@ -9,5 +9,5 @@ const Controller = new AcademicTermController(courseRepository);
 
 router.post("/", Controller.Create);
 router.get("/", Controller.Get);
-
+router.put("/", Controller.Update);
 module.exports = router;

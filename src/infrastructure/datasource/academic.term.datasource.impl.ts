@@ -1,8 +1,18 @@
 import { academic_term_status } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm } from "../../domain";
+import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm, UpdateAcademicTerm } from "../../domain";
 
 export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
+    async Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
+        const result = await prisma.academic_term.update({
+            where:{
+                id: data.id
+            }, data: {
+                start_date: data.start_date,
+                end_date: data.end_date
+            }});
+        return AcademicTermEntityt.fromObject(result);
+    }
     async Get(data: GetAcademicTerm): Promise<AcademicTermEntityt[]> {
         let whereClause = {};
         if (data.fecha != undefined) {
