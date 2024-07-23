@@ -8,6 +8,6 @@ const courseRepository = new AcademicTermRepositoryImpl(datasource);
 const Controller = new AcademicTermController(courseRepository);
 
 router.post("/", Controller.Create);
-//router.get("/", Controller.Create);
+router.get("/", Controller.Get);
 
 module.exports = router;
