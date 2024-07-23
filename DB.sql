@@ -30,7 +30,7 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,6 +62,7 @@ CREATE TABLE `academic_term` (
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `semester` tinyint(1) DEFAULT NULL,
+  `status` enum('ACTIVO','CULMINADO','EQUIVALENCIAS') NOT NULL DEFAULT 'ACTIVO',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -128,30 +129,14 @@ CREATE TABLE `enrollment` (
   `seminarian_id` varchar(20) NOT NULL,
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
-  `status_id` tinyint NOT NULL COMMENT '0 = cursando, 1 = cursada',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0 = cursando, 1 = cursada',
   PRIMARY KEY (`seminarian_id`,`subject_id`,`academic_term_id`),
   KEY `fk_seminarian_subject_subject_idx` (`subject_id`),
   KEY `fk_seminarian_academic_term_idx` (`academic_term_id`),
-  KEY `fk_enrollment_enrollment_status_idx` (`status_id`),
-  CONSTRAINT `fk_enrollment_enrollment_status` FOREIGN KEY (`status_id`) REFERENCES `enrollment_status` (`id`),
   CONSTRAINT `fk_seminarian_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `fk_seminarian_subject_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
   CONSTRAINT `fk_seminarian_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `enrollment_status`
---
-
-DROP TABLE IF EXISTS `enrollment_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `enrollment_status` (
-  `id` tinyint NOT NULL AUTO_INCREMENT,
-  `description` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Pienso que los status deberían ser 0 = activa, 1 = pasada, 2 = reprobada y 3 =  retirada';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,7 +211,7 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,7 +265,7 @@ CREATE TABLE `phone_number` (
   PRIMARY KEY (`id`),
   KEY `fk_phone_number_person_idx` (`person_id`),
   CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +351,7 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -420,7 +405,7 @@ CREATE TABLE `subject` (
   CONSTRAINT `fk_subject_academicfield` FOREIGN KEY (`academic_field_id`) REFERENCES `academic_field` (`id`),
   CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,4 +479,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-20 15:36:30
+-- Dump completed on 2024-07-23 11:29:00
