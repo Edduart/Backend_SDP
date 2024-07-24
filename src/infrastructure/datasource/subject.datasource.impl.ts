@@ -59,8 +59,8 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
         if (result == null) throw new Error("Subject does not exists");
         const result_p = await prisma.subject.findMany({where:{precedent: id}});
         if (result_p.length > 0) throw new Error("can not delete as it precents: " + result_p[0].description);
-
-        const delete_u = await prisma.subject.update({where:{id:id},data:{status: !result, precedent: null}});
+        const auxiliary_boolean = !result.status;
+        const delete_u = await prisma.subject.update({where:{id:id},data:{status: auxiliary_boolean, precedent: null}});
         const subjet_deleted = await this.get(GetSubjectDTO.FindDto(delete_u.id, false));
         return subjet_deleted[0];
     }
