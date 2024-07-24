@@ -7,6 +7,8 @@ import {
   EnrollmentRepository,
   UpdateEnrollmentDto,
   DeleteEnrollment,
+  GetEnrollmentDto,
+  DeleteEnrollmentDto,
 } from "../../domain";
 import { ValidatePermission } from "../services/permissionValidator";
 
@@ -14,8 +16,11 @@ export class EnrollmentController {
   constructor(private readonly repository: EnrollmentRepository) {}
 
   public get = (req: Request, res: Response) => {
+    const [error, getDto] = GetEnrollmentDto.get(req.body);
+    if (error) return res.status(400).json({ error });
+
     new GetEnrollment(this.repository)
-      .execute()
+      .execute(getDto!)
       .then((enrollment) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(enrollment)
       )
@@ -56,9 +61,11 @@ export class EnrollmentController {
   };
 
   public delete = (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);
+    if (error) return res.status(400).json({ error });
+
     new DeleteEnrollment(this.repository)
-      .execute(id)
+      .execute(deleteDto!)
       .then((Enrollment) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
           msj:

@@ -3,7 +3,7 @@ export class EnrollmentEntity {
     public seminarian_id: string,
     public subject_id: number,
     public academic_term_id: number,
-    public status_id: number
+    public status: EnrollmentStatus
   ) {}
 
   public static fromObject(object: { [key: string]: any }): EnrollmentEntity {
@@ -20,4 +20,11 @@ export class EnrollmentEntity {
       status_id
     );
   }
+}
+
+export enum EnrollmentStatus {
+  CURSANDO = "CURSANDO",
+  APROVADO = "APROVADO",
+  REPROBADO = "REPROBADO",
+  RETIRADO = "RETIRADO",
 }

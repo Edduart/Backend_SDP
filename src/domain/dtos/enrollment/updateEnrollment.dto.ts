@@ -1,9 +1,10 @@
+import {EnrollmentStatus} from "../../entities/enrollment.entity"
 export class UpdateEnrollmentDto {
   constructor(
-    //public seminarian_id: string,
+    public seminarian_id: string,
     public subject_id: number,
     public academic_term_id: number,
-    public status_id: number
+    public status: EnrollmentStatus
   ) {}
 
   get values() {
@@ -13,7 +14,7 @@ export class UpdateEnrollmentDto {
     //if (this.subject_id) returnObj.subject_id = this.subject_id;
     if (this.academic_term_id)
       returnObj.academic_term_id = this.academic_term_id;
-    if (this.status_id) returnObj.status_id = this.status_id;
+    if (this.status) returnObj.status = this.status;
 
     return returnObj;
   }
@@ -21,7 +22,7 @@ export class UpdateEnrollmentDto {
   static update(props: {
     [key: string]: any;
   }): [string[]?, UpdateEnrollmentDto?] {
-    let { subject_id, academic_term_id, status_id } = props;
+    let { seminarian_id, subject_id, academic_term_id, status } = props;
     let dataErrors: string[] = [];
 
     //let statusToNumber: number | undefined;
@@ -55,7 +56,9 @@ export class UpdateEnrollmentDto {
           "academic_term_id must be a valid number between 0 and 1"
         );
     }
-    if (status_id == undefined) {
+
+    // TODO status enum check
+    /*if (status_id == undefined) {
       dataErrors.push("status_id is required");
     } else {
       if (
@@ -65,12 +68,17 @@ export class UpdateEnrollmentDto {
         status_id > 1
       )
         dataErrors.push("status_id must be a valid number between 0 and 1");
-    }
+    }*/
 
     if (dataErrors.length > 0) return [dataErrors];
     return [
       undefined,
-      new UpdateEnrollmentDto(subject_id, academic_term_id, status_id),
+      new UpdateEnrollmentDto(
+        seminarian_id,
+        subject_id,
+        academic_term_id,
+        status
+      ),
     ];
   }
 }

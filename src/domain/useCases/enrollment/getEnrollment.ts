@@ -1,15 +1,15 @@
-//import { } from "../../dtos";
+import { GetEnrollmentDto} from "../../dtos";
 import { EnrollmentEntity } from "../../entities";
 import { EnrollmentRepository } from "../../repositories";
 
 interface GetEnrollmentUseCase {
-  execute(): Promise<EnrollmentEntity[]>;
+  execute(dto: GetEnrollmentDto): Promise<EnrollmentEntity[]>;
 }
 
 export class GetEnrollment implements GetEnrollmentUseCase {
   constructor(private readonly repository: EnrollmentRepository) {}
 
-  execute(): Promise<EnrollmentEntity[]> {
-    return this.repository.get();
+  execute(dto: GetEnrollmentDto): Promise<EnrollmentEntity[]> {
+    return this.repository.get(dto);
   }
 }

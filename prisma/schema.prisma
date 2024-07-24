@@ -29,10 +29,11 @@ model academic_field {
 }
 
 model academic_term {
-  id          Int           @id @default(autoincrement())
-  start_date  DateTime      @db.Date
-  end_date    DateTime      @db.Date
-  semester    Boolean?
+  id          Int                  @id @default(autoincrement())
+  start_date  DateTime             @db.Date
+  end_date    DateTime             @db.Date
+  semester    Int                 @default(1)
+  status      academic_term_status @default(ACTIVO)
   enrollment  enrollment[]
   instruction instruction[]
 }
@@ -67,27 +68,18 @@ model diocese {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model enrollment {
-  seminarian_id     String            @db.VarChar(20) @unique
-  subject_id        Int               @unique
-  academic_term_id  Int
-  status_id         Int               @db.TinyInt
-  enrollment_status enrollment_status @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_enrollment_enrollment_status")
-  academic_term     academic_term     @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
-  seminarian        seminarian        @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
-  subject           subject           @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
-  test_score        test_score[]
+  seminarian_id    String        @db.VarChar(20) @unique
+  subject_id       Int
+  academic_term_id Int
+  status           enrollment_status @default(CURSANDO)
+  academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
+  seminarian       seminarian    @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
+  subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
+  test_score       test_score[]
 
   @@id([seminarian_id, subject_id, academic_term_id])
-  @@index([status_id], map: "fk_enrollment_enrollment_status_idx")
   @@index([academic_term_id], map: "fk_seminarian_academic_term_idx")
   @@index([subject_id], map: "fk_seminarian_subject_subject_idx")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model enrollment_status {
-  id          Int          @id @default(autoincrement()) @db.TinyInt
-  description String       @db.VarChar(50)
-  enrollment  enrollment[]
 }
 
 model foreigner_seminarian {
@@ -115,13 +107,13 @@ model instruction {
 }
 
 model instructor {
-  professor_id        String                          @id @db.VarChar(20)
-  starting_date       DateTime                        @db.Date
+  professor_id        String               @id @db.VarChar(20)
+  starting_date       DateTime             @db.Date
   status              Int
   instructor_position instructor_position?
   course              course[]
   instruction         instruction[]
-  professor           professor                       @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
+  professor           professor            @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
 
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
@@ -307,6 +299,7 @@ enum foreigner_seminarian_stage {
   DISCIPULADO   @map("2")
   CONFIGURATIVA @map("3")
 }
+
 enum seminarian_status {
   ACTIVO    @map("ACTIVO")
   RETIRADO  @map("RETIRADO")
@@ -315,12 +308,12 @@ enum seminarian_status {
 }
 
 enum instructor_position {
-  RECTOR @map("RECTOR")
-  VICERECTOR @map("VICERECTOR")
-  ACADEMICO @map("ACADEMICO")
-  ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
-  DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
-  ECONOMO @map("ECONOMO")
+  RECTOR                @map("RECTOR")
+  VICERECTOR            @map("VICERECTOR")
+  ACADEMICO             @map("ACADEMICO")
+  ASESOR_PROPEDEUTICO   @map("ASESOR PROPEDEUTICO")
+  DIRECTOR_ESPIRITUAL   @map("DIRECTOR ESPIRITUAL")
+  ECONOMO               @map("ECONOMO")
 }
 
 enum seminarian_Location {
@@ -345,4 +338,17 @@ enum person_BloodType {
   O_POSITIVO  @map("O+")
   O_NEGATIVO  @map("O-")
   UNKNOWN
+}
+
+enum academic_term_status {
+  ACTIVO
+  CULMINADO
+  EQUIVALENCIAS
+}
+
+enum enrollment_status {
+  CURSANDO 
+  APROVADO 
+  REPROBADO 
+  RETIRADO 
 }
