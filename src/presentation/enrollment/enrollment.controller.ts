@@ -48,7 +48,7 @@ export class EnrollmentController {
 
   public create = (req: Request, res: Response) => {
     const [error, createDto] = CreateEnrollmentDto.create(req.body);
-    if (error) return res.status(400).json({ error });
+    if (error) return res.status(400).json({msj: "Data validation errors", error });
 
     new CreateEnrollment(this.repository)
       .execute(createDto!)

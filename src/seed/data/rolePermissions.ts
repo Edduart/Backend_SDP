@@ -1,4 +1,4 @@
-export const role_permissions = [
+export const rolePermissions = [
     {
         role_id: 5,
         permission_id:  29

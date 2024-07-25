@@ -1,7 +1,4 @@
-import { enrollment_status } from "@prisma/client";
-
 import { prisma } from "../../data/postgres";
-import { DeleteEnrollment } from "../../domain/useCases/enrollment/deleteEnrollment";
 import {
   EnrollmentStatus,
   UpdateEnrollmentDto,
@@ -9,16 +6,11 @@ import {
   EnrollmentEntity,
   CreateEnrollmentDto,
   DeleteEnrollmentDto,
-  GetEnrollmentDto
+  GetEnrollmentDto,
 } from "../../domain";
-
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   async create(createDto: CreateEnrollmentDto): Promise<EnrollmentEntity> {
-    const subjectCheck = await prisma.enrollment.findFirst({
-      where: { subject_id: createDto.subject_id },
-    });
-    if (subjectCheck != null)
-      throw `Enrollment of the subject ID: ${createDto.subject_id}, already exist`;
+    await this.validateExistence(createDto);
     const createEnrollment = await prisma.enrollment.create({
       data: createDto!,
     });
@@ -66,4 +58,36 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     });
     return EnrollmentEntity.fromObject(deleteEnrollment);
   }
+
+  async validateExistence(dto: DtoValidate) {
+    const [enrollment, seminarian, subject, academicTerm = true] = await Promise.all([ // FIXME need to update database check for academic term error
+      prisma.enrollment.findFirst({
+        where: {
+          seminarian_id: dto.seminarian_id,
+          subject_id: dto.subject_id,
+          academic_term_id: dto.academic_term_id,
+        },
+      }),
+      prisma.seminarian.findUnique({ where: { id: dto.seminarian_id } }),
+      prisma.subject.findUnique({
+        where: { id: dto.subject_id, status: true },
+      }),
+      /*prisma.academic_term.findUnique({
+        where: { id: dto.academic_term_id },
+      }),*/
+    ]);
+    if (enrollment)
+      throw `Enrollment with the seminarian ID: ${dto.seminarian_id} , subject ID: ${dto.subject_id} , academic term ID: ${dto.academic_term_id}, already exist`;
+    if (!seminarian) throw `Seminarian ID ${dto.seminarian_id} doesn't exist!`;
+    if (!subject) throw `Subject ID ${dto.subject_id} doesn't exist!`;
+    if (!academicTerm)
+      throw `Academic term ID ${dto.academic_term_id} doesn't exist!`;
+  }
+}
+
+interface DtoValidate {
+  seminarian_id?: string;
+  subject_id?: number;
+  academic_term_id?: number;
+  status?: string;
 }
