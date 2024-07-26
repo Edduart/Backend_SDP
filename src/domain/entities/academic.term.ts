@@ -13,7 +13,6 @@ export class AcademicTermEntityt{
 
     public static fromObject(object: { [key: string]: any }): AcademicTermEntityt {
         const { id, start_date, end_date, status,semester } = object;
-        console.log("creando resultado");
         const end_typedate = new Date(end_date);
         const start_typedate = new Date(start_date);
         const name = start_typedate.toISOString().split('-')[0] + '-' + end_typedate.toISOString().split('-')[0]
