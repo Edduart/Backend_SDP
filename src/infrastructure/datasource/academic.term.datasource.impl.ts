@@ -85,6 +85,7 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
         const result = await prisma.academic_term.create({
             data: dto
         });
+        console.log("Ya creado");
         return AcademicTermEntityt.fromObject(result);
     }
 }

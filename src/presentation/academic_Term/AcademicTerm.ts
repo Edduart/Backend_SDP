@@ -8,7 +8,9 @@ export class AcademicTermController {
         if (academicCreateDTO != undefined) {
             new CreateAcademicTermUseCase(this.repository).execute(academicCreateDTO)
             .then((academic)=>{res.status(200).json(academic).send();})
-            .catch((error) => {res.status(400).json("Error obteniendo periodos" + error).send()})
+            .catch((error) => {
+                console.log(error);
+                res.status(400).json("Error creando periodos" + error).send()})
         }else{
             console.log(error_Arr);
             res.status(400).json({ error_Arr }).send();
@@ -39,14 +41,14 @@ export class AcademicTermController {
         if(id == undefined){res.status(400).json("el id es requerido").send()}
         new PassAcademicTermSemesterUseCase(this.repository).execute(id)
         .then((academic)=>{res.status(200).json(academic).send();})
-        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
+        .catch((error) => {res.status(400).json("Error pasando el semestre del periodo" + error).send()})
     }
     public Activate = (req: Request, res: Response) => {
         const id = +req.params.id;
         if(id == undefined){res.status(400).json("el id es requerido").send()}
         new ActivateAcademicTermUseCase(this.repository).execute(id)
         .then((academic)=>{res.status(200).json(academic).send();})
-        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
+        .catch((error) => {res.status(400).json("Error activando el periodo" + error).send()})
     }
     public Deactivate = (req: Request, res: Response) => {
         const id = +req.params.id;
@@ -54,6 +56,6 @@ export class AcademicTermController {
         if(id == undefined){res.status(400).json("el id es requerido").send()}
         new EndAcademicTermUseCase(this.repository).execute(id)
         .then((academic)=>{res.status(200).json(academic).send();})
-        .catch((error) => {res.status(400).json("Error actualizando periodos" + error).send()})
+        .catch((error) => {res.status(400).json("Error eliminando periodo" + error).send()})
     }
 }
