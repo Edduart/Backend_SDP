@@ -19,4 +19,5 @@ export * from "./person.entity";
 export * from "./seminarian.entity";
 export * from "./subject.entity";
 export * from "./academic.field";
+export * from "./instruction.entity"
 export * from "./academic.term";

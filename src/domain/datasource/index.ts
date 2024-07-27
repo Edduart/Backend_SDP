@@ -11,3 +11,4 @@ export * from "./user.datasource"
 export * from "./subject.datasource";
 export * from "./seminarian.datasource";
 export * from "./academic.term.datasource";
+export * from "./instructuion.datasource";
