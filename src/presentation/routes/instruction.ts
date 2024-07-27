@@ -7,6 +7,6 @@ const router = Router();
 const datasource = new InstructionDataSourceImple();
 const instructionRepository = new InstructionRepositoryImpl(datasource);
 const instructionController = new InstructionController(instructionRepository);
-
+router.get('/', instructionController.get);
 router.post('/', instructionController.create);
 module.exports = router;

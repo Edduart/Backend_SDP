@@ -17,10 +17,9 @@ export class CreateInstruction{
         if(professor_id != undefined){
             if (!/^(V|E)-\d{1,18}$/.test(professor_id))errorarray.push("professor ID follows this format: V-xxxxxx ");
         }else {professor_id = null}
-        console.log(professor_id);
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
         }
         return [undefined, new CreateInstruction(subject_id, academic_term_id, professor_id)];
-      }
+    }
 }
