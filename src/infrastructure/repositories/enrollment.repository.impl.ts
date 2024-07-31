@@ -5,12 +5,16 @@ import {
   EnrollmentRepository,
   UpdateEnrollmentDto,
   DeleteEnrollmentDto,
-  GetEnrollmentDto
+  GetEnrollmentDto,
+  GetAcademicStatusDto
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
-  create(dto: CreateEnrollmentDto): Promise<EnrollmentEntity> {
+  getAcademicStatus(dto: GetAcademicStatusDto): Promise<object> {
+    return this.dataSource.getAcademicStatus(dto);
+  }
+  create(dto: CreateEnrollmentDto): Promise<object> {
     return this.dataSource.create(dto);
   }
   get(dto: GetEnrollmentDto): Promise<EnrollmentEntity[]> {

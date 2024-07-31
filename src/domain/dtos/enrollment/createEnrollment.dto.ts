@@ -1,7 +1,7 @@
 export class CreateEnrollmentDto {
   constructor(
     public seminarian_id: string,
-    public subject_id: number,
+    public subject_id: number[],
     public academic_term_id: number //public status: number
   ) {}
 
@@ -10,6 +10,10 @@ export class CreateEnrollmentDto {
   }): [object[]?, CreateEnrollmentDto?] {
     let { seminarian_id, subject_id, academic_term_id } = props;
     let validationErrors: ValidationError[] = [];
+
+    console.log(subject_id);
+
+    // TODO reWork validations
 
     if (!seminarian_id) {
       validationErrors.push({
@@ -23,21 +27,26 @@ export class CreateEnrollmentDto {
       });
     }
 
-    if (!subject_id) {
+    if (subject_id.length == 0) {
       validationErrors.push({
         field: "subject_id",
         message: "subject_id is required!",
       });
-    } else if (
-      Number.isNaN(subject_id) ||
-      !Number.isInteger(subject_id) ||
-      subject_id <= 0 
-    ) {
-      validationErrors.push({
-        field: "subject_id",
-        message: "subject_id must be a valid number!",
+    } else {
+      subject_id.forEach((element: number) => {
+        if (
+          Number.isNaN(element) ||
+          !Number.isInteger(element) ||
+          element <= 0
+        ) {
+          validationErrors.push({
+            field: "subject_id",
+            message: "subject_id must be a valid number!",
+          });
+        }
       });
     }
+
     if (!academic_term_id) {
       validationErrors.push({
         field: "academic_term_id",
