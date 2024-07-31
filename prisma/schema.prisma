@@ -71,7 +71,7 @@ model enrollment {
   seminarian_id    String        @db.VarChar(20) @unique
   subject_id       Int
   academic_term_id Int
-  status           Boolean       @default(true)
+  status           enrollment_status @default(CURSANDO)
   academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
   seminarian       seminarian    @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
   subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
@@ -299,7 +299,6 @@ enum foreigner_seminarian_stage {
   DISCIPULADO   @map("2")
   CONFIGURATIVA @map("3")
 }
-
 enum seminarian_status {
   ACTIVO    @map("ACTIVO")
   RETIRADO  @map("RETIRADO")
@@ -344,4 +343,11 @@ enum academic_term_status {
   ACTIVO
   CULMINADO
   EQUIVALENCIAS
+}
+
+enum enrollment_status {
+  CURSANDO 
+  APROVADO 
+  REPROBADO 
+  RETIRADO 
 }

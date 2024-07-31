@@ -14,3 +14,4 @@ export * from "./seminarian.datasource.impl";
 export * from "./subject.datasource.impl";
 export * from "./academic.term.datasource.impl";
 export * from "./instruction.impl";
+export * from "./enrollment.dataSource.impl"

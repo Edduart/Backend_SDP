@@ -12,3 +12,4 @@ export * from "./user.repository.imple"
 export * from "./subject.repository.imple";
 export * from "./academic.term.repository";
 export * from "./instructor.repository.imple"
+export * from "./enrollment.repository.impl";

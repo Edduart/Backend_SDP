@@ -7,10 +7,11 @@ import {
   stages as stageData,
   parishes as parishData,
   roles as rolesData,
-  course as couserData,
-  role_permissions as RP_Data,
-  person_user as PData,
-  user as UData
+  course as coursesData,
+  rolePermissions as rolePermissionsData,
+  person as personsData,
+  user as usersData,
+  subject as subjectsData,
 } from "./";
 
 
@@ -21,11 +22,18 @@ export const modelData = {
   diocese: { model: prisma.diocese.createMany, data: diocesesData },
   redes: { model: prisma.social_media_category.createMany, data: redData },
   stage: { model: prisma.stage.createMany, data: stageData },
-  parishe: { model: prisma.parish.createMany,data: parishData},
-  academic_field: {model: prisma.academic_field.createMany, data: academicData},
-  course: {model: prisma.course.createMany, data: couserData},
-  role: {model: prisma.role.createMany, data: rolesData},
-  role_permission: {model: prisma.role_permission.createMany, data: RP_Data},
-  person: {model: prisma.person.createMany, data: PData},
-  user: {model: prisma.user.createMany, data: UData},
+  parish: { model: prisma.parish.createMany, data: parishData },
+  academic_field: {
+    model: prisma.academic_field.createMany,
+    data: academicData,
+  },
+  course: { model: prisma.course.createMany, data: coursesData },
+  role: { model: prisma.role.createMany, data: rolesData },
+  role_permission: {
+    model: prisma.role_permission.createMany,
+    data: rolePermissionsData,
+  },
+  person: { model: prisma.person.createMany, data: personsData },
+  user: { model: prisma.user.createMany, data: usersData },
+  subject: { model: prisma.subject.createMany, data: subjectsData },
 };
