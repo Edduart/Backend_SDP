@@ -29,3 +29,4 @@ export enum EnrollmentStatus {
   REPROBADO = "REPROBADO",
   RETIRADO = "RETIRADO",
 }
+
