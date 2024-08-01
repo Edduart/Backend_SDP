@@ -2,6 +2,17 @@ import { prisma } from "../../data/postgres";
 import { CreateInstruction, GetInstruction, InstructionDatasource, InstructionEntity } from "../../domain";
 
 export class InstructionDataSourceImple implements InstructionDatasource{
+    async Update(data: CreateInstruction): Promise<InstructionEntity> {
+        const check_exists = await prisma.instruction.findFirst({
+            where:{
+                subject_id:         data.subject_id,
+                academic_term_id:   data.academic_term_id
+        }});
+        if(check_exists != null)throw new Error("Instruction does not exists");
+        throw new Error("Instruction does not exists");
+        //const result_created = //await prisma.instruction.update({});
+        //return InstructionEntity.fromObject(result_created);
+    }
     async Get(data: GetInstruction): Promise<InstructionEntity[]> {
         const result = await prisma.instruction.findMany({
             where:{
