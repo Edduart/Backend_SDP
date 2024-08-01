@@ -17,5 +17,5 @@ router.get(
 router.post("/", enrollmentController.create);
 router.get("/", enrollmentController.get);
 router.put("/:id", enrollmentController.update);
-router.delete("/:id", enrollmentController.delete);
+router.delete("/", enrollmentController.delete);
 module.exports = router;

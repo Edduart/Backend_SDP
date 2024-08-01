@@ -51,10 +51,10 @@ export class EnrollmentController {
   };
 
   public update = (req: Request, res: Response) => {
-    const subject_id = +req.params.id;
+    const seminarian_id = req.params.id;
     const [error, updateDto] = UpdateEnrollmentDto.update({
       ...req.body,
-      subject_id,
+      seminarian_id,
     });
     if (error) return res.status(400).json({ error });
     new UpdateEnrollment(this.repository)

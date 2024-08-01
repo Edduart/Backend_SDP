@@ -2,7 +2,7 @@ import { EnrollmentStatus } from "../../entities/enrollment.entity";
 export class UpdateEnrollmentDto {
   constructor(
     public seminarian_id: string,
-    public subject_id: number,
+    public subject_id: number[],
     public academic_term_id: number,
     public status: EnrollmentStatus
   ) {}
@@ -22,13 +22,17 @@ export class UpdateEnrollmentDto {
     let dataErrors: string[] = [];
     if (dataErrors.length > 0) return [dataErrors];
 
+    console.log(props);
+
+    // TODO subject_id maybe only one number
+
     // TODO reWork validations
 
     return [
       undefined,
       new UpdateEnrollmentDto(
         seminarian_id,
-        subject_id,
+        [subject_id],
         academic_term_id,
         status
       ),

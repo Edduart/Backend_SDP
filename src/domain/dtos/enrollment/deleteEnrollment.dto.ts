@@ -1,7 +1,7 @@
 export class DeleteEnrollmentDto {
   constructor(
     public seminarian_id: string,
-    public subject_id: number,
+    public subject_id: number[],
     public academic_term_id: number
   ) {}
 
@@ -16,7 +16,7 @@ export class DeleteEnrollmentDto {
     if (dataErrors.length > 0) return [dataErrors];
     return [
       undefined,
-      new DeleteEnrollmentDto(seminarian_id, subject_id, academic_term_id),
+      new DeleteEnrollmentDto(seminarian_id, [subject_id], academic_term_id),
     ];
   }
 }
