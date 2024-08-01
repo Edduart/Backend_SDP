@@ -14,3 +14,4 @@ export * from "./user";
 export * from "./subject";
 export * from "./academicterm";
 export * from "./instruction";
+export * from "./enrollment";

@@ -13,3 +13,4 @@ export * from "./seminarian.repository";
 export * from "./subject.repository";
 export * from "./academic.tern.repository";
 export * from "./instruction.repository";
+export * from "./enrollment.repository";
