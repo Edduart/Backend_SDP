@@ -18,6 +18,16 @@ model academic_degree {
   @@index([user_id], map: "fk_academic_degree_user_idx")
 }
 
+model academic_field {
+  id          Int       @id @default(autoincrement())
+  stage_id    Int       @db.TinyInt
+  description String?   @db.VarChar(100)
+  stage       stage     @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_acadmicfield_stage")
+  subject     subject[]
+
+  @@index([stage_id], map: "fk_acadmicfield_stage_idx")
+}
+
 model academic_term {
   id          Int           @id @default(autoincrement())
   start_date  DateTime      @db.Date
@@ -89,28 +99,29 @@ model foreigner_seminarian {
 }
 
 model instruction {
-  professor_id     String        @db.VarChar(20)
+  professor_id     String?       @db.VarChar(20)
   subject_id       Int
   academic_term_id Int
   academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professo_subject_academic_term")
-  professor        professor     @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_professor")
+  instructor       instructor?   @relation(fields: [professor_id], references: [professor_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_instructor")
   subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_subject_subject")
   test             test[]
 
-  @@id([professor_id, subject_id, academic_term_id])
+  @@id([subject_id, academic_term_id])
   @@index([academic_term_id], map: "fk_professo_subject_academic_term_idx")
+  @@index([professor_id], map: "fk_professor_instructor_idx")
   @@index([subject_id], map: "fk_professor_subject_subject_idx")
   @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
-  @@unique([subject_id, academic_term_id])
 }
 
 model instructor {
-  professor_id        String               @id @db.VarChar(20)
-  starting_date       DateTime             @db.Date
+  professor_id        String                          @id @db.VarChar(20)
+  starting_date       DateTime                        @db.Date
   status              Int
   instructor_position instructor_position?
   course              course[]
-  professor           professor            @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
+  instruction         instruction[]
+  professor           professor                       @relation(fields: [professor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "instructor_professor")
 
   @@index([professor_id], map: "fk_instructor_professor_idx")
 }
@@ -161,11 +172,10 @@ model phone_number {
 }
 
 model professor {
-  id          String        @id @db.VarChar(20)
-  status_id   Int           @db.TinyInt
-  instruction instruction[]
-  instructor  instructor?
-  user        user          @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
+  id         String      @id @db.VarChar(20)
+  status_id  Int         @db.TinyInt
+  instructor instructor?
+  user       user        @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor_user")
 }
 
 model role {
@@ -239,9 +249,9 @@ model subject {
   subject           subject?       @relation("subjectTosubject", fields: [precedent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_subject_precedent")
   other_subject     subject[]      @relation("subjectTosubject")
 
+  @@index([academic_field_id], map: "fk_subject_academicfield_idx")
   @@index([course_id], map: "fk_subject_course_idx")
   @@index([precedent], map: "fk_subject_precedent_idx")
-  @@index([academic_field_id], map: "fk_subject_academicfield_idx")
 }
 
 model test {
@@ -282,49 +292,47 @@ model user {
   parish          parish            @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_parish")
   person          person            @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_person")
 
-  @@index([parish_id], map: "fk_user_parish_idx")
   @@index([Role_id], map: "Role_id_idx")
-}
-
-model academic_field {
-  id          Int       @id @default(autoincrement())
-  stage_id    Int       @db.TinyInt
-  description String?   @db.VarChar(100)
-  stage       stage     @relation(fields: [stage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_acadmicfield_stage")
-  subject     subject[]
-
-  @@index([stage_id], map: "fk_acadmicfield_stage_idx")
-}
-
-enum seminarian_status {
-  Activo    @map("Activo")
-  Retirado  @map("Retirado")
-  Pastoral  @map("Año Pastoral")
-  Culminado @map("Culminado")
-}
-
-enum seminarian_Location {
-  Externo
-  Interno
+  @@index([parish_id], map: "fk_user_parish_idx")
 }
 
 enum basic_worker_job_position {
-  Mantenimiento
-  Cocinero
-  Transportista
-}
-
-enum seminarian_Ministery {
-  Unkown    @map("Unkown")
-  Admision  @map("Admisión")
-  Lectorado @map("Lectorado")
-  Acolitado @map("Acolitado")
+  MANTENIMIENTO
+  COCINERO
+  TRANSPORTISTA
 }
 
 enum foreigner_seminarian_stage {
   PROPEDEUTICO  @map("1")
   DISCIPULADO   @map("2")
   CONFIGURATIVA @map("3")
+}
+enum seminarian_status {
+  ACTIVO    @map("ACTIVO")
+  RETIRADO  @map("RETIRADO")
+  PASTORAL  @map("AÑO PASTORAL")
+  CULMINADO @map("CULMINADO")
+}
+
+enum instructor_position {
+  RECTOR @map("RECTOR")
+  VICERECTOR @map("VICERECTOR")
+  ACADEMICO @map("ACADEMICO")
+  ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
+  DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
+  ECONOMO @map("ECONOMO")
+}
+
+enum seminarian_Location {
+  EXTERNO
+  INTERNO
+}
+
+enum seminarian_Ministery {
+  UNKOWN
+  ADMISI_N  @map("ADMISIÓN")
+  LECTORADO
+  ACOLITADO
 }
 
 enum person_BloodType {
@@ -337,13 +345,4 @@ enum person_BloodType {
   O_POSITIVO  @map("O+")
   O_NEGATIVO  @map("O-")
   UNKNOWN
-}
-
-enum instructor_position {
-  RECTOR
-  VICERECTOR
-  ACADEMICO
-  ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
-  DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
-  ECONOMO
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
-import { updateFile } from "../services/upload.service";
+import { uploadFile, updateFile } from "../services/upload.service";
 import {
   ProfessorDataSourceImpl,
   ProfessorRepositoryImpl,
@@ -25,9 +25,11 @@ const professorController = new ProfessorController(
 router.get("/", professorController.get);
 
 router.post("/:id", (req: Request, res: Response, next: NextFunction) => {
-  updateFile.single("file")(req, res, (err) => {
+  uploadFile.single("file")(req, res, (err) => {
     if (err) {
-      return res.status(500).json({msj: "Unexpected error on the image file" ,error: err });
+      return res
+        .status(500)
+        .json({ msj: "Unexpected error on the image file", error: err });
     } else {
       professorController.create(req, res);
     }

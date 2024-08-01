@@ -8,7 +8,6 @@ export class CreateDioceseDto {
 
   static create(props: { [key: string]: any }): [string?, CreateDioceseDto?] {
     const {  name, holder } = props;
-
     if (!name) {
       return ["Name is required"];
     } else if (typeof name !== "string") {
@@ -20,7 +19,9 @@ export class CreateDioceseDto {
       return ["Holder must be a string"];
     }
 
-    return [undefined, new CreateDioceseDto(name, holder)];
+    const name_u = name.toUpperCase();
+    const holder_u = holder.toUpperCase();
+    return [undefined, new CreateDioceseDto(name_u, holder_u)];
   }
 }
 

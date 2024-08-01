@@ -5,7 +5,7 @@ export class UpdateInstructorDto {
     public readonly professor_id: string,
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
-    public readonly status: number
+    public readonly status?: number
   ) {}
 
   get values() {
@@ -31,6 +31,7 @@ export class UpdateInstructorDto {
     } else if (typeof professor_id !== "string") {
       return ["Instructor ID must be a string"];
     }
+
     if (!starting_date) {
       throw "starting date is required";
     }
@@ -42,8 +43,10 @@ export class UpdateInstructorDto {
       throw "starting date is not a valid date";
     }
     if (!instructor_position) return ["instructor position is required"];
-    if (typeof status !== "number" || (status !== 0 && status !== 1))
-      return ["status is required"];
+
+    /*if (typeof status !== "number" || (status !== 0 && status !== 1))
+      return ["status is required"];*/
+    
     return [
       undefined,
       new UpdateInstructorDto(

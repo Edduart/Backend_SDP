@@ -31,9 +31,10 @@ export class UpdateDioceseDto {
     } else if (typeof holder !== "string") {
       return ["Holder must be a string"];
     }
-
+    let name_u = name.toUpperCase();
+    let hold_u = holder.toUpperCase();
     //validate 
 
-    return [undefined, new UpdateDioceseDto(id, name, holder)];
+    return [undefined, new UpdateDioceseDto(id, name_u, hold_u)];
   }
 }

@@ -1,12 +1,11 @@
 export class CreateSocialMedia{
     constructor(
-        public readonly social_media_category: string,
+        public readonly social_media_category: number,
         public readonly link: string,
     ){}
     
     public Validate(): string|null{
         let errorarray: string[]= [];
-        
         if (!this.social_media_category) errorarray.push ("Category is required");
         if (!this.link) errorarray.push ("link is required");
 

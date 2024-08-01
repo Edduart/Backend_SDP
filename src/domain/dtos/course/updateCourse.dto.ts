@@ -34,7 +34,7 @@ export class UpdateCourseDto {
     } else if (typeof description !== "string") {
       return ["Description must be a string"];
     }
-
+    let description_u = description.toUpperCase();
     if (!instructor_id) {
       return ["Instructor ID is required"];
     } else if (typeof instructor_id !== "string") {
@@ -43,7 +43,7 @@ export class UpdateCourseDto {
 
     return [
       undefined,
-      new UpdateCourseDto(id, stage_id, description, instructor_id),
+      new UpdateCourseDto(id, stage_id, description_u, instructor_id),
     ];
   }
 }

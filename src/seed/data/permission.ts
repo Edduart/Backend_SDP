@@ -1,172 +1,184 @@
 export const permissions: permisos[] = [
   {
     id:           1,
-    name:         "Permiso para crear instructores",
+    name:         "PERMISO PARA CREAR INSTRUCTORES",
     type:         "C",
-    table:        "instructor"
+    table:        "INSTRUCTOR"
 
   },
   {
     id:           2,
-    name:         "Permiso para editar instructores",
+    name:         "PERMISO PARA EDITAR INSTRUCTORES",
     type:         "U",
-    table:        "instructor"
+    table:        "INSTRUCTOR"
   },
   {
     id:           3,
-    name:         "Permiso para eliminar instructores",
+    name:         "PERMISO PARA ELIMINAR INSTRUCTORES",
     type:         "D",
-    table:        "instructor"
+    table:        "INSTRUCTOR"
   },
   {
     id:           4,
-    name:         "Permiso para ver instructores",
+    name:         "PERMISO PARA VER INSTRUCTORES",
     type:         "R",
-    table:        "instructor"
+    table:        "INSTRUCTOR"
   },
   {
     id:           5,
-    name:         "Permiso para crear usuarios",
+    name:         "PERMISO PARA CREAR USUARIOS",
     type:         "C",
-    table:        "user"
+    table:        "USER"
   },
   {
     id:           6,
-    name:         "Permiso para editar usuarios",
+    name:         "PERMISO PARA EDITAR USUARIOS",
     type:         "U",
-    table:        "user"
+    table:        "USER"
   },
   {
     id:           7,
-    name:         "Permiso para ver usuarios",
+    name:         "PERMISO PARA VER USUARIOS",
     type:         "R",
-    table:        "user"
+    table:        "USER"
   },
   {
     id:           8,
-    name:         "Permiso para eliminar usuarios",
+    name:         "PERMISO PARA ELIMINAR USUARIOS",
     type:         "D",
-    table:        "user"
+    table:        "USER"
   },
   {
     id:            9,
-    name:         "Permiso para crear seminaristas",
+    name:         "PERMISO PARA CREAR SEMINARISTAS",
     type:         "C",
-    table:        "seminarian"
+    table:        "SEMINARIAN"
   },
   {
     id:           10,
-    name:         "Permiso para editar seminaristas",
+    name:         "PERMISO PARA EDITAR SEMINARISTAS",
     type:         "U",
-    table:        "seminarian"
+    table:        "SEMINARIAN"
   },
   {
     id:           11,
-    name:         "Permiso para ver seminaristas",
+    name:         "PERMISO PARA VER SEMINARISTAS",
     type:         "R",
-    table:        "seminarian"
+    table:        "SEMINARIAN"
   },
   {
     id:           12,
-    name:         "Permiso para eliminar seminaristas",
+    name:         "PERMISO PARA ELIMINAR SEMINARISTAS",
     type:         "D",
-    table:        "seminarian"
+    table:        "SEMINARIAN"
   },
   {
     id:           13,
-    name:         "Permiso para crear tests",
+    name:         "PERMISO PARA CREAR TESTS",
     type:         "C",
-    table:        "test"
+    table:        "TEST"
   },
   {
     id:           14,
-    name:         "Permiso para editar tests",
+    name:         "PERMISO PARA EDITAR TESTS",
     type:         "U",
-    table:        "test"
+    table:        "TEST"
   },
   {
     id:           15,
-    name:         "Permiso para ver tests",
+    name:         "PERMISO PARA VER TESTS",
     type:         "R",
-    table:        "test"
+    table:        "TEST"
   },
   {
     id:           16,
-    name:         "Permiso para eliminar tests",
+    name:         "PERMISO PARA ELIMINAR TESTS",
     type:         "D",
-    table:        "test"
+    table:        "TEST"
   },
   {
     id:           17,
-    name:         "Permiso para crear etapas",
+    name:         "PERMISO PARA CREAR ETAPAS",
     type:         "C",
-    table:        "stage"
+    table:        "STAGE"
   },
   {
     id:           18,
-    name:         "Permiso para editar etapas",
+    name:         "PERMISO PARA EDITAR ETAPAS",
     type:         "U",
-    table:        "stage"
+    table:        "STAGE"
   },
   {
     id:           19,
-    name:         "Permiso para ver etapas",
+    name:         "PERMISO PARA VER ETAPAS",
     type:         "R",
-    table:        "stage"
+    table:        "STAGE"
   },
   {
     id:           20,
-    name:         "Permiso para eliminar etapas",
+    name:         "PERMISO PARA ELIMINAR ETAPAS",
     type:         "D",
-    table:        "stage"
+    table:        "STAGE"
   },
   {
     id:           21,
-    name:         "Permiso para crear cursos",
+    name:         "PERMISO PARA CREAR CURSOS",
     type:         "C",
-    table:        "course"
+    table:        "COURSE"
   },
   {
     id:           22,
-    name:         "Permiso para editar cursos",
+    name:         "PERMISO PARA EDITAR CURSOS",
     type:         "U",
-    table:        "course"
+    table:        "COURSE"
   },
   {
     id:           23,
-    name:         "Permiso para ver cursos",
+    name:         "PERMISO PARA VER CURSOS",
     type:         "R",
-    table:        "course"
+    table:        "COURSE"
   },
   {
     id:           24,
-    name:         "Permiso para eliminar cursos",
+    name:         "PERMISO PARA ELIMINAR CURSOS",
     type:         "D",
-    table:        "course"
+    table:        "COURSE"
   },
   {
     id:           25,
-    name:         "Permiso para crear materias",
+    name:         "PERMISO PARA CREAR MATERIAS",
     type:         "C",
-    table:        "subject"
+    table:        "SUBJECT"
   },
   {
     id:           26,
-    name:         "Permiso para editar materias",
+    name:         "PERMISO PARA EDITAR MATERIAS",
     type:         "U",
-    table:        "subject"
+    table:        "SUBJECT"
   },
   {
     id:           27,
-    name:         "Permiso para ver materias",
+    name:         "PERMISO PARA VER MATERIAS",
     type:         "R",
-    table:        "subject"
+    table:        "SUBJECT"
   },
   {
     id:           28,
-    name:         "Permiso para eliminar materias",
+    name:         "PERMISO PARA ELIMINAR MATERIAS",
     type:         "D",
     table:        "subject"
+  },
+  {
+    id:           29,
+    name:         "PERMISO PARA VER LAS NOTAS PROPIAS UNICAMENTE",
+    type:         "R",
+    table:        "TESTS"
+  },
+  {
+    id:           30,
+    name:         "ACCESO TOTAL AL SISTEMA",
+    type:         "A",
+    table:        "ADMIN"
   },
 ];
 

@@ -10,7 +10,7 @@ export class GetSubjectDTO{
     ){}
 
     static CreateDTO(object: { [key: string]: any }): [string?, GetSubjectDTO?]{
-        const { description, course_id, academic_field_id, stage_id, status} = object;
+        let { description, course_id, academic_field_id, stage_id, status} = object;
         let errorarray: string[]= [];
         let status_aux = true;
         let course_id_number, academic_field_id_number, stage_id_number = undefined;
@@ -35,6 +35,7 @@ export class GetSubjectDTO{
             }
 
         if(description!= undefined){
+            description = description.toUpperCase();
             if(description.length > 200) errorarray.push("description too large");
         }
         if (course_id !== undefined) {

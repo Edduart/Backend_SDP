@@ -27,7 +27,7 @@ export class CreatePerson{
             if(auxiliary != null) return auxiliary;
         })
         
-        if (!/^\d{1,20}$/.test(this.id))errorarray.push("ID must be only numeric and max 20 digits long");
+        if (!/^(V|E)-\d{1,18}$/.test(this.id))errorarray.push("person ID follows this format: V-xxxxxx ");
         if (!(this.Blood in BloodType))errorarray.push("Invalid type of blood");
         if (!this.forename) errorarray.push ("Forename is required");
         if (!this.surname) errorarray.push ("Surname is required");

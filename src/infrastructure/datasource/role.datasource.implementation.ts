@@ -32,7 +32,10 @@ export class RoleDataSourceImpl implements RoleDataSource{
         return result_individual[0];
     }
     async GetAllPermissions(): Promise<PermissionEntity[]> {
-        const from_db = await prisma.permission.findMany();
+        const from_db = await prisma.permission.findMany({
+          where:{ id: {
+            notIn:[29, 30]}}
+        });
         return from_db.map(permiso => PermissionEntity.fromdb(permiso));
     }
     async Update(nuevo: UpdateRoleStruc): Promise<RoleEntity> {
@@ -46,7 +49,12 @@ export class RoleDataSourceImpl implements RoleDataSource{
       }
       await prisma.role_permission.deleteMany({
         where:{
-          role_id: nuevo.id
+          AND:[
+            {role_id: nuevo.id},
+            {permission_id: {
+              notIn: [29, 30]
+            }}
+          ]
         }
       })
       const result = await prisma.role.update({
@@ -67,53 +75,22 @@ export class RoleDataSourceImpl implements RoleDataSource{
       /* si ambas variables son undefined se procede con el select all, sin embargo si una de las variables es undefined
       se procede con el filtro, pues prisma controla el undefined como una forma de ignorar dicha comparacion 
       y null como un valor */
-      if((id === undefined) && (name === undefined) ){
-        roles_baseD = await prisma.role.findMany({
-          select: {
-            id: true,
-            name: true,
-            description:  true,
-            role_permission: {
-              select: {
-                permission: {
-                  select: {
-                      id: true,
-                      name: true,
-                      type: true, 
-                      table: true,
-                  }
-                }
-              }
-            }
-          }
-        });
-       } else{
-        roles_baseD = await prisma.role.findMany({where: {
-          OR: [
+      roles_baseD = await prisma.role.findMany({
+        where:{
+          AND:[
             {id: id},
-            {name: name}
+            {name: name},
+            {id: {notIn: [1]}}
           ]
         },
-        select: {
-          id: true,
-          name: true,
-          description:  true,
-          role_permission: {
-            select: {
-              permission: {
-                select: {
-                    id: true,
-                    name: true,
-                    type: true,
-                    table: true,
-                }
-              }
-            }
-          }
-        }});  
-       }
+        include:{
+          role_permission:{include:{permission: true}}
+        }
+      });
           const roleEntities: RoleEntity[] = roles_baseD.map(rol => {
+            
             const permissions: PermissionEntity[] = rol.role_permission.map(rolePermission => {
+              
               return PermissionEntity.fromdb({
                 id:     rolePermission.permission.id,
                 name:   rolePermission.permission.name,

@@ -40,3 +40,7 @@ export * from "./seminarian/create.Foreing.seminarian";
 export * from "./user/update.user";
 export * from "./seminarian/update.seminarian";
 export * from "./seminarian/get.seminarian";
+export * from "./academic_term";
+export * from "./instruction";
+
+export * from "./enrollment";

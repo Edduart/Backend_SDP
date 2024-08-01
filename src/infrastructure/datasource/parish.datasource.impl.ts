@@ -69,11 +69,9 @@ export class ParishDatasourceimpl implements ParishDataSource {
   }
 
   async delete(id: number): Promise<null> {
-    await prisma.parish.delete({
-      where: {
-        id: id,
-      },
-    });
+    const user_with_parish = await prisma.user.findMany({where: {parish_id: id}});
+    if(user_with_parish.length > 0)throw `Unable to delete this record, there are user with this parish`;
+    await prisma.parish.delete({where: {id: id,},});
     return null;
   }
 }

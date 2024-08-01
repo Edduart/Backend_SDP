@@ -40,7 +40,8 @@ export class UpdateParishDto {
       return [errorarray.join(", "), undefined];
   }
     //validate patron
-
-    return [undefined, new UpdateParishDto(id ,diocese_id,name,patron)];
+    let name_u = name.toUpperCase();
+    let patron_u = patron.toUpperCase();
+    return [undefined, new UpdateParishDto(id ,diocese_id,name_u,patron_u)];
   }
 }

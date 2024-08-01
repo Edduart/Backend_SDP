@@ -1,5 +1,4 @@
 import { prisma } from "../../data/postgres";
-import { filterNullValues } from "../../presentation/utils/filterNullObject";
 import {
   CreateUserDto,
   Login,
@@ -8,6 +7,7 @@ import {
   UserEntity,
   RoleEntity,
 } from "../../domain";
+import { filterNullValues } from "../../presentation/utils/FilterNullObject";
 
 export class UserDataSourceImplementation implements UserDataSource {
   async getById(id: string): Promise<object> {
@@ -57,6 +57,9 @@ export class UserDataSourceImplementation implements UserDataSource {
   }
   async getAll(): Promise<object> {
     const users = await prisma.user.findMany({
+      where:{
+        person_id: {notIn:["1"]}
+      },
       select: {
         person: { select: { id: true, forename: true, surname: true } },
         seminarian: {

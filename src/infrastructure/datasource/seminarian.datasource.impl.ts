@@ -90,11 +90,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         forename: person_actual.forename,
         surname: person_actual.surname,
         email: person_actual.email,
-        fecha: person_actual.birthdate,
+        birthdate: person_actual.birthdate,
         medical_record: person_actual.medical_record,
         BloodType: person_actual.BloodType as BloodType
       }); //person creator
-      person.date_String = person.birthdate.toISOString().split('T')[0];
       const cellphones: PhoneEntity[] = person_actual.phone_number.map(
         (cellphone_actual) => {
           return PhoneEntity.fromdb({
@@ -177,7 +176,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           id: id,
         },
         data: {
-          status: seminarian_status.Retirado,
+          status: seminarian_status.RETIRADO,
         },
       });
       return path?.profile_picture_path;
@@ -220,6 +219,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           apostleships: data.apostleships,
           Location: data.location as seminarian_Location,
           Ministery: data.ministery as seminarian_Ministery,
+          status: data.status as seminarian_status
         },
       });
       return result.id;
@@ -228,10 +228,9 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     }
   }
   async create(data: CreateSeminarian): Promise<string> {
-    try {
-      const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
+    const user = await prisma.person.findFirst({where:{id: data.user.person.id,}});
       if(user != undefined){throw new Error("Someone with the same id already exits");}
-
+    try {
       const result = await prisma.$transaction(async (tx) => {
         await CreateUser(data.user);
       //creating foreing
@@ -241,7 +240,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           data: {
             id: data.user.person.id,
             apostleships: data.apostleships,
-            status: seminarian_status.Activo,
+            status: seminarian_status.ACTIVO,
             Location: data.location as seminarian_Location,
             Ministery: data.ministery as seminarian_Ministery,
             foreigner_seminarian: {
@@ -251,8 +250,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
                 },
                 create: {
                   seminary_name: data.foreing_Data.seminary_name,
-                  stage: data.foreing_Data
-                    .stage as unknown as foreigner_seminarian_stage,
+                  stage: data.foreing_Data.stage as unknown as foreigner_seminarian_stage,
                   stage_year: data.foreing_Data.stage_year,
                 },
               },
@@ -269,7 +267,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         data: {
           id: data.user.person.id,
           apostleships: data.apostleships,
-          status: seminarian_status.Activo,
+          status: seminarian_status.ACTIVO,
           Location: data.location as seminarian_Location,
           Ministery: data.ministery as seminarian_Ministery,
         },
@@ -280,6 +278,12 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       return result;
       
     } catch (error) {
+      console.log(error);
+      await prisma.phone_number.deleteMany({where:{person_id: data.user.person.id}});
+      await prisma.social_media.deleteMany({where:{person_id: data.user.person.id}});
+      await prisma.academic_degree.deleteMany({where:{user_id: data.user.person.id}});
+      await prisma.user.deleteMany({where:{person_id: data.user.person.id}});
+      await prisma.person.delete({where:{id: data.user.person.id}})
       throw new Error("Unable to create seminarian" + error);
     }
   }

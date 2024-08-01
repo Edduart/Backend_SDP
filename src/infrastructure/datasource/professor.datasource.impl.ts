@@ -31,10 +31,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     if (professorExist == null) throw "Professor doesn't exist!";
     await UpdatePersonFunc(data.person);
     await UpdateUserFunc(data.user);
-    await prisma.professor.update({
+    /*await prisma.professor.update({
       where: { id: data.person.id },
       data: { status_id: data.status_id },
-    });
+    });*/
     return { msj: "Professor Updated!" };
   }
 
@@ -88,7 +88,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
 
   async get(filter: GetProfessorDto): Promise<ProfessorEntity[]> {
     const returnFromDB = await prisma.professor.findMany({
-      where: {id: filter.id, status_id: filter.status},
+      where: { id: filter.id, status_id: filter.status },
       select: {
         id: true,
         status_id: true,
@@ -96,7 +96,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         user: {
           include: {
             academic_degree: true,
-            parish: { select: { diocese_id: true } },
+            parish: { select: { id: true, diocese_id: true } },
             person: {
               include: {
                 user: true,
@@ -119,6 +119,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       },
     });
     if (returnFromDB.length === 0) throw "No se encontraron coincidencias con los parametros especificados!"  
+    console.log(returnFromDB);
     return parseProfessorGet(returnFromDB);;
   }
 }

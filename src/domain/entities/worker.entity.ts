@@ -15,7 +15,7 @@ export class WorkerEntity{
 }
 
 export enum Job_Psotion_Enum {
-    Mantenimiento   = 'Mantenimiento',
-    Cocinero        = 'Cocinero',
-    Transportista   = 'Transportista',
+    Mantenimiento   = 'MANTENIMIENTO',
+    Cocinero        = 'COCINERO',
+    Transportista   = 'TRANSPORTISTA',
 }

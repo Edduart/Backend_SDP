@@ -22,7 +22,7 @@ export class GetSeminarianDTO{
         let parish_id_number, diocese_id_number,
         first_Date_obj, second_Date_obj, bool_fore = undefined;
         if(id != undefined){
-            if (!/^\d{1,20}$/.test(id))errorarray.push("ID must be only numeric and max 20 digits long");
+            if(id.length > 20)errorarray.push("Id is too large");
         }
         if (diocese_id !== undefined) {
             diocese_id_number = Number(id);

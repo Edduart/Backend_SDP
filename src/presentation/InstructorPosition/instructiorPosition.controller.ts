@@ -4,6 +4,9 @@ import { GetInstructorPositions, GetInstructorPosition, InstructorPositionReposi
 export class InstructorPositionController {
   constructor(private readonly stageRepository: InstructorPositionRepository) {}
 
+
+
+  
   public getInstructorPositions = (req: Request, res: Response) => {
     new GetInstructorPositions(this.stageRepository)
       .execute()

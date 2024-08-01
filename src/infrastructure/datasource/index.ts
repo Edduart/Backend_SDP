@@ -7,8 +7,11 @@ export * from "./instructorPostion.datasource.impl";
 export * from "./instructor.datasource.imple";
 export * from "./course.datasource.impl";
 export * from "./professor.datasource.impl";
-export * from "./user.datasource.impl"
-export * from "./user.datasource.impl"
-export * from "./utils/user.functions"
-export * from "./seminarian.datasource.impl"
+export * from "./user.datasource.impl";
+export * from "./user.datasource.impl";
+export * from "./utils/user.functions";
+export * from "./seminarian.datasource.impl";
 export * from "./subject.datasource.impl";
+export * from "./academic.term.datasource.impl";
+export * from "./instruction.impl";
+export * from "./enrollment.dataSource.impl"

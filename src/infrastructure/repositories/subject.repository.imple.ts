@@ -1,9 +1,12 @@
-import { CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, SubjectRepository, UpdateSubjectDTO } from "../../domain";
+import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, SubjectRepository, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectRepositoryImpl implements SubjectRepository{
     constructor (
         private readonly datasource: SubjectDataSource,
     ){}
+    Get_fields(): Promise<academicFieldEntity[]> {
+        return this.datasource.Get_fields();
+    }
     get_instruction(data: GetSubjectDTO): Promise<SubjectDeliver[]> {
         return this.datasource.get_instruction(data);
     }

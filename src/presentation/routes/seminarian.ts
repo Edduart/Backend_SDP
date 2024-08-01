@@ -10,7 +10,7 @@ const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
 
-router.post('/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
+router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
     profile.single('picture')(req, res, async (err) => {
         if (err) {
             return next(err);
@@ -18,7 +18,8 @@ router.post('/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next
         SeminarianControl.Create(req, res);
     });
 });
-router.put('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
+router.put('/update/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
+    console.log("holi")
     profileU.single('picture')(req, res, async (err) => {
         if (err) {
             return next(err);
@@ -26,6 +27,6 @@ router.put('/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next
         SeminarianControl.update(req, res);
     });
 });
-router.get('/', ValidatorTo.ValidarToken, SeminarianControl.get);
+router.get('/getsem', ValidatorTo.ValidarToken, SeminarianControl.get);
 router.delete('/:id', ValidatorTo.ValidarToken, SeminarianControl.delete);
 module.exports= router;

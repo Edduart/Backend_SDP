@@ -30,7 +30,7 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,6 @@ CREATE TABLE `academic_degree` (
 
 LOCK TABLES `academic_degree` WRITE;
 /*!40000 ALTER TABLE `academic_degree` DISABLE KEYS */;
-INSERT INTO `academic_degree` VALUES (1,'2845764444','Ingenieria quimica','hhtpppp.dsfdslkglkdsf');
 /*!40000 ALTER TABLE `academic_degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +56,7 @@ CREATE TABLE `academic_field` (
   PRIMARY KEY (`id`),
   KEY `fk_acadmicfield_stage_idx` (`stage_id`),
   CONSTRAINT `fk_acadmicfield_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +65,7 @@ CREATE TABLE `academic_field` (
 
 LOCK TABLES `academic_field` WRITE;
 /*!40000 ALTER TABLE `academic_field` DISABLE KEYS */;
+INSERT INTO `academic_field` VALUES (1,1,'Catequético Vocacional'),(2,1,'Comunitario Pastoral'),(3,1,'Humano-Cultural'),(4,1,'Iniciación Pastoral'),(5,2,'Filosofía del Hombre'),(6,2,'Filosofía del Conocimiento'),(7,2,'Filosofía Ética'),(8,2,'Filosofía de la Naturaleza y de la Ciencia'),(9,2,'Filosofía del Ser'),(10,2,'Filosofía de la Religión'),(11,2,'Historia de la Cultura'),(12,2,'Historia de la Filosofía'),(13,2,'Síntesis'),(14,2,'Lenguas clásicas'),(15,2,'Investigación'),(16,2,'Instrumentales'),(17,2,'Filosofía social y política'),(18,2,'Filosofía de la Cultura'),(19,2,'Idiomas modernos'),(20,3,'Teología Bíblica'),(21,3,'Teología Fundamental'),(22,3,'Teología Dogmática'),(23,3,'Teología Moral'),(24,3,'Teología Espiritual'),(25,3,'Teología pastoral'),(26,3,'Liturgia'),(27,3,'Historia Eclesiástica'),(28,3,'Derecho Canónico ');
 /*!40000 ALTER TABLE `academic_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +103,7 @@ DROP TABLE IF EXISTS `basic_worker`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `basic_worker` (
   `person_id` varchar(20) NOT NULL,
-  `job_position` enum('Mantenimiento','Cocinero','Transportista') NOT NULL,
+  `job_position` enum('MANTENIMIENTO','COCINERO','TRANSPORTISTA') NOT NULL,
   PRIMARY KEY (`person_id`),
   KEY `fk_basic_worker_position_idx` (`job_position`),
   CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
@@ -116,7 +116,6 @@ CREATE TABLE `basic_worker` (
 
 LOCK TABLES `basic_worker` WRITE;
 /*!40000 ALTER TABLE `basic_worker` DISABLE KEYS */;
-INSERT INTO `basic_worker` VALUES ('667435764','Cocinero'),('67555432','Cocinero');
 /*!40000 ALTER TABLE `basic_worker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +136,7 @@ CREATE TABLE `course` (
   KEY `fk_course_instructor_idx` (`instructor_id`),
   CONSTRAINT `fk_course_instructor` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`professor_id`),
   CONSTRAINT `fk_course_stage` FOREIGN KEY (`stage_id`) REFERENCES `stage` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,6 +145,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
+INSERT INTO `course` VALUES (1,1,'Propedéutico',NULL),(2,2,'I Filosofía',NULL),(3,2,'II Filosofía',NULL),(4,2,'III Filosofía',NULL),(5,3,'I Teología',NULL),(6,3,'II Teología',NULL),(7,3,'III Teología',NULL),(8,3,'IV Teología',NULL);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +161,7 @@ CREATE TABLE `diocese` (
   `name` varchar(200) NOT NULL,
   `holder` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +252,6 @@ CREATE TABLE `foreigner_seminarian` (
 
 LOCK TABLES `foreigner_seminarian` WRITE;
 /*!40000 ALTER TABLE `foreigner_seminarian` DISABLE KEYS */;
-INSERT INTO `foreigner_seminarian` VALUES ('2845764444','Seminario de petare','1',4),('566456774','Seminario Extranjero','1',2),('777855755','Seminario Extranjero','1',2);
 /*!40000 ALTER TABLE `foreigner_seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,15 +263,16 @@ DROP TABLE IF EXISTS `instruction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `instruction` (
-  `professor_id` varchar(20) NOT NULL,
+  `professor_id` varchar(20) DEFAULT NULL,
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
-  PRIMARY KEY (`professor_id`,`subject_id`,`academic_term_id`),
+  PRIMARY KEY (`subject_id`,`academic_term_id`),
   KEY `fk_professor_subject_subject_idx` (`subject_id`),
   KEY `fk_professo_subject_academic_term_idx` (`academic_term_id`) /*!80000 INVISIBLE */,
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
+  KEY `fk_professor_instructor_idx` (`professor_id`),
   CONSTRAINT `fk_professo_subject_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
-  CONSTRAINT `fk_professor_subject_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`),
+  CONSTRAINT `fk_professor_instructor` FOREIGN KEY (`professor_id`) REFERENCES `instructor` (`professor_id`),
   CONSTRAINT `fk_professor_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -328,7 +328,7 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,7 +337,7 @@ CREATE TABLE `parish` (
 
 LOCK TABLES `parish` WRITE;
 /*!40000 ALTER TABLE `parish` DISABLE KEYS */;
-INSERT INTO `parish` VALUES (1,1,'prueba','test');
+INSERT INTO `parish` VALUES (1,1,'BASÍLICA MENOR SANTO CRISTO DE LA GRACIA','SANTÍSIMO SACRAMENTO'),(2,2,'BEATA MARÍA DE SAN JOSÉ','EL NAZARENO'),(3,3,'CRISTO REDENTOR','NUESTRA SEÑORA DE COROMOTO'),(4,4,'CRISTO REY','SANTOS APÓSTOLES'),(5,5,'DIVINA PASTORA','SANTÍSIMO SACRAMENTO'),(6,6,'DIVINO NIÑO (EL TRIGAL)','SAGRADO CORAZÓN DE JESÚS'),(7,7,'EL SALVADOR','NUESTRA SEÑORA DE COROMOTO'),(8,8,'ESPÍRITU SANTO (BQTO)','ESPÍRITU SANTO'),(9,9,'INMACULADA CONCEPCIÓN (BUENA VISTA)','NTRA SRA DE ALTAGRACIA'),(10,10,'INMACULADA CONCEPCIÓN (CUARA)','NTRA SRA DE ALTAGRACIA'),(11,11,'JESÚS DE NAZARET','SANTÍSIMA TRINIDAD'),(12,12,'LA MEDALLA MILAGROSA','SANTÍSIMO SACRAMENTO'),(14,14,'MARÍA AUXILIADORA','ESPÍRITU SANTO'),(15,15,'MARÍA AUXILIADORA (LA MIEL)','EL NAZARENO'),(16,16,'MARÍA REINA DE TODOS LOS SANTOS','NUESTRA SEÑORA DE COROMOTO'),(84,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ'),(100,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ');
 /*!40000 ALTER TABLE `parish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -363,7 +363,7 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES (1,'Permiso para crear instructores','C','instructor'),(2,'Permiso para editar instructores','U','instructor'),(3,'Permiso para eliminar instructores','D','instructor'),(4,'Permiso para ver instructores','R','instructor'),(5,'Permiso para crear usuarios','C','user'),(6,'Permiso para editar usuarios','U','user'),(7,'Permiso para ver usuarios','R','user'),(8,'Permiso para eliminar usuarios','D','user'),(9,'Permiso para crear seminaristas','C','seminarian'),(10,'Permiso para editar seminaristas','U','seminarian'),(11,'Permiso para ver seminaristas','R','seminarian'),(12,'Permiso para eliminar seminaristas','D','seminarian'),(13,'Permiso para crear tests','C','test'),(14,'Permiso para editar tests','U','test'),(15,'Permiso para ver tests','R','test'),(16,'Permiso para eliminar tests','D','test'),(17,'Permiso para crear etapas','C','stage'),(18,'Permiso para editar etapas','U','stage'),(19,'Permiso para ver etapas','R','stage'),(20,'Permiso para eliminar etapas','D','stage'),(21,'Permiso para crear cursos','C','course'),(22,'Permiso para editar cursos','U','course'),(23,'Permiso para ver cursos','R','course'),(24,'Permiso para eliminar cursos','D','course'),(25,'Permiso para crear materias','C','subject'),(26,'Permiso para editar materias','U','subject'),(27,'Permiso para ver materias','R','subject'),(28,'Permiso para eliminar materias','D','subject');
+INSERT INTO `permission` VALUES (1,'Permiso para crear instructores','C','instructor'),(2,'Permiso para editar instructores','U','instructor'),(3,'Permiso para eliminar instructores','D','instructor'),(4,'Permiso para ver instructores','R','instructor'),(5,'Permiso para crear usuarios','C','user'),(6,'Permiso para editar usuarios','U','user'),(7,'Permiso para ver usuarios','R','user'),(8,'Permiso para eliminar usuarios','D','user'),(9,'Permiso para crear seminaristas','C','seminarian'),(10,'Permiso para editar seminaristas','U','seminarian'),(11,'Permiso para ver seminaristas','R','seminarian'),(12,'Permiso para eliminar seminaristas','D','seminarian'),(13,'Permiso para crear tests','C','test'),(14,'Permiso para editar tests','U','test'),(15,'Permiso para ver tests','R','test'),(16,'Permiso para eliminar tests','D','test'),(17,'Permiso para crear etapas','C','stage'),(18,'Permiso para editar etapas','U','stage'),(19,'Permiso para ver etapas','R','stage'),(20,'Permiso para eliminar etapas','D','stage'),(21,'Permiso para crear cursos','C','course'),(22,'Permiso para editar cursos','U','course'),(23,'Permiso para ver cursos','R','course'),(24,'Permiso para eliminar cursos','D','course'),(25,'Permiso para crear materias','C','subject'),(26,'Permiso para editar materias','U','subject'),(27,'Permiso para ver materias','R','subject'),(28,'Permiso para eliminar materias','D','subject'),(29,'Permiso para ver las notas propias unicamente','R','Tests'),(30,'Acceso total al sistema','A','Admin');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -393,7 +393,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('27984286','null','Angel Edurado','Rodriguez Torrealba','angelerodriguezt03@gmail.com','2023-03-29','null','O+'),('2845764444','images/seminarian/2845764444.jpeg','Joese antonio','Bidon de lata','No lo voy a poner','2001-04-27',NULL,'O+'),('28765455','images/seminarian/28765455.jpeg','Joe','mama','No lo voy a poner','2001-04-27',NULL,'O+'),('56645674','images/seminarian/56645674.jpeg','Joe','mama','No lo voy a poner','2001-04-27',NULL,'O+'),('566456774','images/seminarian/566456774.jpeg','Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+'),('667435764','images/worker/667435764.jpeg','Olga','Pernalete','thegodneko@gmail.com','2001-04-27','Estoy bien','O+'),('67555432',NULL,'Miguel','Ochoa','thegodneko@gmail.com','2001-04-27','Estoy bien','O+'),('777855755',NULL,'Joe','Biden','No lo voy a poner','2001-04-27',NULL,'O+');
+INSERT INTO `person` VALUES ('1',NULL,'None','Nobody','Noway@nowhere.com','2024-07-20',NULL,'UNKNOWN');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +412,7 @@ CREATE TABLE `phone_number` (
   PRIMARY KEY (`id`),
   KEY `fk_phone_number_person_idx` (`person_id`),
   CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -421,7 +421,6 @@ CREATE TABLE `phone_number` (
 
 LOCK TABLES `phone_number` WRITE;
 /*!40000 ALTER TABLE `phone_number` DISABLE KEYS */;
-INSERT INTO `phone_number` VALUES (59,'0416334324','28765455','0416334324'),(60,'04125565','28765455','04125565'),(61,'0416334324','56645674','0416334324'),(62,'04125565','56645674','04125565'),(63,'0416334324','566456774','0416334324'),(64,'04125565','566456774','04125565'),(73,'0416334324','2845764444','0416334324'),(74,'04125565','2845764444','04125565'),(75,'0416334324','777855755','0416334324'),(76,'04125565','777855755','04125565');
 /*!40000 ALTER TABLE `phone_number` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -461,7 +460,7 @@ CREATE TABLE `role` (
   `name` varchar(100) NOT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -470,7 +469,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'Rector','Rector principal'),(5,'seminarian','seminarista'),(13,'Vicerrector','Supervisa');
+INSERT INTO `role` VALUES (1,'SuperAdmin','Administrador con acceso total'),(2,'Rector','Rector principal'),(3,'Vice Rector','Usuario encargado del apartado academico'),(4,'Profesor','Usuario con capacidad para asignar notas a los tests'),(5,'Seminarian','Perfil de seminarista común'),(6,'Instructor','Profesor e instructor');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -498,7 +497,7 @@ CREATE TABLE `role_permission` (
 
 LOCK TABLES `role_permission` WRITE;
 /*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(13,1),(13,2),(13,3),(13,4),(13,5),(13,6),(13,7),(13,8),(13,9),(13,10),(13,11),(13,12),(13,13),(13,14),(13,15),(13,16);
+INSERT INTO `role_permission` VALUES (1,30),(5,29);
 /*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -512,9 +511,9 @@ DROP TABLE IF EXISTS `seminarian`;
 CREATE TABLE `seminarian` (
   `id` varchar(20) NOT NULL,
   `apostleships` text,
-  `status` enum('Activo','Retirado','Año Pastoral','Culminado') NOT NULL,
-  `Location` enum('Externo','Interno') NOT NULL,
-  `Ministery` enum('Unkown','Admisión','Lectorado','Acolitado') DEFAULT NULL,
+  `status` enum('ACTIVO','RETIRADO','AÑO PASTORAL','CULMINADO') NOT NULL,
+  `Location` enum('EXTERNO','INTERNO') NOT NULL,
+  `Ministery` enum('UNKOWN','ADMISIÓN','LECTORADO','ACOLITADO') DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -526,7 +525,6 @@ CREATE TABLE `seminarian` (
 
 LOCK TABLES `seminarian` WRITE;
 /*!40000 ALTER TABLE `seminarian` DISABLE KEYS */;
-INSERT INTO `seminarian` VALUES ('2845764444','no se que va aqui','Retirado','Externo','Unkown'),('28765455','no se que va aqui','Activo','Externo','Unkown'),('56645674','no se que va aqui','Activo','Externo','Unkown'),('566456774','no se que va aqui','Activo','Externo','Unkown'),('777855755','no se que va aqui','Activo','Externo','Unkown');
 /*!40000 ALTER TABLE `seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -547,7 +545,7 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,7 +554,6 @@ CREATE TABLE `social_media` (
 
 LOCK TABLES `social_media` WRITE;
 /*!40000 ALTER TABLE `social_media` DISABLE KEYS */;
-INSERT INTO `social_media` VALUES (31,'28765455',1,'ya lo mando'),(32,'56645674',1,'ya lo mando'),(33,'566456774',1,'ya lo mando'),(38,'2845764444',1,'ya lo mando'),(39,'67555432',1,'ya lo mando 2'),(41,'667435764',1,'ya lo mando 2'),(42,'777855755',1,'ya lo mando');
 /*!40000 ALTER TABLE `social_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -631,7 +628,7 @@ CREATE TABLE `subject` (
   CONSTRAINT `fk_subject_academicfield` FOREIGN KEY (`academic_field_id`) REFERENCES `academic_field` (`id`),
   CONSTRAINT `fk_subject_course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
   CONSTRAINT `fk_subject_precedent` FOREIGN KEY (`precedent`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -729,7 +726,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('27984286',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-07-09'),('2845764444',0,1,'$2b$10$wMdgTeuXPWV5zcjMrT.o0epy252SpFcEaTRx4lw4XL9EIH/WeiDSW',5,NULL),('28765455',1,1,'$2b$10$mZAYtJH3oj4WuVx7c27dpOGFbYmVK1ppJuLALRpVWwXLxzqbnAUoK',5,NULL),('56645674',1,1,'$2b$10$w4H74yDAHM7Xe3XKtARXPOyBjPwcJfZQ2e1TV4X7hXabDQzNJxfWS',5,NULL),('566456774',1,1,'$2b$10$4LwKlUlXzwHFz9CNfQacNOg/namD51BUNg4qmYpQ7oCbANHwBFyiG',5,NULL),('777855755',1,1,'$2b$10$zhps2Og58A/gvKOtinisiOZTx9AAFTwjUwr5OxQJYqV3eaWSagQD6',5,NULL);
+INSERT INTO `user` VALUES ('1',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -742,4 +739,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-11 19:01:20
+-- Dump completed on 2024-07-20 15:36:47

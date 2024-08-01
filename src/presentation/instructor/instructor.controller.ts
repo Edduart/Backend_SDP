@@ -7,8 +7,10 @@ import {
   UpdateInstructor,
   DeleteInstructor,
   CreateInstructorDto,
-  UpdateInstructorDto
+  UpdateInstructorDto,
 } from "../../domain";
+
+import {formatDate} from "../utils/formatDate"
 
 export class InstructorController {
   constructor(private readonly instructorRepository: InstructorRepository) {}
@@ -23,7 +25,8 @@ export class InstructorController {
       )
       .catch((error) => {
         console.log("unexpected error while executing" + error);
-        res.status(400).json({ error })});
+        res.status(400).json({ error });
+      });
   };
 
   public getInstructors = (req: Request, res: Response) => {
@@ -32,31 +35,35 @@ export class InstructorController {
       .then((instructors) => res.json(instructors))
       .catch((error: unknown) => {
         console.log("unexpected error while executing" + error);
-        res.status(400).json({ error })});
+        res.status(400).json({ error });
+      });
   };
 
-  public getinstructorById = (req: Request, res: Response) => {
+  public getInstructorById = (req: Request, res: Response) => {
     const id = req.params.id;
 
     new GetInstructor(this.instructorRepository)
       .execute(id)
-      .then((instructor) =>
+      .then((instructor) => {
+
+        console.log(instructor);
+
         res.json({
           mjs:
             "Posicion de instructor ID:" +
             instructor.professor_id +
             ", encontrado exitosamente!",
           instructor,
-        })
-      )
+        });
+      })
       .catch((error: unknown) => res.status(400).json({ error }));
   };
 
   public updateInstructorById = (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const professor_id = req.params.id;
     const [error, updateInstructorDto] = UpdateInstructorDto.update({
       ...req.body,
-      id,
+      professor_id,
     });
 
     if (error) return res.status(400).json({ error });
@@ -73,7 +80,8 @@ export class InstructorController {
       )
       .catch((error) => {
         console.log("unexpected error while executing" + error);
-        res.status(400).json({ error })});
+        res.status(400).json({ error });
+      });
   };
 
   public deleteInstructor = (req: Request, res: Response) => {

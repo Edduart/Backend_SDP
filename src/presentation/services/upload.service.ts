@@ -47,24 +47,25 @@ const fileFilter = function (
       }
   cb(null, true);
 };
-const storage_U = multer.diskStorage({
+const storageUpdate = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./images/worker");
+    const destinationFolder = getDestination(req);
+    cb(null, destinationFolder);
   },
   filename: function (req, file, cb) {
     const filename = req.params.id + "." + file.mimetype.split("/")[1];
     cb(null, filename);
-    req.body.ayuda = path.join("./images/worker", filename);
+    req.body.ayuda = path.join(getDestination(req), filename);
   },
 });
 
-export const updateFile = multer({
+export const uploadFile = multer({
   storage: storage,
   fileFilter: fileFilter,
 });
 
-export const actualizar = multer({
-  storage: storage_U,
+export const updateFile = multer({
+  storage: storageUpdate,
   fileFilter: fileFilter,
 });
 

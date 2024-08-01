@@ -59,13 +59,17 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
         return("worker deleted");
     }
     async create(spers: CreateWorker): Promise<WorkerEntity> {
+        const user = await prisma.person.findFirst({where:{id: spers.persona.id,}});
+      if(user != undefined){throw new Error("Someone with the same id already exits");}
+        try{
         const result_individual = await prisma.$transaction(async (tx) => {
             //first i check if the person exist, if exist throw error
             const exists = await prisma.person.findFirst({
                 where: { id: spers.persona.id }
               })
-              if(exists){
-                throw `Usuario ya tiene un nombre registrado`;
+              if(exists != null){
+                console.log(exists);
+                throw `Usuario ya está registrado`;
               }
               //now i create the person
               await CreatePersonFunc(spers.persona);
@@ -73,12 +77,19 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 await prisma.basic_worker.create({
                     data:{
                         person_id:                  spers.persona.id,
-                        job_position:               spers.job_position as basic_worker_job_position
+                        job_position:               spers.job_position.toUpperCase() as basic_worker_job_position
                     }
                 });
-                return await this.get(spers.persona.id, undefined);
             })
-            return result_individual[0];
+        }catch(error){
+            
+            await prisma.phone_number.deleteMany({where:{person_id: spers.persona.id}});
+            await prisma.social_media.deleteMany({where:{person_id: spers.persona.id}});
+            await prisma.person.delete({where:{id: spers.persona.id}})
+            throw error;
+        }
+        const  result_individual =await this.get(spers.persona.id, undefined);
+        return result_individual[0];
     }
 
     async get(id_re: string | undefined, puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]> {
@@ -88,7 +99,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                     {id: id_re},
                     {
                         basic_worker: {
-                            job_position: puesto
+                            job_position: puesto as basic_worker_job_position
                         }
                     },
                     {basic_worker:{
@@ -116,7 +127,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource{
                 forename:               Worker.forename,
                 surname:                Worker.surname,
                 email:                  Worker.email,
-                fecha:                  Worker.birthdate,
+                birthdate:                  Worker.birthdate,
                 medical_record:         Worker.medical_record,
                 BloodType:              Worker.BloodType as BloodType
             });

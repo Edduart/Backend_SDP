@@ -1,6 +1,7 @@
 import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian,
     CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, 
-    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase} from "../../domain";
+    StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase,
+    seminarian_status_enum} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -24,7 +25,7 @@ export class SeminarianControler{
                 }
             }
         }catch(error){
-            res.status(418).send("Error: " + error);
+            res.status(418).json({error})
         }
     }
     public delete = async (req: Request, res: Response) => {
@@ -50,6 +51,7 @@ export class SeminarianControler{
     public update = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
+            console.log("entro")
             const result = ValidatePermission(source, "seminarian", 'U');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
@@ -65,7 +67,8 @@ export class SeminarianControler{
             //assembling de seminarian
             const seminarian = new UpdateSeminarian(foreingdata,
                 user_origin.location as Locations_enum, user_origin.apostleships, persondto, 
-                user_origin.ministery as seminarianMinistery_ENUM
+                user_origin.ministery as seminarianMinistery_ENUM,
+                user_origin.status as seminarian_status_enum
             );
             //now check if there are errors
             const errores = seminarian.Validate();
@@ -95,7 +98,6 @@ export class SeminarianControler{
               res.status(418).send("Error: " + error);
         }
     }
-
     public Create = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
@@ -123,27 +125,24 @@ export class SeminarianControler{
             const errores = seminarian.Validate();
             //if there is any error, it send error
             if(errores == null){
-                new CreateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian)=>{res.json({message: "ready"}).send})
-                .catch((error) => {
-                    if (req.body.ayuda != null) {
-                        fs.unlinkSync(req.body.ayuda);
+                new CreateSeminarianUseCase(this.repository).execute(seminarian).then((seminarian)=>{
+                    res.json({message: "ready"}).send})
+                .catch((error) => {if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);
                       }
-                    res.status(400).send("Unexpected error: " + error)
+                res.status(400).send("Unexpected error: " + error)
                 })
             }else{
-                if (req.body.ayuda != null) {
-                    fs.unlinkSync(req.body.ayuda);
-                }
+                if (req.body.ayuda != null) {fs.unlinkSync(req.body.ayuda);}
                 //validation errors
                 console.log(errores);
-                res.status(400).send("Validation error: " + errores);
-            }
+                res.status(400).send("Validation error: " + errores);}
         }catch(error){
             // permissions errores
             if (req.body.ayuda != null) {
                 fs.unlinkSync(req.body.ayuda);
               }
               console.log("unexpected error while executing");
+              console.log("error mientrs se ejecuta");
               res.status(418).send("Error: " + error);
         }
     }
