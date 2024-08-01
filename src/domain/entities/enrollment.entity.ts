@@ -25,7 +25,7 @@ export class EnrollmentEntity {
 
 export enum EnrollmentStatus {
   CURSANDO = "CURSANDO",
-  APROVADO = "APROVADO",
+  APROBADO = "APROBADO",
   REPROBADO = "REPROBADO",
   RETIRADO = "RETIRADO",
 }

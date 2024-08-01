@@ -45,8 +45,14 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   }
 
   async get(getDto: GetEnrollmentDto): Promise<EnrollmentEntity[]> {
-    //TODO add filters
-    const enrollment = await prisma.enrollment.findMany();
+    const enrollment = await prisma.enrollment.findMany({
+      where: {
+        seminarian_id: getDto.seminarian_id,
+        academic_term_id: getDto.academic_term_id,
+        status: getDto.status,
+        subject_id: getDto.subject_id,
+      },
+    });
     return enrollment.map((enrollment) =>
       EnrollmentEntity.fromObject(enrollment)
     );
@@ -62,7 +68,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
       },
       data: {
         academic_term_id: updateDto.academic_term_id,
-        status: updateDto.status,
+        status: updateDto.status as EnrollmentStatus,
       },
     });
     return EnrollmentEntity.fromObject(updateEnrollment);

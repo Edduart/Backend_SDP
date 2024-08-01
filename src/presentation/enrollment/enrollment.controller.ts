@@ -10,7 +10,7 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   DeleteEnrollmentDto,
-  GetAcademicStatus
+  GetAcademicStatus,
 } from "../../domain";
 import { ValidatePermission } from "../services/permissionValidator";
 
@@ -18,13 +18,11 @@ export class EnrollmentController {
   constructor(private readonly repository: EnrollmentRepository) {}
 
   public getAcademicStatus = (req: Request, res: Response) => {
-
     console.log("academic status get");
 
     const seminarian_id: string = req.params.seminarian_id;
 
-
-    const [error, getDto] = GetAcademicStatusDto.get({seminarian_id});
+    const [error, getDto] = GetAcademicStatusDto.get({ seminarian_id });
     if (error) return res.status(400).json({ error });
 
     new GetAcademicStatus(this.repository)
@@ -36,10 +34,9 @@ export class EnrollmentController {
   };
 
   public get = (req: Request, res: Response) => {
-
     console.log("general get");
 
-    const [error, getDto] = GetEnrollmentDto.get(req.body);
+    const [error, getDto] = GetEnrollmentDto.get(req.query);
     if (error) return res.status(400).json({ error });
 
     new GetEnrollment(this.repository)
@@ -51,11 +48,7 @@ export class EnrollmentController {
   };
 
   public update = (req: Request, res: Response) => {
-    const seminarian_id = req.params.id;
-    const [error, updateDto] = UpdateEnrollmentDto.update({
-      ...req.body,
-      seminarian_id,
-    });
+    const [error, updateDto] = UpdateEnrollmentDto.update(req.body);
     if (error) return res.status(400).json({ error });
     new UpdateEnrollment(this.repository)
       .execute(updateDto!)

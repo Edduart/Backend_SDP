@@ -347,7 +347,7 @@ enum academic_term_status {
 
 enum enrollment_status {
   CURSANDO 
-  APROVADO 
+  APROBADO 
   REPROBADO 
   RETIRADO 
 }
