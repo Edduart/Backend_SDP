@@ -8,6 +8,7 @@ import {
   DeleteEnrollmentDto,
   GetEnrollmentDto,
   GetAcademicStatusDto,
+  EnrollmentGetInterface,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
@@ -44,7 +45,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     return createEnrollment;
   }
 
-  async get(getDto: GetEnrollmentDto): Promise<EnrollmentEntity[]> {
+  async get(getDto: GetEnrollmentDto): Promise<EnrollmentGetInterface[]> {
     const enrollment = await prisma.enrollment.findMany({
       where: {
         seminarian_id: getDto.seminarian_id,
@@ -52,10 +53,18 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         status: getDto.status,
         subject_id: getDto.subject_id,
       },
+      include: {
+        subject: { select: { id: true, description: true } },
+        academic_term: {
+          select: { id: true, start_date: true, end_date: true, status: true },
+        },
+      },
     });
-    return enrollment.map((enrollment) =>
-      EnrollmentEntity.fromObject(enrollment)
-    );
+
+    const enrollmentResponse = await GetEnrollmentDto.getResponse(enrollment);
+
+    console.log({ enrollmentResponse });
+    return enrollmentResponse;
   }
 
   async update(updateDto: UpdateEnrollmentDto): Promise<EnrollmentEntity> {

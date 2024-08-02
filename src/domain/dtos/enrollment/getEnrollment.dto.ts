@@ -1,4 +1,5 @@
-import {EnrollmentStatus} from "../../entities/enrollment.entity"
+import { EnrollmentStatus } from "../../entities/enrollment.entity";
+import {formatDate} from "../../../presentation/utils/formatDate"
 
 export class GetEnrollmentDto {
   constructor(
@@ -13,17 +14,56 @@ export class GetEnrollmentDto {
     let dataErrors: string[] = [];
 
     console.log("🚀 ~ GetEnrollmentDto ~ get ~ props:", props);
-    
+
     // TODO reWork validations
 
-    if (subject_id!= undefined) subject_id = +subject_id;
+    if (subject_id != undefined) subject_id = +subject_id;
 
     if (academic_term_id != undefined) academic_term_id = +academic_term_id;
-      
+
     if (dataErrors.length > 0) return [dataErrors];
     return [
       undefined,
       new GetEnrollmentDto(seminarian_id, subject_id, academic_term_id, status),
     ];
   }
+
+  static getResponse(enrollment: Array<any>): EnrollmentGetInterface[] {
+    const enrollmentDto: EnrollmentGetInterface[] = enrollment.map(
+      (enrollment) => ({
+        seminarian_id: enrollment.seminarian_id,
+        subject: {
+          id: enrollment.subject.id,
+          name: enrollment.subject.description,
+        },
+        academic_term: {
+          id: enrollment.academic_term.id,
+          start_date: formatDate(
+            enrollment.academic_term.start_date.toISOString()
+          ),
+          end_date: formatDate(
+            enrollment.academic_term.end_date.toISOString()
+          ),
+          status: enrollment.academic_term.status,
+        },
+        subject_status: enrollment.status,
+      })
+    );
+    return enrollmentDto;
+  }
+}
+
+export interface EnrollmentGetInterface {
+  seminarian_id: string;
+  subject: {
+    id: number;
+    name: string;
+  };
+  academic_term: {
+    id: number;
+    start_date: string | null;
+    end_date: string | null;
+    status: string;
+  };
+  subject_status: string;
 }
