@@ -68,6 +68,7 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
                 lt: endOfYear,
                 },
             },
+            {id: data.id}
             ],
         };
         }

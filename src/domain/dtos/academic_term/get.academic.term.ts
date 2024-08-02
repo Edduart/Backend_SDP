@@ -4,10 +4,17 @@ export class GetAcademicTerm{
     private constructor(
         public readonly status: academic_term_enum,
         public readonly fecha?: Date,
+        public readonly id?: number,
     ){}
 
     static create(props: { [key: string]: any }): GetAcademicTerm {
-        let { fecha, status } = props;
+        let { fecha, status,id } = props;
+        if (id !== undefined) {
+            id = Number(id);
+            if (Number.isNaN(id) || !Number.isInteger(id) || id < 0) {
+                id = undefined
+            }
+        }
         if(fecha != undefined){
             try {
                 fecha = new Date(fecha)

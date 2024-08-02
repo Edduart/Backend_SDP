@@ -9,9 +9,18 @@ export class InstructionDataSourceImple implements InstructionDatasource{
                 academic_term_id:   data.academic_term_id
         }});
         if(check_exists != null)throw new Error("Instruction does not exists");
-        throw new Error("Instruction does not exists");
-        //const result_created = //await prisma.instruction.update({});
-        //return InstructionEntity.fromObject(result_created);
+        const result_created = await prisma.instruction.update({
+            where:{
+                subject_id_academic_term_id: {
+                    subject_id: data.subject_id,
+                    academic_term_id: data.academic_term_id
+                  }
+            },
+            data:{
+                professor_id: data.professor_id,
+            }
+        });
+        return InstructionEntity.fromObject(result_created);
     }
     async Get(data: GetInstruction): Promise<InstructionEntity[]> {
         const result = await prisma.instruction.findMany({
