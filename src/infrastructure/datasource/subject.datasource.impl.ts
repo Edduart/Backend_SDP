@@ -112,8 +112,8 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
             return results;
     }
     async create(data: CreateSubjectDTO): Promise<SubjectEntity> {
-        const result_name = await prisma.subject.findMany({where:{description: data.description}});
-        if (result_name.length == 0) throw new Error("Subject with same name already exists");
+        const result_name = await prisma.subject.findFirst({where:{description: data.description}});
+        if (result_name != null) throw new Error("Subject with same name already exists");
         if(data.precedent != null){
             await this.CheckPrecedent(data.precedent, data.course_id, data.semester);
         }
