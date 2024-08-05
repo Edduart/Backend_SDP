@@ -3,6 +3,14 @@ import { prisma } from "../../data/postgres";
 import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm, UpdateAcademicTerm } from "../../domain";
 
 export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
+    async GetByID(data: GetAcademicTerm): Promise<AcademicTermEntityt> {
+        const results = await prisma.academic_term.findFirst({
+            where: {id:data.id}
+        });
+        if (results == null)throw new Error("ID Does not exists")
+        const entity = AcademicTermEntityt.fromObject(results);
+        return entity;
+    }
     async PassSemester(id: number): Promise<AcademicTermEntityt> {
         const find = await prisma.academic_term.findFirst({where:{id:id}});
         if(find == null) throw new Error("El periodo academico no existe");
@@ -68,11 +76,9 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
                 lt: endOfYear,
                 },
             },
-            {id: data.id}
             ],
         };
         }
-
         const results = await prisma.academic_term.findMany({
             where: whereClause
         });

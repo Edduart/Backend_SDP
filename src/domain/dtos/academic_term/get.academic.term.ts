@@ -28,6 +28,6 @@ export class GetAcademicTerm{
         }else {
             status = academic_term_enum.ACTIVO;
         }
-        return new GetAcademicTerm(status, fecha );
+        return new GetAcademicTerm(status, fecha, id );
     }
 }

@@ -3,6 +3,7 @@ import { AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm, UpdateAcademi
 export abstract class AcademicTermRepository {
     abstract create(dto: CreateAcademicTerm): Promise<AcademicTermEntityt>;
     abstract Get(data: GetAcademicTerm): Promise<AcademicTermEntityt[]>;
+    abstract GetByID(data: GetAcademicTerm): Promise<AcademicTermEntityt>;
     abstract Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt>;
     abstract PassSemester(id: number): Promise<AcademicTermEntityt>;
     abstract EndAcademicTerm(id: number): Promise<AcademicTermEntityt>;

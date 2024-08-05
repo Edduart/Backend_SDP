@@ -9,6 +9,7 @@ const Controller = new AcademicTermController(courseRepository);
 
 router.post("/", Controller.Create);
 router.get("/", Controller.Get);
+router.get("/:id", Controller.Getid);
 router.put("/", Controller.Update);
 router.delete("/delete/:id", Controller.Deactivate);
 router.put("/activate/:id", Controller.Activate);

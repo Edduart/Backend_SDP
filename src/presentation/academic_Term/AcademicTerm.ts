@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicTermRepository, ActivateAcademicTermUseCase, CreateAcademicTerm, CreateAcademicTermUseCase, EndAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, PassAcademicTermSemesterUseCase, UpdateAcademicTerm, updateAcademicTermUseCase } from "../../domain";
+import { AcademicTermRepository, ActivateAcademicTermUseCase, CreateAcademicTerm, CreateAcademicTermUseCase, EndAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, GetbyidAcademicTermUseCase, PassAcademicTermSemesterUseCase, UpdateAcademicTerm, updateAcademicTermUseCase } from "../../domain";
 
 export class AcademicTermController {
     constructor(private readonly repository: AcademicTermRepository) {}
@@ -24,7 +24,14 @@ export class AcademicTermController {
             console.log(error);
             return res.status(400).json("Error obteniendo periodos" + error)})
     }
-
+    public Getid = (req: Request, res: Response) => {
+        const  get_dto = GetAcademicTerm.create(req.params);
+        new GetbyidAcademicTermUseCase(this.repository).execute(get_dto).then((results) => {
+            return res.status(200).json(results);
+        }).catch((error) => {
+            console.log(error);
+            return res.status(400).json("Error obteniendo periodos" + error)})
+    }
     public Update = (req: Request, res: Response) => {
         const [error_Arr, academicupdateDTO] = UpdateAcademicTerm.create(req.body);
         if (academicupdateDTO != undefined) {
