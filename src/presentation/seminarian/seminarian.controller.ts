@@ -1,7 +1,8 @@
 import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian,
     CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, 
     StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase,
-    seminarian_status_enum} from "../../domain";
+    seminarian_status_enum,
+    GetByIDSeminarianUseCase} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -14,8 +15,11 @@ export class SeminarianControler{
             "Content-Type": "application/pdf",
             "Content-Disposition": "inline; filename=constance.pdf"
         })
-        const infor = "V27984286"//await prisma.seminarian.findFirst({where:{user:{person_id: req.query.id as string}},include:{user:{include:{person: true}}}})
-        BuildPDF((data)=>line.write(data),()=>line.end(), infor);
+        new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
+            BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
+        })
+        
+        
         //res.send("constance")
     }
     public get = async (req: Request, res: Response) => {
