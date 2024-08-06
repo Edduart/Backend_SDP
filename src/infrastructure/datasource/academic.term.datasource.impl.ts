@@ -1,6 +1,6 @@
 import { academic_term_status } from "@prisma/client";
 import { prisma } from "../../data/postgres";
-import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm, UpdateAcademicTerm } from "../../domain";
+import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAcademicTerm } from "../../domain";
 
 export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
     async GetByID(data: GetAcademicTerm): Promise<AcademicTermEntityt> {
@@ -10,17 +10,6 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
         if (results == null)throw new Error("ID Does not exists")
         const entity = AcademicTermEntityt.fromObject(results);
         return entity;
-    }
-    async PassSemester(id: number): Promise<AcademicTermEntityt> {
-        const find = await prisma.academic_term.findFirst({where:{id:id}});
-        if(find == null) throw new Error("El periodo academico no existe");
-        const result = await prisma.academic_term.update({
-            where:{id: id},
-            data:{
-                semester: 2
-            }
-        });
-        return AcademicTermEntityt.fromObject(result);
     }
     async EndAcademicTerm(id: number): Promise<AcademicTermEntityt> {
         const find = await prisma.academic_term.findFirst({where:{id:id}});
@@ -45,15 +34,16 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
         });
         return AcademicTermEntityt.fromObject(result);
     }
-    async Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
-        const find = await prisma.academic_term.findFirst({where:{id:data.id}});
+    async Update(id: number): Promise<AcademicTermEntityt> {
+        const find = await prisma.academic_term.findFirst({where:{id:id}});
         if(find == null) throw new Error("El periodo academico no existe");
+        let number= 1;
+        if(find.semester == 1)number = 2;
         const result = await prisma.academic_term.update({
             where:{
-                id: data.id
+                id: id
             }, data: {
-                start_date: data.start_date,
-                end_date: data.end_date
+                semester: number
             }});
         return AcademicTermEntityt.fromObject(result);
     }

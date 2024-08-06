@@ -13,5 +13,4 @@ router.get("/:id", Controller.Getid);
 router.put("/", Controller.Update);
 router.delete("/delete/:id", Controller.Deactivate);
 router.put("/activate/:id", Controller.Activate);
-router.put("/pass/:id", Controller.PassSemester);
 module.exports = router;

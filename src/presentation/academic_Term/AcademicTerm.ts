@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import { AcademicTermRepository, ActivateAcademicTermUseCase, CreateAcademicTerm, CreateAcademicTermUseCase, EndAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, GetbyidAcademicTermUseCase, PassAcademicTermSemesterUseCase, UpdateAcademicTerm, updateAcademicTermUseCase } from "../../domain";
+import { AcademicTermRepository, ActivateAcademicTermUseCase, CreateAcademicTerm, 
+    CreateAcademicTermUseCase, EndAcademicTermUseCase, GetAcademicTerm, GetAcademicTermUseCase, GetbyidAcademicTermUseCase
+    , updateAcademicTermUseCase } from "../../domain";
 
 export class AcademicTermController {
     constructor(private readonly repository: AcademicTermRepository) {}
@@ -33,22 +35,9 @@ export class AcademicTermController {
             return res.status(400).json("Error obteniendo periodos" + error)})
     }
     public Update = (req: Request, res: Response) => {
-        const [error_Arr, academicupdateDTO] = UpdateAcademicTerm.create(req.body);
-        if (academicupdateDTO != undefined) {
-            new updateAcademicTermUseCase(this.repository).execute(academicupdateDTO)
+            new updateAcademicTermUseCase(this.repository).execute(req.body.id)
             .then((academic)=>{return res.status(200).json(academic);})
             .catch((error) => {return res.status(400).json("Error actualizando periodos" + error)})
-        }else{
-            console.log(error_Arr);
-            return res.status(400).json({ error_Arr });
-        } 
-    }
-    public PassSemester = (req: Request, res: Response) => {
-        const id = +req.params.id;
-        if(id == undefined){return res.status(400).json("el id es requerido")}
-        new PassAcademicTermSemesterUseCase(this.repository).execute(id)
-        .then((academic)=>{return res.status(200).json(academic);})
-        .catch((error) => {return res.status(400).json("Error pasando el semestre del periodo" + error)})
     }
     public Activate = (req: Request, res: Response) => {
         const id = +req.params.id;

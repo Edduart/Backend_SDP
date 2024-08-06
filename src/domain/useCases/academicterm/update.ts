@@ -1,13 +1,13 @@
-import { AcademicTermEntityt, AcademicTermRepository, UpdateAcademicTerm } from "../..";
+import { AcademicTermEntityt, AcademicTermRepository } from "../..";
 
 export interface UpdateAcademicTermUse {
-    execute(data: UpdateAcademicTerm): Promise<AcademicTermEntityt>;
+    execute(id: number): Promise<AcademicTermEntityt>;
   }
   
   export class updateAcademicTermUseCase implements UpdateAcademicTermUse {
     constructor(private readonly repository: AcademicTermRepository) {}
   
-    execute(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
-      return this.repository.Update(data);
+    execute(id: number): Promise<AcademicTermEntityt> {
+      return this.repository.Update(id);
     }
   }
