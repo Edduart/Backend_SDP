@@ -1,5 +1,4 @@
 import PDFDocument from 'pdfkit';
-import blobStream from 'blob-stream';
 
 export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
