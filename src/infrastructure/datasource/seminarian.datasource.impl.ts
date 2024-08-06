@@ -9,6 +9,7 @@ import {
   BloodType,
   CreateSeminarian,
   DegreeEntity,
+  DocumenDTO,
   ForeingSeminarianEntity,
   GetSeminarianDTO,
   Locations_enum,
@@ -24,6 +25,11 @@ import {
 import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource {
+  async getByID(id: string): Promise<DocumenDTO> {
+    const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
+    if(result == null)throw new Error("Seminarian does not exists");
+    return DocumenDTO.fromdb({id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname})
+  }
   async get(data: GetSeminarianDTO): Promise<SeminarianEntity[]> {
     let where_clause_foreing = undefined;
     //if the foreing clause is not undefined we pass to assing data

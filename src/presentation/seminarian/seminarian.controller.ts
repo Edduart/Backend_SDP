@@ -6,8 +6,18 @@ import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
+import { BuildPDF } from "../docs/Constancy";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
+    public getConstance = async (req: Request, res: Response) => {
+        const line =res.writeHead(200,{
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "inline; filename=constance.pdf"
+        })
+        const infor = "V27984286"//await prisma.seminarian.findFirst({where:{user:{person_id: req.query.id as string}},include:{user:{include:{person: true}}}})
+        BuildPDF((data)=>line.write(data),()=>line.end(), infor);
+        //res.send("constance")
+    }
     public get = async (req: Request, res: Response) => {
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');

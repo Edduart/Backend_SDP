@@ -9,7 +9,7 @@ const router = Router();
 const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
-
+router.get('/constance/', SeminarianControl.getConstance)
 router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
     profile.single('picture')(req, res, async (err) => {
         if (err) {
@@ -19,7 +19,6 @@ router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Respons
     });
 });
 router.put('/update/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
-    console.log("holi")
     profileU.single('picture')(req, res, async (err) => {
         if (err) {
             return next(err);
