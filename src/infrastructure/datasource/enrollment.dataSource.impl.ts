@@ -14,19 +14,25 @@ import {
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
-    const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany({
-      where: { seminarian_id: GetDto.seminarian_id },
-      include: { subject: { include: { course: true } } },
-    });
+    const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany(
+      {
+        where: {
+          seminarian_id: GetDto.seminarian_id,
+          NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+        },
+        include: { subject: { include: { course: true } } },
+      }
+    );
+
+    console.log("after prisma consult: ", { academicStatus });
 
     const subjectsToEnroll = EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
       GetDto.seminarian_id!
     );
 
-
-    academicStatus.map((item) => {
-      if (item.status != "CURSANDO") console.log(item.subject_id)});
+    /*academicStatus.map((item) => {
+      if (item.status != "CURSANDO") console.log(item.subject_id)});*/
     //academicStatus.map(item => item.subject_id)
 
     /*console.log(typeof academicStatus); // this is a object

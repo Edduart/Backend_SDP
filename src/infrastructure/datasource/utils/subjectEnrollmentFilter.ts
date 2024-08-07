@@ -97,15 +97,30 @@ export class EnrollmentSubjectFilter {
 
       // here I can start to filter
 
-      const test2 = subjectResult.map((item) => {
+      const test2 = subjectResult.map((item) => ({
+        id: item.id,
+        description: item.description,
+        course: item.course.map((course) => ({
+          id: course.id,
+          stage_id: course.stage_id,
+          description: course.description,
+          instructor_id: course.instructor_id,
+          subject: course.subject.filter(
+            (subject) => {
+              !subjectsToFilter.includes(subject.id)
+        }),
+        })),
+      }));
+
+      /*const test2 = subjectResult.map((item) => {
         const courses = item.course.map((course) => {
           let subjectFilter = course.subject.map((subject) => {
             console.log("iteration", subject.id)
             if (!subjectsToFilter.some(id => id === subject.id)) {
-              console.log("filtered: ", subject.id);
+              console.log("added: ", subject.id);
               return subject;
             } else {
-              console.log("added: ", subject.id);
+              console.log("filtered: ", subject.id);
             }
           });
           return {
@@ -122,7 +137,7 @@ export class EnrollmentSubjectFilter {
           description: item.description,
           course: courses,
         };
-      });
+      });*/
 
       console.log(JSON.stringify(test2));
 
