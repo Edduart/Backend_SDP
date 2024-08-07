@@ -14,7 +14,7 @@ import {
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
-    const academicStatus = await prisma.enrollment.findMany({
+    const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany({
       where: { seminarian_id: GetDto.seminarian_id },
       include: { subject: { include: { course: true } } },
     });
@@ -24,8 +24,13 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
       GetDto.seminarian_id!
     );
 
-    console.log(typeof academicStatus); // this is a object
-    console.log(academicStatus);
+
+    academicStatus.map((item) => {
+      if (item.status != "CURSANDO") console.log(item.subject_id)});
+    //academicStatus.map(item => item.subject_id)
+
+    /*console.log(typeof academicStatus); // this is a object
+    console.log(academicStatus);*/
 
     return subjectsToEnroll;
   }
@@ -135,3 +140,21 @@ interface DtoValidate {
   academic_term_id?: number;
   status?: EnrollmentStatus;
 }
+
+export interface SeminarianStatus {
+  seminarian_id: string;
+  subject_id: number;
+  academic_term_id: number;
+  status: string;
+  subject: {
+    id: number;
+    course_id: number;
+    description: string;
+    status: boolean;
+    precedent: number | null;
+    semester: number;
+    academic_field_id: number;
+    course: object;
+  };
+}
+[];
