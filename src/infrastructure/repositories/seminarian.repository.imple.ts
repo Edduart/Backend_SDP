@@ -1,9 +1,12 @@
-import { SeminarianDataSource, SeminarianRepository, CreateSeminarian, UpdateSeminarian, GetSeminarianDTO, SeminarianEntity, DocumenDTO } from "../../domain";
+import { SeminarianDataSource, SeminarianRepository, CreateSeminarian, UpdateSeminarian, GetSeminarianDTO, SeminarianEntity, DocumenDTO, SeminarianFichaDTO } from "../../domain";
 
 export class SeminarianRepositoryImpl implements SeminarianRepository{
     constructor (
         private readonly datasource: SeminarianDataSource,
     ){}
+    Ficha(id: string): Promise<SeminarianFichaDTO> {
+        return this.datasource.Ficha(id);
+    }
     getByID(id: string): Promise<DocumenDTO> {
         return this.datasource.getByID(id);
     }

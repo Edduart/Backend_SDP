@@ -8,8 +8,16 @@ import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
 import { BuildPDF } from "../docs/Constancy";
+import { BuildFicha } from "../docs/ficha";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
+    public ficha = (req: Request, res: Response) => {
+        const line =res.writeHead(200,{
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "inline; filename=ficha.pdf"
+        })
+        BuildFicha((data)=>line.write(data),()=>line.end());
+      }
     public getConstance = async (req: Request, res: Response) => {
         const line =res.writeHead(200,{
             "Content-Type": "application/pdf",
@@ -18,8 +26,6 @@ export class SeminarianControler{
         new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
             BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
         })
-        
-        
         //res.send("constance")
     }
     public get = async (req: Request, res: Response) => {

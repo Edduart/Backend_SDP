@@ -18,6 +18,7 @@ import {
   seminarian_status_enum,
   SeminarianDataSource,
   SeminarianEntity,
+  SeminarianFichaDTO,
   seminarianMinistery_ENUM,
   SocialMediaEntity,
   UpdateSeminarian,
@@ -25,6 +26,35 @@ import {
 import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource {
+  async Ficha(id: string): Promise<SeminarianFichaDTO> {
+    const result = await prisma.seminarian.findFirst({where:{id: id}, include:{
+      foreigner_seminarian:true,
+      user:{
+        include:{
+          academic_degree: true,
+          parish:{
+            include:{
+              diocese: true
+            }
+          },
+          person:{
+            include:{
+              phone_number: true,
+              social_media:{
+                include:{
+                  social_media_category_social_media_social_media_categoryTosocial_media_category: true,
+                }
+              }
+            }
+          }
+        }
+      }
+    }})
+
+
+
+    throw new Error("Method not implemented.");
+  }
   async getByID(id: string): Promise<DocumenDTO> {
     const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
     if(result == null)throw new Error("Seminarian does not exists");
