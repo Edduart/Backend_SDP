@@ -1,4 +1,5 @@
 import {
+  enrollment_status,
   foreigner_seminarian_stage,
   seminarian_Location,
   seminarian_Ministery,
@@ -20,6 +21,7 @@ import {
   SeminarianEntity,
   SeminarianFichaDTO,
   seminarianMinistery_ENUM,
+  SocialMediaDTO,
   SocialMediaEntity,
   UpdateSeminarian,
 } from "../../domain";
@@ -50,16 +52,117 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         }
       }
     }})
-
-
-
-    throw new Error("Method not implemented.");
+    if(result == null)throw new Error("Seminarian does not exist");
+    const [stage,course] = await this.CheckStageAndCourse(id);
+    let instruction_Grade = "BACHILLER";
+    if(result.user.academic_degree.length > 0){
+      instruction_Grade = result.user.academic_degree[0].description;
+    }
+    const cellpones: string[]= result.user.person.phone_number.map((cellphone)=>{
+      return cellphone.phone_number
+    })
+    const redes: SocialMediaDTO[] = result.user.person.social_media.map((socialdata)=>{
+      return new SocialMediaDTO(
+        socialdata.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
+        socialdata.link,
+      )
+    })
+    const stage_fixed = stage.split(" ");
+    const dto = new SeminarianFichaDTO(result.id,
+      result.user.person.profile_picture_path,
+      result.user.person.forename,
+      result.user.person.surname,
+      result.user.person.birthdate,
+      stage_fixed[stage_fixed.length-1], course, result.user.parish.name,
+      result.user.parish.diocese.name,
+      cellpones,
+      redes,
+      result.Location as string,
+      instruction_Grade,
+      result.Ministery == seminarian_Ministery.UNKOWN ? "N/A" : result.Ministery as string
+    )
+    return dto;
   }
-  CheckEtapa(){
-    
+  async CheckStageAndCourse(id: string): Promise<[string,string]>{
+  let etapa = "PROPEDEUTICO";
+  let curso = "PROPEDÉUTICO";
+  const materias = await prisma.enrollment.findMany({
+      where:{
+        seminarian_id: id,
+        status: enrollment_status.CURSANDO}
+        ,include:{subject:{include:{course:{include:{stage: true}}}}}});
+  if(materias.length > 0){
+    etapa = materias[0].subject.course.stage.description;
+    curso = materias[0].subject.course.description;
+    return [etapa,curso];
   }
-  CheckCourse(){
-
+    //si no hay ninguno siendo cursado, obtengo y ordeno descenciente para saber cual es la etapa mas alta aprobada
+  const m_vacaciones = await prisma.enrollment.findMany({
+      where:{
+        seminarian_id: id,
+        status: enrollment_status.APROBADO
+      },include:{
+        subject:{
+          include:{
+            course:{
+              include:{
+                stage:true
+              }
+            }
+          },
+        }
+      }, orderBy:{
+        subject:{
+          course:{
+            stage_id: 'desc'
+          }
+        }
+      }
+  });
+    //si no hay nada, pues retorno propedeutico
+  if(m_vacaciones.length == 0){return [etapa, curso];}
+    //ahora que tengo el ID de la etapa mas alta aprobada, debo revisar que haya aprobado todas las materias de esa etapa
+  //primero cuento todas las materias con el numero de la etapa
+  const subject_stage_count = await prisma.subject.count({
+    where:{
+      course:{
+        stage_id: m_vacaciones[0].subject.course.stage.id
+      }
+    }
+  })
+  //segundo, cuento cuantas materias aprobadas tiene el seminarista con el id de la etapa
+  const subject_id_count = await  prisma.enrollment.count({
+    where:{
+      seminarian_id:id,
+      status: enrollment_status.APROBADO,
+      subject:{
+        course:{
+          stage_id: m_vacaciones[0].subject.course.stage.id
+        }
+      }
+    }
+  });
+  //ahora paso a chequear que tengan el mismo numero, si tiene el mismo numero significa que aprobó toda la etapa y pasa a la siguiente, si no, se queda en la actual
+  if(subject_stage_count == subject_id_count){
+    //en cambio, si pasó todas las materias, debo pasar la etapa siguiente, pero si es 3 entonces lo dejo igual
+    if(m_vacaciones[0].subject.course.stage.id == 3){ 
+      etapa = m_vacaciones[0].subject.course.stage.description
+      curso = m_vacaciones[0].subject.course.description
+      return [etapa, curso];
+    }else{
+      const name_stage_auxiliary = await prisma.stage.findFirst({
+        where:{id: m_vacaciones[0].subject.course.stage.id+1}
+      })
+      etapa = name_stage_auxiliary!.description
+      curso = m_vacaciones[0].subject.course.description
+      return [etapa, curso];
+    }
+  }else{
+    //si no pasó todas las materias entonces retorno el nombre de la etapa actual
+    etapa = m_vacaciones[0].subject.course.stage.description;
+    curso = m_vacaciones[0].subject.course.description
+    return [etapa, curso];
+  }
   }
   async getByID(id: string): Promise<DocumenDTO> {
     const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
