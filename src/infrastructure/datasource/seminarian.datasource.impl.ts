@@ -55,6 +55,12 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
 
     throw new Error("Method not implemented.");
   }
+  CheckEtapa(){
+    
+  }
+  CheckCourse(){
+
+  }
   async getByID(id: string): Promise<DocumenDTO> {
     const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
     if(result == null)throw new Error("Seminarian does not exists");
