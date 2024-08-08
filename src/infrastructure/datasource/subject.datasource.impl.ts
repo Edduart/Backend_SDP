@@ -65,7 +65,7 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
         return subjet_deleted[0];
     }
     async Update(data: UpdateSubjectDTO): Promise<SubjectEntity> {
-        const result = await prisma.subject.findFirst({where:{description: data.description}});
+        const result = await prisma.subject.findFirst({where:{description: data.description, id:{not: data.id}}});
         if (result != null){throw new Error("Subject with same name already exists");}
         const result_u = await prisma.subject.update({
             where:{
