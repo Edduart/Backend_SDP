@@ -22,7 +22,7 @@ export class SeminarianControler{
         }).catch((error)=>{
             res.status(418).send("unable to create ID: " + error);
         })
-      }
+    }
     public getConstance = async (req: Request, res: Response) => {
         const line =res.writeHead(200,{
             "Content-Type": "application/pdf",
