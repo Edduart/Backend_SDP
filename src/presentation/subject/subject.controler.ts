@@ -1,8 +1,9 @@
 import { CreateSubjectDTO, CreateSubjectUseCase, DeleteSubjectUseCase, GetFieldstUseCase, GetSubjecInsttUseCase, GetSubjectDTO, 
-    GetSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
+    GetSubjectUseCase, PensumSubjectUseCase, SubjectRepository, UpdateSubjectDTO, 
     UpdateSubjectUseCase} from "../../domain";
 import { Request, Response } from "express";
 import { ValidatePermission } from "../services/permissionValidator";
+import { BuildPensum } from "../docs/pensum";
 export class SubjectControler{
     constructor(private readonly repository: SubjectRepository){}
     public Delete = async (req: Request, res: Response) => {
@@ -93,6 +94,17 @@ export class SubjectControler{
         }catch(error){
             res.status(401).send("Error: " + error);
         }
+    }
+    public Pensum = async (req: Request, res: Response) => {
+        new PensumSubjectUseCase(this.repository).execute().then((data)=>{
+            res.send(data);
+        }).catch((error)=>{res.status(400).send("unable to get pensum: " + error);})
+        /*
+        const line =res.writeHead(200,{
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "inline; filename=ficha.pdf"
+          })
+          BuildPensum((data)=>line.write(data),()=>line.end()); */
     }
     public Get_inst = async (req: Request, res: Response) => {
         try{

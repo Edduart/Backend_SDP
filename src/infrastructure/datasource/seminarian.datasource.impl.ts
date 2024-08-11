@@ -28,6 +28,7 @@ import {
 import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource {
+
   async Ficha(id: string): Promise<SeminarianFichaDTO> {
     const result = await prisma.seminarian.findFirst({where:{id: id}, include:{
       foreigner_seminarian:true,
@@ -122,16 +123,18 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     //si no hay nada, pues retorno propedeutico
   if(m_vacaciones.length == 0){return [etapa, curso];}
     //ahora que tengo el ID de la etapa mas alta aprobada, debo revisar que haya aprobado todas las materias de esa etapa
-  //primero cuento todas las materias con el numero de la etapa
-  const subject_stage_count = await prisma.subject.count({
+  //primero cuento todas las materias activas con el numero de la etapa
+  const materias_de_la_etapa = await prisma.subject.count({
     where:{
+      status: true,
       course:{
+        
         stage_id: m_vacaciones[0].subject.course.stage.id
       }
     }
   })
   //segundo, cuento cuantas materias aprobadas tiene el seminarista con el id de la etapa
-  const subject_id_count = await  prisma.enrollment.count({
+  const materias_aprobadas_seminarista = await  prisma.enrollment.count({
     where:{
       seminarian_id:id,
       status: enrollment_status.APROBADO,
@@ -143,7 +146,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     }
   });
   //ahora paso a chequear que tengan el mismo numero, si tiene el mismo numero significa que aprobó toda la etapa y pasa a la siguiente, si no, se queda en la actual
-  if(subject_stage_count == subject_id_count){
+  if(materias_de_la_etapa == materias_aprobadas_seminarista){
     //en cambio, si pasó todas las materias, debo pasar la etapa siguiente, pero si es 3 entonces lo dejo igual
     if(m_vacaciones[0].subject.course.stage.id == 3){ 
       etapa = m_vacaciones[0].subject.course.stage.description

@@ -1,4 +1,4 @@
-import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "..";
+import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, Stage_PensumDTO, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "..";
 
 export abstract class SubjectRepository{
     abstract create(data: CreateSubjectDTO): Promise<SubjectEntity>;
@@ -7,4 +7,5 @@ export abstract class SubjectRepository{
     abstract Update(data: UpdateSubjectDTO): Promise<SubjectEntity>;
     abstract get_instruction(data: GetSubjectDTO): Promise<SubjectDeliver[]>;
     abstract Get_fields(): Promise<academicFieldEntity[]>;
+    abstract Pensum(): Promise<Stage_PensumDTO[]>;
 }

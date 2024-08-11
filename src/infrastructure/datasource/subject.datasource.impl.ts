@@ -1,5 +1,5 @@
 import { prisma } from "../../data/postgres";
-import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
+import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, Stage_PensumDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
     async Get_fields(): Promise<academicFieldEntity[]> {
@@ -134,5 +134,24 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
                 }else throw new Error("La materia que prela no puede ser de un semestre mayor o igual")
             }else throw new Error("La materia que prela no puede ser de un curso mayor")
         }else throw new Error("La materia que prela no existe o está desactivada")
+    }
+    async Pensum(): Promise <Stage_PensumDTO[]> {
+        let materias_stage1: any[];
+        //const materias_stage2 = await prisma.subject.findMany({where: {status: true,academic_field:{stage_id: 2}},orderBy: [{academic_field: {description: 'asc',},},],include: {academic_field: {include: {stage: true,},},},});
+        //const materias_stage3 = await prisma.subject.findMany({where: {status: true,academic_field:{stage_id: 3}},orderBy: [{academic_field: {description: 'asc',},},],include: {academic_field: {include: {stage: true,},},},});
+        let etidades: Stage_PensumDTO[];
+        let array_materias: string[];
+        const academic_fields = await prisma.academic_field.findMany({})
+        for (let index = 1; index < 4; index++) {
+            materias_stage1 = await prisma.subject.findMany({where: {status: true,academic_field:{stage_id: index}},orderBy: [{academic_field: {description: 'asc',},},],include: {academic_field: {include: {stage: true,},},},});
+            academic_fields.forEach(actial_field => {
+                materias_stage1.map((actual)=>{
+                    if(actual.){}
+                })
+            });
+
+        }
+        console.log(materias_stage1)
+        throw new Error("E")
     }
 }
