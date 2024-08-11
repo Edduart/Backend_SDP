@@ -25,13 +25,21 @@ export class InstructionDataSourceImple implements InstructionDatasource{
     async Get(data: GetInstruction): Promise<InstructionEntity[]> {
         const result = await prisma.instruction.findMany({
             where:{
-                professor_id: data.professor_id,
-                subject_id: data.subject_id,
-                academic_term_id: data.academic_term_id
+                
+                AND:[
+                    {professor_id: data.professor_id,},
+                    {subject_id: data.subject_id,},
+                    {academic_term_id: data.academic_term_id},
+                ],
+            },
+            include:{
+                subject: true,
             }
         });
         const list_results: InstructionEntity[] = result.map((actual)=>{
-            return InstructionEntity.fromObject(actual);
+           const retornar = InstructionEntity.fromObject(actual);
+           retornar.subject = actual.subject.description;
+            return retornar
         });
         return list_results;
     }
@@ -40,6 +48,8 @@ export class InstructionDataSourceImple implements InstructionDatasource{
             where:{
                 subject_id: data.subject_id,
                 academic_term_id: data.academic_term_id
+            },include:{
+                subject:true
             }
         })
         if (check_if_already_exists != null) throw new Error("Acadenuc Term ya existe");

@@ -79,9 +79,28 @@ export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
     }
 
     async create(dto: CreateAcademicTerm): Promise<AcademicTermEntityt> {
-        const result = await prisma.academic_term.create({
-            data: dto
-        });
-        return AcademicTermEntityt.fromObject(result);
+        try{
+            const result = await prisma.$transaction(async (tx)=>{
+                const result = await prisma.academic_term.create({
+                    data: dto
+                });
+                const materias = await prisma.subject.findMany({
+                    where:{status:true}, select:{id: true}})
+                const data = materias.map((actual)=>{
+                    return {
+                        academic_term_id: result.id,
+                        subject_id: actual.id,
+                        professor_id: null
+                    }
+                })
+                await prisma.instruction.createMany({
+                    data: data,
+                });
+                return result;
+            })
+            return AcademicTermEntityt.fromObject(result);
+        }catch(error){
+            throw new Error("somenthin went wrong" + error)
+        }
     }
 }
