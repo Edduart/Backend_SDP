@@ -97,14 +97,12 @@ export class SubjectControler{
     }
     public Pensum = async (req: Request, res: Response) => {
         new PensumSubjectUseCase(this.repository).execute().then((data)=>{
-            res.send(data);
-        }).catch((error)=>{res.status(400).send("unable to get pensum: " + error);})
-        /*
         const line =res.writeHead(200,{
             "Content-Type": "application/pdf",
             "Content-Disposition": "inline; filename=ficha.pdf"
           })
-          BuildPensum((data)=>line.write(data),()=>line.end()); */
+          BuildPensum((data)=>line.write(data),()=>line.end(), data); 
+        }).catch((error)=>{res.status(400).send("unable to get pensum: " + error);})
     }
     public Get_inst = async (req: Request, res: Response) => {
         try{
