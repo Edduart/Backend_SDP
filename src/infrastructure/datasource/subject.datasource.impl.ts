@@ -1,5 +1,5 @@
 import { prisma } from "../../data/postgres";
-import { academic_field_pensumDTo, academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, Stage_PensumDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
+import { subjectPensumDTO, academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, Stage_PensumDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
     async Get_fields(): Promise<academicFieldEntity[]> {
@@ -139,17 +139,23 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
        
         const stages = await prisma.stage.findMany({include:{academic_field:{
             include:{
-                subject:true
+                subject:{
+                    include:{
+                        subject: true
+                    }
+                }
             }
         }}});
+        let subjects: subjectPensumDTO[];
         const pensum: Stage_PensumDTO[] = stages.map((stage_actual)=>{
-            const fields_pdt: academic_field_pensumDTo[] = stage_actual.academic_field.map((field_actual)=>{
-                const materias_fiel: string[] = field_actual.subject.map((actual)=>{
-                    return actual.description
+            subjects = []
+            stage_actual.academic_field.map((field_actual)=>{
+                field_actual.subject.map((materia_actual)=>{
+                    subjects.push(new subjectPensumDTO(materia_actual.subject != null ? materia_actual.subject.description : " ", materia_actual.description))
                 })
-                return new academic_field_pensumDTo(materias_fiel, field_actual.description != null ? field_actual.description : "");
             })
-            return new Stage_PensumDTO(fields_pdt, stage_actual.description);
+            
+            return new Stage_PensumDTO(subjects, stage_actual.description);
         });
         return pensum
     }

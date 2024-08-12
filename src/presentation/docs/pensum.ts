@@ -30,14 +30,12 @@ export async function BuildPensum(dataCB: (...args: any[]) => void, endCB: (...a
     doc.moveDown();
     data.forEach(async actual => {
         let materias: string[][] = [];
-        actual.academic_fields.forEach(element => {
-        element.subjects.forEach(matea => {
-            materias.push([element.name,matea]); 
-        });
+        actual.subjects.forEach(element => {
+        materias.push([element.name, element.preceden]); 
     });
         const table = {
             title: actual.name,
-            headers: [{ label: 'ÁREA DE ESTUDIO', property: 'area', headerColor: 'blue' }, { label: 'ASIGNATURA', property: 'asignatura', headerColor: 'blue' }],
+            headers: [{ label: 'ASIGNATURA', property: 'area', headerColor: 'blue' }, { label: 'PRECEDIDA POR', property: 'asignatura', headerColor: 'blue' }],
             rows: materias
         };
         await doc.table(table, {  

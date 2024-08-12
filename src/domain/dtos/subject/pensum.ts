@@ -1,13 +1,13 @@
 export class Stage_PensumDTO{
     constructor(
-        public readonly academic_fields:        academic_field_pensumDTo[],
+        public readonly subjects:               subjectPensumDTO[],
         public readonly name:                   string,
     ){}
 }
 
-export class academic_field_pensumDTo{
+export class subjectPensumDTO{
     constructor(
-        public readonly subjects:   string[],
+        public readonly preceden:   string,
         public readonly name:       string
     ){}
     
