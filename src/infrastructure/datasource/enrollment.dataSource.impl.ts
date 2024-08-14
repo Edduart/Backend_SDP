@@ -9,10 +9,27 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
+  GetStageOfSeminarianDto,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
+import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter"
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+
+  async getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
+    const seminarians = await prisma.seminarian.findMany({
+      where: { status: "ACTIVO" }, select: {id:true},
+    });
+
+    const seminariansArray = seminarians.map(seminarians => seminarians.id);
+
+    console.log({ seminariansArray });
+
+    const result = GetStageOfSeminarianFilter.filter(dto.stage, seminariansArray);
+
+    return result;
+  }
+
   async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
     const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany(
       {
