@@ -26,25 +26,30 @@ export class CreateEnrollmentDto {
         message: "Seminarian_id must follows this format: V-xxxxxx!",
       });
     }
-
-    if (subject_id.length == 0) {
+    if (!Array.isArray(subject_id)) {
       validationErrors.push({
         field: "subject_id",
-        message: "subject_id is required!",
+        message: "subject_id is should be a valid array!",
       });
-    } else {
-      subject_id.forEach((element: number) => {
-        if (
-          Number.isNaN(element) ||
-          !Number.isInteger(element) ||
-          element <= 0
-        ) {
-          validationErrors.push({
-            field: "subject_id",
-            message: "subject_id must be a valid number!",
-          });
-        }
-      });
+      if (subject_id.length == 0) {
+        validationErrors.push({
+          field: "subject_id",
+          message: "subject_id is required!",
+        });
+      } else if (Array.isArray(subject_id)){
+        subject_id.forEach((element: number) => {
+          if (
+            Number.isNaN(element) ||
+            !Number.isInteger(element) ||
+            element <= 0
+          ) {
+            validationErrors.push({
+              field: "subject_id",
+              message: "subject_id must be a valid number!",
+            });
+          }
+        });
+      }
     }
 
     if (!academic_term_id) {
