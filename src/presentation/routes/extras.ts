@@ -13,4 +13,9 @@ router.get(
   ValidatorTo.ValidarToken,
   extraControl.GetInstructors
 );
+router.get(
+  "/get-enrollment-status/",
+  ValidatorTo.ValidarToken,
+  extraControl.getEnrollmentStatusEnum
+);
 module.exports= router;
