@@ -1,5 +1,7 @@
 import { prisma } from "../../../data/postgres";
 
+// TODO clean code and add try and catch, if all is working as intended
+
 export class GetStageOfSeminarianFilter {
   public static async filter(stage: string, seminarians: string[]) {
 
