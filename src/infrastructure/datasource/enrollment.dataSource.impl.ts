@@ -9,23 +9,51 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
+  GetStageOfSeminarianDto,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
+import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter"
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
-  async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
-    const academicStatus = await prisma.enrollment.findMany({
-      where: { seminarian_id: GetDto.seminarian_id },
-      include: { subject: { include: { course: true } } },
+
+  async getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
+    const seminarians = await prisma.seminarian.findMany({
+      where: { status: "ACTIVO" }, select: {id:true},
     });
+
+    const seminariansArray = seminarians.map(seminarians => seminarians.id);
+
+    console.log({ seminariansArray });
+
+    const result = GetStageOfSeminarianFilter.filter(dto.stage, seminariansArray);
+
+    return result;
+  }
+
+  async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
+    const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany(
+      {
+        where: {
+          seminarian_id: GetDto.seminarian_id,
+          NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+        },
+        include: { subject: { include: { course: true } } },
+      }
+    );
+
+    //console.log("after prisma consult: ", { academicStatus });
 
     const subjectsToEnroll = EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
       GetDto.seminarian_id!
     );
 
-    console.log(typeof academicStatus); // this is a object
-    console.log(academicStatus);
+    /*academicStatus.map((item) => {
+      if (item.status != "CURSANDO") console.log(item.subject_id)});*/
+    //academicStatus.map(item => item.subject_id)
+
+    /*console.log(typeof academicStatus); // this is a object
+    console.log(academicStatus);*/
 
     return subjectsToEnroll;
   }
@@ -135,3 +163,21 @@ interface DtoValidate {
   academic_term_id?: number;
   status?: EnrollmentStatus;
 }
+
+export interface SeminarianStatus {
+  seminarian_id: string;
+  subject_id: number;
+  academic_term_id: number;
+  status: string;
+  subject: {
+    id: number;
+    course_id: number;
+    description: string;
+    status: boolean;
+    precedent: number | null;
+    semester: number;
+    academic_field_id: number;
+    course: object;
+  };
+}
+[];

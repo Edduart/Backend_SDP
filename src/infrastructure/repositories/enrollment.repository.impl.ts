@@ -8,10 +8,14 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
+  GetStageOfSeminarianDto,
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
+  getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
+    return this.dataSource.getStageOfSeminarian(dto);
+  }
   getAcademicStatus(dto: GetAcademicStatusDto): Promise<object> {
     return this.dataSource.getAcademicStatus(dto);
   }

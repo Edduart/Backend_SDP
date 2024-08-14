@@ -13,6 +13,7 @@ router.get(
   "/academic-status/:seminarian_id",
   enrollmentController.getAcademicStatus
 );
+router.get("/seminarian-stage/", enrollmentController.getStageOfSeminarian);
 
 router.post("/", enrollmentController.create);
 router.get("/", enrollmentController.get);

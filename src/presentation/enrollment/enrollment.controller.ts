@@ -11,11 +11,30 @@ import {
   GetAcademicStatusDto,
   DeleteEnrollmentDto,
   GetAcademicStatus,
+  GetStageOfSeminarianDto,
+  getStageOfSeminarian
 } from "../../domain";
+
 import { ValidatePermission } from "../services/permissionValidator";
 
 export class EnrollmentController {
   constructor(private readonly repository: EnrollmentRepository) {}
+
+  public getStageOfSeminarian = (req: Request, res: Response) => {
+
+        const [error, getDto] = GetStageOfSeminarianDto.get(req.query);
+        if (error) return res.status(400).json({ error });
+
+        new getStageOfSeminarian(this.repository)
+          .execute(getDto!)
+          .then((enrollment) =>
+            res
+              .set({ "Access-Control-Expose-Headers": "auth" })
+              .json(enrollment)
+          )
+          .catch((error) => res.status(400).json({ error }));
+
+  }
 
   public getAcademicStatus = (req: Request, res: Response) => {
     console.log("academic status get");
