@@ -3,6 +3,7 @@ import { SeminarianStatus } from "../enrollment.dataSource.impl";
 
 
 // TODO if all its okay after all test then clean code and comments, add try and catch too 
+
 export class EnrollmentSubjectFilter {
   static async subjectFilter(
     enrollmentStatus: SeminarianStatus[],
@@ -10,6 +11,8 @@ export class EnrollmentSubjectFilter {
   ): Promise<object> {
     console.log("running filter");
     //console.log({ enrollmentStatus });
+
+    // FIXME case where a new subject will lower the seminarian stage
 
     let seminarianStage: number = 1;
     let seminarianCourse: number[] = [1];
@@ -25,7 +28,6 @@ export class EnrollmentSubjectFilter {
     );
 
     for (let i = 1; i < 4; i++) {
-
       const subjects = await prisma.stage.findMany({
         where: { id: seminarianStage },
         select: {
@@ -49,7 +51,6 @@ export class EnrollmentSubjectFilter {
 
       subjects.map((stage) => {
         for (let j = 0; j < stage.course.length; j++) {
-
           let approveAtLeastOne = false; // in the given course
 
           console.log("J value", j);
@@ -70,9 +71,12 @@ export class EnrollmentSubjectFilter {
           }
           if (approveAtLeastOne == false) {
             break;
-          }else{
-            seminarianCourse.push(seminarianCourse.length + 1)
-            console.log("aprovo una matera del curso actual, pasa al siguiente: ",seminarianCourse);
+          } else {
+            seminarianCourse.push(seminarianCourse.length + 1);
+            console.log(
+              "aprovo una matera del curso actual, pasa al siguiente: ",
+              seminarianCourse
+            );
           }
         }
       });
