@@ -22,7 +22,7 @@ export class CreateInstructorDto {
 
     const completeDate = starting_date.toString() + "T00:00:00.000Z";
     let newStartingDate = new Date(completeDate);
-    starting_date = completeDate;
+    starting_date = newStartingDate;
     console.log(starting_date);
     if (newStartingDate.toString() === "Invalid Date") {
       throw "starting date is not a valid date";

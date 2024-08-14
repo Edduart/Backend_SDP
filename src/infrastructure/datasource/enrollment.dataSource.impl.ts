@@ -24,7 +24,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
       }
     );
 
-    console.log("after prisma consult: ", { academicStatus });
+    //console.log("after prisma consult: ", { academicStatus });
 
     const subjectsToEnroll = EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
