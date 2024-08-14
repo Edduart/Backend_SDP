@@ -30,15 +30,16 @@ export class CreateEnrollmentDto {
       validationErrors.push({
         field: "subject_id",
         message: "subject_id is should be a valid array!",
-      });
+      })};
       if (Array.isArray(subject_id)) {
+        console.log("es array")
         if (subject_id.length == 0) {
           validationErrors.push({
             field: "subject_id",
             message: "subject_id is required!",
           });
         } else {
-          subject_id.forEach((element: number) => {
+          subject_id.forEach((element: any) => {
             if (
               Number.isNaN(element) ||
               !Number.isInteger(element) ||
@@ -46,12 +47,12 @@ export class CreateEnrollmentDto {
             ) {
               validationErrors.push({
                 field: "subject_id",
-                message: "subject_id must be a valid number!",
+                message: "subject_id must be a valid array of numbers > to 0!",
               });
             }
           });
         }
-      }}
+      }
 
     if (!academic_term_id) {
       validationErrors.push({
