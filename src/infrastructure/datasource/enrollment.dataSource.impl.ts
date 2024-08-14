@@ -13,19 +13,20 @@ import {
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
-import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter"
+import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
-
   async getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
     const seminarians = await prisma.seminarian.findMany({
-      where: { status: "ACTIVO" }, select: {id:true},
+      where: { status: "ACTIVO" },
+      select: {
+        id: true,
+        user: {
+          select: { person: { select: { forename: true, surname: true } } },
+        },
+      },
     });
 
-    const seminariansArray = seminarians.map(seminarians => seminarians.id);
-
-    console.log({ seminariansArray });
-
-    const result = GetStageOfSeminarianFilter.filter(dto.stage, seminariansArray);
+    const result = GetStageOfSeminarianFilter.filter(dto.stage, seminarians);
 
     return result;
   }
