@@ -67,14 +67,20 @@ export class EnrollmentController {
   };
 
   public update = (req: Request, res: Response) => {
-    const [error, updateDto] = UpdateEnrollmentDto.update(req.body);
+
+    const enrollment_id = +req.params.id;
+
+    const [error, updateDto] = UpdateEnrollmentDto.update({
+      ...req.body,
+      enrollment_id,
+    });
     if (error) return res.status(400).json({ error });
     new UpdateEnrollment(this.repository)
       .execute(updateDto!)
       .then((enrollment) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
           msj:
-            "Enrollment in subject ID:" + updateDto?.subject_id + ", updated!",
+            "Enrollment in subject updated!",
           enrollment,
         })
       )
@@ -97,11 +103,11 @@ export class EnrollmentController {
   };
 
   public delete = (req: Request, res: Response) => {
-    const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);
-    if (error) return res.status(400).json({ error });
+
+    const id = +req.params.id;
 
     new DeleteEnrollment(this.repository)
-      .execute(deleteDto!)
+      .execute(id)
       .then((Enrollment) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
           msj:

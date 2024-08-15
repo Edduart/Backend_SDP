@@ -44,3 +44,6 @@ export * from "./academic_term";
 export * from "./instruction";
 
 export * from "./enrollment";
+
+export * from "./test";
+export * from "./testScore";
