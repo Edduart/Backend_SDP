@@ -41,6 +41,7 @@ export class GetEnrollmentDto {
     const enrollmentDto: EnrollmentGetInterface[] = enrollment.map(
       (enrollment) => ({
         seminarian_id: enrollment.seminarian_id,
+        enrollment_id: enrollment.enrollment_id,
         subject: {
           id: enrollment.subject.id,
           name: enrollment.subject.description,
@@ -64,6 +65,7 @@ export class GetEnrollmentDto {
 
 export interface EnrollmentGetInterface {
   seminarian_id: string;
+  enrollment_id: number,
   subject: {
     id: number;
     name: string;

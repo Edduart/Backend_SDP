@@ -126,17 +126,19 @@ DROP TABLE IF EXISTS `enrollment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `enrollment` (
+  `enrollment_id` int NOT NULL AUTO_INCREMENT,
   `seminarian_id` varchar(20) NOT NULL,
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'CURSANDO' COMMENT '0 = cursando, 1 = cursada',
-  PRIMARY KEY (`seminarian_id`,`subject_id`,`academic_term_id`),
-  KEY `fk_seminarian_subject_subject_idx` (`subject_id`),
-  KEY `fk_seminarian_academic_term_idx` (`academic_term_id`),
-  CONSTRAINT `fk_seminarian_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
-  CONSTRAINT `fk_seminarian_subject_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
-  CONSTRAINT `fk_seminarian_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
+  PRIMARY KEY (`enrollment_id`,`seminarian_id`,`subject_id`,`academic_term_id`),
+  KEY `fk_enrollment_subject_idx` (`subject_id`),
+  KEY `fk_enrollment_seminarian_idx` (`seminarian_id`),
+  KEY `fk_enrollment_academic_term_idx` (`academic_term_id`),
+  CONSTRAINT `fk_enrollment_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
+  CONSTRAINT `fk_enrollment_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
+  CONSTRAINT `fk_enrollment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -420,7 +422,7 @@ CREATE TABLE `test` (
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
   `description` varchar(200) NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `maximum_score` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
@@ -440,10 +442,12 @@ CREATE TABLE `test_score` (
   `test_id` int NOT NULL,
   `seminarian_id` varchar(20) NOT NULL,
   `score` decimal(5,2) NOT NULL,
+  `enrollment_id` int NOT NULL,
+  `status` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`test_id`),
-  KEY `fk_test_score_enrollment_idx` (`seminarian_id`),
-  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`),
-  CONSTRAINT `fk_text_enrrolment` FOREIGN KEY (`seminarian_id`) REFERENCES `enrollment` (`seminarian_id`)
+  KEY `fk_test_score_enrollment_idx` (`enrollment_id`),
+  CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollment` (`enrollment_id`),
+  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -479,4 +483,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-14 22:09:33
+-- Dump completed on 2024-08-15 12:01:41
