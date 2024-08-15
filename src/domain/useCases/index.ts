@@ -15,3 +15,5 @@ export * from "./subject";
 export * from "./academicterm";
 export * from "./instruction";
 export * from "./enrollment";
+export * from "./test";
+export * from "./testScore";
