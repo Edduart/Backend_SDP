@@ -22,7 +22,7 @@ export class TestDataSourceImpl implements TestDataSource {
       include: { test_score: {include: {enrollment: true}} },
     });
 
-    const test1 = await prisma.enrollment.findMany({select: {seminarian_id: true, subject_id: true,test_score:true}})
+    const test1 = await prisma.enrollment.findMany({include: {test_score: {include: {test: true}}}})
 
     console.log({ test1 });
 

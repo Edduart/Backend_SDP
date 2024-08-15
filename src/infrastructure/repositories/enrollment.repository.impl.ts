@@ -28,7 +28,7 @@ export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   update(dto: UpdateEnrollmentDto): Promise<EnrollmentEntity> {
     return this.dataSource.update(dto);
   }
-  delete(dto: DeleteEnrollmentDto): Promise<EnrollmentEntity> {
-    return this.dataSource.delete(dto);
+  delete(id: number): Promise<EnrollmentEntity> {
+    return this.dataSource.delete(id);
   }
 }

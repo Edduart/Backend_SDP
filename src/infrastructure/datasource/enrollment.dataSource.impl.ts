@@ -81,6 +81,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         academic_term_id: getDto.academic_term_id,
         status: getDto.status,
         subject_id: getDto.subject_id,
+        enrollment_id: getDto.enrollment_id
       },
       include: {
         subject: { select: { id: true, description: true } },
@@ -97,35 +98,30 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   }
 
   async update(updateDto: UpdateEnrollmentDto): Promise<EnrollmentEntity> {
-    await this.validateExistence(updateDto!);
+    //await this.validateExistence(updateDto!);
     const updateEnrollment = await prisma.enrollment.update({
       where: {
-        seminarian_id: updateDto.seminarian_id,
-        subject_id: updateDto.subject_id[0], // check for array
-        academic_term_id: updateDto.academic_term_id,
+        enrollment_id: 1
       },
       data: {
-        academic_term_id: updateDto.academic_term_id,
         status: updateDto.status as EnrollmentStatus,
       },
     });
     return EnrollmentEntity.fromObject(updateEnrollment);
   }
 
-  async delete(DeleteDto: DeleteEnrollmentDto): Promise<EnrollmentEntity> {
-    await this.validateExistence(DeleteDto!, true);
+  async delete(id: number): Promise<EnrollmentEntity> {
+    //await this.validateExistence(DeleteDto!, true);
     const deleteEnrollment = await prisma.enrollment.update({
       where: {
-        seminarian_id: DeleteDto.seminarian_id,
-        subject_id: DeleteDto.subject_id[0],
-        academic_term_id: DeleteDto.academic_term_id,
+        enrollment_id: id,
       },
       data: { status: "RETIRADO" },
     });
     return EnrollmentEntity.fromObject(deleteEnrollment);
   }
 
-  async validateExistence(dto: DtoValidate, skip?: boolean) {
+  async validateExistence(dto: DtoValidate, skip?: boolean) { // FIXME need to fix because of db change
     const [enrollment, seminarian, subject, academicTerm] = await Promise.all([
       await prisma.enrollment.findMany({
         where: {
