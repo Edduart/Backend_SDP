@@ -37,3 +37,21 @@ export class GetTestBySubjectDto {
     ];
   }
 }
+
+export interface EnrollmentTestResult {
+  seminarian_id: string;
+  seminarian_surname: string;
+  seminarian_forename: string;
+  subject_name: string;
+  subject_id: number;
+  enrollment_id: number;
+  academic_term_id: number;
+  status: string;
+  test_score: {
+    message?: string;
+    test_description?: string;
+    test_score_out_of_100: string;
+    test_score_out_max_test_score: string;
+  }[];
+}
+[];

@@ -44,7 +44,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
 
     //console.log("after prisma consult: ", { academicStatus });
 
-    const subjectsToEnroll = EnrollmentSubjectFilter.subjectFilter(
+    const subjectsToEnroll = await EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
       GetDto.seminarian_id!
     );
