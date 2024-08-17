@@ -3,6 +3,9 @@ import { EnrollmentTestResult } from '../../domain';
 
 export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: EnrollmentTestResult[]) {
     const doc = new PDFDocument({ font: 'Times-Roman' });
+    doc.font('Times-Roman', 12)
+
+
     doc.image('./images/assests/backgproundcolored.png', 25,65,{
         fit:[100,100],
         align:'right',
@@ -38,27 +41,21 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.font('Times-Roman', 12).text(forename_fixed+surname_fixed, {align: 'center'});
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico" + data[0]. + "obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", );
-    doc.font('Times-Roman', 12)
+    let startinyear = data[0].start_date?.split('-')[0]
+    let endyeard = data[0].end_date?.split('-')[0]
+    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico " +startinyear + "-"+ endyeard+ " obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", {indent: 30,});
+    
     doc.on("data", dataCB);
     doc.on("end", endCB);
-    //Crear el array de areas
-    //cambiar academic field a delegate
-    // Pipe the document to the readable stream
-    // Define your table data
     doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
-    
+    let materias: string[][] = [];
+    data.forEach(element => {
+        //materias.push([element.subject_name, element.]);
+    });    
     const table = {
         headers: [{ label: '   Asignatura', headerColor: "#FFFFFF"}, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },
-            { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }, 
-            { label: 'Semestre', property: 'semestre', headerColor: '#FFFFFF' }],
-        rows: [["pollo", "1", "1", "1"], ["pollo", "1", "1", "1"]]
+            { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }],
+        rows: [["pollo", "1", "1"], ["pollo", "1", "1"]]
     }
     await doc.table(table, { 
         divider:{
@@ -66,24 +63,60 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
             header:{disabled: true}
         },
         columnSpacing: 10,
-        columnsSize: [350, 40, 50,50]
+        columnsSize: [350, 40, 50]
     });
-/*
-    data.forEach(async actual => {
-        let materias: string[][] = [];
-        actual.subjects.forEach(element => {
-        materias.push([element.name, element.preceden]); 
-    });
-        const table = {
-            title: actual.name,
-            headers: [{ label: 'ASIGNATURA', property: 'area', headerColor: 'blue' }, { label: 'PRECEDIDA POR', property: 'asignatura', headerColor: 'blue' }],
-            rows: materias
-        };
-        await doc.table(table, {});
+    doc.font('Times-Roman', 12).text("La escala de calificaciones es del UNO (01) al DIEZ (10) y la nota mínima aprobatoria es de SEIS (06) puntos.", {indent: 30,});
+    doc.moveDown();
+    let date = new Date();
+    let day = date.getDay()
+    let month = Getmonth(date.getMonth())
+    let year = date.getFullYear(); 
+    doc.font('Times-Roman', 12).text("Certificación que se expide a petición de la parte interesada, en Barquisimeto, a los " + day + " días del mes de " + month + " " + year + "", {indent: 30,});
     
-    });
-    */
     // End the document
     doc.end();
 
+}
+
+function Getmonth(id: number){
+    switch (id) {
+        case    1:
+            return "enero";
+            break;
+        case    2:
+            return "febrero";
+            break;
+        case    3:
+            return "marzo";
+            break;
+        case    4:
+            return "abril";
+            break;
+        case    5:
+            return "mayo";
+            break;
+        case    6:
+            return "junio";
+            break;
+        case    7:
+            return "julio";
+            break;
+        case    8:
+            return "agosto";
+            break;
+        case    9:
+            return "septiembre";
+            break;
+        case    10:
+            return "octubre";
+            break;
+        case    11:
+            return "noviembre";
+            break;
+        case    12:
+            return "diciembre";
+            break;
+        default:
+            break;
+    }
 }
