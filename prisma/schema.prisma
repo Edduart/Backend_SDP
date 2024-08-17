@@ -253,7 +253,7 @@ model test {
   subject_id       Int
   academic_term_id Int
   description      String      @db.VarChar(200)
-  status           Boolean     @default(true) @db.TinyInt
+  status           Boolean        @default(true) @db.TinyInt
   maximum_score    Decimal     @db.Decimal(5, 2)
   instruction      instruction @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
   test_score       test_score?

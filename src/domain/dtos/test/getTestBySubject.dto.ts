@@ -42,11 +42,14 @@ export interface EnrollmentTestResult {
   seminarian_id: string;
   seminarian_surname: string;
   seminarian_forename: string;
-  subject_name: string;
   subject_id: number;
+  subject_name: string;
+  subject_status: number;
   enrollment_id: number;
   academic_term_id: number;
-  status: string;
+  start_date: string | null;
+  end_date: string | null;
+  academic_term_status: number;
   test_score: {
     message?: string;
     test_description?: string;

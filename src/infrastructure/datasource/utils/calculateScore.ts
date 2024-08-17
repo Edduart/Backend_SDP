@@ -1,12 +1,16 @@
 import { prisma } from "../../../data/postgres";
 import{EnrollmentTestResult} from "../../../domain/dtos/test/getTestBySubject.dto"
 
+import {formatDate } from "../../../presentation/utils/formatDate"
+
 
 // TODO clean code and add try and catch, if all is working as intended
 
 export class calculateTestScore {
   public static async calculateTestScoreFromSubject(testScoreBySubject: any[]) {
     const decimalNumbers: number = 2;
+
+    console.log(testScoreBySubject.map(test=> test));
 
     if (testScoreBySubject.length == 0) {
       console.log("No score to calculate");
@@ -25,11 +29,16 @@ export class calculateTestScore {
             seminarian_id: subject.seminarian_id,
             seminarian_surname: subject.seminarian.user.person.surname,
             seminarian_forename: subject.seminarian.user.person.forename,
-            subject_name: subject.subject.description,
             subject_id: subject.subject_id,
+            subject_name: subject.subject.description,
+            subject_status: subject.status,
             enrollment_id: subject.enrollment_id,
             academic_term_id: subject.academic_term_id,
-            status: subject.status,
+            start_date: formatDate(
+              subject.academic_term.start_date.toISOString()
+            ),
+            end_date: formatDate(subject.academic_term.end_date.toISOString()),
+            academic_term_status: subject.academic_term.status,
             test_score:
               subject.test_score.length === 0
                 ? [{ error: "no test added by the teacher!" }]

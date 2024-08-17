@@ -7,7 +7,7 @@ import {
   UpdateTestDto,
   GetTestBySubjectDto,
   GetTestBySubject,
-  EnrollmentTestResult
+  EnrollmentTestResult,
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
@@ -32,7 +32,7 @@ export class TestDataSourceImpl implements TestDataSource {
             },
           },
         },
-        test_score: { include: { test: true } },
+        test_score: { include: { test: true } }, academic_term: {select:{start_date:true, end_date:true, status: true}}
       },
     });
     testScoreBySubject.map((test) => test.subject.description);
@@ -55,6 +55,8 @@ export class TestDataSourceImpl implements TestDataSource {
     });
 
     await this.calculateMaxTestConstrain(testExistingQuantity, dto);
+
+    throw "stop after count"
 
     const createTestTransaction = await prisma.$transaction(async (tx) => {
       const createTest = await tx.test.create({
@@ -148,7 +150,7 @@ export class TestDataSourceImpl implements TestDataSource {
 
     for (
       testCounter = 0;
-      testCounter < testExistingQuantity.length;
+      testCounter <= testExistingQuantity.length;
       testCounter++
     ) {
       console.log({ testCounter });
@@ -156,9 +158,11 @@ export class TestDataSourceImpl implements TestDataSource {
       if (testCounter == 6) {
         throw `there are already ${testCounter} you cannot create more than 6 assignments`;
       }
-      testMaxScoreCounter += Number(
-        testExistingQuantity[testCounter].maximum_score.toFixed(2)
-      );
+
+      if (testCounter == testExistingQuantity.length) break;
+        testMaxScoreCounter += Number(
+          testExistingQuantity[testCounter].maximum_score.toFixed(2)
+        );
     }
 
     const allTestMaxScore = testMaxScoreCounter + dto.maximum_score;
