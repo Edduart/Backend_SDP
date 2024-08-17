@@ -1,4 +1,4 @@
-import { BloodType, Job_Psotion_Enum, InstructorPostion } from "../../domain";
+import { BloodType, Job_Psotion_Enum, InstructorPostion, EnrollmentStatus } from "../../domain";
 import { ValidatePermission } from "../services/permissionValidator";
 import { Request, Response } from "express";
 
@@ -30,6 +30,14 @@ export class ExtraController {
       const result = ValidatePermission(req.body.Permisos, "user", "R");
       //aqui empieza el contenido del controlador
       res.json(InstructorPostion);
+    } catch (error) {
+      res.status(400).json("Acces denied");
+    }
+  }
+  public getEnrollmentStatusEnum(req: Request, res: Response) {
+    try {
+      const result = ValidatePermission(req.body.Permisos, "user", "R");
+      res.json(EnrollmentStatus);
     } catch (error) {
       res.status(400).json("Acces denied");
     }

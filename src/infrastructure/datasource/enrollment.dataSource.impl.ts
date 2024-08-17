@@ -9,23 +9,52 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
+  GetStageOfSeminarianDto,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
+import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
-  async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
-    const academicStatus = await prisma.enrollment.findMany({
-      where: { seminarian_id: GetDto.seminarian_id },
-      include: { subject: { include: { course: true } } },
+  async getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
+    const seminarians = await prisma.seminarian.findMany({
+      where: { status: "ACTIVO" },
+      select: {
+        id: true,
+        user: {
+          select: { person: { select: { forename: true, surname: true } } },
+        },
+      },
     });
+
+    const result = GetStageOfSeminarianFilter.filter(dto.stage, seminarians);
+
+    return result;
+  }
+
+  async getAcademicStatus(GetDto: GetAcademicStatusDto): Promise<object> {
+    const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany(
+      {
+        where: {
+          seminarian_id: GetDto.seminarian_id,
+          NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+        },
+        include: { subject: { include: { course: true } } },
+      }
+    );
+
+    //console.log("after prisma consult: ", { academicStatus });
 
     const subjectsToEnroll = EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
       GetDto.seminarian_id!
     );
 
-    console.log(typeof academicStatus); // this is a object
-    console.log(academicStatus);
+    /*academicStatus.map((item) => {
+      if (item.status != "CURSANDO") console.log(item.subject_id)});*/
+    //academicStatus.map(item => item.subject_id)
+
+    /*console.log(typeof academicStatus); // this is a object
+    console.log(academicStatus);*/
 
     return subjectsToEnroll;
   }
@@ -52,6 +81,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         academic_term_id: getDto.academic_term_id,
         status: getDto.status,
         subject_id: getDto.subject_id,
+        enrollment_id: getDto.enrollment_id
       },
       include: {
         subject: { select: { id: true, description: true } },
@@ -68,35 +98,30 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   }
 
   async update(updateDto: UpdateEnrollmentDto): Promise<EnrollmentEntity> {
-    await this.validateExistence(updateDto!);
+    //await this.validateExistence(updateDto!);
     const updateEnrollment = await prisma.enrollment.update({
       where: {
-        seminarian_id: updateDto.seminarian_id,
-        subject_id: updateDto.subject_id[0], // check for array
-        academic_term_id: updateDto.academic_term_id,
+        enrollment_id: 1
       },
       data: {
-        academic_term_id: updateDto.academic_term_id,
         status: updateDto.status as EnrollmentStatus,
       },
     });
     return EnrollmentEntity.fromObject(updateEnrollment);
   }
 
-  async delete(DeleteDto: DeleteEnrollmentDto): Promise<EnrollmentEntity> {
-    await this.validateExistence(DeleteDto!, true);
+  async delete(id: number): Promise<EnrollmentEntity> {
+    //await this.validateExistence(DeleteDto!, true);
     const deleteEnrollment = await prisma.enrollment.update({
       where: {
-        seminarian_id: DeleteDto.seminarian_id,
-        subject_id: DeleteDto.subject_id[0],
-        academic_term_id: DeleteDto.academic_term_id,
+        enrollment_id: id,
       },
       data: { status: "RETIRADO" },
     });
     return EnrollmentEntity.fromObject(deleteEnrollment);
   }
 
-  async validateExistence(dto: DtoValidate, skip?: boolean) {
+  async validateExistence(dto: DtoValidate, skip?: boolean) { // FIXME need to fix because of db change
     const [enrollment, seminarian, subject, academicTerm] = await Promise.all([
       await prisma.enrollment.findMany({
         where: {
@@ -135,3 +160,21 @@ interface DtoValidate {
   academic_term_id?: number;
   status?: EnrollmentStatus;
 }
+
+export interface SeminarianStatus {
+  seminarian_id: string;
+  subject_id: number;
+  academic_term_id: number;
+  status: string;
+  subject: {
+    id: number;
+    course_id: number;
+    description: string;
+    status: boolean;
+    precedent: number | null;
+    semester: number;
+    academic_field_id: number;
+    course: object;
+  };
+}
+[];

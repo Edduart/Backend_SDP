@@ -30,17 +30,8 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `academic_degree`
---
-
-LOCK TABLES `academic_degree` WRITE;
-/*!40000 ALTER TABLE `academic_degree` DISABLE KEYS */;
-/*!40000 ALTER TABLE `academic_degree` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `academic_field`
@@ -60,15 +51,6 @@ CREATE TABLE `academic_field` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `academic_field`
---
-
-LOCK TABLES `academic_field` WRITE;
-/*!40000 ALTER TABLE `academic_field` DISABLE KEYS */;
-/*!40000 ALTER TABLE `academic_field` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `academic_term`
 --
 
@@ -82,17 +64,8 @@ CREATE TABLE `academic_term` (
   `semester` tinyint NOT NULL DEFAULT '1',
   `status` enum('ACTIVO','CULMINADO','EQUIVALENCIAS') NOT NULL DEFAULT 'ACTIVO',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `academic_term`
---
-
-LOCK TABLES `academic_term` WRITE;
-/*!40000 ALTER TABLE `academic_term` DISABLE KEYS */;
-/*!40000 ALTER TABLE `academic_term` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `basic_worker`
@@ -109,15 +82,6 @@ CREATE TABLE `basic_worker` (
   CONSTRAINT `fk_basic_worker_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `basic_worker`
---
-
-LOCK TABLES `basic_worker` WRITE;
-/*!40000 ALTER TABLE `basic_worker` DISABLE KEYS */;
-/*!40000 ALTER TABLE `basic_worker` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `course`
@@ -140,15 +104,6 @@ CREATE TABLE `course` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `course`
---
-
-LOCK TABLES `course` WRITE;
-/*!40000 ALTER TABLE `course` DISABLE KEYS */;
-/*!40000 ALTER TABLE `course` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `diocese`
 --
 
@@ -164,15 +119,6 @@ CREATE TABLE `diocese` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `diocese`
---
-
-LOCK TABLES `diocese` WRITE;
-/*!40000 ALTER TABLE `diocese` DISABLE KEYS */;
-/*!40000 ALTER TABLE `diocese` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `enrollment`
 --
 
@@ -180,27 +126,20 @@ DROP TABLE IF EXISTS `enrollment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `enrollment` (
+  `enrollment_id` int NOT NULL AUTO_INCREMENT,
   `seminarian_id` varchar(20) NOT NULL,
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'CURSANDO' COMMENT '0 = cursando, 1 = cursada',
-  PRIMARY KEY (`seminarian_id`,`subject_id`,`academic_term_id`),
-  KEY `fk_seminarian_subject_subject_idx` (`subject_id`),
-  KEY `fk_seminarian_academic_term_idx` (`academic_term_id`),
-  CONSTRAINT `fk_seminarian_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
-  CONSTRAINT `fk_seminarian_subject_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
-  CONSTRAINT `fk_seminarian_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
+  PRIMARY KEY (`enrollment_id`,`seminarian_id`,`subject_id`,`academic_term_id`),
+  KEY `fk_enrollment_subject_idx` (`subject_id`),
+  KEY `fk_enrollment_seminarian_idx` (`seminarian_id`),
+  KEY `fk_enrollment_academic_term_idx` (`academic_term_id`),
+  CONSTRAINT `fk_enrollment_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
+  CONSTRAINT `fk_enrollment_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
+  CONSTRAINT `fk_enrollment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `enrollment`
---
-
-LOCK TABLES `enrollment` WRITE;
-/*!40000 ALTER TABLE `enrollment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `enrollment` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `foreigner_seminarian`
@@ -220,15 +159,6 @@ CREATE TABLE `foreigner_seminarian` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `foreigner_seminarian`
---
-
-LOCK TABLES `foreigner_seminarian` WRITE;
-/*!40000 ALTER TABLE `foreigner_seminarian` DISABLE KEYS */;
-/*!40000 ALTER TABLE `foreigner_seminarian` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `instruction`
 --
 
@@ -245,19 +175,10 @@ CREATE TABLE `instruction` (
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   KEY `fk_professor_instructor_idx` (`professor_id`),
   CONSTRAINT `fk_professo_subject_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
-  CONSTRAINT `fk_professor_instructor` FOREIGN KEY (`professor_id`) REFERENCES `instructor` (`professor_id`),
+  CONSTRAINT `fk_professor_instructor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`),
   CONSTRAINT `fk_professor_subject_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `instruction`
---
-
-LOCK TABLES `instruction` WRITE;
-/*!40000 ALTER TABLE `instruction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instruction` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `instructor`
@@ -278,15 +199,6 @@ CREATE TABLE `instructor` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `instructor`
---
-
-LOCK TABLES `instructor` WRITE;
-/*!40000 ALTER TABLE `instructor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instructor` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `parish`
 --
 
@@ -301,17 +213,8 @@ CREATE TABLE `parish` (
   PRIMARY KEY (`id`),
   KEY `fk_parish_diocese_idx` (`diocese_id`),
   CONSTRAINT `fk_parish_diocese` FOREIGN KEY (`diocese_id`) REFERENCES `diocese` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `parish`
---
-
-LOCK TABLES `parish` WRITE;
-/*!40000 ALTER TABLE `parish` DISABLE KEYS */;
-/*!40000 ALTER TABLE `parish` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `permission`
@@ -328,15 +231,6 @@ CREATE TABLE `permission` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `permission`
---
-
-LOCK TABLES `permission` WRITE;
-/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `person`
@@ -359,15 +253,6 @@ CREATE TABLE `person` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `person`
---
-
-LOCK TABLES `person` WRITE;
-/*!40000 ALTER TABLE `person` DISABLE KEYS */;
-/*!40000 ALTER TABLE `person` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `phone_number`
 --
 
@@ -382,17 +267,8 @@ CREATE TABLE `phone_number` (
   PRIMARY KEY (`id`),
   KEY `fk_phone_number_person_idx` (`person_id`),
   CONSTRAINT `fk_phone_number_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='descripción podría ser whatsapp, personal, familiar, amigo, etc.';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `phone_number`
---
-
-LOCK TABLES `phone_number` WRITE;
-/*!40000 ALTER TABLE `phone_number` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phone_number` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `professor`
@@ -410,15 +286,6 @@ CREATE TABLE `professor` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `professor`
---
-
-LOCK TABLES `professor` WRITE;
-/*!40000 ALTER TABLE `professor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `professor` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `role`
 --
 
@@ -432,15 +299,6 @@ CREATE TABLE `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `role`
---
-
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `role_permission`
@@ -461,15 +319,6 @@ CREATE TABLE `role_permission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role_permission`
---
-
-LOCK TABLES `role_permission` WRITE;
-/*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `seminarian`
 --
 
@@ -488,15 +337,6 @@ CREATE TABLE `seminarian` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `seminarian`
---
-
-LOCK TABLES `seminarian` WRITE;
-/*!40000 ALTER TABLE `seminarian` DISABLE KEYS */;
-/*!40000 ALTER TABLE `seminarian` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `social_media`
 --
 
@@ -513,17 +353,8 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `social_media`
---
-
-LOCK TABLES `social_media` WRITE;
-/*!40000 ALTER TABLE `social_media` DISABLE KEYS */;
-/*!40000 ALTER TABLE `social_media` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `social_media_category`
@@ -541,15 +372,6 @@ CREATE TABLE `social_media_category` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `social_media_category`
---
-
-LOCK TABLES `social_media_category` WRITE;
-/*!40000 ALTER TABLE `social_media_category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `social_media_category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `stage`
 --
 
@@ -562,15 +384,6 @@ CREATE TABLE `stage` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `stage`
---
-
-LOCK TABLES `stage` WRITE;
-/*!40000 ALTER TABLE `stage` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stage` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `subject`
@@ -598,15 +411,6 @@ CREATE TABLE `subject` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `subject`
---
-
-LOCK TABLES `subject` WRITE;
-/*!40000 ALTER TABLE `subject` DISABLE KEYS */;
-/*!40000 ALTER TABLE `subject` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `test`
 --
 
@@ -618,23 +422,14 @@ CREATE TABLE `test` (
   `subject_id` int NOT NULL,
   `academic_term_id` int NOT NULL,
   `description` varchar(200) NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `maximum_score` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `academic_term_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `test`
---
-
-LOCK TABLES `test` WRITE;
-/*!40000 ALTER TABLE `test` DISABLE KEYS */;
-/*!40000 ALTER TABLE `test` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `test_score`
@@ -647,21 +442,14 @@ CREATE TABLE `test_score` (
   `test_id` int NOT NULL,
   `seminarian_id` varchar(20) NOT NULL,
   `score` decimal(5,2) NOT NULL,
+  `enrollment_id` int NOT NULL,
+  `status` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`test_id`),
-  KEY `fk_test_score_enrollment_idx` (`seminarian_id`),
-  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`),
-  CONSTRAINT `fk_text_enrrolment` FOREIGN KEY (`seminarian_id`) REFERENCES `enrollment` (`seminarian_id`)
+  KEY `fk_test_score_enrollment_idx` (`enrollment_id`),
+  CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollment` (`enrollment_id`),
+  CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `test_score`
---
-
-LOCK TABLES `test_score` WRITE;
-/*!40000 ALTER TABLE `test_score` DISABLE KEYS */;
-/*!40000 ALTER TABLE `test_score` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -685,15 +473,6 @@ CREATE TABLE `user` (
   CONSTRAINT `Role_id` FOREIGN KEY (`Role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -704,4 +483,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-31 20:06:55
+-- Dump completed on 2024-08-15 12:01:41
