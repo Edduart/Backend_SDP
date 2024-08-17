@@ -2,7 +2,11 @@ import { Request, Response } from "express";
 import {
 TestRepository,
 GetTestDto,
-GetTest
+GetTest,
+GetTestBySubjectDto,
+GetTestBySubject, 
+CreateTestDto,
+CreateTest
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
@@ -20,6 +24,39 @@ export class TestController {
       .execute(getDto!)
       .then((test) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(test)
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public getTestBySubject = (req: Request, res: Response) => {
+    console.log("get by subject");
+
+    const [error, getDto] = GetTestBySubjectDto.get(req.query);
+    if (error) return res.status(400).json({ error });
+
+    new GetTestBySubject(this.repository)
+      .execute(getDto!)
+      .then((test) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json(test)
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public create = (req: Request, res: Response) => {
+
+    const [error, createDto] = CreateTestDto.create(req.body);
+
+    console.log("inside create controller", {createDto});
+
+    if (error)
+      return res.status(400).json({ msj: "Data validation errors", error });
+
+    new CreateTest(this.repository)
+      .execute(createDto!)
+      .then((test) =>
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ msj: "Enrollment successful", test })
       )
       .catch((error) => res.status(400).json({ error }));
   };

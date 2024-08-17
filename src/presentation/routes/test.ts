@@ -11,9 +11,9 @@ const testRepository = new TestRepositoryImpl(dataSource);
 const testController = new TestController(testRepository);
 
 
+router.get("/by-subject/", testController.getTestBySubject);
 
-
-//router.post("/", enrollmentController.create);
+router.post("/", testController.create);
 router.get("/", testController.get);
 //router.put("/", enrollmentController.update);
 //router.delete("/", enrollmentController.delete);
