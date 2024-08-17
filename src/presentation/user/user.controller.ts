@@ -27,6 +27,8 @@ export class UserControler {
       .catch((error) => res.status(400).json({ error }));
   };
 
+  
+
   public getById = (req: Request, res: Response) => {
     const id: string = req.params.id;
     new GetUserbyId(this.repository)

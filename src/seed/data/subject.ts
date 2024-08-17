@@ -91,6 +91,7 @@ export const subject = [
     semester: 1,
     academic_field_id: 1,
   },
+  //stage 2
   {
     id: 11,
     course_id: 2,
@@ -253,7 +254,7 @@ export const subject = [
     semester: 1,
     academic_field_id: 4,
   },
-  // begin stage 2, corresponde al ultimo pensum, deberia ser el utilizado este proximo año.
+  // begin stage 3, corresponde al ultimo pensum, deberia ser el utilizado este proximo año.
   {
     id: 29,
     course_id: 5,

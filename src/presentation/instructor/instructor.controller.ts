@@ -8,13 +8,23 @@ import {
   DeleteInstructor,
   CreateInstructorDto,
   UpdateInstructorDto,
+  InstructorFichaUseCase,
 } from "../../domain";
+import { BuildFichaInstructor } from "../docs/ficha.instructor";
 
-import {formatDate} from "../utils/formatDate"
 
 export class InstructorController {
   constructor(private readonly instructorRepository: InstructorRepository) {}
-
+  public ficha = (req: Request, res: Response) => {
+    new InstructorFichaUseCase(this.instructorRepository).execute(req.params.id).then((seminarians)=>{
+      const line =res.writeHead(200,{
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "inline; filename=ficha.pdf"
+      })
+      BuildFichaInstructor((data)=>line.write(data),()=>line.end(), seminarians); 
+    }).catch((error)=>{
+        res.status(418).send("unable to create ID: " + error);})
+}
   public createInstructor = (req: Request, res: Response) => {
     const [error, createInstructorDto] = CreateInstructorDto.create(req.body);
     if (error) return res.status(400).json({ error });
