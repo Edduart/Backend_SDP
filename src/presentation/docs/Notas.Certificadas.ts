@@ -1,13 +1,13 @@
 import PDFDocument from 'pdfkit-table';
+import { EnrollmentTestResult } from '../../domain';
 
-export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: object) {
+export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: EnrollmentTestResult[]) {
     const doc = new PDFDocument({ font: 'Times-Roman' });
     doc.image('./images/assests/backgproundcolored.png', 25,65,{
         fit:[100,100],
         align:'right',
         
     });
-    
     doc.moveDown();
     doc.moveDown();
     doc.font('Times-Bold', 12).text("Arquidiósis de Barquisimeto", {align: 'center'});
@@ -18,11 +18,27 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.moveDown();
     doc.font('Times-Roman', 12).text('El suscrito en su carácter de Control de Estudio del Instituto de Estudios Superiores "Divina Pastora", certifica por medio de la presente que:', {indent: 30,});
     doc.moveDown();
-    doc.font('Times-Roman', 12).text('', {align: 'center'});
+    
     
     //names
-    
+    data[0].seminarian_surname = data[0].seminarian_surname.toLowerCase();
+    let nombre = data[0].seminarian_surname.split(" ");
+    let surname_fixed = "";
+    nombre.forEach(actual => {
+        surname_fixed =  surname_fixed + actual[0].toUpperCase() + actual.slice(1) +" ";
+    }); 
 
+    data[0].seminarian_forename = data[0].seminarian_forename.toLowerCase();
+    let apellido = data[0].seminarian_forename.split(" ");
+    let forename_fixed= "";
+    apellido.forEach(actual => {
+        const frist = 
+        forename_fixed =  forename_fixed + actual[0].toUpperCase() + actual.slice(1) +" ";
+    });
+    doc.font('Times-Roman', 12).text(forename_fixed+surname_fixed, {align: 'center'});
+    doc.moveDown();
+    doc.moveDown();
+    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico" + data[0]. + "obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", );
     doc.font('Times-Roman', 12)
     doc.on("data", dataCB);
     doc.on("end", endCB);
