@@ -3,7 +3,7 @@ export class CreateTestDto {
     public subject_id: number,
     public academic_term_id: number,
     public description: string,
-    public maximum_score: number
+    public maximum_score: number // no allow 0
   ) {}
 
   static create(props: { [key: string]: any }): [object[]?, CreateTestDto?] {
