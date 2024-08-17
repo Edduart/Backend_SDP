@@ -4,7 +4,7 @@ export class InstructionEntity {
     constructor(
         public professor_id:        string |   null,
         public subject_id:          number,
-        public Academic_term_id:    number,
+        public academic_term_id:    number,
         public subject?:           string
       ) {}
       public static fromObject(object: { [key: string]: any }): InstructionEntity {
