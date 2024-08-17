@@ -4,12 +4,12 @@ export class TestEntity {
     public subject_id: number,
     public academic_term_id: number,
     public description: string,
-    public status: number,
+    public status: boolean,
     public maximum_score: number
   ) {}
 
   public static fromObject(object: { [key: string]: any }): TestEntity {
-    const {
+    let {
       id,
       subject_id,
       academic_term_id,
@@ -24,6 +24,7 @@ export class TestEntity {
     if (!description) throw "description is required";
     if (!status) throw "status is required";
     if (!maximum_score) throw "maximum_score is required";
+    //if (maximum_score) maximum_score = maximum_score.Tofixed(2);
 
     return new TestEntity(
       id,

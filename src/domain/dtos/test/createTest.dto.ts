@@ -1,6 +1,5 @@
 export class CreateTestDto {
   constructor(
-    public id: number,
     public subject_id: number,
     public academic_term_id: number,
     public description: string,
@@ -8,14 +7,10 @@ export class CreateTestDto {
   ) {}
 
   static create(props: { [key: string]: any }): [object[]?, CreateTestDto?] {
-    let {
-      id,
-      subject_id,
-      academic_term_id,
-      description,
-      maximum_score,
-    } = props;
+    let { subject_id, academic_term_id, description, maximum_score } = props;
     let validationErrors: ValidationError[] = [];
+
+    console.log({ props });
 
     // TODO reWork validations
 
@@ -26,7 +21,6 @@ export class CreateTestDto {
     return [
       undefined,
       new CreateTestDto(
-        id,
         subject_id,
         academic_term_id,
         description,
