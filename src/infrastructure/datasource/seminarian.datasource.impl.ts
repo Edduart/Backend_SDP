@@ -1,5 +1,4 @@
 import {
-  enrollment_status,
   foreigner_seminarian_stage,
   seminarian_Location,
   seminarian_Ministery,
@@ -90,7 +89,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   const materias = await prisma.enrollment.findMany({
       where:{
         seminarian_id: id,
-        status: enrollment_status.CURSANDO}
+        status: "CURSANDO"}
         ,include:{subject:{include:{course:{include:{stage: true}}}}}});
   if(materias.length > 0){
     etapa = materias[0].subject.course.stage.description;
@@ -101,7 +100,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   const m_vacaciones = await prisma.enrollment.findMany({
       where:{
         seminarian_id: id,
-        status: enrollment_status.APROBADO
+        status: "APROBADO"
       },include:{
         subject:{
           include:{
@@ -137,7 +136,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   const materias_aprobadas_seminarista = await  prisma.enrollment.count({
     where:{
       seminarian_id:id,
-      status: enrollment_status.APROBADO,
+      status: "APROBADO",
       subject:{
         course:{
           stage_id: m_vacaciones[0].subject.course.stage.id

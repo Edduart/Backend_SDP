@@ -52,7 +52,8 @@ export class InstructionDataSourceImple implements InstructionDatasource{
                 subject:true
             }
         })
-        if (check_if_already_exists != null) throw new Error("Acadenuc Term ya existe");
+        console.log(check_if_already_exists)
+        if (check_if_already_exists != null) throw new Error("instruction already exists");
         const result_created = await prisma.instruction.create({data: data});
         return InstructionEntity.fromObject(result_created);
     }
