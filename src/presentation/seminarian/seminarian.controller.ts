@@ -1,13 +1,38 @@
 import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, UpdateSeminarian,
     CreateSeminarianUseCase, Locations_enum, seminarianMinistery_ENUM, SeminarianRepository, 
     StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase,
-    seminarian_status_enum} from "../../domain";
+    seminarian_status_enum,
+    GetByIDSeminarianUseCase,
+    SeminarianFichaUseCase} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
+import { BuildPDF } from "../docs/Constancy";
+import { BuildFicha } from "../docs/ficha";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
+    public ficha = (req: Request, res: Response) => {
+        new SeminarianFichaUseCase(this.repository).execute(req.params.id).then((seminarians)=>{
+            const line =res.writeHead(200,{
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "inline; filename=ficha.pdf"
+              })
+              BuildFicha((data)=>line.write(data),()=>line.end(), seminarians);
+        }).catch((error)=>{
+            res.status(418).send("unable to create ID: " + error);
+        })
+    }
+    public getConstance = async (req: Request, res: Response) => {
+        const line =res.writeHead(200,{
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "inline; filename=constance.pdf"
+        })
+        new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
+            BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
+        })
+        //res.send("constance")
+    }
     public get = async (req: Request, res: Response) => {
         try{
             const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');

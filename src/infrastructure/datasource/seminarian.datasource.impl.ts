@@ -1,4 +1,5 @@
 import {
+  enrollment_status,
   foreigner_seminarian_stage,
   seminarian_Location,
   seminarian_Ministery,
@@ -9,6 +10,7 @@ import {
   BloodType,
   CreateSeminarian,
   DegreeEntity,
+  DocumenDTO,
   ForeingSeminarianEntity,
   GetSeminarianDTO,
   Locations_enum,
@@ -17,13 +19,159 @@ import {
   seminarian_status_enum,
   SeminarianDataSource,
   SeminarianEntity,
+  SeminarianFichaDTO,
   seminarianMinistery_ENUM,
+  SocialMediaDTO,
   SocialMediaEntity,
   UpdateSeminarian,
 } from "../../domain";
 import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
 
 export class SeminarianDataSourceImpl implements SeminarianDataSource {
+
+  async Ficha(id: string): Promise<SeminarianFichaDTO> {
+    const result = await prisma.seminarian.findFirst({where:{id: id}, include:{
+      foreigner_seminarian:true,
+      user:{
+        include:{
+          academic_degree: true,
+          parish:{
+            include:{
+              diocese: true
+            }
+          },
+          person:{
+            include:{
+              phone_number: true,
+              social_media:{
+                include:{
+                  social_media_category_social_media_social_media_categoryTosocial_media_category: true,
+                }
+              }
+            }
+          }
+        }
+      }
+    }})
+    if(result == null)throw new Error("Seminarian does not exist");
+    const [stage,course] = await this.CheckStageAndCourse(id);
+    let instruction_Grade = "BACHILLER";
+    if(result.user.academic_degree.length > 0){
+      instruction_Grade = result.user.academic_degree[0].description;
+    }
+    const cellpones: string[]= result.user.person.phone_number.map((cellphone)=>{
+      return cellphone.phone_number
+    })
+    const redes: SocialMediaDTO[] = result.user.person.social_media.map((socialdata)=>{
+      return new SocialMediaDTO(
+        socialdata.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
+        socialdata.link,
+      )
+    })
+    const stage_fixed = stage.split(" ");
+    const dto = new SeminarianFichaDTO(result.id,
+      result.user.person.profile_picture_path,
+      result.user.person.forename,
+      result.user.person.surname,
+      result.user.person.birthdate,
+      stage_fixed[stage_fixed.length-1], course, result.user.parish.name,
+      result.user.parish.diocese.name,
+      cellpones,
+      redes,
+      result.Location as string,
+      instruction_Grade,
+      result.Ministery == seminarian_Ministery.UNKOWN ? "N/A" : result.Ministery as string
+    )
+    return dto;
+  }
+  async CheckStageAndCourse(id: string): Promise<[string,string]>{
+  let etapa = "PROPEDEUTICO";
+  let curso = "PROPEDÉUTICO";
+  const materias = await prisma.enrollment.findMany({
+      where:{
+        seminarian_id: id,
+        status: enrollment_status.CURSANDO}
+        ,include:{subject:{include:{course:{include:{stage: true}}}}}});
+  if(materias.length > 0){
+    etapa = materias[0].subject.course.stage.description;
+    curso = materias[0].subject.course.description;
+    return [etapa,curso];
+  }
+    //si no hay ninguno siendo cursado, obtengo y ordeno descenciente para saber cual es la etapa mas alta aprobada
+  const m_vacaciones = await prisma.enrollment.findMany({
+      where:{
+        seminarian_id: id,
+        status: enrollment_status.APROBADO
+      },include:{
+        subject:{
+          include:{
+            course:{
+              include:{
+                stage:true
+              }
+            }
+          },
+        }
+      }, orderBy:{
+        subject:{
+          course:{
+            stage_id: 'desc'
+          }
+        }
+      }
+  });
+    //si no hay nada, pues retorno propedeutico
+  if(m_vacaciones.length == 0){return [etapa, curso];}
+    //ahora que tengo el ID de la etapa mas alta aprobada, debo revisar que haya aprobado todas las materias de esa etapa
+  //primero cuento todas las materias activas con el numero de la etapa
+  const materias_de_la_etapa = await prisma.subject.count({
+    where:{
+      status: true,
+      course:{
+        
+        stage_id: m_vacaciones[0].subject.course.stage.id
+      }
+    }
+  })
+  //segundo, cuento cuantas materias aprobadas tiene el seminarista con el id de la etapa
+  const materias_aprobadas_seminarista = await  prisma.enrollment.count({
+    where:{
+      seminarian_id:id,
+      status: enrollment_status.APROBADO,
+      subject:{
+        course:{
+          stage_id: m_vacaciones[0].subject.course.stage.id
+        }
+      }
+    }
+  });
+  //ahora paso a chequear que tengan el mismo numero, si tiene el mismo numero significa que aprobó toda la etapa y pasa a la siguiente, si no, se queda en la actual
+  if(materias_de_la_etapa == materias_aprobadas_seminarista){
+    //en cambio, si pasó todas las materias, debo pasar la etapa siguiente, pero si es 3 entonces lo dejo igual
+    if(m_vacaciones[0].subject.course.stage.id == 3){ 
+      etapa = m_vacaciones[0].subject.course.stage.description
+      curso = m_vacaciones[0].subject.course.description
+      return [etapa, curso];
+    }else{
+      const name_stage_auxiliary = await prisma.stage.findFirst({
+        where:{id: m_vacaciones[0].subject.course.stage.id+1}
+      })
+      etapa = name_stage_auxiliary!.description
+      curso = m_vacaciones[0].subject.course.description
+      return [etapa, curso];
+    }
+  }else{
+    //si no pasó todas las materias entonces retorno el nombre de la etapa actual
+    etapa = m_vacaciones[0].subject.course.stage.description;
+    curso = m_vacaciones[0].subject.course.description
+    return [etapa, curso];
+  }
+  }
+  async getByID(id: string): Promise<DocumenDTO> {
+    const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
+    if(result == null)throw new Error("Seminarian does not exists");
+    return DocumenDTO.fromdb({id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname})
+  }
   async get(data: GetSeminarianDTO): Promise<SeminarianEntity[]> {
     let where_clause_foreing = undefined;
     //if the foreing clause is not undefined we pass to assing data

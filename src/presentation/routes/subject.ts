@@ -8,6 +8,7 @@ const router = Router();
 const datasource = new SubjectDataSourceImpl();
 const Repository = new SubjectRepositoryImpl(datasource);
 const subControl = new SubjectControler(Repository);
+router.get('/pensum', subControl.Pensum);
 router.put('/', ValidatorTo.ValidarToken, subControl.Update);
 router.post('/', ValidatorTo.ValidarToken, subControl.Create);
 router.get('/', ValidatorTo.ValidarToken, subControl.Get);

@@ -56,14 +56,14 @@ export async function parseUserData(req: any, person: CreatePerson) {
   try {
     const origin = await JSON.parse(req); // check that is only a string
     const hashedPassword = await encode(origin.persona.id);
-    const degrees: CreateDegree[] | undefined = origin.user.degree.map(
+    const degrees: CreateDegree[] | undefined =  origin.user.degree !=null ? origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
         new CreateDegree(
           origin.persona.id,
           degree_Actual.description,
           degree_Actual.link
         )
-    );
+    ) : undefined
     const userData = new CreateUserDTO(
       person,
       degrees,

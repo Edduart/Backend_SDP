@@ -2,12 +2,16 @@ import {
   CreateInstructorDto,
   InstructorDataSource,
   InstructorEntity,
+  instructorFichaDTO,
   InstructorRepository,
   UpdateInstructorDto,
 } from "../../domain";
 
 export class InstructorRepositoryImpl implements InstructorRepository {
   constructor(private readonly datasource: InstructorDataSource) {}
+  Ficha(id: string): Promise<instructorFichaDTO> {
+    return this.datasource.Ficha(id);
+  }
   create(createDto: CreateInstructorDto): Promise<InstructorEntity> {
     return this.datasource.create(createDto);
   }

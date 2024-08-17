@@ -1,5 +1,5 @@
 import { prisma } from "../../data/postgres";
-import { academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
+import { subjectPensumDTO, academicFieldEntity, CreateSubjectDTO, GetSubjectDTO, instruction_dto, Stage_PensumDTO, SubjectDataSource, SubjectDeliver, SubjectEntity, UpdateSubjectDTO } from "../../domain";
 
 export class SubjectDataSourceImpl implements SubjectDataSource {
     async Get_fields(): Promise<academicFieldEntity[]> {
@@ -134,5 +134,29 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
                 }else throw new Error("La materia que prela no puede ser de un semestre mayor o igual")
             }else throw new Error("La materia que prela no puede ser de un curso mayor")
         }else throw new Error("La materia que prela no existe o está desactivada")
+    }
+    async Pensum(): Promise <Stage_PensumDTO[]> {
+       
+        const stages = await prisma.stage.findMany({include:{academic_field:{
+            include:{
+                subject:{
+                    include:{
+                        subject: true
+                    }
+                }
+            }
+        }}});
+        let subjects: subjectPensumDTO[];
+        const pensum: Stage_PensumDTO[] = stages.map((stage_actual)=>{
+            subjects = []
+            stage_actual.academic_field.map((field_actual)=>{
+                field_actual.subject.map((materia_actual)=>{
+                    subjects.push(new subjectPensumDTO(materia_actual.subject != null ? materia_actual.subject.description : " ", materia_actual.description))
+                })
+            })
+            
+            return new Stage_PensumDTO(subjects, stage_actual.description);
+        });
+        return pensum
     }
 }

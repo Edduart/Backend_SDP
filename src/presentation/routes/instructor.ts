@@ -11,7 +11,7 @@ const instructorRepository = new InstructorRepositoryImpl(
 const instructorController = new InstructorController(
   instructorRepository
 );
-
+router.get("/ficha/:id", instructorController.ficha)
 router.post("/", instructorController.createInstructor);
 router.get("/", instructorController.getInstructors);
 router.get("/:id", instructorController.getInstructorById);

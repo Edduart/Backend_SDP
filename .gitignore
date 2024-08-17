@@ -3,3 +3,4 @@
 /postgres
 backup.data/
 migrations/
+images/
