@@ -23,6 +23,7 @@ export class TestDataSourceImpl implements TestDataSource {
         academic_term_id: dto.academic_term_id,
         subject_id: dto.subject_id,
         enrollment_id: dto.enrollment_id,
+        status: dto.status
       },
       include: {
         subject: { select: { description: true } },
@@ -33,7 +34,10 @@ export class TestDataSourceImpl implements TestDataSource {
             },
           },
         },
-        test_score: { include: { test: true } }, academic_term: {select:{start_date:true, end_date:true, status: true}}
+        test_score: { include: { test: true } },
+        academic_term: {
+          select: { start_date: true, end_date: true, status: true },
+        },
       },
     });
     testScoreBySubject.map((test) => test.subject.description);
@@ -43,7 +47,7 @@ export class TestDataSourceImpl implements TestDataSource {
       );
     return testScoreCalculated;
   }
-  async create(dto: CreateTestDto): Promise<TestEntity> {
+  async create(dto: CreateTestDto): Promise<object> {
     const enrollment = await this.validateExistAndReturnEnrollment(dto);
 
     const testExistingQuantity = await prisma.test.findMany({
@@ -55,32 +59,20 @@ export class TestDataSourceImpl implements TestDataSource {
       select: { maximum_score: true },
     });
 
-    await this.calculateMaxTestConstrain(testExistingQuantity, dto);
+    //await this.calculateMaxTestConstrain(testExistingQuantity, dto);
 
-    throw "stop after count"
+    
 
-    const createTestTransaction = await prisma.$transaction(async (tx) => {
-      const createTest = await tx.test.create({
-        data: {
-          subject_id: dto.subject_id,
-          academic_term_id: dto.academic_term_id,
-          maximum_score: dto.maximum_score,
-          description: dto.description,
-        },
-      });
-      const createAllTestScore = await tx.test_score.createMany({
-        data: enrollment.map((subject) => ({
-          test_id: createTest.id,
-          enrollment_id: subject.enrollment_id,
-          seminarian_id: subject.seminarian_id,
-          score: 0,
-        })),
-      });
-      console.log("all OK in transaction");
-      console.log({ createAllTestScore });
-      return createTest;
+    const createTest = await prisma.test.createMany({
+      data: dto.tests.map((tests) => ({
+        subject_id: dto.subject_id,
+        academic_term_id: dto.academic_term_id,
+        maximum_score: tests.maximum_score,
+        description: tests.description,
+      })),
     });
-    return TestEntity.fromObject(createTestTransaction);
+
+    return createTest;
   }
   async get(dto: GetTestDto): Promise<object> {
     const test = await prisma.test.findMany({
@@ -139,7 +131,7 @@ export class TestDataSourceImpl implements TestDataSource {
     return enrollment;
   }
 
-  private async calculateMaxTestConstrain(
+  /*private async calculateMaxTestConstrain(
     testExistingQuantity: any[],
     dto: CreateTestDto
   ) {
@@ -161,9 +153,9 @@ export class TestDataSourceImpl implements TestDataSource {
       }
 
       if (testCounter == testExistingQuantity.length) break;
-        testMaxScoreCounter += Number(
-          testExistingQuantity[testCounter].maximum_score.toFixed(2)
-        );
+      testMaxScoreCounter += Number(
+        testExistingQuantity[testCounter].maximum_score.toFixed(2)
+      );
     }
 
     const allTestMaxScore = testMaxScoreCounter + dto.maximum_score;
@@ -176,5 +168,5 @@ export class TestDataSourceImpl implements TestDataSource {
       throw `the sum of all the assignments need to be 100, new assignments ${dto.maximum_score}, total out of: ${allTestMaxScore}`;
 
     console.log(testMaxScoreCounter);
-  }
+  }*/
 }

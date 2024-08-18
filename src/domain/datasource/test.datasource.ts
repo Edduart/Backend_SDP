@@ -8,7 +8,7 @@ import {
 } from "../dtos";
 
 export abstract class TestDataSource {
-  abstract create(dto: CreateTestDto): Promise<TestEntity>;
+  abstract create(dto: CreateTestDto): Promise<object>;
   abstract get(dto: GetTestDto): Promise<object>;
   abstract getTestBySubject(
     dto: GetTestBySubjectDto

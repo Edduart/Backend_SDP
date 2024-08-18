@@ -2,12 +2,11 @@ export class CreateTestDto {
   constructor(
     public subject_id: number,
     public academic_term_id: number,
-    public description: string,
-    public maximum_score: number // no allow 0
+    public tests: test[],
   ) {}
 
   static create(props: { [key: string]: any }): [object[]?, CreateTestDto?] {
-    let { subject_id, academic_term_id, description, maximum_score } = props;
+    let { subject_id, academic_term_id, tests } = props;
     let validationErrors: ValidationError[] = [];
 
     console.log({ props });
@@ -18,15 +17,7 @@ export class CreateTestDto {
       console.error("CreateEnrollmentDto", { validationErrors });
       return [validationErrors];
     }
-    return [
-      undefined,
-      new CreateTestDto(
-        subject_id,
-        academic_term_id,
-        description,
-        maximum_score
-      ),
-    ];
+    return [undefined, new CreateTestDto(subject_id, academic_term_id, tests)];
   }
 }
 
@@ -34,3 +25,8 @@ interface ValidationError {
   field: string;
   message: string;
 }
+
+interface test {
+  description: string;
+  maximum_score: number;
+}[]
