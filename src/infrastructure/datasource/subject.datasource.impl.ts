@@ -120,7 +120,12 @@ export class SubjectDataSourceImpl implements SubjectDataSource {
         const result = await prisma.subject.create({
             data: data,
         });
-        
+        await prisma.instruction.create({
+            data:{
+                subject_id: result.id,
+                academic_term_id: 1
+            }
+        })
         const subjet_created = await this.get(GetSubjectDTO.FindDto(result.id));
         return subjet_created[0];
     }

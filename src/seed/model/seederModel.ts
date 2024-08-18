@@ -14,7 +14,6 @@ export class modelPrismaData {
   callSedder = async (data: modelType) => {
     await data.model({
       data: data.data,
-      skipDuplicates: true,
     });
   };
 }
