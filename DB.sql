@@ -138,7 +138,7 @@ CREATE TABLE `enrollment` (
   CONSTRAINT `fk_enrollment_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `fk_enrollment_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
   CONSTRAINT `fk_enrollment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -428,7 +428,7 @@ CREATE TABLE `test` (
   KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `academic_term_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -440,11 +440,10 @@ DROP TABLE IF EXISTS `test_score`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `test_score` (
   `test_id` int NOT NULL,
-  `seminarian_id` varchar(20) NOT NULL,
   `score` decimal(5,2) NOT NULL,
   `enrollment_id` int NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '1',
-  PRIMARY KEY (`test_id`),
+  `last_edited_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`test_id`,`enrollment_id`),
   KEY `fk_test_score_enrollment_idx` (`enrollment_id`),
   CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollment` (`enrollment_id`),
   CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`)
@@ -483,4 +482,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-15 12:01:41
+-- Dump completed on 2024-08-18 13:26:15

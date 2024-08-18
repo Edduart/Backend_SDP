@@ -249,28 +249,28 @@ model subject {
 }
 
 model test {
-  id               Int         @id @default(autoincrement())
+  id               Int          @id @default(autoincrement())
   subject_id       Int
   academic_term_id Int
-  description      String      @db.VarChar(200)
-  status           Boolean        @default(true) @db.TinyInt
-  maximum_score    Decimal     @db.Decimal(5, 2)
-  instruction      instruction @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
-  test_score       test_score?
+  description      String       @db.VarChar(200)
+  status           Boolean      @default(true)
+  maximum_score    Decimal      @db.Decimal(5, 2)
+  instruction      instruction  @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
+  test_score       test_score[]
 
   @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
   @@index([subject_id, academic_term_id], map: "fk_test_instructor_idx")
 }
 
 model test_score {
-  test_id       Int        @id
-  seminarian_id String     @db.VarChar(20)
-  score         Decimal    @db.Decimal(5, 2)
-  enrollment_id Int
-  status        Int        @default(1) @db.TinyInt
-  enrollment    enrollment @relation(fields: [enrollment_id], references: [enrollment_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
-  test          test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
+  test_id          Int
+  score            Decimal    @db.Decimal(5, 2)
+  enrollment_id    Int        
+  last_edited_date DateTime?  @db.DateTime(0)
+  enrollment       enrollment @relation(fields: [enrollment_id], references: [enrollment_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
+  test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
 
+  @@id([test_id, enrollment_id])
   @@index([enrollment_id], map: "fk_test_score_enrollment_idx")
 }
 

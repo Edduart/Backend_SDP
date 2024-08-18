@@ -197,7 +197,7 @@ CREATE TABLE `enrollment` (
   CONSTRAINT `fk_enrollment_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `fk_enrollment_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
   CONSTRAINT `fk_enrollment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +206,7 @@ CREATE TABLE `enrollment` (
 
 LOCK TABLES `enrollment` WRITE;
 /*!40000 ALTER TABLE `enrollment` DISABLE KEYS */;
-INSERT INTO `enrollment` VALUES (1,'V-123',1,1,'RETIRADO'),(2,'V-123',3,1,'CURSANDO'),(3,'V-123',4,1,'CURSANDO'),(4,'V-123',6,1,'CURSANDO'),(5,'V-123',7,1,'CURSANDO'),(6,'V-123',8,1,'CURSANDO'),(7,'V-123',9,1,'CURSANDO'),(8,'V-123',10,1,'CURSANDO'),(9,'V-123',1,6,'CURSANDO');
+INSERT INTO `enrollment` VALUES (1,'V-123',1,1,'RETIRADO'),(2,'V-123',3,1,'CURSANDO'),(3,'V-123',4,1,'CURSANDO'),(4,'V-123',6,1,'CURSANDO'),(5,'V-123',7,1,'CURSANDO'),(6,'V-123',8,1,'CURSANDO'),(7,'V-123',9,1,'CURSANDO'),(8,'V-123',10,1,'CURSANDO'),(9,'V-123',1,6,'CURSANDO'),(10,'V-1234',3,1,'CURSANDO'),(11,'V-12345',3,1,'CURSANDO');
 /*!40000 ALTER TABLE `enrollment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +265,7 @@ CREATE TABLE `instruction` (
 
 LOCK TABLES `instruction` WRITE;
 /*!40000 ALTER TABLE `instruction` DISABLE KEYS */;
-INSERT INTO `instruction` VALUES ('V-123451',1,6);
+INSERT INTO `instruction` VALUES ('V-123451',1,6),('V-123451',2,6),('V-123451',3,1);
 /*!40000 ALTER TABLE `instruction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -647,7 +647,7 @@ CREATE TABLE `test` (
   KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `academic_term_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -656,7 +656,7 @@ CREATE TABLE `test` (
 
 LOCK TABLES `test` WRITE;
 /*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` VALUES (1,1,6,'primer examen',1,20.00),(2,1,6,'segundo examen',1,20.00),(3,1,6,'tercer examen',1,20.00),(4,1,6,'cuarto examen',1,20.00),(5,1,6,'quinto examen',1,20.00);
+INSERT INTO `test` VALUES (1,1,6,'primer examen',1,20.00),(2,1,6,'segundo examen',1,20.00),(3,1,6,'tercer examen',1,20.00),(4,1,6,'cuarto examen',1,20.00),(15,2,6,'examen 1',1,30.00),(16,3,1,'examen 1',1,30.00),(17,3,1,'examen 1',1,30.00),(18,3,1,'examen 1',1,30.00),(19,3,1,'examen 1',1,30.00),(20,3,1,'examen 3',1,30.00),(21,3,1,'examen 3',1,30.00),(22,3,1,'examen 3',1,30.00),(25,3,1,'examen 3',1,30.00),(27,3,1,'examen 3',1,30.00),(28,3,1,'examen 3',1,30.00),(29,3,1,'examen 3',1,30.00),(30,3,1,'examen 3',1,30.00),(31,3,1,'examen 3',1,30.00),(32,3,1,'examen 3',1,30.00),(33,3,1,'examen 3',1,30.00),(34,3,1,'examen 3',1,30.00),(35,3,1,'examen 3',1,30.00),(36,3,1,'examen 3',1,30.00),(37,3,1,'examen 3',1,30.00),(38,3,1,'examen 3',1,30.00),(39,3,1,'examen 3',1,30.00),(40,3,1,'examen 3',1,30.00),(41,3,1,'examen 3',1,30.00),(42,3,1,'examen 3',1,30.00),(43,3,1,'examen 3',1,30.00),(44,3,1,'examen 3',1,30.00),(45,3,1,'examen 3',1,30.00),(46,3,1,'examen 4',1,30.00),(47,3,1,'examen 5',1,30.00),(52,1,6,'examen 5',1,10.00),(53,1,6,'examen 5',1,10.00),(54,1,6,'examen 5',1,10.00),(55,1,6,'examen 5',1,10.00);
 /*!40000 ALTER TABLE `test` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -669,11 +669,10 @@ DROP TABLE IF EXISTS `test_score`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `test_score` (
   `test_id` int NOT NULL,
-  `seminarian_id` varchar(20) NOT NULL,
   `score` decimal(5,2) NOT NULL,
   `enrollment_id` int NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '1',
-  PRIMARY KEY (`test_id`),
+  `last_edited_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`test_id`,`enrollment_id`),
   KEY `fk_test_score_enrollment_idx` (`enrollment_id`),
   CONSTRAINT `fk_test_score_enrollment` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollment` (`enrollment_id`),
   CONSTRAINT `fk_test_score_test` FOREIGN KEY (`test_id`) REFERENCES `test` (`id`)
@@ -686,7 +685,6 @@ CREATE TABLE `test_score` (
 
 LOCK TABLES `test_score` WRITE;
 /*!40000 ALTER TABLE `test_score` DISABLE KEYS */;
-INSERT INTO `test_score` VALUES (1,'V-123',15.00,9,1),(2,'V-123',10.50,9,1),(3,'V-123',18.00,9,1),(4,'V-123',19.00,9,1),(5,'V-123',11.00,9,1);
 /*!40000 ALTER TABLE `test_score` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,4 +730,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-15 12:01:07
+-- Dump completed on 2024-08-18 13:25:54
