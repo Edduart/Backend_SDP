@@ -10,7 +10,7 @@ const dataSource = new TestDataSourceImpl();
 const testRepository = new TestRepositoryImpl(dataSource);
 const testController = new TestController(testRepository);
 
-
+router.get("/notas/:id", testController.notas);
 router.get("/by-subject/", testController.getTestBySubject);
 
 router.post("/", testController.create);
