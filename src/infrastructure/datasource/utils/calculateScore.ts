@@ -20,8 +20,8 @@ export class calculateTestScore {
         (subject) => {
           let totalSubjectScore: number = 0; //15
           let totalGradedScore: number = 0;
-          let totalSubjectScoreOutOf20: number = 0;
-          let totalGradedScoreOutOf20: number = 0;
+          let totalSubjectScoreOutOf10: number = 0;
+          let totalGradedScoreOutOf10: number = 0;
 
           console.log({ totalSubjectScore });
 
@@ -70,12 +70,12 @@ export class calculateTestScore {
                       console.log(maxScore);
                       console.log([{ totalTestScore }]);
 
-                      totalSubjectScoreOutOf20 = (totalSubjectScore / 100) * 20;
-                      totalGradedScoreOutOf20 = (totalGradedScore / 100) * 20;
+                      totalSubjectScoreOutOf10 = (totalSubjectScore / 100) * 10;
+                      totalGradedScoreOutOf10 = (totalGradedScore / 100) * 10;
 
                       console.log("inside the second loop", {
                         totalSubjectScore,
-                        totalSubjectScoreOutOf20,
+                        totalSubjectScoreOutOf10,
                       });
 
                       return {
@@ -91,9 +91,9 @@ export class calculateTestScore {
               " / " +
               totalGradedScore,
             subject_total_score_out_of_graded_scored:
-              totalSubjectScoreOutOf20.toFixed(decimalNumbers) +
+              totalSubjectScoreOutOf10.toFixed(decimalNumbers) +
               " / " +
-              totalGradedScoreOutOf20,
+              totalGradedScoreOutOf10,
           };
         }
       );
