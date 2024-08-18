@@ -16,6 +16,7 @@ export class TestDataSourceImpl implements TestDataSource {
   async getTestBySubject(
     dto: GetTestBySubjectDto
   ): Promise<EnrollmentTestResult[]> {
+    console.log(dto)
     const testScoreBySubject = await prisma.enrollment.findMany({
       where: {
         seminarian_id: dto.seminarian_id,

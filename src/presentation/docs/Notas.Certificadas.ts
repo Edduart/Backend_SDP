@@ -50,12 +50,12 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.moveDown();
     let materias: string[][] = [];
     data.forEach(element => {
-        //materias.push([element.subject_name, element.]);
+        materias.push([element.subject_name, element.subject_total_score_out_of_graded_scored, element.start_date?.split('-')[0] + "-" +element.end_date?.split('-')[0]]);
     });    
     const table = {
         headers: [{ label: '   Asignatura', headerColor: "#FFFFFF"}, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },
             { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }],
-        rows: [["pollo", "1", "1"], ["pollo", "1", "1"]]
+        rows: materias
     }
     await doc.table(table, { 
         divider:{
