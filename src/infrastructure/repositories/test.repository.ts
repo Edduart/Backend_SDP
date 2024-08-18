@@ -14,7 +14,7 @@ export class TestRepositoryImpl implements TestRepository {
   getTestBySubject(dto: GetTestBySubjectDto): Promise<EnrollmentTestResult[]> {
     return this.dataSource.getTestBySubject(dto);
   }
-  create(dto: CreateTestDto): Promise<TestEntity> {
+  create(dto: CreateTestDto): Promise<object> {
     return this.dataSource.create(dto);
   }
   get(dto: GetTestDto): Promise<object> {
