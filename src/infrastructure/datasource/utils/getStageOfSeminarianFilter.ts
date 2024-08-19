@@ -4,7 +4,11 @@ import { prisma } from "../../../data/postgres";
 
 export class GetStageOfSeminarianFilter {
   public static async filter(stage: string, seminarians: any[]) {
-    
+    if (stage == undefined) {
+      console.log("stage go undefined");
+      stage = "ALL";
+    }
+
     const seminarianInfo = seminarians.map((item) => ({
       id: item.id,
       name: item.user.person.forename,
@@ -16,6 +20,7 @@ export class GetStageOfSeminarianFilter {
     console.log({ seminariansArray });
 
     const stages = {
+      ALL: 0,
       PROPEDEUTICO: 1,
       DISCIPULAR: 2,
       CONFIGURATIVA: 3,
@@ -61,6 +66,7 @@ export class GetStageOfSeminarianFilter {
         subjects.map((stage) => {
           console.log({ stageNumber });
           for (let j = 0; j < stage.course.length; j++) {
+            // courses
             console.log("J value", j);
             console.log("COURSE ID: ", stage.course[j].id);
             console.log("COURSE LENGTH: ");
@@ -97,22 +103,37 @@ export class GetStageOfSeminarianFilter {
 
     console.log({ seminariansStage });
 
-    const filterGivenStage = seminariansStage.filter(
-      (stage) => stage.stage == stageNumber
-    );
+    if (stageNumber != 0) {
+      const filterGivenStage = seminariansStage.filter(
+        (stage) => stage.stage == stageNumber
+      );
 
-    console.log({ filterGivenStage });
+      console.log({ filterGivenStage });
 
-    const stageMap = new Map(
-      filterGivenStage.map((item) => [item.id, item.stage])
-    );
+      const stageMap = new Map(
+        filterGivenStage.map((item) => [item.id, item.stage])
+      );
 
-    const result = seminarianInfo.filter((item) => stageMap.has(item.id)).map((item) => ({
+      const result = seminarianInfo
+        .filter((item) => stageMap.has(item.id))
+        .map((item) => ({
+          ...item,
+          stage: stageMap.get(item.id),
+        }));
+      return result;
+    }
+
+
+     const stageMap = new Map(
+       seminariansStage.map((item) => [item.id, item.stage])
+     );
+
+    const result = seminarianInfo
+      .filter((item) => stageMap.has(item.id))
+      .map((item) => ({
         ...item,
         stage: stageMap.get(item.id),
       }));
-
-      console.log({ result });
 
     return result;
   }
