@@ -51,10 +51,10 @@ export class CreateTestScoreDto {
 
     const prepareTestScore = tests_score.reduce((accumulator: any, test: any) => {
       return accumulator.concat(
-        test.test.map((test2: any) => ({
+        test.test.map((assignment: any) => ({
           enrollment_id: test.enrollment_id,
-          test_id: test2.test_id,
-          score: test2.score,
+          test_id: assignment.test_id,
+          score: assignment.score,
         }))
       );
     }, []);
