@@ -7,7 +7,9 @@ GetTestBySubjectDto,
 GetTestBySubject, 
 CreateTestDto,
 CreateTest,
-EnrollmentStatus
+EnrollmentStatus,
+GetTestForTestScoreDto,
+GetTestForTestScore
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
@@ -15,6 +17,20 @@ import { BuildNotas } from "../docs/Notas.Certificadas";
 
 export class TestController {
   constructor(private readonly repository: TestRepository) {}
+
+  public getTestForTestScore = (req: Request, res: Response) => {
+    console.log("get test for subject");
+
+    const [error, getDto] = GetTestForTestScoreDto.get(req.query);
+    if (error) return res.status(400).json({ error });
+
+    new GetTestForTestScore(this.repository)
+      .execute(getDto!)
+      .then((test) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json(test)
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
 
   public get = (req: Request, res: Response) => {
     console.log("general get");
@@ -44,25 +60,33 @@ export class TestController {
       .catch((error) => res.status(400).json({ error }));
   };
   public notas = (req: Request, res: Response) => {
-
-    const getdto = new GetTestBySubjectDto(undefined, req.params.id, undefined, undefined, EnrollmentStatus.APROBADO)
+    const getdto = new GetTestBySubjectDto(
+      undefined,
+      req.params.id,
+      undefined,
+      undefined,
+      EnrollmentStatus.APROBADO
+    );
 
     new GetTestBySubject(this.repository)
       .execute(getdto)
-      .then((test) =>{
-        const line =res.writeHead(200,{
+      .then((test) => {
+        const line = res.writeHead(200, {
           "Content-Type": "application/pdf",
-          "Content-Disposition": "inline; filename=nota.pdf"
-        })
-        BuildNotas((data)=>line.write(data),()=>line.end(), test);
+          "Content-Disposition": "inline; filename=nota.pdf",
+        });
+        BuildNotas(
+          (data) => line.write(data),
+          () => line.end(),
+          test
+        );
       })
       .catch((error) => res.status(400).json({ error }));
-}
+  };
   public create = (req: Request, res: Response) => {
-
     const [error, createDto] = CreateTestDto.create(req.body);
 
-    console.log("inside create controller", {createDto});
+    console.log("inside create controller", { createDto });
 
     if (error)
       return res.status(400).json({ msj: "Data validation errors", error });
@@ -88,21 +112,6 @@ export class TestController {
             "Enrollment in subject ID:" + updateDto?.subject_id + ", updated!",
           enrollment,
         })
-      )
-      .catch((error) => res.status(400).json({ error }));
-  };
-
-  public create = (req: Request, res: Response) => {
-    const [error, createDto] = CreateEnrollmentDto.create(req.body);
-    if (error)
-      return res.status(400).json({ msj: "Data validation errors", error });
-
-    new CreateEnrollment(this.repository)
-      .execute(createDto!)
-      .then((enrollment) =>
-        res
-          .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Enrollment successful", enrollment })
       )
       .catch((error) => res.status(400).json({ error }));
   };

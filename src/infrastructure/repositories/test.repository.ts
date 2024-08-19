@@ -7,10 +7,15 @@ import {
   UpdateTestDto,
   GetTestBySubjectDto,
   EnrollmentTestResult,
+  GetTestForTestScoreDto,
+  TestForTestScoreResult,
 } from "../../domain";
 
 export class TestRepositoryImpl implements TestRepository {
   constructor(private readonly dataSource: TestDataSource) {}
+  getTestForTestScore(dto: GetTestForTestScoreDto): Promise<TestForTestScoreResult> {
+    return this.dataSource.getTestForTestScore(dto);
+  }
   getTestBySubject(dto: GetTestBySubjectDto): Promise<EnrollmentTestResult[]> {
     return this.dataSource.getTestBySubject(dto);
   }
