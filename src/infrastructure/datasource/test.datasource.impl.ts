@@ -8,22 +8,81 @@ import {
   GetTestBySubjectDto,
   GetTestBySubject,
   EnrollmentTestResult,
+  GetTestForTestScoreDto,
+  TestForTestScoreResult,
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
 
 export class TestDataSourceImpl implements TestDataSource {
+  async getTestForTestScore(
+    dto: GetTestForTestScoreDto
+  ): Promise<TestForTestScoreResult> {
+    console.log({ dto });
+
+    const testsResult = await prisma.test.findMany({
+      where: {
+        AND: [
+          { subject_id: dto.subject_id },
+          { academic_term_id: dto.academic_term_id },
+        ],
+      },
+      select: { id: true, description: true, maximum_score: true },
+    });
+
+    const seminariansResult = await prisma.enrollment.findMany({
+      where: {
+        AND: [
+          { subject_id: dto.subject_id },
+          { academic_term_id: dto.academic_term_id },
+          { status: "CURSANDO" },
+        ],
+      },
+      include: {
+        test_score: { select: { test_id: true, score: true } },
+        seminarian: {
+          select: {
+            user: {
+              select: { person: { select: { forename: true, surname: true } } },
+            },
+          },
+        },
+      },
+    });
+
+    const resultMap: TestForTestScoreResult = {
+      tests: testsResult.map((test) => ({
+        id: test.id,
+        description: test.description,
+        maximum_score: Number(test.maximum_score.toFixed(2)),
+      })),
+
+      seminarians: seminariansResult.map((seminarians: any) => ({
+        enrollment_id: seminarians.enrollment_id,
+        seminarian_id: seminarians.seminarian_id,
+        seminarian_surname: seminarians.seminarian.user.person.forename,
+        seminarian_forename: seminarians.seminarian.user.person.surname,
+        test_score: seminarians.test_score.map((test_score: any) => ({
+          test_id: test_score.test_id,
+          score: test_score.score,
+        })),
+      })),
+    };
+
+    return resultMap;
+  }
+
   async getTestBySubject(
     dto: GetTestBySubjectDto
   ): Promise<EnrollmentTestResult[]> {
-    console.log(dto)
+    console.log(dto);
     const testScoreBySubject = await prisma.enrollment.findMany({
       where: {
         seminarian_id: dto.seminarian_id,
         academic_term_id: dto.academic_term_id,
         subject_id: dto.subject_id,
         enrollment_id: dto.enrollment_id,
-        status: dto.status
+        status: dto.status,
       },
       include: {
         subject: { select: { description: true } },
@@ -60,8 +119,6 @@ export class TestDataSourceImpl implements TestDataSource {
     });
 
     //await this.calculateMaxTestConstrain(testExistingQuantity, dto);
-
-    
 
     const createTest = await prisma.test.createMany({
       data: dto.tests.map((tests) => ({

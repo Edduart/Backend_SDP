@@ -6,11 +6,11 @@ import { ValidatorTo } from "../services/TokenValidator";
 
 const router = Router();
 const dataSource = new TestScoreDataSourceImpl();
-const enrollmentRepository = new TestScoreRepositoryImpl(dataSource);
-const enrollmentController = new TestScoreController(enrollmentRepository);
+const testScoreRepository = new TestScoreRepositoryImpl(dataSource);
+const testScoreController = new TestScoreController(testScoreRepository);
 
-//router.post("/", enrollmentController.create);
-router.get("/", enrollmentController.get);
+router.post("/", testScoreController.create);
+router.get("/", testScoreController.get);
 //router.put("/", enrollmentController.update);
 //router.delete("/", enrollmentController.delete);
 module.exports = router;

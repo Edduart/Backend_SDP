@@ -14,7 +14,7 @@ export class EnrollmentSubjectFilter {
 
     // FIXME case where a new subject will lower the seminarian stage
 
-    let seminarianStage: number = 1;
+    let seminarianStage: number = 1; 
     let seminarianCourse: number[] = [1];
 
     console.log(seminarianCourse.length);
@@ -81,28 +81,6 @@ export class EnrollmentSubjectFilter {
         }
       });
 
-      /*stage.course.map((course) => {
-          
-          course.subject.forEach((subject) => {
-
-            if (!approbatedSubjectsArray.includes(subject.id)) {
-              console.log("no aprobo", subject.id);
-              approveStage = false;
-            } else {
-              coursePassed = true;
-              console.log("uno aprobado", subject.id);
-            }
-          });
-        return course.id;  
-        })
-      );*/
-      //console.log(JSON.stringify(testCourseFilter));
-
-      /*if (coursePassed) {
-        console.log("avanza 1 curso");
-        seminarianCourse.push(seminarianCourse.length + 1);
-        console.log(seminarianCourse);
-      }*/
       console.log({ approveStage });
       if (!approveStage) {
         console.log("se queda en el mismo stage");
