@@ -8,8 +8,9 @@ import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
 import { ValidatePermission } from "../services/permissionValidator";
-import { BuildPDF } from "../docs/Constancy";
+import { BuildPDF } from "../docs/carta_culminacion";
 import { BuildFicha } from "../docs/ficha";
+import { BuildConstance } from "../docs/constance";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public ficha = (req: Request, res: Response) => {
@@ -23,15 +24,21 @@ export class SeminarianControler{
             res.status(418).send("unable to create ID: " + error);
         })
     }
-    public getConstance = async (req: Request, res: Response) => {
+    public getCartaCulminacione = async (req: Request, res: Response) => {
         const line =res.writeHead(200,{
             "Content-Type": "application/pdf",
-            "Content-Disposition": "inline; filename=constance.pdf"
+            "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
         })
         new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
             BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
         })
-        //res.send("constance")
+    }
+    public GetConstance = async (req: Request, res: Response) => {
+        const line =res.writeHead(200,{
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "inline; filename=constance.pdf"
+        })
+        BuildConstance((data)=>line.write(data),()=>line.end(), "V-27984286", "Rodriguez Torealba", "Angel Eduardo", "2023-2024", StageEnum.DISCIPULADO as string)
     }
     public get = async (req: Request, res: Response) => {
         try{

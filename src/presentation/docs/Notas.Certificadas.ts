@@ -78,7 +78,7 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
 
 }
 
-function Getmonth(id: number){
+export function Getmonth(id: number){
     switch (id) {
         case    1:
             return "enero";
