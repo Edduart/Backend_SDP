@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TestScoreRepository, GetTestScoreDto, GetTestScore } from "../../domain";
+import { TestScoreRepository, GetTestScoreDto, GetTestScore, CreateTestScoreDto, CreateTestScore } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
 
@@ -20,6 +20,21 @@ export class TestScoreController {
       .catch((error) => res.status(400).json({ error }));
   };
 
+  public create = (req: Request, res: Response) => {
+    const [error, createDto] = CreateTestScoreDto.create(req.body);
+    if (error)
+      return res.status(400).json({ msj: "Data validation errors", error });
+
+    new CreateTestScore(this.repository)
+      .execute(createDto!)
+      .then((testScore) =>
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ msj: "Test Score creation successful", testScore })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
   /*public update = (req: Request, res: Response) => {
     const [error, updateDto] = UpdateEnrollmentDto.update(req.body);
     if (error) return res.status(400).json({ error });
@@ -35,20 +50,6 @@ export class TestScoreController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  public create = (req: Request, res: Response) => {
-    const [error, createDto] = CreateEnrollmentDto.create(req.body);
-    if (error)
-      return res.status(400).json({ msj: "Data validation errors", error });
-
-    new CreateEnrollment(this.repository)
-      .execute(createDto!)
-      .then((enrollment) =>
-        res
-          .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Enrollment successful", enrollment })
-      )
-      .catch((error) => res.status(400).json({ error }));
-  };
 
   public delete = (req: Request, res: Response) => {
     const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);
