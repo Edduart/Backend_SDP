@@ -44,7 +44,7 @@ export class InstructionDataSourceImple implements InstructionDatasource{
         return list_results;
     }
     async Create(data: CreateInstruction): Promise<InstructionEntity> {
-        const check_if_already_exists = await prisma.instruction.findFirst({
+        const check_if_exists = await prisma.instruction.findFirst({
             where:{
                 subject_id: data.subject_id,
                 academic_term_id: data.academic_term_id
@@ -52,9 +52,18 @@ export class InstructionDataSourceImple implements InstructionDatasource{
                 subject:true
             }
         })
-        console.log(check_if_already_exists)
-        if (check_if_already_exists != null) throw new Error("instruction already exists");
-        const result_created = await prisma.instruction.create({data: data});
+        if (check_if_exists == null) throw new Error("instruction does not exists");
+        const result_created = await prisma.instruction.update({
+            where:{
+                subject_id_academic_term_id:{
+                    subject_id: data.subject_id,
+                    academic_term_id: data.academic_term_id,
+                }
+            },
+            data: {
+                professor_id: data.professor_id
+            }
+        });
         return InstructionEntity.fromObject(result_created);
     }
 
