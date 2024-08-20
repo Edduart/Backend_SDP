@@ -1,4 +1,4 @@
-export const subject = [
+export const subjectNO = [
   //begin stage 1, this is just to test 'propedeutico'
   {
     id: 1,
@@ -14,7 +14,7 @@ export const subject = [
     course_id: 1,
     description: "INTRODUCCIÓN A LA LECTURA DE LA SAGRADA ESCRITURA II",
     status: true,
-    precedent: 1,
+    precedent: null,
     semester: 2,
     academic_field_id: 1,
   },
@@ -41,7 +41,7 @@ export const subject = [
     course_id: 1,
     description: "CATECISMO DE LA IGLESIA CATÓLICA II",
     status: true,
-    precedent: 4,
+    precedent: null,
     semester: 2,
     academic_field_id: 1,
   },
@@ -91,9 +91,10 @@ export const subject = [
     semester: 1,
     academic_field_id: 1,
   },
+  //stage 2
   {
     id: 11,
-    course_id: 1,
+    course_id: 2,
     description: "INTRODUCCIÓN A LA ORACIÓN Y A LA LITURGIA I",
     status: true,
     precedent: null,
@@ -102,16 +103,16 @@ export const subject = [
   },
   {
     id: 12,
-    course_id: 1,
+    course_id: 2,
     description: "INTRODUCCIÓN A LA ORACIÓN Y A LA LITURGIA II",
     status: true,
-    precedent: 11,
+    precedent: null,
     semester: 1,
     academic_field_id: 2,
   },
   {
     id: 13,
-    course_id: 1,
+    course_id: 2,
     description: "ELEMENTOS DE PSICOLOGÍA",
     status: true,
     precedent: null,
@@ -120,7 +121,7 @@ export const subject = [
   },
   {
     id: 14,
-    course_id: 1,
+    course_id: 2,
     description: "ELEMENTOS DE CULTURA HUMANÍSTICA I",
     status: true,
     precedent: null,
@@ -129,16 +130,16 @@ export const subject = [
   },
   {
     id: 15,
-    course_id: 1,
+    course_id: 2,
     description: "ELEMENTOS DE CULTURA HUMANÍSTICA II",
     status: true,
-    precedent: 14,
+    precedent: null,
     semester: 1,
     academic_field_id: 3,
   },
   {
     id: 16,
-    course_id: 1,
+    course_id: 2,
     description: "LENGUAJE Y COMUNICACIÓN I",
     status: true,
     precedent: null,
@@ -147,16 +148,16 @@ export const subject = [
   },
   {
     id: 17,
-    course_id: 1,
+    course_id: 2,
     description: "LENGUAJE Y COMUNICACIÓN II",
     status: true,
-    precedent: 16,
+    precedent: null,
     semester: 1,
     academic_field_id: 3,
   },
   {
     id: 18,
-    course_id: 1,
+    course_id: 2,
     description: "GRAMÁTICA Y REDACCIÓN I",
     status: true,
     precedent: null,
@@ -165,16 +166,16 @@ export const subject = [
   },
   {
     id: 19,
-    course_id: 1,
+    course_id: 2,
     description: "GRAMÁTICA Y REDACCIÓN II",
     status: true,
-    precedent: 18,
+    precedent: null,
     semester: 1,
     academic_field_id: 3,
   },
   {
     id: 20,
-    course_id: 1,
+    course_id: 2,
     description: "TÉCNICAS DE ESTUDIO",
     status: true,
     precedent: null,
@@ -183,7 +184,7 @@ export const subject = [
   },
   {
     id: 21,
-    course_id: 1,
+    course_id: 3,
     description: "PRIMEROS AUXILIOS ",
     status: true,
     precedent: null,
@@ -192,7 +193,7 @@ export const subject = [
   },
   {
     id: 22,
-    course_id: 1,
+    course_id: 3,
     description: "LOS VALORES",
     status: true,
     precedent: null,
@@ -201,7 +202,7 @@ export const subject = [
   },
   {
     id: 23,
-    course_id: 1,
+    course_id: 3,
     description: "AFECTIVIDAD Y SEXUALIDAD",
     status: true,
     precedent: null,
@@ -210,7 +211,7 @@ export const subject = [
   },
   {
     id: 24,
-    course_id: 1,
+    course_id: 3,
     description: "URBANIDAD",
     status: true,
     precedent: null,
@@ -219,7 +220,7 @@ export const subject = [
   },
   {
     id: 25,
-    course_id: 1,
+    course_id: 3,
     description: "MUSICA",
     status: true,
     precedent: null,
@@ -228,7 +229,7 @@ export const subject = [
   },
   {
     id: 26,
-    course_id: 1,
+    course_id: 4,
     description: "DEPORTES",
     status: true,
     precedent: null,
@@ -237,7 +238,7 @@ export const subject = [
   },
   {
     id: 27,
-    course_id: 1,
+    course_id: 4,
     description: "INFORMÁTICA",
     status: true,
     precedent: null,
@@ -246,17 +247,17 @@ export const subject = [
   },
   {
     id: 28,
-    course_id: 1,
+    course_id: 4,
     description: "REALIDAD DIOCESANA",
     status: true,
     precedent: null,
     semester: 1,
     academic_field_id: 4,
   },
-  // begin stage 2, corresponde al ultimo pensum, deberia ser el utilizado este proximo año.
+  // begin stage 3, corresponde al ultimo pensum, deberia ser el utilizado este proximo año.
   {
     id: 29,
-    course_id: 2,
+    course_id: 5,
     description: "LATIN I",
     status: true,
     precedent: null,
@@ -265,7 +266,7 @@ export const subject = [
   },
   {
     id: 30,
-    course_id: 2,
+    course_id: 5,
     description: "LÓGICA I",
     status: true,
     precedent: null,
@@ -274,7 +275,7 @@ export const subject = [
   },
   {
     id: 31,
-    course_id: 2,
+    course_id: 5,
     description: "PSICOLOGÍA GENERAL",
     status: true,
     precedent: null,
@@ -283,7 +284,7 @@ export const subject = [
   },
   {
     id: 32,
-    course_id: 2,
+    course_id: 5,
     description: "HISTORIA DE LA CULTURA",
     status: true,
     precedent: null,
@@ -292,7 +293,7 @@ export const subject = [
   },
   {
     id: 33,
-    course_id: 2,
+    course_id: 5,
     description: "HISTORIA DE LA FILOSOFIA-ANTIGUA",
     status: true,
     precedent: null,
@@ -301,7 +302,7 @@ export const subject = [
   },
   {
     id: 34,
-    course_id: 2,
+    course_id: 6,
     description: "ÉTICA I",
     status: true,
     precedent: null,
@@ -310,7 +311,7 @@ export const subject = [
   },
   {
     id: 35,
-    course_id: 2,
+    course_id: 6,
     description: "DOCUMENTOS SACERDOTALES",
     status: true,
     precedent: null,
@@ -319,7 +320,7 @@ export const subject = [
   },
   {
     id: 36,
-    course_id: 2,
+    course_id: 6,
     description: "TEORÍA DEL CONOCIMIENTO",
     status: true,
     precedent: null,
@@ -328,7 +329,7 @@ export const subject = [
   },
   {
     id: 37,
-    course_id: 2,
+    course_id: 6,
     description: "PEDAGOGÍA PASTORAL",
     status: true,
     precedent: null,
@@ -337,7 +338,7 @@ export const subject = [
   },
   {
     id: 38,
-    course_id: 3,
+    course_id: 7,
     description: "GRIEGO I",
     status: true,
     precedent: null,
@@ -346,7 +347,7 @@ export const subject = [
   },
   {
     id: 39,
-    course_id: 3,
+    course_id: 7,
     description: "SEMINARIO LAUDATO SI",
     status: true,
     precedent: null,
@@ -355,7 +356,7 @@ export const subject = [
   },
   {
     id: 40,
-    course_id: 3,
+    course_id: 7,
     description: "TEODICEA",
     status: true,
     precedent: null,
@@ -363,8 +364,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 38,
-    course_id: 3,
+    id: 41,
+    course_id: 7,
     description: "HISTORIA DE LA FILOSOFIA MODERNA",
     status: true,
     precedent: null,
@@ -372,8 +373,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 39,
-    course_id: 3,
+    id: 42,
+    course_id: 7,
     description: "FILOSOFIA DE LA NATURALEZA",
     status: true,
     precedent: null,
@@ -381,8 +382,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 40,
-    course_id: 3,
+    id: 43,
+    course_id: 8,
     description: "TECNICA DE LA DOCUMENTACIÓN I",
     status: true,
     precedent: null,
@@ -390,8 +391,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 38,
-    course_id: 3,
+    id: 44,
+    course_id: 8,
     description: "ANTROPOLOGÍA FILOSOFICA I",
     status: true,
     precedent: null,
@@ -399,8 +400,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 39,
-    course_id: 3,
+    id: 45,
+    course_id: 8,
     description: "SOCIOLOGÍA",
     status: true,
     precedent: null,
@@ -408,8 +409,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 40,
-    course_id: 3,
+    id: 46,
+    course_id: 8,
     description: "METAFÍSICA I",
     status: true,
     precedent: null,
@@ -417,8 +418,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 38,
-    course_id: 4,
+    id: 47,
+    course_id: 8,
     description: "ORIENTACIÓN A LA TESINA I",
     status: true,
     precedent: null,
@@ -426,8 +427,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 39,
-    course_id: 4,
+    id: 48,
+    course_id: 8,
     description: "SINTESIS FILOSÓFICA I",
     status: true,
     precedent: null,
@@ -435,8 +436,8 @@ export const subject = [
     academic_field_id: 1,
   },
   {
-    id: 40,
-    course_id: 4,
+    id: 49,
+    course_id: 8,
     description: "FILOSOFIA DE LA EDUCACIÓN",
     status: true,
     precedent: null,
@@ -445,4 +446,4 @@ export const subject = [
   },
 ];
 
-// TODO finish the seeder data with real info, also change to lowercase the first stage
+
