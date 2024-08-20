@@ -38,7 +38,7 @@ export class SeminarianControler{
             "Content-Type": "application/pdf",
             "Content-Disposition": "inline; filename=constance.pdf"
         })
-        BuildConstance((data)=>line.write(data),()=>line.end(), "V-27984286", "Rodriguez Torealba", "Angel Eduardo", "2023-2024", StageEnum.DISCIPULADO as string)
+        BuildConstance((data)=>line.write(data),()=>line.end(), "V-27984286", "Rodriguez Torealba", "Angel Eduardo", "2023-2024", "Discipulado")
     }
     public get = async (req: Request, res: Response) => {
         try{

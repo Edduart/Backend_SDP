@@ -47,7 +47,7 @@ export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args
     doc.font('Times-Roman', 18).text(surname + ', ' + forename, {align: 'center'})
     doc.moveDown();
     doc.moveDown();
-    doc.text("Portador de la C.I. Nº:"+ infor +" está inscrito en el lapso académico "+period+", de la "+etapa+".", {
+    doc.font('Times-Roman', 12).text("Portador de la C.I. Nº:"+ infor +" está inscrito en el lapso académico "+period+", de la "+etapa+".", {
         indent: 30
     });
     doc.moveDown();
@@ -66,7 +66,7 @@ export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
-
+    doc.moveDown();
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
@@ -74,10 +74,7 @@ export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args
     doc.moveDown();
     doc.font('Times-Bold', 12).text('Pbro. Lcdo. Frank Reinaldo Dorante Boquett', {align: 'center'});
     doc.font('Times-Bold', 12).text('V-********', {align: 'center'});
-    doc.font('Times-Bold', 12).text('Director Académico', {align: 'center'});
-    doc.moveDown();
-    doc.moveDown();
-    doc.moveDown();
+    doc.font('Times-Bold', 12).text('Rector', {align: 'center'});
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
