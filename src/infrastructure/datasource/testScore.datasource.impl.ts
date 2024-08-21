@@ -10,7 +10,7 @@ import {
 
 export class TestScoreDataSourceImpl implements TestScoreDataSource {
   async create(dto: CreateTestScoreDto): Promise<object> {
-
+    
     await this.validateExist(dto.enrollmentIds, dto.testIds);
 
     const createTestScore = await prisma.test_score.createMany({
@@ -19,6 +19,7 @@ export class TestScoreDataSourceImpl implements TestScoreDataSource {
     });
 
     return createTestScore;
+    
   }
   get(dto: GetTestScoreDto): Promise<object> {
     throw new Error("Method not implemented.");
