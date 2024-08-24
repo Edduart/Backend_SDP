@@ -166,7 +166,7 @@ export const permissions: permisos[] = [
     id:           28,
     name:         "PERMISO PARA ELIMINAR MATERIAS",
     type:         "D",
-    table:        "subject"
+    table:        "SUBJECT"
   },
   {
     id:           29,
