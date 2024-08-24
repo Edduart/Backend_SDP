@@ -35,14 +35,24 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     const academicStatus: SeminarianStatus[] = await prisma.enrollment.findMany(
       {
         where: {
-          seminarian_id: GetDto.seminarian_id,
-          NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+          OR: [
+            {
+              seminarian_id: GetDto.seminarian_id,
+              NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+            },
+            {
+              AND: [
+                { academic_term: { status: "ACTIVO" } },
+                { status: "RETIRADO" },
+              ],
+            },
+          ],
         },
         include: { subject: { include: { course: true } } },
       }
     );
 
-    //console.log("after prisma consult: ", { academicStatus });
+    console.log("after prisma consult: ", academicStatus );
 
     const subjectsToEnroll = await EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
@@ -81,7 +91,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         academic_term_id: getDto.academic_term_id,
         status: getDto.status,
         subject_id: getDto.subject_id,
-        enrollment_id: getDto.enrollment_id
+        enrollment_id: getDto.enrollment_id,
       },
       include: {
         subject: { select: { id: true, description: true } },
@@ -101,7 +111,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     //await this.validateExistence(updateDto!);
     const updateEnrollment = await prisma.enrollment.update({
       where: {
-        enrollment_id: 1
+        enrollment_id: 1,
       },
       data: {
         status: updateDto.status as EnrollmentStatus,
@@ -121,7 +131,8 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     return EnrollmentEntity.fromObject(deleteEnrollment);
   }
 
-  async validateExistence(dto: DtoValidate, skip?: boolean) { // FIXME need to fix because of db change
+  async validateExistence(dto: DtoValidate, skip?: boolean) {
+    // FIXME need to fix because of db change
     const [enrollment, seminarian, subject, academicTerm] = await Promise.all([
       await prisma.enrollment.findMany({
         where: {

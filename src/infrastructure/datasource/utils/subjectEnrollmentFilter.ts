@@ -1,8 +1,7 @@
 import { prisma } from "../../../data/postgres";
 import { SeminarianStatus } from "../enrollment.dataSource.impl";
 
-
-// TODO if all its okay after all test then clean code and comments, add try and catch too 
+// TODO if all its okay after all test then clean code and comments, add try and catch too
 
 export class EnrollmentSubjectFilter {
   static async subjectFilter(
@@ -14,7 +13,7 @@ export class EnrollmentSubjectFilter {
 
     // FIXME case where a new subject will lower the seminarian stage
 
-    let seminarianStage: number = 1; 
+    let seminarianStage: number = 1;
     let seminarianCourse: number[] = [1];
 
     console.log(seminarianCourse.length);
@@ -288,17 +287,17 @@ export class EnrollmentSubjectFilter {
 
       const availableSubjects: SubjectAllowToEnroll = {
         seminarian_id: id,
-        stage: filteredSubjectResult.map((stage) => ({
-          stage: stage.description,
-          course: stage.course.map((course) => ({
+        stage: filteredSubjectResult[0].description,
+        course: filteredSubjectResult.flatMap((stage) =>
+          stage.course.map((course) => ({
             course: course.description,
             subject: course.subject.map((subject) => ({
               id: subject.id,
               name: subject.description,
               semester: subject.semester,
             })), // Empty array to match the interface
-          })),
-        })),
+          }))
+        ),
       };
 
       return availableSubjects;
@@ -306,7 +305,8 @@ export class EnrollmentSubjectFilter {
   }
 }
 
-interface SubjectAllowToEnroll {
+interface SubjectAllowToEnroll1 {
+  // remove later when check is okay
   seminarian_id: string;
   stage: {
     stage: string;
@@ -322,6 +322,19 @@ interface SubjectAllowToEnroll {
 }
 // old
 interface SubjectAllowToEnrollCourseZero {
+  seminarian_id: string;
+  stage: string;
+  course: {
+    course: string;
+    subject: {
+      id: number;
+      name: string;
+      semester: number;
+    }[];
+  }[];
+}
+
+interface SubjectAllowToEnroll {
   seminarian_id: string;
   stage: string;
   course: {
