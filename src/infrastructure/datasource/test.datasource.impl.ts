@@ -144,13 +144,20 @@ export class TestDataSourceImpl implements TestDataSource {
   }
   async update(dto: UpdateTestDto): Promise<TestEntity> {
     const test = await prisma.test.update({
-      where: {id: dto.id},
-      data: dto.values!
-    })
+      where: { id: dto.id },
+      data: dto.values!,
+    });
     return TestEntity.fromObject(test);
   }
   async delete(id: number): Promise<TestEntity> {
-    throw new Error("Method not implemented.");
+    const test = await prisma.test.update({
+      where: { id: id },
+      data: { status: false },
+    });
+
+    console.log(test);
+    
+    return TestEntity.fromObject(test);
   }
 
   private async validateExistAndReturnEnrollment(dto: CreateTestDto) {

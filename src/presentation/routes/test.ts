@@ -17,5 +17,5 @@ router.get("/for-test-score/", testController.getTestForTestScore);
 router.post("/", testController.create);
 router.get("/", testController.get);
 router.put("/:id", testController.update);
-//router.delete("/", enrollmentController.delete);
+router.delete("/:id", testController.delete);
 module.exports = router;

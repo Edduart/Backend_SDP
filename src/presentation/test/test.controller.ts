@@ -11,7 +11,8 @@ EnrollmentStatus,
 GetTestForTestScoreDto,
 GetTestForTestScore,
 UpdateTestDto,
-UpdateTest
+UpdateTest,
+DeleteTest
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
@@ -19,6 +20,22 @@ import { BuildNotas } from "../docs/Notas.Certificadas";
 
 export class TestController {
   constructor(private readonly repository: TestRepository) {}
+
+  public delete = (req: Request, res: Response) => {
+
+    const id = +req.params.id;
+
+    new DeleteTest(this.repository)
+      .execute(id!)
+      .then((test) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
+          msj:
+            "Test ID " + test.id + " disabled!",
+          test,
+        })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
 
   public update = (req: Request, res: Response) => {
     const id = +req.params.id;
@@ -32,8 +49,7 @@ export class TestController {
       .execute(updateDto!)
       .then((test) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
-          msj:
-            "Test in ID:" + updateDto?.id + ", updated!",
+          msj: "Test in ID:" + updateDto?.id + ", updated!",
           test,
         })
       )
@@ -122,22 +138,4 @@ export class TestController {
       )
       .catch((error) => res.status(400).json({ error }));
   };
-
-  /*
-
-  public delete = (req: Request, res: Response) => {
-    const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);
-    if (error) return res.status(400).json({ error });
-
-    new DeleteEnrollment(this.repository)
-      .execute(deleteDto!)
-      .then((Enrollment) =>
-        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
-          msj:
-            "Enrollment of subject ID " + Enrollment.subject_id + " disabled!",
-          Enrollment,
-        })
-      )
-      .catch((error) => res.status(400).json({ error }));
-  };*/
 }
