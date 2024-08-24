@@ -9,7 +9,9 @@ CreateTestDto,
 CreateTest,
 EnrollmentStatus,
 GetTestForTestScoreDto,
-GetTestForTestScore
+GetTestForTestScore,
+UpdateTestDto,
+UpdateTest
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
@@ -17,6 +19,26 @@ import { BuildNotas } from "../docs/Notas.Certificadas";
 
 export class TestController {
   constructor(private readonly repository: TestRepository) {}
+
+  public update = (req: Request, res: Response) => {
+    const id = +req.params.id;
+
+    const [error, updateDto] = UpdateTestDto.update({
+      ...req.body,
+      id,
+    });
+    if (error) return res.status(400).json({ error });
+    new UpdateTest(this.repository)
+      .execute(updateDto!)
+      .then((test) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
+          msj:
+            "Test in ID:" + updateDto?.id + ", updated!",
+          test,
+        })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
 
   public getTestForTestScore = (req: Request, res: Response) => {
     console.log("get test for subject");
@@ -60,7 +82,7 @@ export class TestController {
       .catch((error) => res.status(400).json({ error }));
   };
   public notas = (req: Request, res: Response) => {
-    const getdto = new GetTestBySubjectDto(
+    const getDto = new GetTestBySubjectDto(
       undefined,
       req.params.id,
       undefined,
@@ -69,7 +91,7 @@ export class TestController {
     );
 
     new GetTestBySubject(this.repository)
-      .execute(getdto)
+      .execute(getDto)
       .then((test) => {
         const line = res.writeHead(200, {
           "Content-Type": "application/pdf",
@@ -101,20 +123,7 @@ export class TestController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  /*public update = (req: Request, res: Response) => {
-    const [error, updateDto] = UpdateEnrollmentDto.update(req.body);
-    if (error) return res.status(400).json({ error });
-    new UpdateEnrollment(this.repository)
-      .execute(updateDto!)
-      .then((enrollment) =>
-        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
-          msj:
-            "Enrollment in subject ID:" + updateDto?.subject_id + ", updated!",
-          enrollment,
-        })
-      )
-      .catch((error) => res.status(400).json({ error }));
-  };
+  /*
 
   public delete = (req: Request, res: Response) => {
     const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);

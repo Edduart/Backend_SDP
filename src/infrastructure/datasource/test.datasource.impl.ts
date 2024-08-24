@@ -133,25 +133,21 @@ export class TestDataSourceImpl implements TestDataSource {
   }
   async get(dto: GetTestDto): Promise<object> {
     const test = await prisma.test.findMany({
-      /*where: {
+      where: {
         id: dto.id,
         subject_id: dto.subject_id,
         status: dto.status,
         academic_term_id: dto.academic_term_id,
-      },*/
-      include: { test_score: { include: { enrollment: true } } },
+      },
     });
-
-    const test1 = await prisma.enrollment.findMany({
-      include: { test_score: { include: { test: true } } },
-    });
-
-    console.log({ test1 });
-
-    return test1;
+    return test;
   }
   async update(dto: UpdateTestDto): Promise<TestEntity> {
-    throw new Error("Method not implemented.");
+    const test = await prisma.test.update({
+      where: {id: dto.id},
+      data: dto.values!
+    })
+    return TestEntity.fromObject(test);
   }
   async delete(id: number): Promise<TestEntity> {
     throw new Error("Method not implemented.");
