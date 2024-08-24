@@ -10,7 +10,6 @@ import {
 
 export class TestScoreDataSourceImpl implements TestScoreDataSource {
   async create(dto: CreateTestScoreDto): Promise<object> {
-    
     await this.validateExist(dto.enrollmentIds, dto.testIds);
 
     const createTestScore = await prisma.test_score.createMany({
@@ -19,10 +18,29 @@ export class TestScoreDataSourceImpl implements TestScoreDataSource {
     });
 
     return createTestScore;
-    
   }
-  get(dto: GetTestScoreDto): Promise<object> {
-    throw new Error("Method not implemented.");
+  async get(dto: GetTestScoreDto): Promise<object> {
+    const testScore = await prisma.test_score.findMany({
+      where: { test_id: dto.test_id, enrollment_id: dto.enrollment_id },
+      include: {
+        enrollment: {
+          select: {
+            seminarian: {
+              select: {
+                user: {
+                  select: {
+                    person: {
+                      select: { id: true, forename: true, surname: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return testScore;
   }
   update(dto: UpdateTestScoreDto): Promise<TestScoreEntity> {
     throw new Error("Method not implemented.");
