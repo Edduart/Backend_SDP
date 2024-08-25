@@ -50,7 +50,13 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.moveDown();
     let materias: string[][] = [];
     data.forEach(element => {
-        materias.push([element.subject_name, element.subject_total_score_out_of_graded_scored, element.start_date?.split('-')[0] + "-" +element.end_date?.split('-')[0]]);
+        materias.push([
+          element.subject_name,
+          element.subject_total_score_out_of_graded_scored_10_scale,
+          element.start_date?.split("-")[0] +
+            "-" +
+            element.end_date?.split("-")[0],
+        ]);
     });    
     const table = {
         headers: [{ label: '   Asignatura', headerColor: "#FFFFFF"}, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },

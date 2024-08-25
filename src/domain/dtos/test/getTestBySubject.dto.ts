@@ -55,8 +55,9 @@ export interface EnrollmentTestResult {
     test_description?: string;
     test_score_out_of_100: string;
     test_score_out_max_test_score: string;
+    test_score_was_edited?: string | null;
   }[];
   subject_total_score_out_of_graded_score: string;
-  subject_total_score_out_of_graded_scored: string;
+  subject_total_score_out_of_graded_scored_10_scale: string;
 }
 [];
