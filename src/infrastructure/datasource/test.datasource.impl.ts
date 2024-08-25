@@ -25,6 +25,7 @@ export class TestDataSourceImpl implements TestDataSource {
         AND: [
           { subject_id: dto.subject_id },
           { academic_term_id: dto.academic_term_id },
+          { status: true },
         ],
       },
       select: { id: true, description: true, maximum_score: true },
@@ -118,7 +119,7 @@ export class TestDataSourceImpl implements TestDataSource {
       select: { maximum_score: true },
     });
 
-    //await this.calculateMaxTestConstrain(testExistingQuantity, dto);
+    //await this.calculateMaxTestConstrain(testExistingQuantity, dto); FIXME
 
     const createTest = await prisma.test.createMany({
       data: dto.tests.map((tests) => ({
@@ -133,28 +134,36 @@ export class TestDataSourceImpl implements TestDataSource {
   }
   async get(dto: GetTestDto): Promise<object> {
     const test = await prisma.test.findMany({
-      /*where: {
+      where: {
         id: dto.id,
         subject_id: dto.subject_id,
         status: dto.status,
         academic_term_id: dto.academic_term_id,
-      },*/
-      include: { test_score: { include: { enrollment: true } } },
+      },
     });
-
-    const test1 = await prisma.enrollment.findMany({
-      include: { test_score: { include: { test: true } } },
-    });
-
-    console.log({ test1 });
-
-    return test1;
+    return test;
   }
   async update(dto: UpdateTestDto): Promise<TestEntity> {
-    throw new Error("Method not implemented.");
+    const test = await prisma.test.update({
+      where: { id: dto.id },
+      data: dto.values!,
+    });
+    return TestEntity.fromObject(test);
   }
   async delete(id: number): Promise<TestEntity> {
-    throw new Error("Method not implemented.");
+
+    const checkIfHaveTestScore = await prisma.test_score.findMany({where:{test_id: id}});
+
+    if (checkIfHaveTestScore.length > 0) throw `cannot delete a test if already have seminarians with this test added!`
+
+      const test = await prisma.test.update({
+        where: { id: id },
+        data: { status: false },
+      });
+
+    console.log(test);
+
+    return TestEntity.fromObject(test);
   }
 
   private async validateExistAndReturnEnrollment(dto: CreateTestDto) {

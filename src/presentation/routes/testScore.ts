@@ -11,6 +11,6 @@ const testScoreController = new TestScoreController(testScoreRepository);
 
 router.post("/", testScoreController.create);
 router.get("/", testScoreController.get);
-//router.put("/", enrollmentController.update);
+router.put("/", testScoreController.update);
 //router.delete("/", enrollmentController.delete);
 module.exports = router;
