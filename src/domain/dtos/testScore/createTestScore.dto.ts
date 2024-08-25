@@ -35,7 +35,7 @@ export class CreateTestScoreDto {
           isNaN(Number(test2.score)) ||
           typeof test2.score == "string" ||
           test2.score < 0 ||
-          test2.score > 100
+          test2.score > 20
         )
           throw "data error in any score";
         allScores.push(test2.score);
