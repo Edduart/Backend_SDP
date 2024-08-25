@@ -8,5 +8,5 @@ import {
 export abstract class TestScoreRepository {
   abstract create(dto: CreateTestScoreDto): Promise<object>;
   abstract get(dto: GetTestScoreDto): Promise<object>;
-  abstract update(dto: UpdateTestScoreDto): Promise<TestScoreEntity>;
+  abstract update(dto: UpdateTestScoreDto): Promise<object>;
 }

@@ -25,6 +25,7 @@ export class TestDataSourceImpl implements TestDataSource {
         AND: [
           { subject_id: dto.subject_id },
           { academic_term_id: dto.academic_term_id },
+          { status: true },
         ],
       },
       select: { id: true, description: true, maximum_score: true },
@@ -150,13 +151,18 @@ export class TestDataSourceImpl implements TestDataSource {
     return TestEntity.fromObject(test);
   }
   async delete(id: number): Promise<TestEntity> {
-    const test = await prisma.test.update({
-      where: { id: id },
-      data: { status: false },
-    });
+
+    const checkIfHaveTestScore = await prisma.test_score.findMany({where:{test_id: id}});
+
+    if (checkIfHaveTestScore.length > 0) throw `cannot delete a test if already have seminarians with this test added!`
+
+      const test = await prisma.test.update({
+        where: { id: id },
+        data: { status: false },
+      });
 
     console.log(test);
-    
+
     return TestEntity.fromObject(test);
   }
 

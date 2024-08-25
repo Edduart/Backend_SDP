@@ -266,7 +266,7 @@ model test_score {
   test_id          Int
   score            Decimal    @db.Decimal(5, 2)
   enrollment_id    Int        
-  last_edited_date DateTime?  @db.DateTime(0)
+  last_edited_date DateTime?  @db.DateTime(0) @default(now()) @updatedAt
   enrollment       enrollment @relation(fields: [enrollment_id], references: [enrollment_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
   test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
 

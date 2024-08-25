@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TestScoreRepository, GetTestScoreDto, GetTestScore, CreateTestScoreDto, CreateTestScore } from "../../domain";
+import { TestScoreRepository, GetTestScoreDto, GetTestScore, CreateTestScoreDto, CreateTestScore, UpdateTestScoreDto,UpdateTestScore } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
 
@@ -35,35 +35,19 @@ export class TestScoreController {
       .catch((error) => res.status(400).json({ error }));
   };
 
-  /*public update = (req: Request, res: Response) => {
-    const [error, updateDto] = UpdateEnrollmentDto.update(req.body);
+
+  public update = (req: Request, res: Response) => {
+    const [error, updateDto] = UpdateTestScoreDto.update(req.body);
     if (error) return res.status(400).json({ error });
-    new UpdateEnrollment(this.repository)
+    new UpdateTestScore(this.repository)
       .execute(updateDto!)
-      .then((enrollment) =>
+      .then((test) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
           msj:
-            "Enrollment in subject ID:" + updateDto?.subject_id + ", updated!",
-          enrollment,
+            "Test score updated!",
+          test,
         })
       )
       .catch((error) => res.status(400).json({ error }));
   };
-
-
-  public delete = (req: Request, res: Response) => {
-    const [error, deleteDto] = DeleteEnrollmentDto.delete(req.body);
-    if (error) return res.status(400).json({ error });
-
-    new DeleteEnrollment(this.repository)
-      .execute(deleteDto!)
-      .then((Enrollment) =>
-        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
-          msj:
-            "Enrollment of subject ID " + Enrollment.subject_id + " disabled!",
-          Enrollment,
-        })
-      )
-      .catch((error) => res.status(400).json({ error }));
-  };*/
 }

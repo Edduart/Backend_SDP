@@ -42,19 +42,48 @@ export class TestScoreDataSourceImpl implements TestScoreDataSource {
     });
     return testScore;
   }
-  update(dto: UpdateTestScoreDto): Promise<TestScoreEntity> {
-    throw new Error("Method not implemented.");
+  async update(dto: UpdateTestScoreDto): Promise<object> {
+
+    let count: number = 0;
+    let updateTest: object = {}
+
+    for (const test of Object.values(dto.tests)) {
+      await prisma.test_score.updateMany({
+        where: {
+          enrollment_id: test.enrollment_id,
+          test_id: test.test_id,
+        },
+        data: {
+          score: test.score,
+        },
+      });
+      count++;
+    }
+
+    updateTest = { count };
+
+    return updateTest;
   }
 
   private async validateExist(enrollmentIds: number[], testIds: number[]) {
-    const [enrollment, test] = await Promise.all([
+    const [enrollment, test, test_score] = await Promise.all([
       await prisma.enrollment.findMany({
         where: { enrollment_id: { in: enrollmentIds } },
       }),
       await prisma.test.findMany({
         where: { id: { in: testIds } },
       }),
+      await prisma.test_score.findMany({
+        where: {
+          AND: [
+            { enrollment_id: { in: enrollmentIds } },
+            { test_id: { in: testIds } },
+          ],
+        },
+      }),
     ]);
+
+    console.log("test score check", { test_score }); // if is necessary to check this in both update or create?
 
     if (enrollment.length !== enrollmentIds.length)
       throw "one or more enrollment_id doesn't exist";
