@@ -7,4 +7,5 @@ export abstract class UserRepository {
   abstract getAll(): Promise<object>;
   abstract getById(id: string): Promise<object>;
   abstract getByType(type: string): Promise<object>;
+  abstract RestartPassword(id: string): Promise<String>;
 }

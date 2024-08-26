@@ -7,6 +7,9 @@ import {
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly datasource: UserDataSource) {}
+  RestartPassword(id: string): Promise<String> {
+    return this.datasource.RestartPassword(id);
+  }
   getById(id: string): Promise<object> {
     return this.datasource.getById(id);
   }

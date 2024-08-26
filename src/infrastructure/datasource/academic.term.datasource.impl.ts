@@ -5,7 +5,12 @@ import { AcademicTermDatasource, AcademicTermEntityt, CreateAcademicTerm, GetAca
 export class AcademicTermDataSourceImpl implements AcademicTermDatasource {
     async GetByID(data: GetAcademicTerm): Promise<AcademicTermEntityt> {
         const results = await prisma.academic_term.findFirst({
-            where: {id:data.id}
+            where: {id:data.id,
+                status: {
+                    not: academic_term_status.EQUIVALENCIAS
+                }
+
+            }
         });
         if (results == null)throw new Error("ID Does not exists")
         const entity = AcademicTermEntityt.fromObject(results);

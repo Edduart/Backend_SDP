@@ -6,13 +6,15 @@ import {
   UserTrans,
   GetUsers,
   GetUserbyId,
-  GetUsersByType
+  GetUsersByType,
+  Restart_use
 } from "../../domain";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { compare, encode } from "../services/hash_handler";
 import { ActualizarFecha } from "../../infrastructure";
+import { ValidatePermission } from "../services/permissionValidator";
 
 export class UserControler {
   constructor(private readonly repository: UserRepository) {}
@@ -42,11 +44,18 @@ export class UserControler {
   };
 
   public getAll = (req: Request, res: Response) => {
-    new GetUsers(this.repository)
+    const source = req.headers['Permissions'];
+    try{
+      const result = ValidatePermission(source, "USER", 'R');
+      new GetUsers(this.repository)
       .execute()
       .then((users) =>{
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
     }).catch((error) => res.status(400).json({ error }));
+    }catch(error){
+      res.status(400).json({ error })
+    }
+    
   };
 
   public Login = (req: Request, res: Response) => {
@@ -84,7 +93,15 @@ export class UserControler {
       })
       .catch((error) => res.status(400).json({ error }));
   };
-
+  public Reset = async (req: Request, res: Response) => {
+    new Restart_use(this.repository)
+      .execute(req.body.id)
+      .then((result) => {
+        res
+          .json("Contraseña cambiada").send;
+      })
+      .catch((error) => res.status(400).json({ error }));
+  };
   public ChangePass = async (req: Request, res: Response) => {
     const new_pass = encode(req.body.password);
     const acces_promts = new Login(req.body.id, await new_pass);

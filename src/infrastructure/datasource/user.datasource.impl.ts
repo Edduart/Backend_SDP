@@ -7,9 +7,20 @@ import {
   UserEntity,
   RoleEntity,
 } from "../../domain";
+import { encode } from "../../presentation/services/hashHandler";
 import { filterNullValues } from "../../presentation/utils/FilterNullObject";
 
 export class UserDataSourceImplementation implements UserDataSource {
+  async RestartPassword(id: string): Promise<String> {
+    const password = await encode(id);
+    const actu = await prisma.user.update({
+      where:{person_id:id}, data:{
+        password: password,
+        LastIn: null
+      }
+    })
+    return actu.person_id
+  }
   async getById(id: string): Promise<object> {
     const userById = await prisma.user.findUnique({
       where: { person_id: id },
