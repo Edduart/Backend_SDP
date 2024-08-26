@@ -8,7 +8,7 @@ export class TestScoreRepositoryImpl implements TestScoreRepository {
   get(dto: GetTestScoreDto): Promise<object> {
     return this.dataSource.get(dto);
   }
-  update(dto: UpdateTestScoreDto): Promise<TestScoreEntity> {
+  update(dto: UpdateTestScoreDto): Promise<object> {
     return this.dataSource.update(dto);
   }
 }

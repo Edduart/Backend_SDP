@@ -13,6 +13,8 @@ export class CreateTestDto {
 
     // TODO reWork validations
 
+    // descriptions to uppercase
+
     if (validationErrors.length > 0) {
       console.error("CreateEnrollmentDto", { validationErrors });
       return [validationErrors];

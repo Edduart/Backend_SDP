@@ -1,27 +1,21 @@
-
 export class UpdateTestDto {
-  constructor(
-    public description: string,
-    public status: number,
-    public maximum_score: number
-  ) {}
+  constructor(public id: number, public description: string) {}
   get values() {
     const returnObj: { [key: string]: any } = {};
 
     if (this.description) returnObj.description = this.description;
-    if (this.status) returnObj.status = this.status;
-    if (this.maximum_score) returnObj.maximum_score = this.maximum_score;
 
     return returnObj;
   }
   static update(props: { [key: string]: any }): [string[]?, UpdateTestDto?] {
-    let { description, status, maximum_score } = props;
+  let { id, description } = props;
     let dataErrors: string[] = [];
     if (dataErrors.length > 0) return [dataErrors];
 
+    console.log(props);
 
     // TODO reWork validations
 
-    return [undefined, new UpdateTestDto(description, status, maximum_score)];
+    return [undefined, new UpdateTestDto(id, description.toUpperCase())];
   }
 }

@@ -1,8 +1,7 @@
 import { prisma } from "../../../data/postgres";
-import{EnrollmentTestResult} from "../../../domain/dtos/test/getTestBySubject.dto"
+import { EnrollmentTestResult } from "../../../domain/dtos/test/getTestBySubject.dto";
 
-import {formatDate } from "../../../presentation/utils/formatDate"
-
+import { formatDate } from "../../../presentation/utils/formatDate";
 
 // TODO clean code and add try and catch, if all is working as intended
 
@@ -10,7 +9,7 @@ export class calculateTestScore {
   public static async calculateTestScoreFromSubject(testScoreBySubject: any[]) {
     const decimalNumbers: number = 2;
 
-    console.log(testScoreBySubject.map(test=> test));
+    console.log(testScoreBySubject.map((test) => test));
 
     if (testScoreBySubject.length == 0) {
       console.log("No score to calculate");
@@ -47,7 +46,7 @@ export class calculateTestScore {
                       return {
                         message: "STILL NO GRADED BY THE TEACHER!",
                         test_description: individualTest.test.description,
-                        test_score_out_of_100: "0 / 100",
+                        test_score_out_of_20: "0 / 20",
                         test_score_out_max_test_score:
                           individualTest.test.maximum_score,
                       };
@@ -80,9 +79,15 @@ export class calculateTestScore {
 
                       return {
                         test_description: individualTest.test.description,
-                        test_score_out_of_100: formattedTestScore + " / 100",
+                        test_score_out_of_20: formattedTestScore + " / 20",
                         test_score_out_max_test_score:
                           formattedTotalTestScore + " / " + maxScore,
+                        test_score_was_edited:
+                          individualTest.last_edited_date == null
+                            ? "No"
+                            : formatDate(
+                                individualTest.last_edited_date.toISOString
+                              ()),
                       };
                     }
                   }),
@@ -90,7 +95,7 @@ export class calculateTestScore {
               totalSubjectScore.toFixed(decimalNumbers) +
               " / " +
               totalGradedScore,
-            subject_total_score_out_of_graded_scored:
+            subject_total_score_out_of_graded_scored_10_scale:
               totalSubjectScoreOutOf10.toFixed(decimalNumbers) +
               " / " +
               totalGradedScoreOutOf10,
@@ -112,11 +117,9 @@ export class calculateTestScore {
   ) {
     const testScore: number = individualScore;
     const maxScore: number = maximumTestScore;
-    const totalTestScore: number = (testScore / 100) * maxScore;
+    const totalTestScore: number = (testScore / 20) * maxScore;
 
     return { testScore, maxScore, totalTestScore };
   }
 }
 // any needed interfaces
-
-
