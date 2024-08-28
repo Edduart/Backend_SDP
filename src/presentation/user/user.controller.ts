@@ -77,7 +77,8 @@ export class UserControler {
             const user_to_send = new UserTrans(
               user.person_id,
               user.role.premissions,
-              user.fecha
+              user.fecha,
+              user.role.description
             );
             const token = jwt.sign(
               { ...user_to_send },
