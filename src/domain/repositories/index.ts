@@ -16,3 +16,4 @@ export * from "./instruction.repository";
 export * from "./enrollment.repository";
 export * from "./test.repository";
 export * from "./testScore.repository";
+export * from "./bitacora.repository";

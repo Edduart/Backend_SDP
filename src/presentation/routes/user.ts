@@ -14,7 +14,7 @@ router.get("/user-by-type/", UserControl.getByType);
 router.get("/:id", UserControl.getById);
 router.post('/Login/', ValidatorLogin, UserControl.Login);
 router.post('/logout', ValidatorTo.Eliminate);
-router.post('/reset', UserControl.Reset);
+router.post('/reset', ValidatorTo.ValidarToken, UserControl.Reset);
 router.post('/pass', ValidatorTo.ValidarToken, ValidatorLogin, UserControl.ChangePass)
 
 module.exports= router;

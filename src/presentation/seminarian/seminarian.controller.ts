@@ -42,7 +42,7 @@ export class SeminarianControler{
     }
     public get = async (req: Request, res: Response) => {
         try{
-            const result = ValidatePermission(req.body.Permisos, "seminarian", 'R');
+            const result = ValidatePermission(req.body.Permisos, "SEMINARIAN", 'R');
             const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
             if(error != undefined){
                 console.log("verification errors:" +error);
@@ -62,7 +62,7 @@ export class SeminarianControler{
     }
     public delete = async (req: Request, res: Response) => {
         try{
-            const result = ValidatePermission(req.body.Permisos, "seminarian", 'D');
+            const result = ValidatePermission(req.body.Permisos, "SEMINARIAN", 'D');
             new DeleteSeminarianUseCase(this.repository).execute(req.params.id).then((result) =>{
                 if(typeof result !== 'string'){
                     if (req.body.ayuda != null) {
@@ -83,8 +83,7 @@ export class SeminarianControler{
     public update = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
-            console.log("entro")
-            const result = ValidatePermission(source, "seminarian", 'U');
+            const result = ValidatePermission(source, "SEMINARIAN", 'U');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
             const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);
@@ -133,7 +132,7 @@ export class SeminarianControler{
     public Create = async (req: Request, res: Response) => {
         const source = req.headers['Permissions'];
         try{
-            const result = ValidatePermission(source, "seminarian", 'C');
+            const result = ValidatePermission(source, "SEMINARIAN", 'C');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
             const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);

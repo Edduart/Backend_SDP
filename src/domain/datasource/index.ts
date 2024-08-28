@@ -15,3 +15,4 @@ export * from "./instructuion.datasource";
 export * from "./enrollment.dataSource";
 export * from "./test.datasource";
 export * from "./testScore.datasource";
+export * from "./bitacora.datasource";

@@ -44,6 +44,6 @@ export * from "./academic_term";
 export * from "./instruction";
 
 export * from "./enrollment";
-
+export * from "./bitacora/get";
 export * from "./test";
 export * from "./testScore";
