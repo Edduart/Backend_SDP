@@ -134,7 +134,7 @@ export class TestController {
       .then((test) =>
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Enrollment successful", test })
+          .json({ msj: "Test created successfully", test })
       )
       .catch((error) => res.status(400).json({ error }));
   };

@@ -10,11 +10,38 @@ import {
   GetAcademicStatusDto,
   EnrollmentGetInterface,
   GetStageOfSeminarianDto,
+  EnrollmentTestResult,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
 import { GetStageOfSeminarianFilter } from "./utils/getStageOfSeminarianFilter";
+import { calculateTestScore } from "./utils/calculateScore";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  async updateStatusByFinalSubjectScore() {
+    const testScoreBySubject = await prisma.enrollment.findMany({
+      where: {
+        AND: [{ academic_term: { status: "ACTIVO" } }, { status: "CURSANDO" }],
+      },
+      include: {
+        subject: { select: { description: true } },
+        seminarian: {
+          select: {
+            user: {
+              select: {
+                person: { select: { surname: true, forename: true } },
+              },
+            },
+          },
+        },
+        test_score: { include: { test: true } },
+        academic_term: {
+          select: { start_date: true, end_date: true, status: true },
+        },
+      },
+    });
+    await calculateTestScore.calculateFinalSubjectScore(testScoreBySubject);
+  }
+
   async getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
     const seminarians = await prisma.seminarian.findMany({
       where: { status: "ACTIVO" },
@@ -52,7 +79,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
       }
     );
 
-    console.log("after prisma consult: ", academicStatus );
+    console.log("after prisma consult: ", academicStatus);
 
     const subjectsToEnroll = await EnrollmentSubjectFilter.subjectFilter(
       academicStatus,
@@ -100,7 +127,6 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         },
       },
     });
-
     const enrollmentResponse = await GetEnrollmentDto.getResponse(enrollment);
 
     console.log({ enrollmentResponse });

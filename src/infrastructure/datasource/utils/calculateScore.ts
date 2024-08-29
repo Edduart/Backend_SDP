@@ -5,25 +5,23 @@ import { formatDate } from "../../../presentation/utils/formatDate";
 
 // TODO clean code and add try and catch, if all is working as intended
 
+// TODO minimal grade to 1
+
 export class calculateTestScore {
   public static async calculateTestScoreFromSubject(testScoreBySubject: any[]) {
     const decimalNumbers: number = 2;
-
     console.log(testScoreBySubject.map((test) => test));
-
     if (testScoreBySubject.length == 0) {
       console.log("No score to calculate");
       return testScoreBySubject;
     } else {
       const testFilter: EnrollmentTestResult[] = testScoreBySubject.map(
         (subject) => {
-          let totalSubjectScore: number = 0; //15
+          let totalSubjectScore: number = 0;
           let totalGradedScore: number = 0;
-          let totalSubjectScoreOutOf10: number = 0;
+          let totalSubjectScoreOutOf10: number = 0; // final subject grade
           let totalGradedScoreOutOf10: number = 0;
-
           console.log({ totalSubjectScore });
-
           return {
             seminarian_id: subject.seminarian_id,
             seminarian_surname: subject.seminarian.user.person.surname,
@@ -56,27 +54,21 @@ export class calculateTestScore {
                           individualTest.score,
                           individualTest.test.maximum_score
                         );
-
                       const formattedTestScore =
                         testScore.toFixed(decimalNumbers);
                       const formattedTotalTestScore =
                         totalTestScore.toFixed(decimalNumbers);
-
                       totalSubjectScore += +totalTestScore;
                       totalGradedScore += +maxScore;
-
                       console.log(testScore);
                       console.log(maxScore);
                       console.log([{ totalTestScore }]);
-
                       totalSubjectScoreOutOf10 = (totalSubjectScore / 100) * 10;
                       totalGradedScoreOutOf10 = (totalGradedScore / 100) * 10;
-
                       console.log("inside the second loop", {
                         totalSubjectScore,
                         totalSubjectScoreOutOf10,
                       });
-
                       return {
                         test_description: individualTest.test.description,
                         test_score_out_of_20: formattedTestScore + " / 20",
@@ -86,8 +78,8 @@ export class calculateTestScore {
                           individualTest.last_edited_date == null
                             ? "No"
                             : formatDate(
-                                individualTest.last_edited_date.toISOString
-                              ()),
+                                individualTest.last_edited_date.toISOString()
+                              ),
                       };
                     }
                   }),
@@ -102,15 +94,60 @@ export class calculateTestScore {
           };
         }
       );
-
       console.log(testFilter);
-
       console.log(testFilter.map((test) => test.test_score));
-
       return testFilter;
     }
   }
-
+  public static async calculateFinalSubjectScore(testScoreBySubject: any[]) {
+    let subjectScorePassMark: number = 6; // minimal required to approve
+    if (testScoreBySubject.length > 0) {
+      for (const subject of testScoreBySubject) {
+        let totalSubjectScore: number = 0;
+        let totalSubjectScoreOutOf10: number = 0; // final subject grade 10/10
+        if (subject.test_score.length === 0) {
+          console.log(
+            "No test score: ",
+            subject.seminarian_id,
+            subject.subject_id
+          );
+        } else {
+          for (const individualTest of subject.test_score) {
+            const { totalTestScore } = await this.calculateIndividualScore(
+              individualTest.score,
+              individualTest.test.maximum_score
+            );
+            totalSubjectScore += totalTestScore;
+            totalSubjectScoreOutOf10 = (totalSubjectScore / 100) * 10;
+          }
+        }
+        if (totalSubjectScoreOutOf10 > subjectScorePassMark) {
+          console.log(
+            "APROBADO ,final subject score: ",
+            { totalSubjectScoreOutOf10 },
+            subject.seminarian_id,
+            subject.description
+          );
+          await prisma.enrollment.update({
+            where: { enrollment_id: subject.enrollment_id },
+            data: { status: "APROBADO" },
+          });
+        } else {
+          console.log(
+            "REPROBADO ,final subject score: ",
+            { totalSubjectScoreOutOf10 },
+            subject.seminarian_id,
+            subject.description
+          );
+          await prisma.enrollment.update({
+            where: { enrollment_id: subject.enrollment_id },
+            data: { status: "REPROBADO" },
+          });
+        }
+      }
+    }
+    console.log("end of calculate score");
+  }
   public static calculateIndividualScore(
     individualScore: number,
     maximumTestScore: number
@@ -118,8 +155,8 @@ export class calculateTestScore {
     const testScore: number = individualScore;
     const maxScore: number = maximumTestScore;
     const totalTestScore: number = (testScore / 20) * maxScore;
-
     return { testScore, maxScore, totalTestScore };
   }
 }
+
 // any needed interfaces

@@ -68,14 +68,14 @@ model diocese {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model enrollment {
-  enrollment_id    Int           @default(autoincrement()) @unique
-  seminarian_id    String        @db.VarChar(20)
+  enrollment_id    Int               @unique @default(autoincrement())
+  seminarian_id    String            @db.VarChar(20)
   subject_id       Int
   academic_term_id Int
-  status           String        @default("CURSANDO") @db.VarChar(20)
-  academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
-  seminarian       seminarian    @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
-  subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
+  status           enrollment_status @default(CURSANDO)
+  academic_term    academic_term     @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
+  seminarian       seminarian        @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
+  subject          subject           @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
   test_score       test_score[]
 
   @@id([enrollment_id, seminarian_id, subject_id, academic_term_id])
@@ -265,8 +265,8 @@ model test {
 model test_score {
   test_id          Int
   score            Decimal    @db.Decimal(5, 2)
-  enrollment_id    Int        
-  last_edited_date DateTime?  @db.DateTime(0) @default(now()) @updatedAt
+  enrollment_id    Int
+  last_edited_date DateTime?  @updatedAt @db.DateTime(0)
   enrollment       enrollment @relation(fields: [enrollment_id], references: [enrollment_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
   test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
 
@@ -348,4 +348,11 @@ enum academic_term_status {
   ACTIVO
   CULMINADO
   EQUIVALENCIAS
+}
+
+enum enrollment_status {
+  CURSANDO
+  APROBADO
+  REPROBADO
+  RETIRADO
 }

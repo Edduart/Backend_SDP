@@ -55,6 +55,7 @@ export class CreateTestScoreDto {
           enrollment_id: test.enrollment_id,
           test_id: assignment.test_id,
           score: assignment.score,
+          last_edited_date: null
         }))
       );
     }, []);
