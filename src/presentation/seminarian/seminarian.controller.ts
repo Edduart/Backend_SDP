@@ -11,6 +11,7 @@ import { ValidatePermission } from "../services/permissionValidator";
 import { BuildPDF } from "../docs/carta_culminacion";
 import { BuildFicha } from "../docs/ficha";
 import { BuildConstance } from "../docs/constance";
+import { CreateSeminarianList } from "../docs/seminarianlist";
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public ficha = (req: Request, res: Response) => {
@@ -34,11 +35,17 @@ export class SeminarianControler{
         })
     }
     public GetConstance = async (req: Request, res: Response) => {
-        const line =res.writeHead(200,{
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "inline; filename=constance.pdf"
+        new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((result)=>{
+            const line =res.writeHead(200,{
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "inline; filename=constance.pdf"
+            })
+            BuildConstance((data)=>line.write(data),()=>line.end(), result.id, result.surname, result.forename, "2023-2024", "Discipulado")
+        
+        }).catch((error)=>{
+            console.log(error);
+            res.send(error);
         })
-        BuildConstance((data)=>line.write(data),()=>line.end(), "V-27984286", "Rodriguez Torealba", "Angel Eduardo", "2023-2024", "Discipulado")
     }
     public get = async (req: Request, res: Response) => {
         try{
@@ -177,7 +184,30 @@ export class SeminarianControler{
               res.status(418).send("Error: " + error);
         }
     }
-
+    public CreateList = async (req: Request, res: Response) => {
+        try{
+            const result = ValidatePermission(req.body.Permisos, "SEMINARIAN", 'R');
+            const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
+            if(error != undefined){
+                console.log("verification errors:" +error);
+            res.json({error}).send();
+            }else{
+                if(get_dto != undefined){
+                    new GetSeminarianUseCase(this.repository).execute(get_dto).then((seminarians)=>{
+                        const line =res.writeHead(200,{
+                            "Content-Type": "application/pdf",
+                            "Content-Disposition": "inline; filename=constance.pdf"
+                        })
+                        CreateSeminarianList((data)=>line.write(data),()=>line.end(), seminarians)   
+                    }).catch((error)=>{
+                        res.status(418).send("unable to get seminarians: " + error);
+                    })
+                }
+            }
+        }catch(error){
+            res.status(418).json({error})
+        }
+    }
 
 
 

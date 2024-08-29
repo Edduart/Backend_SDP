@@ -4,17 +4,19 @@ import { slowDown } from 'express-slow-down'
 import rateLimit from 'express-rate-limit'
 const limiter = rateLimit({
 	windowMs: 1 * 60 * 1000, // minutes
-	limit: 15, // max 15 request per ip each passing menute
+	limit: 60, // max 15 request per ip each passing menute
 	standardHeaders: 'draft-7',
   statusCode: 429,
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 })
+//No me acuerdo en que afectaba el delay o si ya arreglamos el error
+/*
 const delayer = slowDown({
-	windowMs: 1 * 60 * 1000, // 15 minutes
-	delayAfter: 1, // Allow 5 requests per 1 minute.
-	delayMs: (hits) => hits * 200, // Add 50 ms of delay after the first request
+	windowMs: 1 * 60 * 1000, // 1 minutes
+	delayAfter: 10, // Allow 10 requests per 1 minute.
+	delayMs: (hits) => hits * 200, // Add ms of delay after the first request
 })
-
+*/
 //Debido a la necesidad de que el json de tokens este en todo el ambiente del server, se declara el blacklist en el server
 export interface Blacklist_interface {
   Token: string;
@@ -53,8 +55,8 @@ export class Server {
     //this.app.use( compression() )
     //request limiter
     this.app.use(limiter);
-
-    this.app.use(delayer);
+    //si se quiere usar el delayer, des comentar lo de abajo
+    //this.app.use(delayer);
     //* Routes 
     this.app.use(this.routes);
     this.app.listen(this.port, () => {

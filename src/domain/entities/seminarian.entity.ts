@@ -11,6 +11,7 @@ export class SeminarianEntity{
         public degrees?:        DegreeEntity[],
         public person?:         PersonEntity,
         public foreing_Data?:   ForeingSeminarianEntity,
+        public diocesi_name?:   string,
     ){}
     public static fromdb(object: {[key: string]: any}){
         const {id, apostleships, location, Ministery, status, parish_id, diocesi_id} = object;

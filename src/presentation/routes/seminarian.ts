@@ -28,6 +28,7 @@ router.put('/update/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Respons
         SeminarianControl.update(req, res);
     });
 });
+router.get('/seminarianlist', ValidatorTo.ValidarToken, SeminarianControl.CreateList);
 router.get('/getsem', ValidatorTo.ValidarToken, SeminarianControl.get);
 router.delete('/:id', ValidatorTo.ValidarToken, SeminarianControl.delete);
 module.exports= router;

@@ -280,6 +280,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       }); //seminarian creator
       seminarian.person = person;
       seminarian.foreing_Data = foreing;
+      seminarian.diocesi_name = person_actual.user?.parish.diocese.name;
       if(person_actual.user?.academic_degree != null){
         const degrees: DegreeEntity[] = person_actual.user.academic_degree.map((degree_actual)=>{
           return DegreeEntity.fromdb(degree_actual);

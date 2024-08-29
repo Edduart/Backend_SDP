@@ -11,7 +11,7 @@ export class CreateEnrollmentDto {
     let { seminarian_id, subject_id, academic_term_id } = props;
     let validationErrors: ValidationError[] = [];
 
-    console.log(subject_id);
+    console.log({props});
 
     // TODO reWork validations
 
