@@ -14,6 +14,7 @@ import {
 
 import { calculateTestScore } from "./utils/calculateScore";
 export class TestDataSourceImpl implements TestDataSource {
+  
   async getTestForTestScore(
     dto: GetTestForTestScoreDto
   ): Promise<TestForTestScoreResult> {
@@ -53,7 +54,6 @@ export class TestDataSourceImpl implements TestDataSource {
         description: test.description,
         maximum_score: Number(test.maximum_score.toFixed(2)),
       })),
-
       seminarians: seminariansResult.map((seminarians: any) => ({
         enrollment_id: seminarians.enrollment_id,
         seminarian_id: seminarians.seminarian_id,
@@ -102,6 +102,7 @@ export class TestDataSourceImpl implements TestDataSource {
       );
     return testScoreCalculated;
   }
+
   async create(dto: CreateTestDto): Promise<object> {
     await this.validateExist(dto);
     const testExistingQuantity = await prisma.test.findMany({
@@ -123,6 +124,7 @@ export class TestDataSourceImpl implements TestDataSource {
     });
     return createTest;
   }
+
   async get(dto: GetTestDto): Promise<object> {
     const test = await prisma.test.findMany({
       where: {
@@ -134,6 +136,7 @@ export class TestDataSourceImpl implements TestDataSource {
     });
     return test;
   }
+
   async update(dto: UpdateTestDto): Promise<TestEntity> {
     const validateIfExist = await prisma.test.findUnique({where: {id: dto.id}})
     if (!validateIfExist) throw `the test id does't exist`
@@ -143,6 +146,7 @@ export class TestDataSourceImpl implements TestDataSource {
     });
     return TestEntity.fromObject(test);
   }
+
   async delete(id: number): Promise<TestEntity> {
     const validateIfExist = await prisma.test.findUnique({
       where: { id: id },
