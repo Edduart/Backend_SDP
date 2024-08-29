@@ -5,11 +5,9 @@ import { formatDate } from "../../../presentation/utils/formatDate";
 
 // TODO clean code and add try and catch, if all is working as intended
 
-// TODO minimal grade to 1
-
 export class calculateTestScore {
   public static async calculateTestScoreFromSubject(testScoreBySubject: any[]) {
-    const decimalNumbers: number = 2;
+    const decimalNumbers: number = 2; 
     console.log(testScoreBySubject.map((test) => test));
     if (testScoreBySubject.length == 0) {
       console.log("No score to calculate");
@@ -44,7 +42,7 @@ export class calculateTestScore {
                       return {
                         message: "STILL NO GRADED BY THE TEACHER!",
                         test_description: individualTest.test.description,
-                        test_score_out_of_20: "0 / 20",
+                        test_score_out_of_20: "1 / 20",
                         test_score_out_max_test_score:
                           individualTest.test.maximum_score,
                       };
@@ -71,8 +69,8 @@ export class calculateTestScore {
                       });
                       return {
                         test_description: individualTest.test.description,
-                        test_score_out_of_20: formattedTestScore + " / 20",
-                        test_score_out_max_test_score:
+                        test_score_out_of_20: testScore < 1 ? "1.00" : formattedTestScore + " / 20",
+                        test_score_out_max_test_score: totalTestScore < 1 ? "1.00" :
                           formattedTotalTestScore + " / " + maxScore,
                         test_score_was_edited:
                           individualTest.last_edited_date == null
@@ -83,11 +81,11 @@ export class calculateTestScore {
                       };
                     }
                   }),
-            subject_total_score_out_of_graded_score:
+            subject_total_score_out_of_graded_score: totalSubjectScore < 1 ? "1.00" :
               totalSubjectScore.toFixed(decimalNumbers) +
               " / " +
               totalGradedScore,
-            subject_total_score_out_of_graded_scored_10_scale:
+            subject_total_score_out_of_graded_scored_10_scale: totalSubjectScoreOutOf10 < 1 ? "1.00" : 
               totalSubjectScoreOutOf10.toFixed(decimalNumbers) +
               " / " +
               totalGradedScoreOutOf10,
@@ -126,7 +124,7 @@ export class calculateTestScore {
             "APROBADO ,final subject score: ",
             { totalSubjectScoreOutOf10 },
             subject.seminarian_id,
-            subject.description
+            subject.test?.description
           );
           await prisma.enrollment.update({
             where: { enrollment_id: subject.enrollment_id },
@@ -137,7 +135,7 @@ export class calculateTestScore {
             "REPROBADO ,final subject score: ",
             { totalSubjectScoreOutOf10 },
             subject.seminarian_id,
-            subject.description
+            subject.test?.description
           );
           await prisma.enrollment.update({
             where: { enrollment_id: subject.enrollment_id },
