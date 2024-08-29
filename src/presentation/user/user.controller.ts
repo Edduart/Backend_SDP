@@ -51,9 +51,10 @@ export class UserControler {
   };
 
   public getAll = (req: Request, res: Response) => {
-    const source = req.headers['Permissions'];
     try{
-      const result = ValidatePermission(source, "USER", 'R');
+      console.log("validando")
+      const result = ValidatePermission(req.body.Permisos, "USER", 'R');
+      console.log("entro")
       new GetUsers(this.repository)
       .execute()
       .then((users) =>{

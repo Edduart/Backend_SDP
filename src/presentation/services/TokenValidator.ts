@@ -53,7 +53,6 @@ export class ValidatorTo {
                 //al no estar se decodifica el payload de permisos y se manda por headers
                 const data_json: { [key: string]: any } = decoded as { [key: string]: any };
                 req.headers['Permissions'] = data_json.Permisos;
-                req.headers['User'] = data_json.person_id
                 if(BlackList.length > 0){
                     DeleteExpiredTokens();
                 }
