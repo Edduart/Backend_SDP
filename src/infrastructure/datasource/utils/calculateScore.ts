@@ -94,7 +94,8 @@ export class calculateTestScore {
       );
       console.log(testFilter);
       console.log(testFilter.map((test) => test.test_score));
-      return testFilter;
+      return testFilter; // can sort and calculate average grade by student 
+      // TODO calculate average grade by student
     }
   }
   public static async calculateFinalSubjectScore(testScoreBySubject: any[]) {
