@@ -111,7 +111,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     //await this.validateExistence(updateDto!);
     const updateEnrollment = await prisma.enrollment.update({
       where: {
-        enrollment_id: 1,
+        enrollment_id: updateDto.enrollment_id,
       },
       data: {
         status: updateDto.status as EnrollmentStatus,
