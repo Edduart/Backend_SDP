@@ -47,6 +47,7 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
   }
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
+    /*
     await this.findById(updateDioceseDto.id);
     const check: DioceseEntity[] = await this.getByName(updateDioceseDto.name);
     const dioceseExist = check.find(
@@ -54,6 +55,10 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
     );
     if (dioceseExist)
       throw `Diocese with name: ${updateDioceseDto.name}, already exist`;
+    */
+    const result = await prisma.diocese.findFirst({where:{name: updateDioceseDto.name, id:{not: updateDioceseDto.id}}});
+    if (result != null){throw new Error("Subject with same name already exists");}
+    
     const updateDiocese = await prisma.diocese.update({
       where: { id: updateDioceseDto.id },
       data: updateDioceseDto!.values
