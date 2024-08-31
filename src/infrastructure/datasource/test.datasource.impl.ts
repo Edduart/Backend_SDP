@@ -11,10 +11,10 @@ import {
   GetTestForTestScoreDto,
   TestForTestScoreResult,
 } from "../../domain";
+import { subject } from "../../seed/data";
 
 import { calculateTestScore } from "./utils/calculateScore";
 export class TestDataSourceImpl implements TestDataSource {
-  
   async getTestForTestScore(
     dto: GetTestForTestScoreDto
   ): Promise<TestForTestScoreResult> {
@@ -134,12 +134,36 @@ export class TestDataSourceImpl implements TestDataSource {
         academic_term_id: dto.academic_term_id,
       },
     });
-    return test;
+
+    // FIXME can go to dto
+
+    const resultMapping: getTestResult[] = test.map((tests) => ({
+      id: tests.id,
+      subject_id: tests.subject_id,
+      academic_term_id: tests.academic_term_id,
+      description: tests.description,
+      status: tests.status,
+      maximum_score: +tests.maximum_score,
+    }));
+
+    interface getTestResult {
+      id: number;
+      subject_id: number;
+      academic_term_id: number;
+      description: string;
+      status: boolean;
+      maximum_score: number;
+    }
+    [];
+
+    return resultMapping;
   }
 
   async update(dto: UpdateTestDto): Promise<TestEntity> {
-    const validateIfExist = await prisma.test.findUnique({where: {id: dto.id}})
-    if (!validateIfExist) throw `the test id does't exist`
+    const validateIfExist = await prisma.test.findUnique({
+      where: { id: dto.id },
+    });
+    if (!validateIfExist) throw `the test id does't exist`;
     const test = await prisma.test.update({
       where: { id: dto.id },
       data: dto.values!,
@@ -152,12 +176,15 @@ export class TestDataSourceImpl implements TestDataSource {
       where: { id: id },
     });
     if (!validateIfExist) throw `the test id does't exist`;
-    const checkIfHaveTestScore = await prisma.test_score.findMany({where:{test_id: id}});
-    if (checkIfHaveTestScore.length > 0) throw `cannot delete a test if already have seminarians with this test added!`
-      const test = await prisma.test.update({
-        where: { id: id },
-        data: { status: false },
-      });
+    const checkIfHaveTestScore = await prisma.test_score.findMany({
+      where: { test_id: id },
+    });
+    if (checkIfHaveTestScore.length > 0)
+      throw `cannot delete a test if already have seminarians with this test added!`;
+    const test = await prisma.test.update({
+      where: { id: id },
+      data: { status: false },
+    });
     return TestEntity.fromObject(test);
   }
 
@@ -196,11 +223,14 @@ export class TestDataSourceImpl implements TestDataSource {
     dto: CreateTestDto
   ) {
     let maximumScoreCounter = 0;
-    if (testExistingQuantity.length > 0) throw `There are already existing tests for this subject, you cannot create more`; 
-    if (dto.tests.length < 2 || dto.tests.length > 6) throw `the minimum tests is 2 and max 6, now is ${dto.tests.length}`;
-    dto.tests.forEach( test => {
+    if (testExistingQuantity.length > 0)
+      throw `There are already existing tests for this subject, you cannot create more`;
+    if (dto.tests.length < 2 || dto.tests.length > 6)
+      throw `the minimum tests is 2 and max 6, now is ${dto.tests.length}`;
+    dto.tests.forEach((test) => {
       maximumScoreCounter += test.maximum_score;
-    })
-    if (maximumScoreCounter !== 100) throw `the sum of all test maximum score need to be 100, now is: ${maximumScoreCounter}`;
+    });
+    if (maximumScoreCounter !== 100)
+      throw `the sum of all test maximum score need to be 100, now is: ${maximumScoreCounter}`;
   }
 }
