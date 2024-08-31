@@ -33,7 +33,10 @@ export class GetStageOfSeminarianFilter {
     let seminariansStage: SeminarianStage[] = [];
 
     for (let i = 0; i < seminariansArray.length; i++) {
-      let seminarianStage: number = 1;
+
+       const seminarianInitialStage = await this.getStageByEnrollSubjectOnly(seminariansArray[i]);
+
+      let seminarianStage: number = seminarianInitialStage; // initial stage
       const approvedSubjects = await prisma.enrollment.findMany({
         where: {
           seminarian_id: seminariansArray[i],
@@ -123,10 +126,9 @@ export class GetStageOfSeminarianFilter {
       return result;
     }
 
-
-     const stageMap = new Map(
-       seminariansStage.map((item) => [item.id, item.stage])
-     );
+    const stageMap = new Map(
+      seminariansStage.map((item) => [item.id, item.stage])
+    );
 
     const result = seminarianInfo
       .filter((item) => stageMap.has(item.id))
@@ -136,6 +138,32 @@ export class GetStageOfSeminarianFilter {
       }));
 
     return result;
+  }
+
+  public static async getStageByEnrollSubjectOnly(seminarian: string) {
+
+    console.log("check stage for enrollment active !")
+
+    const seminarianPerStage = await prisma.seminarian.findUnique({
+      where: { id: seminarian },
+      select: {
+        enrollment: {
+          select: {
+            subject: { select: { course: { select: { stage_id: true } } } },
+          },
+        },
+      },
+    });
+
+    const seminarianPerStageArray = [... new Set(seminarianPerStage?.enrollment.flatMap( enrollment => enrollment.subject.course.stage_id))];
+
+    const SeminarianInitialStage = seminarianPerStageArray.length;
+
+    console.log("result for: ", seminarian);
+    console.log(seminarianPerStageArray);
+    console.log(SeminarianInitialStage);
+
+    return SeminarianInitialStage === 0 ? 1 : SeminarianInitialStage;
   }
 }
 

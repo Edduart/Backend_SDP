@@ -1,5 +1,6 @@
 import { prisma } from "../../../data/postgres";
 import { SeminarianStatus } from "../enrollment.dataSource.impl";
+import { GetStageOfSeminarianFilter } from "./getStageOfSeminarianFilter";
 
 // TODO if all its okay after all test then clean code and comments, add try and catch too
 
@@ -8,23 +9,21 @@ export class EnrollmentSubjectFilter {
     enrollmentStatus: SeminarianStatus[],
     id: string
   ): Promise<object> {
-    console.log("running filter");
-    //console.log({ enrollmentStatus });
-
-    // FIXME case where a new subject will lower the seminarian stage
-
-    let seminarianStage: number = 1;
-    let seminarianCourse: number[] = [1];
-
-    console.log(seminarianCourse.length);
-
+    const seminarianInitialStage =
+      await GetStageOfSeminarianFilter.getStageByEnrollSubjectOnly(id);
     const approbatedSubjects = enrollmentStatus.filter((subject) => {
       return subject.status === "APROBADO";
     });
-
     const approbatedSubjectsArray = approbatedSubjects.map(
       (subjectsId) => subjectsId.subject_id
     );
+
+    let seminarianStage: number = seminarianInitialStage;
+    let seminarianCourse: number[] = [];
+
+    if (seminarianStage === 1) seminarianCourse = [1]; // number of courses in each stage, depends on the seminarian actual stage
+    if (seminarianStage === 2) seminarianCourse = [1, 2];
+    if (seminarianStage === 3) seminarianCourse = [1, 2, 3, 4, 5];
 
     for (let i = 1; i < 4; i++) {
       const subjects = await prisma.stage.findMany({
@@ -41,24 +40,11 @@ export class EnrollmentSubjectFilter {
           },
         },
       });
-
-      //console.log({ approbatedSubjects });
-      //console.log(JSON.stringify(subjects));
-
       let approveStage = true;
-      //let coursePassed = false;
-
       subjects.map((stage) => {
         for (let j = 0; j < stage.course.length; j++) {
           let approveAtLeastOne = false; // in the given course
-
-          console.log("J value", j);
-          console.log("COURSE ID: ", stage.course[j].id);
-          console.log("COURSE LENGTH: ");
-
           for (let k = 0; k < stage.course[j].subject.length; k++) {
-            console.log("SUBJECT ID: ", stage.course[j].subject[k].id);
-
             if (
               !approbatedSubjectsArray.includes(stage.course[j].subject[k].id)
             ) {
@@ -79,7 +65,6 @@ export class EnrollmentSubjectFilter {
           }
         }
       });
-
       console.log({ approveStage });
       if (!approveStage) {
         console.log("se queda en el mismo stage");
@@ -88,6 +73,7 @@ export class EnrollmentSubjectFilter {
         console.log("avanza al proximo stage");
         seminarianStage++;
         console.log(seminarianStage);
+        if (seminarianStage > 3) break; // TODO check if this case will avoid a error
       }
     }
 
@@ -116,7 +102,7 @@ export class EnrollmentSubjectFilter {
           },
         },
       });
-      const availableSubjects: SubjectAllowToEnrollCourseZero = {
+      const availableSubjects: SubjectAllowToEnroll = {
         seminarian_id: id,
         stage: SubjectsResult[0].description,
         course: SubjectsResult[0].course.map((course) => ({
@@ -134,12 +120,6 @@ export class EnrollmentSubjectFilter {
       //console.log({ availableStagesAndCourses });
       //console.log({ enrollmentStatus });
       console.log("No enrollments, so course > 0");
-
-      availableStagesAndCourses.map((test) => {
-        test.course.map((course) => {
-          course.id;
-        });
-      });
 
       const subjectResult = await prisma.stage.findMany({
         where: {
@@ -212,10 +192,10 @@ export class EnrollmentSubjectFilter {
 
                     console.log("id actual", item.id);
 
-                    const approbate = item.id && item.status === "APROBADO";
+                    const approved = item.id && item.status === "APROBADO";
                     console.log(item.id);
-                    console.log({ approbate });
-                    if (item.id === subject.precedent && approbate) {
+                    console.log({ approved });
+                    if (item.id === subject.precedent && approved) {
                       approvedPrecedent.push(subject.id);
 
                       console.log("MATERIA APROBADA ");
@@ -279,12 +259,6 @@ export class EnrollmentSubjectFilter {
         })),
       }));
 
-      /*const filterPrecedentTest = filteredSubjectResult.map((stage) =>
-        stage.course.map((course) => course.subject.map((subject) => subject))
-      );*/
-
-      console.log(JSON.stringify(filteredSubjectResult));
-
       const availableSubjects: SubjectAllowToEnroll = {
         seminarian_id: id,
         stage: filteredSubjectResult[0].description,
@@ -299,41 +273,10 @@ export class EnrollmentSubjectFilter {
           }))
         ),
       };
-
       return availableSubjects;
     }
   }
 }
-
-interface SubjectAllowToEnroll1 {
-  // remove later when check is okay
-  seminarian_id: string;
-  stage: {
-    stage: string;
-    course: {
-      course: string;
-      subject: {
-        id: number;
-        name: string;
-        semester: number;
-      }[];
-    }[];
-  }[];
-}
-// old
-interface SubjectAllowToEnrollCourseZero {
-  seminarian_id: string;
-  stage: string;
-  course: {
-    course: string;
-    subject: {
-      id: number;
-      name: string;
-      semester: number;
-    }[];
-  }[];
-}
-
 interface SubjectAllowToEnroll {
   seminarian_id: string;
   stage: string;
@@ -346,18 +289,6 @@ interface SubjectAllowToEnroll {
     }[];
   }[];
 }
-
-/*
-interface SubjectAllowToEnroll1 {
-  seminarian_id: string;
-  stage: string;
-  course: {
-    description: string;
-    subject: Array<object>;
-  }[];
-}
-*/
-
 export interface EnrollmentGetInterface {
   seminarian_id: string;
   subject: {
@@ -372,27 +303,3 @@ export interface EnrollmentGetInterface {
   };
   subject_status: string;
 }
-
-/*
-
-
-      subjects.map((stage) =>
-        stage.course.map((course) => {
-      
-          
-
-          course.subject.forEach((subject) => {
-            console.log(course.id);
-            if (!approbatedSubjectsArray.includes(subject.id)) {
-              console.log("no aprobo", subject.id);
-              approveStage = false;
-            } else {
-              coursePassed = true;
-              console.log("uno aprobado", subject.id);
-            }
-          });
-        })
-      );
-      
-
-      */
