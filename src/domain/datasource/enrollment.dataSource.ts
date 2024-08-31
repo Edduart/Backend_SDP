@@ -16,4 +16,5 @@ export abstract class EnrollmentDataSource {
   abstract getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object>;
   abstract update(dto: UpdateEnrollmentDto): Promise<EnrollmentEntity>;
   abstract delete(id: number): Promise<EnrollmentEntity>;
+  abstract updateStatusByFinalSubjectScore(): void
 }

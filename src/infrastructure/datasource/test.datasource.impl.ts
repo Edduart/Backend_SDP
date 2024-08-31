@@ -13,13 +13,12 @@ import {
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
-
 export class TestDataSourceImpl implements TestDataSource {
+  
   async getTestForTestScore(
     dto: GetTestForTestScoreDto
   ): Promise<TestForTestScoreResult> {
     console.log({ dto });
-
     const testsResult = await prisma.test.findMany({
       where: {
         AND: [
@@ -30,7 +29,6 @@ export class TestDataSourceImpl implements TestDataSource {
       },
       select: { id: true, description: true, maximum_score: true },
     });
-
     const seminariansResult = await prisma.enrollment.findMany({
       where: {
         AND: [
@@ -50,14 +48,12 @@ export class TestDataSourceImpl implements TestDataSource {
         },
       },
     });
-
     const resultMap: TestForTestScoreResult = {
       tests: testsResult.map((test) => ({
         id: test.id,
         description: test.description,
         maximum_score: Number(test.maximum_score.toFixed(2)),
       })),
-
       seminarians: seminariansResult.map((seminarians: any) => ({
         enrollment_id: seminarians.enrollment_id,
         seminarian_id: seminarians.seminarian_id,
@@ -69,7 +65,6 @@ export class TestDataSourceImpl implements TestDataSource {
         })),
       })),
     };
-
     return resultMap;
   }
 
@@ -107,9 +102,9 @@ export class TestDataSourceImpl implements TestDataSource {
       );
     return testScoreCalculated;
   }
-  async create(dto: CreateTestDto): Promise<object> {
-    const enrollment = await this.validateExistAndReturnEnrollment(dto);
 
+  async create(dto: CreateTestDto): Promise<object> {
+    await this.validateExist(dto);
     const testExistingQuantity = await prisma.test.findMany({
       where: {
         subject_id: dto.subject_id,
@@ -118,9 +113,7 @@ export class TestDataSourceImpl implements TestDataSource {
       },
       select: { maximum_score: true },
     });
-
-    //await this.calculateMaxTestConstrain(testExistingQuantity, dto); FIXME
-
+    await this.calculateMaxTestConstrain(testExistingQuantity, dto);
     const createTest = await prisma.test.createMany({
       data: dto.tests.map((tests) => ({
         subject_id: dto.subject_id,
@@ -129,9 +122,9 @@ export class TestDataSourceImpl implements TestDataSource {
         description: tests.description,
       })),
     });
-
     return createTest;
   }
+
   async get(dto: GetTestDto): Promise<object> {
     const test = await prisma.test.findMany({
       where: {
@@ -143,30 +136,32 @@ export class TestDataSourceImpl implements TestDataSource {
     });
     return test;
   }
+
   async update(dto: UpdateTestDto): Promise<TestEntity> {
+    const validateIfExist = await prisma.test.findUnique({where: {id: dto.id}})
+    if (!validateIfExist) throw `the test id does't exist`
     const test = await prisma.test.update({
       where: { id: dto.id },
       data: dto.values!,
     });
     return TestEntity.fromObject(test);
   }
+
   async delete(id: number): Promise<TestEntity> {
-
+    const validateIfExist = await prisma.test.findUnique({
+      where: { id: id },
+    });
+    if (!validateIfExist) throw `the test id does't exist`;
     const checkIfHaveTestScore = await prisma.test_score.findMany({where:{test_id: id}});
-
     if (checkIfHaveTestScore.length > 0) throw `cannot delete a test if already have seminarians with this test added!`
-
       const test = await prisma.test.update({
         where: { id: id },
         data: { status: false },
       });
-
-    console.log(test);
-
     return TestEntity.fromObject(test);
   }
 
-  private async validateExistAndReturnEnrollment(dto: CreateTestDto) {
+  private async validateExist(dto: CreateTestDto) {
     const [instruction, enrollment, subject, academicTerm] = await Promise.all([
       await prisma.instruction.findFirst({
         where: {
@@ -194,45 +189,18 @@ export class TestDataSourceImpl implements TestDataSource {
     if (!subject) throw `Subject ID ${dto.subject_id} doesn't exist!`;
     if (!academicTerm)
       throw `Academic term ID ${dto.academic_term_id} doesn't exist!`;
-    return enrollment;
   }
 
-  /*private async calculateMaxTestConstrain(
+  private async calculateMaxTestConstrain(
     testExistingQuantity: any[],
     dto: CreateTestDto
   ) {
-    console.log(testExistingQuantity.length);
-
-    let testMaxScoreCounter = 0;
-
-    let testCounter;
-
-    for (
-      testCounter = 0;
-      testCounter <= testExistingQuantity.length;
-      testCounter++
-    ) {
-      console.log({ testCounter });
-
-      if (testCounter == 6) {
-        throw `there are already ${testCounter} you cannot create more than 6 assignments`;
-      }
-
-      if (testCounter == testExistingQuantity.length) break;
-      testMaxScoreCounter += Number(
-        testExistingQuantity[testCounter].maximum_score.toFixed(2)
-      );
-    }
-
-    const allTestMaxScore = testMaxScoreCounter + dto.maximum_score;
-
-    console.log(allTestMaxScore);
-
-    if (allTestMaxScore > 100)
-      throw `the sum of the created assignments is greater than 100, already created assignments ${testMaxScoreCounter}, new assignments ${dto.maximum_score}, total out of: ${allTestMaxScore}`;
-    if (testCounter == 5 && allTestMaxScore != 100)
-      throw `the sum of all the assignments need to be 100, new assignments ${dto.maximum_score}, total out of: ${allTestMaxScore}`;
-
-    console.log(testMaxScoreCounter);
-  }*/
+    let maximumScoreCounter = 0;
+    if (testExistingQuantity.length > 0) throw `There are already existing tests for this subject, you cannot create more`; 
+    if (dto.tests.length < 2 || dto.tests.length > 6) throw `the minimum tests is 2 and max 6, now is ${dto.tests.length}`;
+    dto.tests.forEach( test => {
+      maximumScoreCounter += test.maximum_score;
+    })
+    if (maximumScoreCounter !== 100) throw `the sum of all test maximum score need to be 100, now is: ${maximumScoreCounter}`;
+  }
 }
