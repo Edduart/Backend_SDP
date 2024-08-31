@@ -2,21 +2,14 @@ import { instructor_position } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import {
   CreateProfessor,
-  PersonEntity,
-  PhoneEntity,
-  DegreeEntity,
-  InstructorEntity,
-  SocialMediaEntity,
   ProfessorDataSource,
   ProfessorEntity,
   UpdateProfessorDto,
-  UpdateUserDto,
   GetProfessorDto
 } from "../../domain";
 
 import {
   CreateUser,
-  CreatePersonFunc,
   UpdatePersonFunc,
   UpdateUserFunc,
 } from "./utils/user.functions";

@@ -9,8 +9,8 @@ export class CreateDegree{
     public Validate(): string|null{
         let errorarray: string[]= [];
 
-        if (!this.description) errorarray.push ("description is required");
-        if (!this.link) errorarray.push ("description is required");
+        if (!this.description) errorarray.push ("Degree description is required");
+        if (!this.link) errorarray.push ("degree link is required");
         if (this.description.length > 200) errorarray.push("Parish name  is too long");
 
         if (errorarray.length > 0) {
