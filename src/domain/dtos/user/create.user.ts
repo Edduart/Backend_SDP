@@ -18,7 +18,6 @@ export class CreateUserDTO{
         if(result_person != null)errorarray.push(result_person);
 
         let result_degree: string[] = [""];
-        console.log("los degree son: " + this.degree)
         if(this.degree != undefined && this.degree.length > 0){
             const result_degree = this.degree.map((degree_actual)=>{
                 auxiliary = degree_actual.Validate()
