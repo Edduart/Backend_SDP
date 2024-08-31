@@ -17,11 +17,14 @@ export class CreateUserDTO{
         let auxiliary = undefined;
         if(result_person != null)errorarray.push(result_person);
 
-        const result_degree = this.degree?.map((degree_actual)=>{
-            auxiliary = degree_actual.Validate()
-            if(auxiliary != null) return auxiliary;
-        })
-
+        let result_degree: string[] = [""];
+        console.log("los degree son: " + this.degree)
+        if(this.degree != undefined && this.degree.length > 0){
+            const result_degree = this.degree.map((degree_actual)=>{
+                auxiliary = degree_actual.Validate()
+                if(auxiliary != null) return auxiliary;
+            })
+        }
          //validating it existance
          if (!this.person) errorarray.push("Person is required");
          if (!this.role) errorarray.push("Role is required");
