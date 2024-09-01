@@ -96,9 +96,9 @@ export class AcademicTermController {
 
     await new UpdateEnrollmentStatusByFinalScore(this.enrollmentRepository)
       .execute()
-      .catch((error) => res.status(200).json(error)); //TODO return if all okay
+      .catch((error) => res.status(200).json(error)); 
 
-    console.timeLog("calculating stage status");
+    console.timeLog("calculating enrollment");
 
     await new UpdateStageIfApproved(this.enrollmentRepository)
       .execute()
@@ -115,6 +115,6 @@ export class AcademicTermController {
         return res.status(400).json("Error eliminando periodo" + error);
       });
 
-    console.timeEnd("end of academic term");
+    console.timeEnd("calculating enrollment");
   };
 }
