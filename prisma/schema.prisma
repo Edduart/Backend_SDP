@@ -197,6 +197,7 @@ model seminarian {
   status               seminarian_status
   Location             seminarian_Location
   Ministery            seminarian_Ministery?
+  stage                Int                   @default(1)
   enrollment           enrollment[]
   foreigner_seminarian foreigner_seminarian?
   user                 user                  @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_user")
@@ -299,6 +300,7 @@ model bitacora {
   table   String          @db.VarChar(100)
   date    DateTime        @db.DateTime(0)
 }
+
 enum basic_worker_job_position {
   MANTENIMIENTO
   COCINERO

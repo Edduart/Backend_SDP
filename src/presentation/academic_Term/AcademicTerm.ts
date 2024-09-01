@@ -10,8 +10,10 @@ import {
   GetbyidAcademicTermUseCase,
   updateAcademicTermUseCase,
   EnrollmentRepository,
-  UpdateEnrollmentStatusByFinalScore
+  UpdateEnrollmentStatusByFinalScore,
+  UpdateStageIfApproved,
 } from "../../domain";
+import { error } from "console";
 
 export class AcademicTermController {
   constructor(
@@ -92,9 +94,15 @@ export class AcademicTermController {
 
     console.time("calculating enrollment");
 
-    await new UpdateEnrollmentStatusByFinalScore(this.enrollmentRepository).execute();
+    await new UpdateEnrollmentStatusByFinalScore(this.enrollmentRepository)
+      .execute()
+      .catch((error) => res.status(200).json(error)); //TODO return if all okay
 
-    console.timeLog("calculating enrollment");
+    console.timeLog("calculating stage status");
+
+    await new UpdateStageIfApproved(this.enrollmentRepository)
+      .execute()
+      .catch((error) => res.status(200).json(error));
 
     console.log("start end academic term");
 

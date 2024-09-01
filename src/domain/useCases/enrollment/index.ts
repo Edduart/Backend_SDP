@@ -5,3 +5,4 @@ export * from "./getAcademicStatus";
 export * from "./getStageOfSeminarian";
 export * from "./deleteEnrollment";
 export * from "./updateEnrollmentStatusByFinalScore";
+export * from "./updateStageIfApproved";
