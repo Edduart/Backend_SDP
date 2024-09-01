@@ -54,16 +54,35 @@ export class TestDataSourceImpl implements TestDataSource {
         description: test.description,
         maximum_score: Number(test.maximum_score.toFixed(2)),
       })),
-      seminarians: seminariansResult.map((seminarians: any) => ({
+      seminarians: seminariansResult.map((seminarians: any) => {
+        let testCounter = -1;
+        return ({
         enrollment_id: seminarians.enrollment_id,
         seminarian_id: seminarians.seminarian_id,
         seminarian_surname: seminarians.seminarian.user.person.forename,
         seminarian_forename: seminarians.seminarian.user.person.surname,
-        test_score: seminarians.test_score.map((test_score: any) => ({
-          test_id: test_score.test_id,
-          score: test_score.score,
-        })),
-      })),
+        test_score:
+          seminarians.test_score.length == 0
+            ? testsResult.map((noScoredTest) => ({
+                test_id: noScoredTest.id,
+                score: 0,
+              }))
+            : testsResult.map((test_score: any) => {
+              const scoredTests = seminarians.test_score.map(
+                (test: any) => (
+                  test.score
+                )
+              );
+              testCounter++;
+              return {
+                test_id: test_score.id,
+                score:
+                  testCounter >= scoredTests.length
+                    ? 0
+                    : scoredTests[testCounter],
+              };
+            }),
+      })}),
     };
     return resultMap;
   }
