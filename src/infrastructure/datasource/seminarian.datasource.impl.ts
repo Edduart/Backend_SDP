@@ -22,6 +22,8 @@ import {
   seminarianMinistery_ENUM,
   SocialMediaDTO,
   SocialMediaEntity,
+  StageEnum,
+  stages,
   UpdateSeminarian,
 } from "../../domain";
 import { CreateUser, UpdatePersonFunc } from "./utils/user.functions";
@@ -383,11 +385,13 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
     try {
       const result = await prisma.$transaction(async (tx) => {
         await CreateUser(data.user);
+        
       //creating foreing
       if (data.foreing_Data != undefined) {
         //call to create if foreing data
         const result = await prisma.seminarian.create({
           data: {
+            stage: data.stage_num,
             id: data.user.person.id,
             apostleships: data.apostleships,
             status: seminarian_status.ACTIVO,
@@ -420,6 +424,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           status: seminarian_status.ACTIVO,
           Location: data.location as seminarian_Location,
           Ministery: data.ministery as seminarian_Ministery,
+          stage: data.stage_num
         },
       });
       return result.id;

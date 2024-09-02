@@ -163,7 +163,9 @@ export class SeminarianControler{
             user.role = 5;
             //assembling de seminarian
             const seminarian = new CreateSeminarian(foreingdata,
-                user_origin.location as Locations_enum, user_origin.apostleships, user, user_origin.ministery as seminarianMinistery_ENUM
+                user_origin.location as Locations_enum, 
+                user_origin.stage, 
+                user_origin.apostleships, user, user_origin.ministery as seminarianMinistery_ENUM
             );
             //now check if there are errors
             const errores = seminarian.Validate();

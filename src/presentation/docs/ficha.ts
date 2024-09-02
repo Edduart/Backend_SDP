@@ -122,9 +122,9 @@ export function BuildFicha(dataCB: (...args: any[]) => void, endCB: (...args: an
     //texto
     let cellpp = "N/A"
     if (data.cellphone?.length > 0){
-        cellpp = data.cellphone.join("/")
+        cellpp = data.cellphone[0]
     }
-    doc.text(cellpp, 352,286)
+    doc.text(cellpp, 420,286)
 
     //Redes sociales
     doc.rect(42, 310, 525, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#f2f2f2")

@@ -1,4 +1,4 @@
-import { Locations_enum, seminarianMinistery_ENUM, CreateUserDTO, CreateForeingSeminarian  } from "../..";
+import { Locations_enum, seminarianMinistery_ENUM, CreateUserDTO, CreateForeingSeminarian, StageEnum  } from "../..";
 
 
 
@@ -7,9 +7,11 @@ export class CreateSeminarian{
     constructor(
         public readonly foreing_Data:    CreateForeingSeminarian | undefined,
         public readonly location:        Locations_enum,
+        public stage:                    string,
         public readonly apostleships:    string | undefined,
         public readonly user:            CreateUserDTO,
-        public readonly ministery:      seminarianMinistery_ENUM
+        public readonly ministery:      seminarianMinistery_ENUM,
+        public stage_num?:              number
     ){}
 
     public Validate(): string|null{
@@ -21,7 +23,18 @@ export class CreateSeminarian{
         if(result_user != null){
             errorarray.push(result_user);
         }
-        
+
+        switch (this.stage) {
+            case "PROPEDEUTICO":
+                this.stage_num = 1;
+                break;
+            case "DISCIPULADO":
+                this.stage_num = 2;
+                break;
+            case "CONFIGURATIVA":
+                this.stage_num = 3;
+                break;
+        }
         
         if(result_foreing != null){
             errorarray.push(result_foreing);

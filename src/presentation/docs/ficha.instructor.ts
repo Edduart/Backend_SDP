@@ -117,7 +117,7 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
     //texto
     let cellpp = "N/A"
     if (data.cellphone?.length > 0){
-        cellpp = data.cellphone.join("/")
+        cellpp = data.cellphone[0]
     }
     doc.text(cellpp, 352,286)
 
