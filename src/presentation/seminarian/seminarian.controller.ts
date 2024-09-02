@@ -30,12 +30,14 @@ export class SeminarianControler{
         })
     }
     public getCartaCulminacione = async (req: Request, res: Response) => {
-        const line =res.writeHead(200,{
-            "Content-Type": "application/pdf",
-            "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
-        })
         new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
+            const line =res.writeHead(200,{
+                "Content-Type": "application/pdf",
+                "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
+            })
             BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
+        }).catch((error)=>{
+            res.status(400).json({error: "error encontrando el seminarista"+ error}).send()
         })
     }
     public GetConstance = async (req: Request, res: Response) => {
