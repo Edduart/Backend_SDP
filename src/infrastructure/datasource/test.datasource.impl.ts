@@ -71,8 +71,7 @@ export class TestDataSourceImpl implements TestDataSource {
     dto: GetTestBySubjectDto
   ): Promise<EnrollmentTestResult[]> {
     console.log(dto);
-
-    const testScoreBySeminarian: testScoreBySeminarianResult[] =
+    const testScoreBySeminarian =
       await prisma.seminarian.findMany({
         where: {
           id: dto.seminarian_id,
@@ -109,76 +108,9 @@ export class TestDataSourceImpl implements TestDataSource {
           },
         },
       });
-
-    interface testScoreBySeminarianResult {
-      id: string;
-      user: {
-        person: {
-          surname: string;
-          forename: string;
-        };
-      };
-      enrollment: {
-        enrollment_id: number;
-        subject_id: number;
-        status: string;
-        subject: {
-          description: string;
-        };
-        test_score?: {
-          test_id?: number;
-          score?: number;
-          enrollment_id?: number;
-          last_edited_date?: Date | null;
-          test?: {
-            id?: number;
-            subject_id?: number;
-            academic_term_id?: number;
-            description?: string;
-            status?: boolean;
-            maximum_score?: number;
-          }[];
-        }[];
-      }[];
-    }[]
-
-
-
-
-
-    console.log(JSON.stringify(testScoreBySeminarian));
-
-    throw 'stop after test score'
-
-    const testScoreBySubject = await prisma.enrollment.findMany({
-      where: {
-        seminarian_id: dto.seminarian_id,
-        academic_term_id: dto.academic_term_id,
-        subject_id: dto.subject_id,
-        enrollment_id: dto.enrollment_id,
-        status: dto.status,
-      },
-      include: {
-        subject: { select: { description: true } },
-        seminarian: {
-          select: {
-            user: {
-              select: { person: { select: { surname: true, forename: true } } },
-            },
-          },
-        },
-        test_score: { include: { test: true } },
-        academic_term: {
-          select: { start_date: true, end_date: true, status: true },
-        },
-      },
-    });
-
-    testScoreBySubject.map((test) => test.subject.description);
-
     const testScoreCalculated: EnrollmentTestResult[] =
       await calculateTestScore.calculateTestScoreFromSubject(
-        testScoreBySubject
+        testScoreBySeminarian
       );
     return testScoreCalculated;
   }
