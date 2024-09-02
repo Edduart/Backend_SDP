@@ -209,6 +209,14 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             Location: data.location as seminarian_Location,
             Ministery: data.ministery as seminarian_Ministery,
             foreigner_seminarian: where_clause_foreing,
+            enrollment:{
+              some:{
+                subject_id: data.subject_id,
+                subject:{
+                  course_id: data.curse_id
+                }
+              }
+            }
           },
         },
       },
@@ -225,6 +233,15 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             },
             seminarian: {
               include: {
+                enrollment: {
+                  include:{
+                    subject:{
+                      include:{
+                        course: true
+                      }
+                    }
+                  }
+                },
                 foreigner_seminarian: true,
               },
             },
