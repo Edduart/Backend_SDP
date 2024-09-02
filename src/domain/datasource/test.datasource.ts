@@ -8,6 +8,8 @@ import {
   GetTestForTestScoreDto,
   TestForTestScoreResult,
   GetAverageGradeBySubjectDto,
+  GetSeminarianDTO,
+  SeminarianListDTO,
 } from "../dtos";
 
 export abstract class TestDataSource {
@@ -21,6 +23,7 @@ export abstract class TestDataSource {
   ): Promise<TestForTestScoreResult>;
   abstract update(dto: UpdateTestDto): Promise<TestEntity>;
   abstract delete(id: number): Promise<TestEntity>;
+  abstract GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]>;
   abstract getAverageGradeBySubject(
     dto: GetAverageGradeBySubjectDto
   ): Promise<object[]>;

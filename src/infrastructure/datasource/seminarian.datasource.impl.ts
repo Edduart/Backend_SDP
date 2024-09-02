@@ -243,7 +243,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
       },
     });
-    console.log(result)
     const results: SeminarianEntity[] = result.map((person_actual) => {
       //create the person
       const person = PersonEntity.fromdb({
@@ -289,6 +288,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         apostleships: person_actual.user?.seminarian?.apostleships,
         location: person_actual.user?.seminarian?.Location as Locations_enum,
         Ministery: person_actual.user?.seminarian?.Ministery as seminarianMinistery_ENUM,
+        stage: person_actual.user?.seminarian?.stage.toString() as StageEnum,
         status: person_actual.user?.seminarian?.status as seminarian_status_enum,
         parish_id: person_actual.user?.parish_id,
         diocesi_id: person_actual.user?.parish.diocese_id

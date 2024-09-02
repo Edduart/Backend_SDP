@@ -13,10 +13,14 @@ export class GetSeminarianDTO{
         public readonly foreing:        boolean                    | undefined,
         public readonly location:       Locations_enum             | undefined,
         public readonly status:         seminarian_status_enum     | undefined,
+        public readonly curse_id?:      number                     | undefined,
+        public readonly subject_id?:    number                     | undefined,
+        public readonly note?:          number                     | undefined,
+        public academic_term_id?: number,
     ){}
     
     static CreateDTO(object: { [key: string]: any }): [string?, GetSeminarianDTO?]{
-        const { id, forename, surname, parish_id, diocese_id, first_Date, second_Date, ministery,foreing,location, status} = object;
+        const { id, forename, surname, parish_id, diocese_id, first_Date, second_Date, ministery,foreing,location, status, curse_id, subject_id} = object;
         let errorarray: string[]= [];
         //these auxiliaries var are for all the other params that are not strings
         let parish_id_number, diocese_id_number,
@@ -88,7 +92,7 @@ export class GetSeminarianDTO{
         }
         return [undefined, new GetSeminarianDTO(id, forename, surname, parish_id_number, diocese_id_number,
             first_Date_obj, second_Date_obj, ministery as seminarianMinistery_ENUM, bool_fore, location as Locations_enum,
-            status as seminarian_status_enum)];
+            status as seminarian_status_enum, curse_id, subject_id)];
     }
 
     static isValidDate(date: string): boolean {
