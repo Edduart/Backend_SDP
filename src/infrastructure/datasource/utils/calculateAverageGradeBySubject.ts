@@ -17,7 +17,7 @@ export class calculateAverageGrade {
           +testScore.score
         );
 
-        individualEnrollmentFinalGrade += +totalTestScore.toFixed(2);
+        individualEnrollmentFinalGrade += +totalTestScore.toFixed(2) / 10;
       }
 
       console.log({ individualEnrollmentFinalGrade });
@@ -25,7 +25,7 @@ export class calculateAverageGrade {
       averageGradeInTheSubject += individualEnrollmentFinalGrade;
     }
 
-    averageGradeInTheSubject = averageGradeInTheSubject / numberOfEnrollments;
+    averageGradeInTheSubject = +(averageGradeInTheSubject / numberOfEnrollments).toFixed(2);
     
     const subjectAverageGrade: any = {
       subject: enrollments[0].subject.description,

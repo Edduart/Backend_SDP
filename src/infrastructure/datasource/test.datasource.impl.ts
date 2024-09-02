@@ -39,7 +39,7 @@ export class TestDataSourceImpl implements TestDataSource {
         test_score: { select: { score: true , test: {select:{id: true, maximum_score: true}} } },
       },
     });
-    if (enrollments.length == 0) throw 'The subject dont exist or dont have any enrollments';
+    if (enrollments.length == 0) throw "The subject don't exist or don't have any enrollments";
       const subjectAverageGrade: any[] =
         await calculateAverageGrade.getAverageGradeBySubject(enrollments);
     return subjectAverageGrade;
