@@ -33,15 +33,14 @@ export class ProfessorController {
     const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(
       req.body.data,
-      "http://127.0.0.1:3000/" + req.body.ayuda
+      req.body.ayuda
     );
+
     const { userData } = await parseUserDataUpdate(req.body.data);
-    //console.log(userData);
-    const professorData = new UpdateProfessorDto(
-      personData,
-      userData,
-    );
-    //console.log("user data:", userData);
+    const professorData = new UpdateProfessorDto(personData, userData);
+
+    // TODO validations and remove chainFunction
+
     const updateProfessor = await new UpdateProfessor(this.repository)
       .execute(professorData)
       .then((professor) => {
@@ -63,12 +62,10 @@ export class ProfessorController {
   public get = async (req: Request, res: Response) => {
     const [error, getDto] = GetProfessorDto.GetDto(req.query);
     if (error)
-      return res
-        .status(400)
-        .json({
-          msj: "There are some validation errors in the given params!",
-          error,
-        });
+      return res.status(400).json({
+        msj: "There are some validation errors in the given params!",
+        error,
+      });
     new GetProfessor(this.repository)
       .execute(getDto!)
       .then((professor) => res.json(professor))
@@ -76,17 +73,37 @@ export class ProfessorController {
   };
 
   public create = async (req: Request, res: Response) => {
-
     // TODO check operations order, check role, validations
 
+    let dtoCreateInstructor = null;
     const isInstructor = await parseInstructorData(req.body.data);
-    const personData = await parsePersonData(
-      req.body.data,
-      "http://127.0.0.1:3000/" + req.body.ayuda
-    );
+    const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
-    userData.role = 4;
+
+    userData.role = 4; // TODO add proper roles
+
+    const dataValidationErrors = professorData.Validate();
+    if (dataValidationErrors) {
+      if (req.body.ayuda != null) {
+        fs.unlinkSync(req.body.ayuda);
+      }
+      return res.status(400).send("Error: " + dataValidationErrors);
+    }
+    
+    if (isInstructor) {
+      const [error, createInstructor] =
+        CreateInstructorDto.create(isInstructor);
+      if (error) {
+        if (req.body.ayuda != null) {
+          fs.unlinkSync(req.body.ayuda);
+        }
+        return res.status(400).json({ error });
+      } else {
+        dtoCreateInstructor = createInstructor;
+      }
+    }
+
     const createProfessor = await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
       .then((professor) =>
@@ -96,13 +113,13 @@ export class ProfessorController {
           .send()
       )
       .catch((error) => res.status(400).json({ error }));
-    if (isInstructor != null && createProfessor) {
-      const [error, createInstructor] =
-        CreateInstructorDto.create(isInstructor);
-      if (error) return res.status(400).json({ error });
+
+    console.log({ createProfessor });
+
+    if (isInstructor && createProfessor) {
       new CreateInstructor(this.instructorPositionRepo)
-        .execute(createInstructor!)
-        .catch((error) => res.status(400).json({ error })); // this could generate error
+        .execute(dtoCreateInstructor!)
+        .catch((error) => res.status(400).json({ error }));
     }
   };
 

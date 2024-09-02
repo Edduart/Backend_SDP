@@ -17,6 +17,8 @@ import {
 import { encode } from "../services/hash_handler";
 import { formatDate } from "../../presentation/utils/formatDate";
 
+const serverAddress: string = "http://127.0.0.1:3000/";
+
 export async function parsePersonData(req: any, path: any) {
   try {
     const origin = await JSON.parse(req);
@@ -34,7 +36,7 @@ export async function parsePersonData(req: any, path: any) {
     // Person Data Parsing
     const personData = new CreatePerson(
       origin.persona.id,
-      imageFile,
+      serverAddress + imageFile,
       origin.persona.forename.toUpperCase(),
       origin.persona.surname.toUpperCase(),
       origin.persona.email,

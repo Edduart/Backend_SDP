@@ -93,7 +93,7 @@ export class SeminarianControler{
             const result = ValidatePermission(source, "SEMINARIAN", 'U');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
-            const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);
+            const persondto = await parsePersonData(data, req.body.ayuda);
             let foreingdata = undefined;
             //creating the foreing data
             if(user_origin.ForeingSeminarian != undefined){
@@ -142,7 +142,7 @@ export class SeminarianControler{
             const result = ValidatePermission(source, "SEMINARIAN", 'C');
             const data = req.body.data;
             const user_origin = await JSON.parse(data);
-            const persondto = await parsePersonData(data, "http://127.0.0.1:3000/"+req.body.ayuda);
+            const persondto = await parsePersonData(data, req.body.ayuda);
             let foreingdata = undefined;
             //creating the foreing data
             if(user_origin.ForeingSeminarian != undefined){
