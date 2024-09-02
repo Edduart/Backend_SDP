@@ -73,7 +73,8 @@ export class ProfessorController {
   };
 
   public create = async (req: Request, res: Response) => {
-    // TODO check operations order, check role, validations
+    
+    // TODO check role
 
     let dtoCreateInstructor = null;
     const isInstructor = await parseInstructorData(req.body.data);
