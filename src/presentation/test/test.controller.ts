@@ -109,15 +109,21 @@ export class TestController {
     new GetTestBySubject(this.repository)
       .execute(getDto)
       .then((test) => {
-        const line = res.writeHead(200, {
-          "Content-Type": "application/pdf",
-          "Content-Disposition": "inline; filename=nota.pdf",
-        });
-        BuildNotas(
-          (data) => line.write(data),
-          () => line.end(),
-          test
-        );
+        console.log(test)
+        if(test.length >0){
+          const line = res.writeHead(200, {
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "inline; filename=nota.pdf",
+          });
+          BuildNotas(
+            (data) => line.write(data),
+            () => line.end(),
+            test
+          );
+        }else{
+          res.status(400).json({error:  "Seminarista no encontrado"});
+        }
+        
       })
       .catch((error) => res.status(400).json({ error }));
   };

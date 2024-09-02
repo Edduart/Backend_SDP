@@ -11,7 +11,7 @@ const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
 router.get('/ficha/:id', SeminarianControl.ficha);
 router.get('/carcaCulmin/:id', SeminarianControl.getCartaCulminacione)
-router.get('/constance/', SeminarianControl.GetConstance)
+router.get('/constance/:id', SeminarianControl.GetConstance)
 router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
     profile.single('picture')(req, res, async (err) => {
         if (err) {
