@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
 import {
-TestRepository,
-GetTestDto,
-GetTest,
-GetTestBySubjectDto,
-GetTestBySubject, 
-CreateTestDto,
-CreateTest,
-EnrollmentStatus,
-GetTestForTestScoreDto,
-GetTestForTestScore,
-UpdateTestDto,
-UpdateTest,
+  TestRepository,
+  GetTestDto,
+  GetTest,
+  GetTestBySubjectDto,
+  GetTestBySubject,
+  CreateTestDto,
+  CreateTest,
+  EnrollmentStatus,
+  GetTestForTestScoreDto,
+  GetTestForTestScore,
+  UpdateTestDto,
+  UpdateTest,
+  GetAverageGradeBySubjectDto,
+  GetAverageGradeBySubject,
 DeleteTest,
 GetSeminarianPerNoteUse,
 GetSeminarianDTO
@@ -23,16 +25,29 @@ import { BuildNotas } from "../docs/Notas.Certificadas";
 export class TestController {
   constructor(private readonly repository: TestRepository) {}
 
-  public delete = (req: Request, res: Response) => {
+  public getAverageGradeBySubject = (req: Request, res: Response) => {
 
+    console.log("running getAverageGradeBySubject");
+
+    const [error, getDto] = GetAverageGradeBySubjectDto.get(req.query);
+    if (error) return res.status(400).json({ error });
+
+    new GetAverageGradeBySubject(this.repository)
+      .execute(getDto!)
+      .then((gradeAverage) =>
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json(gradeAverage)
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+  public delete = (req: Request, res: Response) => {
     const id = +req.params.id;
 
     new DeleteTest(this.repository)
       .execute(id!)
       .then((test) =>
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
-          msj:
-            "Test ID " + test.id + " disabled!",
+          msj: "Test ID " + test.id + " disabled!",
           test,
         })
       )
@@ -126,8 +141,8 @@ export class TestController {
     new GetTestBySubject(this.repository)
       .execute(getDto)
       .then((test) => {
-        console.log(test)
-        if(test.length >0){
+        console.log(test);
+        if (test.length > 0) {
           const line = res.writeHead(200, {
             "Content-Type": "application/pdf",
             "Content-Disposition": "inline; filename=nota.pdf",
@@ -137,10 +152,9 @@ export class TestController {
             () => line.end(),
             test
           );
-        }else{
-          res.status(400).json({error:  "Seminarista no encontrado"});
+        } else {
+          res.status(400).json({ error: "Seminarista no encontrado" });
         }
-        
       })
       .catch((error) => res.status(400).json({ error }));
   };

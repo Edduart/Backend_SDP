@@ -16,6 +16,8 @@ import {
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
+import { calculateAverageGrade } from "./utils/calculateAverageGradeBySubject";
+import test from 'node:test';
 export class TestDataSourceImpl implements TestDataSource {
   async GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]> {
     const errolments = await this.getTestBySubject(new GetTestBySubjectDto(undefined, undefined, data.subject_id, data.academic_term_id, undefined))
@@ -37,11 +39,13 @@ export class TestDataSourceImpl implements TestDataSource {
       },
       include: {
         subject: { select: { description: true } },
-        test_score: { select: { score: true } },
+        test_score: { select: { score: true , test: {select:{id: true, maximum_score: true}} } },
       },
     });
-
-    throw new Error("Method not implemented.");
+    if (enrollments.length == 0) throw "The subject don't exist or don't have any enrollments";
+      const subjectAverageGrade: any[] =
+        await calculateAverageGrade.getAverageGradeBySubject(enrollments);
+    return subjectAverageGrade;
   }
   async getTestForTestScore(
     dto: GetTestForTestScoreDto
@@ -190,6 +194,7 @@ export class TestDataSourceImpl implements TestDataSource {
   }
 
   async get(dto: GetTestDto): Promise<object> {
+
     const test = await prisma.test.findMany({
       where: {
         id: dto.id,
