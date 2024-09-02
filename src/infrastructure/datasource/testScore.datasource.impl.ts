@@ -44,16 +44,27 @@ export class TestScoreDataSourceImpl implements TestScoreDataSource {
   }
   async update(dto: UpdateTestScoreDto): Promise<object> {
 
+    await this.validateExist(dto.enrollmentIds, dto.testIds);
+
     let count: number = 0;
-    let updateTest: object = {}
+    let updateTest: object = {};
 
     for (const test of Object.values(dto.tests)) {
-      await prisma.test_score.updateMany({
+      await prisma.test_score.upsert({
         where: {
+          test_id_enrollment_id: {
+            enrollment_id: test.enrollment_id,
+            test_id: test.test_id,
+          },
+        },
+        create: {
           enrollment_id: test.enrollment_id,
           test_id: test.test_id,
+          score: test.score,
         },
-        data: {
+        update: {
+          enrollment_id: test.enrollment_id,
+          test_id: test.test_id,
           score: test.score,
         },
       });
