@@ -10,10 +10,27 @@ import {
   EnrollmentTestResult,
   GetTestForTestScoreDto,
   TestForTestScoreResult,
+  GetAverageGradeBySubjectDto,
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
 export class TestDataSourceImpl implements TestDataSource {
+  async getAverageGradeBySubject(
+    dto: GetAverageGradeBySubjectDto
+  ): Promise<object[]> {
+    const enrollments = await prisma.enrollment.findMany({
+      where: {
+        academic_term_id: dto.academic_term_id,
+        subject_id: dto.subject_id,
+      },
+      include: {
+        subject: { select: { description: true } },
+        test_score: { select: { score: true } },
+      },
+    });
+
+    throw new Error("Method not implemented.");
+  }
   async getTestForTestScore(
     dto: GetTestForTestScoreDto
   ): Promise<TestForTestScoreResult> {
@@ -55,33 +72,32 @@ export class TestDataSourceImpl implements TestDataSource {
       })),
       seminarians: seminariansResult.map((seminarians: any) => {
         let testCounter = -1;
-        return ({
-        enrollment_id: seminarians.enrollment_id,
-        seminarian_id: seminarians.seminarian_id,
-        seminarian_surname: seminarians.seminarian.user.person.forename,
-        seminarian_forename: seminarians.seminarian.user.person.surname,
-        test_score:
-          seminarians.test_score.length == 0
-            ? testsResult.map((noScoredTest) => ({
-                test_id: noScoredTest.id,
-                score: 0,
-              }))
-            : testsResult.map((test_score: any) => {
-              const scoredTests = seminarians.test_score.map(
-                (test: any) => (
-                  test.score
-                )
-              );
-              testCounter++;
-              return {
-                test_id: test_score.id,
-                score:
-                  testCounter >= scoredTests.length
-                    ? 0
-                    : scoredTests[testCounter],
-              };
-            }),
-      })}),
+        return {
+          enrollment_id: seminarians.enrollment_id,
+          seminarian_id: seminarians.seminarian_id,
+          seminarian_surname: seminarians.seminarian.user.person.forename,
+          seminarian_forename: seminarians.seminarian.user.person.surname,
+          test_score:
+            seminarians.test_score.length == 0
+              ? testsResult.map((noScoredTest) => ({
+                  test_id: noScoredTest.id,
+                  score: 0,
+                }))
+              : testsResult.map((test_score: any) => {
+                  const scoredTests = seminarians.test_score.map(
+                    (test: any) => test.score
+                  );
+                  testCounter++;
+                  return {
+                    test_id: test_score.id,
+                    score:
+                      testCounter >= scoredTests.length
+                        ? 0
+                        : scoredTests[testCounter],
+                  };
+                }),
+        };
+      }),
     };
     return resultMap;
   }
@@ -90,43 +106,48 @@ export class TestDataSourceImpl implements TestDataSource {
     dto: GetTestBySubjectDto
   ): Promise<EnrollmentTestResult[]> {
     console.log(dto);
-    const testScoreBySeminarian =
-      await prisma.seminarian.findMany({
-        where: {
-          id: dto.seminarian_id,
-          enrollment: {
-            some: {
-              academic_term_id: dto.academic_term_id,
-              subject_id: dto.subject_id,
-              enrollment_id: dto.enrollment_id,
-              status: dto.status,
-            },
+    const testScoreBySeminarian = await prisma.seminarian.findMany({
+      where: {
+        id: dto.seminarian_id,
+        enrollment: {
+          some: {
+            academic_term_id: dto.academic_term_id,
+            subject_id: dto.subject_id,
+            enrollment_id: dto.enrollment_id,
+            status: dto.status,
           },
         },
-        select: {
-          id: true,
-          user: {
-            select: { person: { select: { surname: true, forename: true } } },
+      },
+      select: {
+        id: true,
+        user: {
+          select: { person: { select: { surname: true, forename: true } } },
+        },
+        enrollment: {
+          where: {
+            academic_term_id: dto.academic_term_id,
+            subject_id: dto.subject_id,
+            enrollment_id: dto.enrollment_id,
+            status: dto.status,
           },
-          enrollment: {
-            select: {
-              enrollment_id: true,
-              subject_id: true,
-              status: true,
-              subject: { select: { description: true } },
-              test_score: { include: { test: true } },
-              academic_term: {
-                select: {
-                  id: true,
-                  start_date: true,
-                  end_date: true,
-                  status: true,
-                },
+          select: {
+            enrollment_id: true,
+            subject_id: true,
+            status: true,
+            subject: { select: { description: true } },
+            test_score: { include: { test: true } },
+            academic_term: {
+              select: {
+                id: true,
+                start_date: true,
+                end_date: true,
+                status: true,
               },
             },
           },
         },
-      });
+      },
+    });
     const testScoreCalculated: EnrollmentTestResult[] =
       await calculateTestScore.calculateTestScoreFromSubject(
         testScoreBySeminarian

@@ -9,10 +9,14 @@ import {
   EnrollmentTestResult,
   GetTestForTestScoreDto,
   TestForTestScoreResult,
+  GetAverageGradeBySubjectDto,
 } from "../../domain";
 
 export class TestRepositoryImpl implements TestRepository {
   constructor(private readonly dataSource: TestDataSource) {}
+  getAverageGradeBySubject(dto: GetAverageGradeBySubjectDto): Promise<object[]> {
+    return this.dataSource.getAverageGradeBySubject(dto);
+  }
   getTestForTestScore(dto: GetTestForTestScoreDto): Promise<TestForTestScoreResult> {
     return this.dataSource.getTestForTestScore(dto);
   }
