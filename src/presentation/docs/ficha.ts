@@ -17,11 +17,17 @@ export function BuildFicha(dataCB: (...args: any[]) => void, endCB: (...args: an
     //titulo del id
     doc.text("DATOS DEL SEMINARISTA", 45,47,{align: 'center'})
     //icono
-    doc.image('./images/assests/seminary.icon.png', 55,65,{
-        fit:[100,100],
-        align:'right',
-        
-    });
+    try{
+        doc.image('./images/assests/seminary.icon.png', 55,65,{
+            fit:[100,100],
+            align:'right',
+            
+        });
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el icono', 55,65);
+    }
+    
     doc.font('Times-Bold', 10).text("SEMINARIO PROVINCIAL", 50, 185,)
     doc.text("DIVINA PASTORA", 65)
     doc.font('Times-Bold', 12)
@@ -32,30 +38,37 @@ export function BuildFicha(dataCB: (...args: any[]) => void, endCB: (...args: an
     doc.text("NOMBES: ", 172,74, {continued: true}).text(data.forename)
     
     //foto de perfil
-    if(data.picture != null){
-        const picture = data.picture.split("3000");
-        const path = "." + picture[1];
-        doc.image(path, 442,65,{
-            width:140,
-            height: 140,
-            fit:[160,140],
-            
-        });
+    try{
+        if(data.picture != null){
+            const picture = data.picture.split("3000");
+            const path = "." + picture[1];
+            doc.image(path, 442,65,{
+                width:140,
+                height: 140,
+                fit:[160,140],
+                
+            });
+        }else{
+            doc.text('Seminarista no tiene foto', 442,65);
+        }
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en la foto del seminarista', 442,65);
     }
+    
 
     //Apellidos
     doc.rect(170, 95, 268, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#ccfcff")
     doc.fillColor("black")
     doc.text("APELLIDOS: ", 172, 101, {continued:true}).text(data.surname)
 
-   doc.fillColor("black")
+    doc.fillColor("black")
     //fecha
     doc.rect(170, 122, 80, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#ccfcff")
     doc.fillColor("black")
     doc.text("NATALICIO", 176,128)
     //texto
     doc.text(data.birthdate.toISOString().split('T')[0], 180,150)
-
 
     //Cedula
     doc.rect(258, 122, 114, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#ccfcff")

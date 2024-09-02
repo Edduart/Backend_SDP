@@ -16,13 +16,17 @@ export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public ficha = (req: Request, res: Response) => {
         new SeminarianFichaUseCase(this.repository).execute(req.params.id).then((seminarians)=>{
-            const line =res.writeHead(200,{
-                "Content-Type": "application/pdf",
-                "Content-Disposition": "inline; filename=ficha.pdf"
-              })
-              BuildFicha((data)=>line.write(data),()=>line.end(), seminarians);
+            try{
+                const line =res.writeHead(200,{
+                    "Content-Type": "application/pdf",
+                    "Content-Disposition": "inline; filename=ficha.pdf"
+                  })
+                BuildFicha((data)=>line.write(data),()=>line.end(), seminarians);
+            }catch(errorID){
+                res.status(418).json("unable to create ID: " + errorID);
+            }
         }).catch((error)=>{
-            res.status(418).send("unable to create ID: " + error);
+            res.status(418).json("unable to create ID: " + error);
         })
     }
     public getCartaCulminacione = async (req: Request, res: Response) => {

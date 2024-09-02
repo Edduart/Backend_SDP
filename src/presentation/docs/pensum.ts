@@ -3,16 +3,27 @@ import { Stage_PensumDTO } from '../../domain';
 
 export async function BuildPensum(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: Stage_PensumDTO[]) {
     const doc = new PDFDocument({ font: 'Times-Roman' });
-    doc.image('./images/assests/backgproundcolored.png', 25,65,{
-        fit:[100,100],
-        align:'right',
-        
-    });
-    doc.image('./images/assests/shield.jpg', 500,65,{
-        fit:[100,100],
-        align:'right',
-        
-    });
+    try{
+        doc.image('./images/assests/backgproundcolored.png', 25,65,{
+            fit:[100,100],
+            align:'right',
+            
+        });
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el icono', 25,65);
+    }
+    try{
+        doc.image('./images/assests/shield.jpg', 500,65,{
+            fit:[100,100],
+            align:'right',
+            
+        });
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el escudo', 500,65);
+    }
+    
     doc.font('Times-Bold', 12).text("PLANES DE ESTUDIO", {align: 'center'});
     doc.font('Times-Roman', 12)
     doc.on("data", dataCB);

@@ -3,10 +3,16 @@ import { Getmonth } from './Notas.Certificadas';
 
 export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string, period: string, etapa: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
-    doc.image("./images/assests/backgpround.png", 110,150,{
-        align:'center',
-        
-    });
+    try{
+        doc.image("./images/assests/backgpround.png", 110,150,{
+            align:'center',
+            
+        });
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el fondo', 110,150);
+    }
+    
     surname = surname.toLowerCase();
     let nombre = surname.split(" ");
     let surname_fixed = "";
@@ -24,10 +30,16 @@ export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args
     forename = forename_fixed;
     doc.on("data", dataCB);
     doc.on("end", endCB);
-    doc.image('./images/assests/seminary.icon.png', {
-        fit:[100,100],
-        align:'right'
-    })
+    try{
+        doc.image('./images/assests/seminary.icon.png', {
+            fit:[100,100],
+            align:'right'
+        })
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el icono', 10,10);
+    }
+    
     doc.font('Times-Bold', 12).text('Arquidiócesis de Barquisimeto', {align: 'center'});
     doc.font('Times-Bold', 12).text('Instituto de Estudios Superiores “Divina Pastora”', {align: 'center'});
     doc.font('Times-Bold', 12).text('Dirección de Estudios', {align: 'center'});

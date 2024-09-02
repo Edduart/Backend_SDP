@@ -4,13 +4,18 @@ import { EnrollmentTestResult } from '../../domain';
 export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: EnrollmentTestResult[]) {
     const doc = new PDFDocument({ font: 'Times-Roman' });
     doc.font('Times-Roman', 12)
+    try{
+        doc.image('./images/assests/backgproundcolored.png', 25,65,{
+            fit:[100,100],
+            align:'right',
+            
+        });
+    }catch(error){
+        //si hay un error cargando la imagen lo envia
+        doc.text('Error en el icono', 25,65);
+    }
 
-
-    doc.image('./images/assests/backgproundcolored.png', 25,65,{
-        fit:[100,100],
-        align:'right',
-        
-    });
+    
     doc.moveDown();
     doc.moveDown();
     doc.font('Times-Bold', 12).text("Arquidiósis de Barquisimeto", {align: 'center'});
@@ -41,23 +46,23 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.font('Times-Roman', 12).text(forename_fixed+surname_fixed, {align: 'center'});
     doc.moveDown();
     doc.moveDown();
-    //let startinyear = data[0].enrollment.start_date?.split('-')[0]
-    //let endyeard = data[0].end_date?.split('-')[0]
-    //doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico " +startinyear + "-"+ endyeard+ " obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", {indent: 30,});
+    let startinyear = data[0].enrollment[0].start_date?.split('-')[0]
+    let endyeard = data[0].enrollment[data[0].enrollment.length-1].end_date?.split('-')[0]
+    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico " +startinyear + "-"+ endyeard+ " obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", {indent: 30,});
     
     doc.on("data", dataCB);
     doc.on("end", endCB);
     doc.moveDown();
     let materias: string[][] = [];
-    /*data.forEach(element => {
+    data[0].enrollment.forEach(element => {
         materias.push([
-          element.enrollment.subject_name,
+          element.subject_name,
           element.subject_total_score_out_of_graded_scored_10_scale,
           element.start_date?.split("-")[0] +
             "-" +
             element.end_date?.split("-")[0],
         ]);
-    });   */ 
+    });   
     const table = {
         headers: [{ label: '   Asignatura', headerColor: "#FFFFFF"}, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },
             { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }],
