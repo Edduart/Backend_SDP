@@ -13,6 +13,6 @@ export class StageEntity {
 export const stages = { // FIXME add 4 as "culminado" if necessary
   ALL: 0,
   PROPEDEUTICO: 1,
-  DISCIPULAR: 2,
+  DISCIPULADO: 2,
   CONFIGURATIVA: 3,
 };
