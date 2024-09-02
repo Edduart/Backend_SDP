@@ -12,7 +12,6 @@ export class calculateTestScore {
     const decimalNumbers: number = 2;
     console.log(testScoreBySubject.map((test) => test));
     if (testScoreBySubject.length == 0) {
-      console.log("No score to calculate");
       return testScoreBySubject;
     } else {
 

@@ -17,7 +17,7 @@ import {
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
 import { GetStageOfSeminarianMap } from "./utils/getStageOfSeminarianFilter";
 import { calculateTestScore } from "./utils/calculateScore";
-import { calculateStageStatus, AllEnrollmentBySeminarian } from "./utils/calculateifSeminarianApproveStage";
+import { calculateStageStatus, AllEnrollmentBySeminarian } from "./utils/calculateIfSeminarianApproveStage";
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   async updateStageIfApproved(): Promise<object> {
     const allEnrollmentBySeminarian: AllEnrollmentBySeminarian[] =
@@ -221,7 +221,6 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
 }
 
 interface DtoValidate {
-  //FIXME check about optional keys, also this can be create as a independent dto need to check
   seminarian_id?: string;
   subject_id?: Array<number>;
   academic_term_id?: number;
