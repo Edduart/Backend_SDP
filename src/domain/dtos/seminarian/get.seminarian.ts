@@ -13,8 +13,10 @@ export class GetSeminarianDTO{
         public readonly foreing:        boolean                    | undefined,
         public readonly location:       Locations_enum             | undefined,
         public readonly status:         seminarian_status_enum     | undefined,
-        public readonly curse_id?:      number| undefined,
-        public readonly subject_id?:    number| undefined,
+        public readonly curse_id?:      number                     | undefined,
+        public readonly subject_id?:    number                     | undefined,
+        public readonly note?:          number                     | undefined,
+        public academic_term_id?: number,
     ){}
     
     static CreateDTO(object: { [key: string]: any }): [string?, GetSeminarianDTO?]{

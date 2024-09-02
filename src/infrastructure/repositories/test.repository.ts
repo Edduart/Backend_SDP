@@ -10,10 +10,15 @@ import {
   GetTestForTestScoreDto,
   TestForTestScoreResult,
   GetAverageGradeBySubjectDto,
+  GetSeminarianDTO,
+  SeminarianListDTO,
 } from "../../domain";
 
 export class TestRepositoryImpl implements TestRepository {
   constructor(private readonly dataSource: TestDataSource) {}
+  GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]> {
+    return this.dataSource.GetSeminarianListWithNotes(data);
+  }
   getAverageGradeBySubject(dto: GetAverageGradeBySubjectDto): Promise<object[]> {
     return this.dataSource.getAverageGradeBySubject(dto);
   }

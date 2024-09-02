@@ -5,3 +5,4 @@ export * from "./updateTest";
 export * from "./getTestBySubject";
 export * from "./getTestForTestScore";
 export * from "./getAverageGradeBySubject";
+export * from "./createlist"

@@ -12,6 +12,8 @@ import { BuildPDF } from "../docs/carta_culminacion";
 import { BuildFicha } from "../docs/ficha";
 import { BuildConstance } from "../docs/constance";
 import { CreateSeminarianList } from "../docs/seminarianlist";
+import { TestDataSourceImpl } from "../../infrastructure";
+const dataSource = new TestDataSourceImpl();
 export class SeminarianControler{
     constructor(private readonly repository: SeminarianRepository){}
     public ficha = (req: Request, res: Response) => {

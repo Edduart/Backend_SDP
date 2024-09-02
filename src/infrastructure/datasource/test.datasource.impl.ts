@@ -11,12 +11,21 @@ import {
   GetTestForTestScoreDto,
   TestForTestScoreResult,
   GetAverageGradeBySubjectDto,
+  GetSeminarianDTO,
+  SeminarianListDTO,
 } from "../../domain";
 
 import { calculateTestScore } from "./utils/calculateScore";
 import { calculateAverageGrade } from "./utils/calculateAverageGradeBySubject";
 import test from 'node:test';
 export class TestDataSourceImpl implements TestDataSource {
+  async GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]> {
+    
+    const errolments = await this.getTestBySubject(new GetTestBySubjectDto(undefined, undefined, data.subject_id, data.academic_term_id, undefined))
+    
+    throw new Error("Method not implemented.");
+  }
+  
   async getAverageGradeBySubject(
     dto: GetAverageGradeBySubjectDto
   ): Promise<object[]> {
