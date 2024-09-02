@@ -30,7 +30,7 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `academic_degree` (
 
 LOCK TABLES `academic_degree` WRITE;
 /*!40000 ALTER TABLE `academic_degree` DISABLE KEYS */;
-INSERT INTO `academic_degree` VALUES (14,'V-123','test of description','www.facebook.com'),(15,'V-1234','test of description','www.facebook.com'),(16,'V-12345','test of description','www.facebook.com'),(17,'V-123456','test of description','www.facebook.com'),(18,'V-123456789','test of description','www.facebook.com'),(19,'V-1234567891','test of description','www.facebook.com'),(20,'V-123451','test of description','www.facebook.com');
+INSERT INTO `academic_degree` VALUES (21,'V-123456789','test of description','www.facebook.com'),(22,'V-1234567891','test of description','www.facebook.com'),(23,'V-1234567892','test of description','www.facebook.com'),(24,'V-1234567893','test of description','www.facebook.com'),(25,'V-1234567894','test of description','www.facebook.com'),(26,'V-1234567895','test of description','www.facebook.com');
 /*!40000 ALTER TABLE `academic_degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +93,7 @@ CREATE TABLE `academic_term` (
 
 LOCK TABLES `academic_term` WRITE;
 /*!40000 ALTER TABLE `academic_term` DISABLE KEYS */;
-INSERT INTO `academic_term` VALUES (1,'2024-08-01','2024-12-30',2,'ACTIVO'),(6,'2024-04-01','2024-07-01',1,'ACTIVO');
+INSERT INTO `academic_term` VALUES (1,'2020-02-01','2025-02-01',1,'EQUIVALENCIAS'),(2,'2020-02-01','2025-02-01',1,'CULMINADO'),(3,'2025-02-01','2025-02-01',1,'CULMINADO');
 /*!40000 ALTER TABLE `academic_term` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,6 +120,33 @@ CREATE TABLE `basic_worker` (
 LOCK TABLES `basic_worker` WRITE;
 /*!40000 ALTER TABLE `basic_worker` DISABLE KEYS */;
 /*!40000 ALTER TABLE `basic_worker` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bitacora`
+--
+
+DROP TABLE IF EXISTS `bitacora`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bitacora` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `User_id` varchar(20) NOT NULL,
+  `action` enum('DELETE','CREATE','UPDATE','LOGIN') NOT NULL,
+  `table` varchar(100) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bitacora`
+--
+
+LOCK TABLES `bitacora` WRITE;
+/*!40000 ALTER TABLE `bitacora` DISABLE KEYS */;
+INSERT INTO `bitacora` VALUES (2,'V-1','LOGIN','USER','2024-08-31 20:02:30'),(3,'V-1','LOGIN','USER','2024-09-01 07:29:08');
+/*!40000 ALTER TABLE `bitacora` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -197,7 +224,7 @@ CREATE TABLE `enrollment` (
   CONSTRAINT `fk_enrollment_academic_term` FOREIGN KEY (`academic_term_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `fk_enrollment_seminarian` FOREIGN KEY (`seminarian_id`) REFERENCES `seminarian` (`id`),
   CONSTRAINT `fk_enrollment_subject` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='materias matriculadas';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +233,7 @@ CREATE TABLE `enrollment` (
 
 LOCK TABLES `enrollment` WRITE;
 /*!40000 ALTER TABLE `enrollment` DISABLE KEYS */;
-INSERT INTO `enrollment` VALUES (1,'V-123',1,1,'RETIRADO'),(2,'V-123',3,1,'CURSANDO'),(3,'V-123',4,1,'CURSANDO'),(4,'V-123',6,1,'CURSANDO'),(5,'V-123',7,1,'CURSANDO'),(6,'V-123',8,1,'CURSANDO'),(7,'V-123',9,1,'CURSANDO'),(8,'V-123',10,1,'CURSANDO'),(9,'V-123',1,6,'CURSANDO'),(10,'V-1234',3,1,'CURSANDO'),(11,'V-12345',3,1,'CURSANDO');
+INSERT INTO `enrollment` VALUES (12,'V-123456789',1,2,'CURSANDO'),(24,'V-1234567891',1,2,'CURSANDO'),(25,'V-123456789',3,2,'CURSANDO');
 /*!40000 ALTER TABLE `enrollment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,7 +260,7 @@ CREATE TABLE `foreigner_seminarian` (
 
 LOCK TABLES `foreigner_seminarian` WRITE;
 /*!40000 ALTER TABLE `foreigner_seminarian` DISABLE KEYS */;
-INSERT INTO `foreigner_seminarian` VALUES ('V-123','Seminario Extranjero','2',2),('V-1234','Seminario Extranjero','2',2),('V-12345','Seminario Extranjero','2',2),('V-123456','Seminario Extranjero','2',2);
+INSERT INTO `foreigner_seminarian` VALUES ('V-123456789','Seminario Extranjero','2',2),('V-1234567891','Seminario Extranjero','2',2),('V-1234567892','Seminario Extranjero','2',2),('V-1234567893','Seminario Extranjero','2',2),('V-1234567894','Seminario Extranjero','2',2),('V-1234567895','Seminario Extranjero','2',2);
 /*!40000 ALTER TABLE `foreigner_seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +292,7 @@ CREATE TABLE `instruction` (
 
 LOCK TABLES `instruction` WRITE;
 /*!40000 ALTER TABLE `instruction` DISABLE KEYS */;
-INSERT INTO `instruction` VALUES ('V-123451',1,6),('V-123451',2,6),('V-123451',3,1);
+INSERT INTO `instruction` VALUES (NULL,1,1),(NULL,1,2),(NULL,2,1),(NULL,2,2),(NULL,3,1),(NULL,3,2),(NULL,3,3),(NULL,4,1),(NULL,5,1),(NULL,6,1),(NULL,7,1),(NULL,8,1),(NULL,9,1),(NULL,10,1),(NULL,11,1),(NULL,12,1),(NULL,13,1),(NULL,14,1),(NULL,15,1),(NULL,16,1),(NULL,17,1),(NULL,18,1),(NULL,19,1),(NULL,20,1),(NULL,21,1),(NULL,22,1),(NULL,23,1),(NULL,24,1),(NULL,25,1),(NULL,26,1),(NULL,27,1),(NULL,28,1),(NULL,29,1),(NULL,30,1),(NULL,31,1),(NULL,32,1),(NULL,33,1),(NULL,34,1),(NULL,35,1),(NULL,36,1),(NULL,37,1),(NULL,38,1),(NULL,39,1),(NULL,40,1),(NULL,41,1),(NULL,42,1),(NULL,43,1),(NULL,44,1),(NULL,45,1),(NULL,46,1),(NULL,47,1),(NULL,48,1);
 /*!40000 ALTER TABLE `instruction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +320,6 @@ CREATE TABLE `instructor` (
 
 LOCK TABLES `instructor` WRITE;
 /*!40000 ALTER TABLE `instructor` DISABLE KEYS */;
-INSERT INTO `instructor` VALUES ('V-123451','2024-06-11',1,'RECTOR');
 /*!40000 ALTER TABLE `instructor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +347,7 @@ CREATE TABLE `parish` (
 
 LOCK TABLES `parish` WRITE;
 /*!40000 ALTER TABLE `parish` DISABLE KEYS */;
-INSERT INTO `parish` VALUES (1,1,'BASÍLICA MENOR SANTO CRISTO DE LA GRACIA','SANTÍSIMO SACRAMENTO'),(2,2,'BEATA MARÍA DE SAN JOSÉ','EL NAZARENO'),(3,3,'CRISTO REDENTOR','NUESTRA SEÑORA DE COROMOTO'),(4,4,'CRISTO REY','SANTOS APÓSTOLES'),(5,5,'DIVINA PASTORA','SANTÍSIMO SACRAMENTO'),(6,6,'DIVINO NIÑO (EL TRIGAL)','SAGRADO CORAZÓN DE JESÚS'),(7,7,'EL SALVADOR','NUESTRA SEÑORA DE COROMOTO'),(8,8,'ESPÍRITU SANTO (BQTO)','ESPÍRITU SANTO'),(9,9,'INMACULADA CONCEPCIÓN (BUENA VISTA)','NTRA SRA DE ALTAGRACIA'),(10,10,'INMACULADA CONCEPCIÓN (CUARA)','NTRA SRA DE ALTAGRACIA'),(11,11,'JESÚS DE NAZARET','SANTÍSIMA TRINIDAD'),(12,12,'LA MEDALLA MILAGROSA','SANTÍSIMO SACRAMENTO'),(14,14,'MARÍA AUXILIADORA','ESPÍRITU SANTO'),(15,15,'MARÍA AUXILIADORA (LA MIEL)','EL NAZARENO'),(16,16,'MARÍA REINA DE TODOS LOS SANTOS','NUESTRA SEÑORA DE COROMOTO'),(180,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ'),(196,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ');
+INSERT INTO `parish` VALUES (1,1,'BASÍLICA MENOR SANTO CRISTO DE LA GRACIA','SANTÍSIMO SACRAMENTO'),(2,2,'BEATA MARÍA DE SAN JOSÉ','EL NAZARENO'),(3,3,'CRISTO REDENTOR','NUESTRA SEÑORA DE COROMOTO'),(4,4,'CRISTO REY','SANTOS APÓSTOLES'),(5,5,'DIVINA PASTORA','SANTÍSIMO SACRAMENTO'),(6,6,'DIVINO NIÑO (EL TRIGAL)','SAGRADO CORAZÓN DE JESÚS'),(7,7,'EL SALVADOR','NUESTRA SEÑORA DE COROMOTO'),(8,8,'ESPÍRITU SANTO (BQTO)','ESPÍRITU SANTO'),(9,9,'INMACULADA CONCEPCIÓN (BUENA VISTA)','NTRA SRA DE ALTAGRACIA'),(10,10,'INMACULADA CONCEPCIÓN (CUARA)','NTRA SRA DE ALTAGRACIA'),(11,11,'JESÚS DE NAZARET','SANTÍSIMA TRINIDAD'),(12,12,'LA MEDALLA MILAGROSA','SANTÍSIMO SACRAMENTO'),(14,14,'MARÍA AUXILIADORA','ESPÍRITU SANTO'),(15,15,'MARÍA AUXILIADORA (LA MIEL)','EL NAZARENO'),(16,16,'MARÍA REINA DE TODOS LOS SANTOS','NUESTRA SEÑORA DE COROMOTO'),(17,13,'LA RESURRECCIÓN DEL SEÑOR','SAN JOSÉ');
 /*!40000 ALTER TABLE `parish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,7 +373,7 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
-INSERT INTO `permission` VALUES (1,'PERMISO PARA CREAR INSTRUCTORES','C','INSTRUCTOR'),(2,'PERMISO PARA EDITAR INSTRUCTORES','U','INSTRUCTOR'),(3,'PERMISO PARA ELIMINAR INSTRUCTORES','D','INSTRUCTOR'),(4,'PERMISO PARA VER INSTRUCTORES','R','INSTRUCTOR'),(5,'PERMISO PARA CREAR USUARIOS','C','USER'),(6,'PERMISO PARA EDITAR USUARIOS','U','USER'),(7,'PERMISO PARA VER USUARIOS','R','USER'),(8,'PERMISO PARA ELIMINAR USUARIOS','D','USER'),(9,'PERMISO PARA CREAR SEMINARISTAS','C','SEMINARIAN'),(10,'PERMISO PARA EDITAR SEMINARISTAS','U','SEMINARIAN'),(11,'PERMISO PARA VER SEMINARISTAS','R','SEMINARIAN'),(12,'PERMISO PARA ELIMINAR SEMINARISTAS','D','SEMINARIAN'),(13,'PERMISO PARA CREAR TESTS','C','TEST'),(14,'PERMISO PARA EDITAR TESTS','U','TEST'),(15,'PERMISO PARA VER TESTS','R','TEST'),(16,'PERMISO PARA ELIMINAR TESTS','D','TEST'),(17,'PERMISO PARA CREAR ETAPAS','C','STAGE'),(18,'PERMISO PARA EDITAR ETAPAS','U','STAGE'),(19,'PERMISO PARA VER ETAPAS','R','STAGE'),(20,'PERMISO PARA ELIMINAR ETAPAS','D','STAGE'),(21,'PERMISO PARA CREAR CURSOS','C','COURSE'),(22,'PERMISO PARA EDITAR CURSOS','U','COURSE'),(23,'PERMISO PARA VER CURSOS','R','COURSE'),(24,'PERMISO PARA ELIMINAR CURSOS','D','COURSE'),(25,'PERMISO PARA CREAR MATERIAS','C','SUBJECT'),(26,'PERMISO PARA EDITAR MATERIAS','U','SUBJECT'),(27,'PERMISO PARA VER MATERIAS','R','SUBJECT'),(28,'PERMISO PARA ELIMINAR MATERIAS','D','subject'),(29,'PERMISO PARA VER LAS NOTAS PROPIAS UNICAMENTE','R','TESTS'),(30,'ACCESO TOTAL AL SISTEMA','A','ADMIN');
+INSERT INTO `permission` VALUES (1,'PERMISO PARA CREAR INSTRUCTORES','C','INSTRUCTOR'),(2,'PERMISO PARA EDITAR INSTRUCTORES','U','INSTRUCTOR'),(3,'PERMISO PARA ELIMINAR INSTRUCTORES','D','INSTRUCTOR'),(4,'PERMISO PARA VER INSTRUCTORES','R','INSTRUCTOR'),(5,'PERMISO PARA CREAR USUARIOS','C','USER'),(6,'PERMISO PARA EDITAR USUARIOS','U','USER'),(7,'PERMISO PARA VER USUARIOS','R','USER'),(8,'PERMISO PARA ELIMINAR USUARIOS','D','USER'),(9,'PERMISO PARA CREAR SEMINARISTAS','C','SEMINARIAN'),(10,'PERMISO PARA EDITAR SEMINARISTAS','U','SEMINARIAN'),(11,'PERMISO PARA VER SEMINARISTAS','R','SEMINARIAN'),(12,'PERMISO PARA ELIMINAR SEMINARISTAS','D','SEMINARIAN'),(13,'PERMISO PARA CREAR TESTS','C','TEST'),(14,'PERMISO PARA EDITAR TESTS','U','TEST'),(15,'PERMISO PARA VER TESTS','R','TEST'),(16,'PERMISO PARA ELIMINAR TESTS','D','TEST'),(17,'PERMISO PARA CREAR ETAPAS','C','STAGE'),(18,'PERMISO PARA EDITAR ETAPAS','U','STAGE'),(19,'PERMISO PARA VER ETAPAS','R','STAGE'),(20,'PERMISO PARA ELIMINAR ETAPAS','D','STAGE'),(21,'PERMISO PARA CREAR CURSOS','C','COURSE'),(22,'PERMISO PARA EDITAR CURSOS','U','COURSE'),(23,'PERMISO PARA VER CURSOS','R','COURSE'),(24,'PERMISO PARA ELIMINAR CURSOS','D','COURSE'),(25,'PERMISO PARA CREAR MATERIAS','C','SUBJECT'),(26,'PERMISO PARA EDITAR MATERIAS','U','SUBJECT'),(27,'PERMISO PARA VER MATERIAS','R','SUBJECT'),(28,'PERMISO PARA ELIMINAR MATERIAS','D','SUBJECT'),(29,'PERMISO PARA VER LAS NOTAS PROPIAS UNICAMENTE','R','TESTS'),(30,'ACCESO TOTAL AL SISTEMA','A','ADMIN');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,7 +403,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('1',NULL,'None','Nobody','Noway@nowhere.com','2024-08-01',NULL,'UNKNOWN'),('V-123','http://127.0.0.1:3000/undefined','JOE','BIDEN','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234','http://127.0.0.1:3000/undefined','JOE','BIDEN','No lo voy a poner','2001-04-27',NULL,'O+'),('V-12345','http://127.0.0.1:3000/undefined','JOE','BIDEN','No lo voy a poner','2001-04-27',NULL,'O+'),('V-123451','http://127.0.0.1:3000/undefined','NAMETEST','SURNAMETEST','email@test.com','2024-01-01',NULL,'O+'),('V-123456','http://127.0.0.1:3000/undefined','JOE','BIDEN','No lo voy a poner','2001-04-27',NULL,'O+'),('V-123456789','http://127.0.0.1:3000/undefined','NAMETEST','SURNAMETEST','email@test.com','2024-01-01',NULL,'O+'),('V-1234567891','http://127.0.0.1:3000/undefined','NAMETEST','SURNAMETEST','email@test.com','2024-01-01',NULL,'O+');
+INSERT INTO `person` VALUES ('V-1',NULL,'None','Nobody','Noway@nowhere.com','2024-08-31',NULL,'UNKNOWN'),('V-123456789','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567891','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567892','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567893','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567894','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567895','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -405,7 +431,6 @@ CREATE TABLE `phone_number` (
 
 LOCK TABLES `phone_number` WRITE;
 /*!40000 ALTER TABLE `phone_number` DISABLE KEYS */;
-INSERT INTO `phone_number` VALUES (97,'1234567','V-123456789','1234567'),(98,'1234567','V-123456789','1234567'),(99,'1234567','V-1234567891','1234567'),(100,'1234567','V-1234567891','1234567'),(101,'1234567','V-123451','1234567'),(102,'1234567','V-123451','1234567');
 /*!40000 ALTER TABLE `phone_number` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,7 +455,6 @@ CREATE TABLE `professor` (
 
 LOCK TABLES `professor` WRITE;
 /*!40000 ALTER TABLE `professor` DISABLE KEYS */;
-INSERT INTO `professor` VALUES ('V-123451',1),('V-123456789',1),('V-1234567891',1);
 /*!40000 ALTER TABLE `professor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -500,6 +524,7 @@ CREATE TABLE `seminarian` (
   `status` enum('ACTIVO','RETIRADO','AÑO PASTORAL','CULMINADO') NOT NULL,
   `Location` enum('EXTERNO','INTERNO') NOT NULL,
   `Ministery` enum('UNKOWN','ADMISIÓN','LECTORADO','ACOLITADO') DEFAULT NULL,
+  `stage` int NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_seminarian_user` FOREIGN KEY (`id`) REFERENCES `user` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -511,7 +536,7 @@ CREATE TABLE `seminarian` (
 
 LOCK TABLES `seminarian` WRITE;
 /*!40000 ALTER TABLE `seminarian` DISABLE KEYS */;
-INSERT INTO `seminarian` VALUES ('V-123','no se que va aqui','ACTIVO','EXTERNO','UNKOWN'),('V-1234','no se que va aqui','ACTIVO','EXTERNO','UNKOWN'),('V-12345','no se que va aqui','ACTIVO','EXTERNO','UNKOWN'),('V-123456','no se que va aqui','ACTIVO','EXTERNO','UNKOWN');
+INSERT INTO `seminarian` VALUES ('V-123456789','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',2),('V-1234567891','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567892','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567893','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567894','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567895','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1);
 /*!40000 ALTER TABLE `seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -532,7 +557,7 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -541,7 +566,7 @@ CREATE TABLE `social_media` (
 
 LOCK TABLES `social_media` WRITE;
 /*!40000 ALTER TABLE `social_media` DISABLE KEYS */;
-INSERT INTO `social_media` VALUES (75,'V-123',2,'ya lo mando'),(76,'V-123',3,'ya lo mando'),(77,'V-1234',2,'ya lo mando'),(78,'V-1234',3,'ya lo mando'),(79,'V-12345',2,'ya lo mando'),(80,'V-12345',3,'ya lo mando'),(81,'V-123456',2,'ya lo mando'),(82,'V-123456',3,'ya lo mando'),(83,'V-123456789',2,'http//www.google.com'),(84,'V-1234567891',2,'http//www.google.com'),(85,'V-123451',2,'http//www.google.com');
+INSERT INTO `social_media` VALUES (86,'V-123456789',2,'ya lo mando'),(87,'V-123456789',3,'ya lo mando'),(88,'V-1234567891',2,'ya lo mando'),(89,'V-1234567891',3,'ya lo mando'),(90,'V-1234567892',2,'ya lo mando'),(91,'V-1234567892',3,'ya lo mando'),(92,'V-1234567893',2,'ya lo mando'),(93,'V-1234567893',3,'ya lo mando'),(94,'V-1234567894',2,'ya lo mando'),(95,'V-1234567894',3,'ya lo mando'),(96,'V-1234567895',2,'ya lo mando'),(97,'V-1234567895',3,'ya lo mando');
 /*!40000 ALTER TABLE `social_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -656,7 +681,7 @@ CREATE TABLE `test` (
 
 LOCK TABLES `test` WRITE;
 /*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` VALUES (1,1,6,'primer examen',1,20.00),(2,1,6,'segundo examen',1,20.00),(3,1,6,'tercer examen',1,20.00),(4,1,6,'cuarto examen',1,20.00),(15,2,6,'examen 1',1,30.00),(16,3,1,'examen 1',1,30.00),(17,3,1,'examen 1',1,30.00),(18,3,1,'examen 1',1,30.00),(19,3,1,'examen 1',1,30.00),(20,3,1,'examen 3',1,30.00),(21,3,1,'examen 3',1,30.00),(22,3,1,'examen 3',1,30.00),(25,3,1,'examen 3',1,30.00),(27,3,1,'examen 3',1,30.00),(28,3,1,'examen 3',1,30.00),(29,3,1,'examen 3',1,30.00),(30,3,1,'examen 3',1,30.00),(31,3,1,'examen 3',1,30.00),(32,3,1,'examen 3',1,30.00),(33,3,1,'examen 3',1,30.00),(34,3,1,'examen 3',1,30.00),(35,3,1,'examen 3',1,30.00),(36,3,1,'examen 3',1,30.00),(37,3,1,'examen 3',1,30.00),(38,3,1,'examen 3',1,30.00),(39,3,1,'examen 3',1,30.00),(40,3,1,'examen 3',1,30.00),(41,3,1,'examen 3',1,30.00),(42,3,1,'examen 3',1,30.00),(43,3,1,'examen 3',1,30.00),(44,3,1,'examen 3',1,30.00),(45,3,1,'examen 3',1,30.00),(46,3,1,'examen 4',1,30.00),(47,3,1,'examen 5',1,30.00),(52,1,6,'examen 5',1,10.00),(53,1,6,'examen 5',1,10.00),(54,1,6,'examen 5',1,10.00),(55,1,6,'examen 5',1,10.00);
+INSERT INTO `test` VALUES (1,1,2,'exmanen 1',1,25.00),(2,1,2,'examen 2',1,25.00),(3,1,2,'examen 3',1,15.00),(4,1,2,'examen 4',1,35.00),(5,3,2,'examen 1',1,50.00),(6,3,2,'exmane 2',1,50.00);
 /*!40000 ALTER TABLE `test` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -685,6 +710,7 @@ CREATE TABLE `test_score` (
 
 LOCK TABLES `test_score` WRITE;
 /*!40000 ALTER TABLE `test_score` DISABLE KEYS */;
+INSERT INTO `test_score` VALUES (1,20.00,12,'2024-09-02 03:46:10'),(1,18.00,24,'2024-09-02 03:45:00'),(2,15.00,12,'2024-09-02 03:46:10'),(2,19.00,24,'2024-09-02 03:45:00'),(3,15.00,12,NULL),(4,15.00,12,NULL),(5,10.00,25,NULL),(6,18.00,25,NULL);
 /*!40000 ALTER TABLE `test_score` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -717,7 +743,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('1',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-08-14'),('V-123',1,1,'$2b$10$D.HrOOgXF0st9SWPtqU8fuCkqw4AJnb75v48jpRFIkYLgQdzlNev2',5,NULL),('V-1234',1,1,'$2b$10$uOr56iq5wzDW.oGYA4yUUuFs.hMQw/oc2ZyTdkN6Dqw9jMnGsdvk2',5,NULL),('V-12345',1,1,'$2b$10$w5Um0rs6pYqhABULCednRuJQOiXSERebxLp4VFq2jTcaekQNL3i8m',5,NULL),('V-123451',1,1,'$2b$10$dI418RgymbnsNRvNV2BJJeOP0uOSsLsvtrnHSlZ8AjDg3DCc1U38a',4,NULL),('V-123456',1,1,'$2b$10$qmTsog819QFiQjzipLoJEO0jOZqm8ykxRkez7BMv2UJP7TDEEEvFG',5,NULL),('V-123456789',1,1,'$2b$10$XmRUMi8q3l3Z.J4jdBcQY.STVjw1EA95v5Wuv3eaKqm4gtatwjtQe',4,NULL),('V-1234567891',1,1,'$2b$10$qk1K1jHjMW.O3D3MxZWMyujnrXhN6Op6apZ1GMIVlVY.sP1BQLO3e',4,NULL);
+INSERT INTO `user` VALUES ('V-1',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-09-01'),('V-123456789',1,1,'$2b$10$Ml8u0QMhkhhgbg/52JGF.ev9CDw07i65suB3vYyoLkyCRc5USKrhO',5,NULL),('V-1234567891',1,1,'$2b$10$lo6Hgww8i3IT3RhbFDPK3OPVlKfqW66LF8ws8.0y9hEuljh31cU9C',5,NULL),('V-1234567892',1,1,'$2b$10$3pdq.xqncHLE3Jjqo0p/WOnfLWJOfs8ty.V300vWKWW4PbUzQz6ou',5,NULL),('V-1234567893',1,1,'$2b$10$aM3qXxqStbavAdzHtd3TOOJuR5T2535w4rbvi0fJKlwhPtcnJl63i',5,NULL),('V-1234567894',1,1,'$2b$10$AISHJUPjKUSnbFbBShUfgO4f.b2ou2pG0B0KcGVqosLcPs58zs44.',5,NULL),('V-1234567895',1,1,'$2b$10$vx3mOa43dEIQq9oqpEJNZ.fsOvq9/T7CNvilumj8KbbmIW2LJRz0C',5,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -730,4 +756,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-18 13:25:54
+-- Dump completed on 2024-09-01 23:59:31
