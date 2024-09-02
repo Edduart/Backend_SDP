@@ -112,7 +112,8 @@ export class SeminarianControler{
             const seminarian = new UpdateSeminarian(foreingdata,
                 user_origin.location as Locations_enum, user_origin.apostleships, persondto, 
                 user_origin.ministery as seminarianMinistery_ENUM,
-                user_origin.status as seminarian_status_enum
+                user_origin.status as seminarian_status_enum,
+                user_origin.stage
             );
             //now check if there are errors
             const errores = seminarian.Validate();

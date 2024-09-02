@@ -371,7 +371,8 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
           apostleships: data.apostleships,
           Location: data.location as seminarian_Location,
           Ministery: data.ministery as seminarian_Ministery,
-          status: data.status as seminarian_status
+          status: data.status as seminarian_status,
+          stage: data.stage_num
         },
       });
       return result.id;
