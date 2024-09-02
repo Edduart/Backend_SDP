@@ -1,34 +1,41 @@
-
 import { prisma } from "../../../data/postgres";
 
+import {calculateTestScore} from "./calculateScore"
+
 export class calculateAverageGrade {
+  public static async getAverageGradeBySubject(enrollments: any[]) {
 
-  public static async getAverageGradeBySubject (enrollments: any[]) {
+    let averageGradeInTheSubject: number = 0;
+    let numberOfEnrollments: number = enrollments.length;
 
-        const enrollments1 = await prisma.enrollment.findMany({
-          where: {
-            academic_term_id: 1,
-            subject_id: 1,
-          },
-          include: {
-            subject: { select: { description: true } },
-            test_score: { select: { score: true } },
-          },
-        });
+    for (const enrollment of enrollments) {
+      let individualEnrollmentFinalGrade: number = 0;
+      for (const testScore of enrollment.test_score) {
 
+        const { totalTestScore } = calculateTestScore.calculateIndividualScore(
+          +testScore.test.maximum_score,
+          +testScore.score
+        );
 
-    for (const enrollment of enrollments1) {
+        individualEnrollmentFinalGrade += +totalTestScore.toFixed(2);
+      }
 
-        let individualEnrollmentFinalGrade: number = 0;
-        let numberOfExams: number = enrollment.test_score.length;
+      console.log({ individualEnrollmentFinalGrade });
 
-        for(const testScore of enrollment.test_score){
-            individualEnrollmentFinalGrade =+ +testScore.score.toFixed(2)
-        }
-
-        
-
+      averageGradeInTheSubject += individualEnrollmentFinalGrade;
     }
+
+    averageGradeInTheSubject = averageGradeInTheSubject / numberOfEnrollments;
+    
+    const subjectAverageGrade: any = {
+      subject: enrollments[0].subject.description,
+      number_of_seminarians: numberOfEnrollments,
+      average_grade: averageGradeInTheSubject,
+    };
+
+    console.log({ subjectAverageGrade });
+
+    return subjectAverageGrade;
 
   }
 }
