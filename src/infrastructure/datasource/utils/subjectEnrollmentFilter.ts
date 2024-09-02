@@ -1,6 +1,5 @@
 import { prisma } from "../../../data/postgres";
 import { SeminarianStatus } from "../enrollment.dataSource.impl";
-import { GetStageOfSeminarianFilter } from "./getStageOfSeminarianFilter";
 
 // TODO if all its okay after all test then clean code and comments, add try and catch too
 
@@ -9,280 +8,178 @@ export class EnrollmentSubjectFilter {
     enrollmentStatus: SeminarianStatus[],
     id: string
   ): Promise<object> {
-    const seminarianInitialStage =
-      await GetStageOfSeminarianFilter.getStageByEnrollSubjectOnly(id);
-    const approbatedSubjects = enrollmentStatus.filter((subject) => {
-      return subject.status === "APROBADO";
+    
+    const getSeminarianStage = await prisma.seminarian.findUnique({
+      where: { id: id },
+      select: { stage: true },
     });
-    const approbatedSubjectsArray = approbatedSubjects.map(
-      (subjectsId) => subjectsId.subject_id
+
+    const enrolledSubjectsCompleteList = enrollmentStatus.map(
+      (enrolledSubjects) => ({
+        id: enrolledSubjects.subject_id,
+        status: enrolledSubjects.status,
+        precedent: enrolledSubjects.subject.precedent,
+        course: enrolledSubjects.subject.course_id,
+      })
     );
 
-    let seminarianStage: number = seminarianInitialStage;
-    let seminarianCourse: number[] = [];
+    console.log({ enrolledSubjectsCompleteList });
 
-    if (seminarianStage === 1) seminarianCourse = [1]; // number of courses in each stage, depends on the seminarian actual stage
-    if (seminarianStage === 2) seminarianCourse = [1, 2];
-    if (seminarianStage === 3) seminarianCourse = [1, 2, 3, 4, 5];
+    let seminarianStage: number = getSeminarianStage!.stage!;
 
-    for (let i = 1; i < 4; i++) {
-      const subjects = await prisma.stage.findMany({
-        where: { id: seminarianStage },
-        select: {
-          course: {
-            select: {
-              id: true,
-              subject: {
-                where: { status: true },
-                select: { id: true, description: true },
-              },
-            },
-          },
-        },
-      });
-      let approveStage = true;
-      subjects.map((stage) => {
-        for (let j = 0; j < stage.course.length; j++) {
-          let approveAtLeastOne = false; // in the given course
-          for (let k = 0; k < stage.course[j].subject.length; k++) {
-            if (
-              !approbatedSubjectsArray.includes(stage.course[j].subject[k].id)
-            ) {
-              console.log("no aprobo", stage.course[j].subject[k].id);
-              approveStage = false;
-            } else {
-              approveAtLeastOne = true;
-            }
-          }
-          if (approveAtLeastOne == false) {
-            break;
-          } else {
-            seminarianCourse.push(seminarianCourse.length + 1);
-            console.log(
-              "aprovo una matera del curso actual, pasa al siguiente: ",
-              seminarianCourse
-            );
-          }
-        }
-      });
-      console.log({ approveStage });
-      if (!approveStage) {
-        console.log("se queda en el mismo stage");
-        break;
-      } else {
-        console.log("avanza al proximo stage");
-        seminarianStage++;
-        console.log(seminarianStage);
-        if (seminarianStage > 3) break; // TODO check if this case will avoid a error
-      }
-    }
-
-    const availableStagesAndCourses = await prisma.stage.findMany({
+    const availableSubjects = await prisma.stage.findMany({
       where: { id: seminarianStage },
-      include: { course: { where: { id: { in: seminarianCourse } } } },
-    }); // here need to remove stages
-
-    if (enrollmentStatus.length == 0) {
-      console.log("No enrollments, so course = 0");
-      const SubjectsResult = await prisma.stage.findMany({
-        where: { id: availableStagesAndCourses[0].id },
-        include: {
-          course: {
-            where: { id: availableStagesAndCourses[0].id },
-            include: {
-              subject: {
-                where: {
-                  semester: 1,
-                  status: { not: false },
-                  precedent: { equals: null },
-                },
-                include: { academic_field: true },
+      select: {
+        description: true,
+        course: {
+          select: {
+            id: true,
+            description: true,
+            subject: {
+              where: { status: true },
+              select: {
+                id: true,
+                description: true,
+                precedent: true,
+                course: { select: { id: true } },
+                semester: true,
               },
             },
           },
         },
-      });
-      const availableSubjects: SubjectAllowToEnroll = {
-        seminarian_id: id,
-        stage: SubjectsResult[0].description,
-        course: SubjectsResult[0].course.map((course) => ({
-          course: course.description,
-          subject: course.subject.map((subject) => ({
+      },
+    });
+
+    let numberOfIterations: number = 0;
+    let approvedAtLeastOne = false;
+
+    const filterSubjects = availableSubjects.map((stage) => ({
+      description: stage.description,
+      course: stage.course.map((course) => {
+        numberOfIterations++;
+        if (numberOfIterations === 1 || approvedAtLeastOne) {
+          approvedAtLeastOne = false;
+          return {
+            description: course.description,
+            subject: course.subject.filter((subject) => {
+              console.log("actual subject", subject.id);
+
+              const subjectEnrolledApproved =
+                enrolledSubjectsCompleteList.filter(
+                  (subjectEnrolled) =>
+                    subjectEnrolled.id === subject.id &&
+                    subjectEnrolled.status === "APROBADO"
+                );
+
+              console.log({ subjectEnrolledApproved }); // subjectEnrolledApproved: [ { id: 1, status: 'APROBADO', precedent: null, course: 1 } ]
+
+              if (subjectEnrolledApproved.length > 0) approvedAtLeastOne = true; // so can advance a course
+
+              const subjectEnrolledOther = enrolledSubjectsCompleteList.filter(
+                (subjectEnrolled) =>
+                  subjectEnrolled.id === subject.id &&
+                  subjectEnrolled.status !== "APROBADO"
+              );
+
+              console.log({ subjectEnrolledOther }); //subjectEnrolledApproved: [ { id: 1, status: 'OTHERS', precedent: null, course: 1 } ]
+
+              if (subject.precedent != null) {
+                console.log(
+                  subject.id,
+                  "have a precedent: ",
+                  subject.precedent
+                );
+
+                const matchingPrecedent = enrolledSubjectsCompleteList.filter(
+                  (SubjectPrecedentApproved) => {
+                    if (
+                      SubjectPrecedentApproved.id === subject.precedent &&
+                      SubjectPrecedentApproved.status === "APROBADO"
+                    ) {
+                      console.log("precedent was approved");
+                      return true;
+                    }
+                  }
+                );
+                if (matchingPrecedent.length > 0) {
+                  if (
+                    matchingPrecedent
+                      .map((precedent) => precedent.id)
+                      .includes(subject.precedent)
+                  ) {
+                    if (
+                      subjectEnrolledApproved.length > 0 ||
+                      subjectEnrolledOther.length > 0
+                    ) {
+                      console.log("already enrolled so is removed", subject.id);
+                      return false;
+                    } else {
+                      console.log(
+                        "No removed because precedent approved",
+                        subject.id
+                      );
+                      return true;
+                    }
+                  } else {
+                    console.log(
+                      "Removed because precedent no approved",
+                      subject.id
+                    );
+                    return false; 
+                  }
+                } else if (subjectEnrolledOther.length > 0) {
+                  console.log(
+                    "Removed because precedent no approved",
+                    subject.id
+                  );
+                  return false;
+                }
+              } else {
+                if (subjectEnrolledApproved.length > 0) {
+                  console.log("Removed because approved", subject.id);
+                  approvedAtLeastOne = true;
+                  return false;
+                } else if (subjectEnrolledOther.length > 0) {
+                  console.log("Removed because is enrolled", subject.id);
+                  return false;
+                } else {
+                  console.log("No removed, no enrolled", subject.id);
+                  return true;
+                }
+              }
+            }),
+          };
+        } else { 
+          return undefined;
+        }
+      }),
+    }));
+
+    console.log(JSON.stringify(filterSubjects));
+
+    const availableSubjectsMap: SubjectAllowToEnroll = {
+      seminarian_id: id,
+      stage: filterSubjects.map((stage) => stage.description).toString(),
+      course: filterSubjects.flatMap((stage) =>
+        stage.course.map((course) => ({
+          course: course?.description,
+          subject: course?.subject?.map((subject) => ({
             id: subject.id,
             name: subject.description,
             semester: subject.semester,
-          })), // Empty array to match the interface
-        })),
-      };
-      //console.log( availableSubjects.course[0] );
-      return availableSubjects;
-    } else {
-      //console.log({ availableStagesAndCourses });
-      //console.log({ enrollmentStatus });
-      console.log("No enrollments, so course > 0");
-
-      const subjectResult = await prisma.stage.findMany({
-        where: {
-          id: {
-            in: availableStagesAndCourses.map((stage) => stage.id),
-          },
-        },
-        include: {
-          course: {
-            where: {
-              id: {
-                in: availableStagesAndCourses.flatMap((stage) =>
-                  stage.course.map((course) => course.id)
-                ),
-              },
-            },
-            include: {
-              subject: {
-                where: { status: { not: false } },
-                include: { academic_field: true },
-              },
-            },
-          },
-        },
-      });
-
-      // to filter
-
-      //console.log(enrollmentStatus);
-
-      const subjectsToFilter = enrollmentStatus.map((item) => item.subject_id);
-
-      const precedentFilter = enrollmentStatus.map((item) => ({
-        id: item.subject_id,
-        status: item.status,
-      }));
-
-      console.log({ subjectsToFilter });
-
-      // here I can start to filter
-      let approvedPrecedent: number[] = [];
-
-      const subjectResultWithPrecedent = subjectResult.map((stage) => ({
-        id: stage.id,
-        description: stage.description,
-        course: stage.course.map((course) => ({
-          id: course.id,
-          stage_id: course.stage_id,
-          description: course.description,
-          instructor_id: course.instructor_id,
-          subject: course.subject.filter(
-            (subject) => {
-              console.log("actual subject ID: ", subject.id);
-              const isIncluded = subjectsToFilter.includes(subject.id);
-              if (subject.precedent) {
-                const precedentIsIncluded = subjectsToFilter.includes(
-                  subject.precedent
-                );
-                if (precedentIsIncluded) {
-                  console.log(
-                    "TIENE PRECEDENTE Y ESTA EN LA LISTA",
-                    {
-                      isIncluded,
-                    },
-                    subject.precedent
-                  );
-                  let filter: boolean = false;
-                  precedentFilter.forEach((item) => {
-                    //  true where ( item.id and item.status === "aprobado")
-
-                    console.log("id actual", item.id);
-
-                    const approved = item.id && item.status === "APROBADO";
-                    console.log(item.id);
-                    console.log({ approved });
-                    if (item.id === subject.precedent && approved) {
-                      approvedPrecedent.push(subject.id);
-
-                      console.log("MATERIA APROBADA ");
-
-                      filter = true;
-                    } else {
-                      console.log("MATERIA NO APROBADA ");
-                    }
-                  });
-                  console.log({ filter });
-                  return filter;
-                } else {
-                  console.log("tiene precedente pero no esta en la lista");
-                  return false; // means no exist
-                }
-              } else {
-                return !isIncluded;
-              }
-            }
-            //return true will include
-          ),
-        })),
-      }));
-
-      console.log({ approvedPrecedent });
-
-      const isPrecedentEnroll = await prisma.enrollment.findMany({
-        where: {
-          seminarian_id: id,
-          subject_id: { in: approvedPrecedent },
-          OR: [{ status: "CURSANDO" }, { status: "APROBADO" }],
-        },
-      });
-
-      const isPrecedentEnrollArray = isPrecedentEnroll.map(
-        (subject) => subject.subject_id
-      );
-
-      console.log({ isPrecedentEnrollArray });
-
-      const filteredSubjectResult = subjectResultWithPrecedent.map((stage) => ({
-        id: stage.id,
-        description: stage.description,
-        course: stage.course.map((course) => ({
-          id: course.id,
-          stage_id: course.stage_id,
-          description: course.description,
-          instructor_id: course.instructor_id,
-          subject: course.subject.filter(
-            (subject) => {
-              if (isPrecedentEnrollArray.includes(subject.id)) {
-                console.log("remove", subject.id);
-                return false;
-              } else {
-                console.log("stay", subject.id);
-                return true;
-              }
-            }
-            //return true will include
-          ),
-        })),
-      }));
-
-      const availableSubjects: SubjectAllowToEnroll = {
-        seminarian_id: id,
-        stage: filteredSubjectResult[0].description,
-        course: filteredSubjectResult.flatMap((stage) =>
-          stage.course.map((course) => ({
-            course: course.description,
-            subject: course.subject.map((subject) => ({
-              id: subject.id,
-              name: subject.description,
-              semester: subject.semester,
-            })), // Empty array to match the interface
-          }))
-        ),
-      };
-      return availableSubjects;
-    }
+          })),
+        }))
+      ),
+    };
+    return availableSubjectsMap;
   }
 }
 interface SubjectAllowToEnroll {
   seminarian_id: string;
   stage: string;
-  course: {
-    course: string;
-    subject: {
+  course?: {
+    course?: string;
+    subject?: {
       id: number;
       name: string;
       semester: number;
@@ -303,3 +200,4 @@ export interface EnrollmentGetInterface {
   };
   subject_status: string;
 }
+

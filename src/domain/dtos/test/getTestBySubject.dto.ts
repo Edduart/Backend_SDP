@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { EnrollmentStatus } from "../../entities/enrollment.entity";
 
 export class GetTestBySubjectDto {
@@ -42,22 +43,25 @@ export interface EnrollmentTestResult {
   seminarian_id: string;
   seminarian_surname: string;
   seminarian_forename: string;
-  subject_id: number;
-  subject_name: string;
-  subject_status: number;
-  enrollment_id: number;
-  academic_term_id: number;
-  start_date: string | null;
-  end_date: string | null;
-  academic_term_status: number;
-  test_score: {
-    message?: string;
-    test_description?: string;
-    test_score_out_of_100: string;
-    test_score_out_max_test_score: string;
-    test_score_was_edited?: string | null;
+  grade_point_average: string;
+  enrollment: {
+    subject_id: number;
+    subject_name: string;
+    subject_status: string;
+    enrollment_id: number;
+    academic_term_id: number;
+    start_date: string | null;
+    end_date: string | null;
+    academic_term_status: string;
+    test_score: {
+      message?: string;
+      test_description?: string;
+      test_score_out_of_20: string;
+      test_score_out_max_test_score: string;
+      test_score_was_edited?: string | null;
+    }[];
+    subject_total_score_out_of_graded_score: string;
+    subject_total_score_out_of_graded_scored_10_scale: string;
   }[];
-  subject_total_score_out_of_graded_score: string;
-  subject_total_score_out_of_graded_scored_10_scale: string;
 }
 [];

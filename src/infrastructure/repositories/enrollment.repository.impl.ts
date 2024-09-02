@@ -13,11 +13,12 @@ import {
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
-
-  updateStatusByFinalSubjectScore(): void {
+  updateStageIfApproved(): Promise<object> {
+    return this.dataSource.updateStageIfApproved();
+  }
+  updateStatusByFinalSubjectScore(): Promise<object> {
     return this.dataSource.updateStatusByFinalSubjectScore();
   }
-
   getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
     return this.dataSource.getStageOfSeminarian(dto);
   }

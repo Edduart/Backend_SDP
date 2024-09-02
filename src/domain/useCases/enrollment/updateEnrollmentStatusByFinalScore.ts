@@ -1,7 +1,7 @@
 import { EnrollmentRepository } from "../../repositories";
 
 interface UpdateEnrollmentStatusByFinalScoreUseCase {
-  execute(): void;
+  execute(): Promise<object>;
 }
 
 export class UpdateEnrollmentStatusByFinalScore
@@ -9,7 +9,7 @@ export class UpdateEnrollmentStatusByFinalScore
 {
   constructor(private readonly repository: EnrollmentRepository) {}
 
-  execute(): void {
+  execute(): Promise<object> {
     return this.repository.updateStatusByFinalSubjectScore();
   }
 }
