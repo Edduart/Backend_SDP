@@ -24,7 +24,7 @@ export async function parsePersonData(req: any, path: any) {
     const origin = await JSON.parse(req);
     const imageFile = path ? path.replace(/\\/g, "/") : null;
     // Social Media Data Parsing
-    const socials: CreateSocialMedia[] | null = origin.persona.social?.map(
+    const socials: CreateSocialMedia[] | null = origin?.persona?.social?.map(
       (social: { social_media_category: number; link: string }) =>
         new CreateSocialMedia(social.social_media_category, social.link)
     );
@@ -35,14 +35,16 @@ export async function parsePersonData(req: any, path: any) {
     );
     // Person Data Parsing
     const personData = new CreatePerson(
-      origin.persona.id,
+      origin?.persona?.id,
       serverAddress + imageFile,
-      origin.persona.forename.toUpperCase(),
-      origin.persona.surname.toUpperCase(),
-      origin.persona.email,
-      new Date(origin.persona.birthdate),
-      origin.persona.medical_record,
-      origin.persona.BloodType as BloodType,
+      origin?.persona?.forename?.toUpperCase(),
+      origin?.persona?.surname?.toUpperCase(),
+      origin?.persona?.email,
+      origin?.persona?.birthdate != null
+        ? new Date(origin.persona.birthdate)
+        : new Date("2024-01-01"),
+      origin?.persona?.medical_record,
+      origin?.persona?.BloodType as BloodType,
       phones,
       socials
     );

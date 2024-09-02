@@ -7,9 +7,14 @@ export class GetStageOfSeminarianDto {
     let { stage } = props;
     let dataErrors: string[] = [];
 
-    // TODO reWork validations
+    if (stage === "DISCIPULAR") {
+      stage = "DISCIPULADO";
+    }
 
-    if (dataErrors.length > 0) return [dataErrors];
+    if (dataErrors.length > 0)
+      // TODO reWork validations
+
+      return [dataErrors];
     return [undefined, new GetStageOfSeminarianDto(stage)];
   }
 }
