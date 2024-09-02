@@ -183,9 +183,11 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       //if it is false, i  sent to select all seminarian that has not foreing data
       where_clause_foreing = data.foreing ? { isNot: null } : { is: null };
     }
+    console.log(data)
     const result = await prisma.person.findMany({
+      
       where: {
-        id: {
+        id:  {
           contains: data.id,
         },
         surname: {
@@ -209,14 +211,6 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             Location: data.location as seminarian_Location,
             Ministery: data.ministery as seminarian_Ministery,
             foreigner_seminarian: where_clause_foreing,
-            enrollment:{
-              some:{
-                subject_id: data.subject_id,
-                subject:{
-                  course_id: data.curse_id
-                }
-              }
-            }
           },
         },
       },
@@ -249,7 +243,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         },
       },
     });
-
+    console.log(result)
     const results: SeminarianEntity[] = result.map((person_actual) => {
       //create the person
       const person = PersonEntity.fromdb({
