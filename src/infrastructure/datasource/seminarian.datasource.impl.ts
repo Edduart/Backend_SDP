@@ -167,7 +167,9 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   }
   }
   async getByID(id: string): Promise<DocumenDTO> {
-    const result = await prisma.seminarian.findFirst({where:{user:{person_id: id}},include:{user:{include:{person:true}}}})
+    const result = await prisma.seminarian.findFirst({where:{
+      status: seminarian_status.CULMINADO,
+      user:{person_id: id}},include:{user:{include:{person:true}}}})
     if(result == null)throw new Error("Seminarian does not exists");
     return DocumenDTO.fromdb({id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname})
   }
