@@ -18,9 +18,12 @@ import {
 import { calculateTestScore } from "./utils/calculateScore";
 export class TestDataSourceImpl implements TestDataSource {
   async GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]> {
-    
     const errolments = await this.getTestBySubject(new GetTestBySubjectDto(undefined, undefined, data.subject_id, data.academic_term_id, undefined))
     
+    errolments.forEach((Element)=>{
+      const result = Element.enrollment[0].subject_total_score_out_of_graded_scored_10_scale.split("/")[0]
+      console.log(Element)
+    })
     throw new Error("Method not implemented.");
   }
   

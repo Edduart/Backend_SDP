@@ -13,7 +13,7 @@ const testController = new TestController(testRepository);
 router.get("/notas/:id", testController.notas);
 router.get("/by-subject/", testController.getTestBySubject);
 router.get("/for-test-score/", testController.getTestForTestScore);
-
+router.get("/lista", testController.SeminarianListWithNotes)
 router.post("/", testController.create);
 router.get("/", testController.get);
 router.put("/:id", testController.update);

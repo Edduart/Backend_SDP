@@ -12,7 +12,9 @@ GetTestForTestScoreDto,
 GetTestForTestScore,
 UpdateTestDto,
 UpdateTest,
-DeleteTest
+DeleteTest,
+GetSeminarianPerNoteUse,
+GetSeminarianDTO
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
@@ -97,6 +99,21 @@ export class TestController {
       )
       .catch((error) => res.status(400).json({ error }));
   };
+  public SeminarianListWithNotes = (req: Request, res: Response) => {
+    const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
+    if(error != undefined){
+      console.log("verification errors:" +error);
+      res.json({error}).send();
+    }else{
+      new GetSeminarianPerNoteUse(this.repository).execute(get_dto!).then((seminarians)=>{
+
+      }).catch((error)=>{
+        res.status(418).send("unable to get seminarians: " + error);
+      })
+    }
+    
+    
+  }
   public notas = (req: Request, res: Response) => {
     const getDto = new GetTestBySubjectDto(
       undefined,
