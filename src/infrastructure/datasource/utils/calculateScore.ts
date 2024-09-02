@@ -14,7 +14,6 @@ export class calculateTestScore {
     if (testScoreBySubject.length == 0) {
       return testScoreBySubject;
     } else {
-
       const calculateScore: EnrollmentTestResult[] = testScoreBySubject.map(
         (seminarian) => {
 
@@ -32,9 +31,6 @@ export class calculateTestScore {
               let totalGradedScore: number = 0;
               let totalSubjectScoreOutOf10: number = 0; // final subject grade
               let totalGradedScoreOutOf10: number = 0;
-
-              console.log(subject.subject_id);
-              console.log("count of max score ", totalSubjectScoreOutOf10);
 
               return {
                 subject_id: subject.subject_id,
@@ -182,7 +178,7 @@ export class calculateTestScore {
     }
 
     return { status: "Ok" };
-    console.log("end of calculate score");
+
   }
 
   public static calculateIndividualScore(
@@ -195,5 +191,3 @@ export class calculateTestScore {
     return { testScore, maxScore, totalTestScore };
   }
 }
-
-// any needed interfaces
