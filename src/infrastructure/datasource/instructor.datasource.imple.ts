@@ -77,6 +77,16 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     return dto;
   }
   async create(createDto: CreateInstructorDto): Promise<InstructorEntity> {
+
+    /*const checkInstructorPosition = await prisma.instructor.findMany({
+      where: {
+        instructor_position:
+          createDto.instructor_position as instructor_position,
+      },
+    });*/
+
+    //console.log({ checkInstructorPosition });
+
     const createInstructor = await prisma.instructor.create({
       data: {
         professor_id: createDto.professor_id,

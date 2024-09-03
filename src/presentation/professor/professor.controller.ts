@@ -63,11 +63,10 @@ export class ProfessorController {
       .execute(professorData)
       .then((professor) => {
         if (isInstructor) {
-          return new UpdateInstructor(this.instructorPositionRepo)
+          new UpdateInstructor(this.instructorPositionRepo)
             .execute(dtoUpdateInstructor!)
             .catch((error) => {
               console.error(error);
-              return res.status(400).json({ error });
             });
         }
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
@@ -126,10 +125,10 @@ export class ProfessorController {
       .execute(professorData)
       .then((professor) => {
         if (isInstructor) {
-          return new CreateInstructor(this.instructorPositionRepo)
+          new CreateInstructor(this.instructorPositionRepo)
             .execute(dtoCreateInstructor!)
             .catch((error) => {
-              return res.status(400).json({ error });
+              console.error(error);
             });
         }
         res
