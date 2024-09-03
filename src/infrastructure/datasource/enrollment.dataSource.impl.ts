@@ -13,6 +13,8 @@ import {
   EnrollmentTestResult,
   stages,
   CreateEnrollmentByEquivalenceDto,
+  SubjectAllowToEnrollEquivalency,
+  SubjectAllowToEnrollEquivalencyDto,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
@@ -24,16 +26,57 @@ import {
 } from "./utils/calculateIfSeminarianApproveStage";
 
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  async getSubjectsToEnroll(
+    dto: SubjectAllowToEnrollEquivalencyDto
+  ): Promise<SubjectAllowToEnrollEquivalency> {
+    const checkSeminarian = await prisma.seminarian.findUnique({
+      where: { id: dto.seminarian_id },
+    });
+
+    if (!checkSeminarian)
+      throw `seminarian ID: ${dto.seminarian_id} does'nt exist`;
+    const academicStatus = await prisma.enrollment.findMany({
+      where: {
+        seminarian_id: dto.seminarian_id,
+        NOT: {
+          OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }],
+        },
+      },
+      include: { subject: { include: { course: true } } },
+    });
+
+    console.log("after prisma consult: ", academicStatus);
+
+    const subjectsToEnroll: SubjectAllowToEnrollEquivalency =
+      await EnrollmentSubjectFilter.subjectFilterForEquivalency(
+        academicStatus,
+        dto.seminarian_id!
+      );
+
+    return subjectsToEnroll;
+  }
   async createByEquivalence(
     dto: CreateEnrollmentByEquivalenceDto
   ): Promise<object> {
     const equivalenceTransactionResult = prisma.$transaction(async (tx) => {
-
       const checkSeminarian = await tx.seminarian.findUnique({
-        where: {id: dto.seminarian_id}
-      })
+        where: { id: dto.seminarian_id },
+      });
 
-      if (!checkSeminarian) throw`seminarian id ${dto.seminarian_id} does't exist`
+      const checkIfAlreadyEnroll = await prisma.enrollment.findMany({
+        where: {
+          AND: [
+            { seminarian_id: dto.seminarian_id },
+            { subject_id: dto.subject_id },
+            { OR: [{ status: "APROBADO" }, { status: "CURSANDO" }] },
+          ],
+        },
+      });
+
+      if (checkIfAlreadyEnroll.length > 0)
+        throw `seminarian id ${dto.seminarian_id} is already enrolled in the subject or was already approved`;
+      if (!checkSeminarian)
+        throw `seminarian id ${dto.seminarian_id} does't exist`;
 
       const equivalenceAcademicTerm = await tx.academic_term.findFirst({
         where: { status: "EQUIVALENCIAS" },
@@ -51,23 +94,23 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
       });
 
       const equivalenceTest = await tx.test.findFirst({
-        where: {subject_id: dto.subject_id}
-      })
+        where: { subject_id: dto.subject_id },
+      });
 
-      if (!equivalenceTest) throw `there is a error with the equivalence test ${dto.subject_id}, it is no found!`
-        const testScore = await tx.test_score.create({
-          data: {
-            test_id: equivalenceTest.id,
-            enrollment_id: enroll.enrollment_id,
-            score: dto.subject_score,
-          },
-        });
+      if (!equivalenceTest)
+        throw `there is a error with the equivalence test ${dto.subject_id}, it is no found!`;
+      const testScore = await tx.test_score.create({
+        data: {
+          test_id: equivalenceTest.id,
+          enrollment_id: enroll.enrollment_id,
+          score: dto.subject_score,
+        },
+      });
 
-        console.log("all okay in equivalency transaction")
+      console.log("all okay in equivalency transaction");
 
-        return { equivalenceAcademicTerm, enroll, testScore };
+      return { equivalenceAcademicTerm, enroll, testScore };
     });
-
 
     return equivalenceTransactionResult;
   }
