@@ -21,6 +21,7 @@ GetSeminarianDTO
 
 import { ValidatePermission } from "../services/permissionValidator";
 import { BuildNotas } from "../docs/Notas.Certificadas";
+import { CreateSeminarianListWithNotes } from "../docs/seminarialistnote";
 
 export class TestController {
   constructor(private readonly repository: TestRepository) {}
@@ -115,13 +116,18 @@ export class TestController {
       .catch((error) => res.status(400).json({ error }));
   };
   public SeminarianListWithNotes = (req: Request, res: Response) => {
+
     const [error, get_dto] = GetSeminarianDTO.CreateDTO(req.query);
     if(error != undefined){
       console.log("verification errors:" +error);
       res.json({error}).send();
     }else{
       new GetSeminarianPerNoteUse(this.repository).execute(get_dto!).then((seminarians)=>{
-
+        const line =res.writeHead(200,{
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "inline; filename=constance.pdf"
+        })
+        CreateSeminarianListWithNotes((data)=>line.write(data),()=>line.end(), seminarians) 
       }).catch((error)=>{
         res.status(418).send("unable to get seminarians: " + error);
       })
