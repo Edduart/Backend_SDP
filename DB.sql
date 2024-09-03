@@ -208,7 +208,7 @@ CREATE TABLE `instructor` (
   `professor_id` varchar(20) NOT NULL,
   `starting_date` date NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO') DEFAULT NULL,
+  `instructor_position` enum('RECTOR','VICERECTOR','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO', 'DESACTIVADO') DEFAULT NULL,
   PRIMARY KEY (`professor_id`),
   KEY `fk_instructor_professor_idx` (`professor_id`),
   CONSTRAINT `instructor_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`)

@@ -103,7 +103,7 @@ export class InstructorController {
           msj:
             "Instructor " +
             instructor.professor_id +
-            " eliminada exitosamente!",
+            " disabled!",
           instructor,
         })
       )

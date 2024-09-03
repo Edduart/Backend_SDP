@@ -54,7 +54,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     if (isInstructor != null) {
       await prisma.instructor.update({
         where: { professor_id: id },
-        data: { status: 0 },
+        data: { status: 0, instructor_position: "DESACTIVADO" },
       });
     }
     return { success: true, msj: "Profesor desactivado" };

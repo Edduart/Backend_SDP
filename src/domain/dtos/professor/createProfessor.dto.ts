@@ -5,9 +5,9 @@ export class CreateProfessor {
 
   public Validate(): string | null {
     let error: string[] = [];
-    const result_user = this.user.Validate();
-    if (result_user != null) {
-      error.push(result_user);
+    const userValidation = this.user.Validate();
+    if (userValidation != null) {
+      error.push(userValidation);
     }
     if (error.length > 0) {
       return error.join(", ");

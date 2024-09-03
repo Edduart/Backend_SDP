@@ -323,10 +323,10 @@ enum seminarian_status {
 enum instructor_position {
   RECTOR              @map("RECTOR")
   VICERECTOR          @map("VICERECTOR")
-  ACADEMICO           @map("ACADEMICO")
   ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
   DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
   ECONOMO             @map("ECONOMO")
+  DESACTIVADO         @map("DESACTIVADO")
 }
 
 enum seminarian_Location {

@@ -31,30 +31,49 @@ export class ProfessorController {
 
   public update = async (req: Request, res: Response) => {
     const isInstructor = await parseInstructorData(req.body.data);
-    const personData = await parsePersonData(
-      req.body.data,
-      req.body.ayuda
-    );
+    const personData = await parsePersonData(req.body.data, req.body.ayuda);
 
     const { userData } = await parseUserDataUpdate(req.body.data);
     const professorData = new UpdateProfessorDto(personData, userData);
 
-    // TODO validations and remove chainFunction
+    const dataValidation = await professorData.DataValidation();
+
+    if (dataValidation) {
+      if (req.body.ayuda != null) {
+        fs.unlinkSync(req.body.ayuda);
+      }
+      return res.status(400).send("Error: " + dataValidation);
+    }
+
+    let dtoUpdateInstructor = null;
+    if (isInstructor) {
+      const [error, updateInstructor] =
+        UpdateInstructorDto.update(isInstructor);
+      if (error) {
+        if (req.body.ayuda != null) {
+          fs.unlinkSync(req.body.ayuda);
+        }
+        return res.status(400).json({ error });
+      } else {
+        dtoUpdateInstructor = updateInstructor;
+      }
+    }
 
     const updateProfessor = await new UpdateProfessor(this.repository)
       .execute(professorData)
       .then((professor) => {
-        if (isInstructor != null) {
-          const [error, updateInstructor] =
-            UpdateInstructorDto.update(isInstructor);
-          if (error) return res.status(400).json({ error });
-          new UpdateInstructor(this.instructorPositionRepo).execute(
-            updateInstructor!
-          );
+        if (isInstructor) {
+          return new UpdateInstructor(this.instructorPositionRepo)
+            .execute(dtoUpdateInstructor!)
+            .catch((error) => {
+              console.error(error);
+              return res.status(400).json({ error });
+            });
         }
-        res
-          .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor actualizado correctamente", professor });
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
+          msj: "Profesor actualizado correctamente",
+          professor,
+        });
       })
       .catch((error) => res.status(400).json({ error }));
   };
@@ -73,25 +92,14 @@ export class ProfessorController {
   };
 
   public create = async (req: Request, res: Response) => {
-    
-    // TODO check role
-
     let dtoCreateInstructor = null;
     const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
     const userData = await parseUserData(req.body.data, personData);
     const professorData = new CreateProfessor(userData);
 
-    userData.role = 4; // TODO add proper roles
+    userData.role = 4;
 
-    const dataValidationErrors = professorData.Validate();
-    if (dataValidationErrors) {
-      if (req.body.ayuda != null) {
-        fs.unlinkSync(req.body.ayuda);
-      }
-      return res.status(400).send("Error: " + dataValidationErrors);
-    }
-    
     if (isInstructor) {
       const [error, createInstructor] =
         CreateInstructorDto.create(isInstructor);
@@ -101,27 +109,34 @@ export class ProfessorController {
         }
         return res.status(400).json({ error });
       } else {
+        userData.role = createInstructor?.instructor_role!;
         dtoCreateInstructor = createInstructor;
       }
     }
 
-    const createProfessor = await new CreateProfessorUseCase(this.repository)
+    const dataValidationErrors = professorData.Validate();
+    if (dataValidationErrors) {
+      if (req.body.ayuda != null) {
+        fs.unlinkSync(req.body.ayuda);
+      }
+      return res.status(400).send("Error: " + dataValidationErrors);
+    }
+
+    await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
-      .then((professor) =>
+      .then((professor) => {
+        if (isInstructor) {
+          return new CreateInstructor(this.instructorPositionRepo)
+            .execute(dtoCreateInstructor!)
+            .catch((error) => {
+              return res.status(400).json({ error });
+            });
+        }
         res
           .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor creado correctamente", professor })
-          .send()
-      )
+          .json({ msj: "Profesor creado correctamente", professor });
+      })
       .catch((error) => res.status(400).json({ error }));
-
-    console.log({ createProfessor });
-
-    if (isInstructor && createProfessor) {
-      new CreateInstructor(this.instructorPositionRepo)
-        .execute(dtoCreateInstructor!)
-        .catch((error) => res.status(400).json({ error }));
-    }
   };
 
   public delete = async (req: Request, res: Response) => {

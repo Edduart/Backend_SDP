@@ -6,6 +6,7 @@ export class CreateInstructorDto {
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
     public readonly status: number,
+    public readonly instructor_role: number
   ) {}
 
   static create(props: {
@@ -24,9 +25,33 @@ export class CreateInstructorDto {
       return ["starting date is not a valid date"];
     }
     if (!instructor_position) return ["Instructor position is required"];
+    let instructor_role: number = 0;
+
+    if (
+      instructor_position === "INSTRUCTOR" ||
+      instructor_position === "DIRECTOR_ESPIRITUAL" ||
+      instructor_position === "ECONOMO"
+    ) {
+      instructor_role = 6;
+    } else if (instructor_position === "ASESOR_PROPEDEUTICO") {
+      instructor_role = 7;
+    } else if (instructor_position === "VICERECTOR") {
+      instructor_role = 3;
+    } else if (instructor_position === "RECTOR") {
+      instructor_role = 2;
+    } else {
+      return [`error instructor role no valid, ${instructor_position}`];
+    }
+
     return [
       undefined,
-      new CreateInstructorDto(professor_id, starting_date, instructor_position, 1),
+      new CreateInstructorDto(
+        professor_id,
+        starting_date,
+        instructor_position,
+        1,
+        instructor_role
+      ),
     ];
   }
 }

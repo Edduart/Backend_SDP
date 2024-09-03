@@ -20,7 +20,7 @@ const professorController = new ProfessorController(
   instructorRepository
 );
 
-// TODO check token and permissions
+// TODO check token
 
 router.get("/", professorController.get);
 

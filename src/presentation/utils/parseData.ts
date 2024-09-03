@@ -117,14 +117,12 @@ export async function parseUserDataUpdate(req: any) {
           degree_Actual.link
         )
     );
-    //const statusUpdate = origin.professor.status_id
+
     const userData = new UpdateUserDto(
       origin.persona.id,
-      //origin.user.status,
       degrees,
       origin.user.parish_id,
       origin.user?.role
-      //hashedPassword
     );
     return { userData };
   } catch (error) {
