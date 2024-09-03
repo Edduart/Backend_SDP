@@ -18,6 +18,7 @@ router.get(
   testController.getAverageGradeBySubject
 );
 
+router.get("/lista", testController.SeminarianListWithNotes)
 router.post("/", testController.create);
 router.get("/", testController.get);
 router.put("/:id", testController.update);

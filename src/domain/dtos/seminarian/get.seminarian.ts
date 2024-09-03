@@ -16,7 +16,9 @@ export class GetSeminarianDTO{
         public readonly curse_id?:      number                     | undefined,
         public readonly subject_id?:    number                     | undefined,
         public readonly note?:          number                     | undefined,
-        public academic_term_id?: number,
+        public academic_term_id?:       number,
+        public menor_a_la_nota?:        boolean
+        //si es verddero se agarra las notas inferiores al valor dado, si no, se agarra las mayores
     ){}
     
     static CreateDTO(object: { [key: string]: any }): [string?, GetSeminarianDTO?]{
