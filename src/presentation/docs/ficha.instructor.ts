@@ -19,10 +19,7 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
     //icono
     try{
         doc.image('./images/assests/seminary.icon.png', 55,65,{
-            fit:[100,100],
-            align:'right',
-            
-        });
+            fit:[100,100],align:'right',});
     }catch(error){
         //si hay un error cargando la imagen lo envia
         doc.text('Error en el icono', 45,47);
@@ -40,14 +37,12 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
     //foto de perfil
     try{
         if(data.picture != null){
+            doc.image(data.picture, 442,65,{width:140,height: 140,fit:[160,140],});
+            //if running in local host, comment above and uncomment below
+            /*
             const picture = data.picture.split("3000");
             const path = "." + picture[1];
-            doc.image(path, 442,65,{
-                width:140,
-                height: 140,
-                fit:[160,140],
-                
-            });
+            doc.image(path, 442,65,{width:140,height: 140,fit:[160,140],});*/
         }else{
             doc.text('instructor no tiene foto', 442,65);
         }
