@@ -18,15 +18,92 @@ import {
 import { calculateTestScore } from "./utils/calculateScore";
 import { calculateAverageGrade } from "./utils/calculateAverageGradeBySubject";
 import test from 'node:test';
+import { seminarian_Location, seminarian_Ministery, seminarian_status } from "@prisma/client";
 export class TestDataSourceImpl implements TestDataSource {
   async GetSeminarianListWithNotes(data: GetSeminarianDTO): Promise<SeminarianListDTO[]> {
     const errolments = await this.getTestBySubject(new GetTestBySubjectDto(undefined, undefined, data.subject_id, data.academic_term_id, undefined))
-    
+    let persons: string[] = []
+    let notas: number[] = []
     errolments.forEach((Element)=>{
       const result = Element.enrollment[0].subject_total_score_out_of_graded_scored_10_scale.split("/")[0]
-      console.log(Element)
+      const notenum = Number(result);
+      if(data.menor_a_la_nota){
+        if(notenum <= data.note!){
+          persons.push(Element.seminarian_id)
+          notas.push(notenum)
+        }
+      }else{
+        if(notenum >= data.note!){
+          persons.push(Element.seminarian_id)
+          notas.push(notenum)
+        }
+    }})
+    let where_clause_foreing = undefined;
+    //if the foreing clause is not undefined we pass to assing data
+    if (data.foreing != undefined) {
+      //if it is true i sent to select all seminarian that has foreing data
+      //if it is false, i  sent to select all seminarian that has not foreing data
+      where_clause_foreing = data.foreing ? { isNot: null } : { is: null };
+    }
+    const result_seminarian = await prisma.person.findMany({
+      where:{
+        id:{
+          in: persons
+        },user: {
+          parish_id: data.parish_id,
+          Role_id: 5,
+          parish: {
+            diocese_id: data.diocese_id,
+          },
+          seminarian: {
+            status: data.status as seminarian_status,
+            Location: data.location as seminarian_Location,
+            Ministery: data.ministery as seminarian_Ministery,
+            foreigner_seminarian: where_clause_foreing,
+          },
+        },
+      },include: {
+        phone_number: true,
+        social_media: true,
+        user: {
+          include: {
+            academic_degree:true,
+            parish:{
+              include:{
+                diocese:true,
+              }
+            },
+            seminarian: {
+              include: {
+                enrollment: {
+                  include:{
+                    subject:{
+                      include:{
+                        course: true
+                      }
+                    }
+                  }
+                },
+                foreigner_seminarian: true,
+              },
+            },
+          },
+        },
+      },
     })
-    throw new Error("Method not implemented.");
+    const entities: SeminarianListDTO[] = result_seminarian.map((actual)=>{
+      const aux = persons.findIndex((element) => element == actual.id) 
+      const number = notas[aux != undefined ? aux : 0]
+      return SeminarianListDTO.fromdb({
+        id: actual.id, 
+        forename: actual.forename, 
+        surname: actual.surname, 
+        email: actual.email, 
+        diocesi_name: actual.user?.parish.diocese, 
+        note: number
+      })
+    })
+    return entities;
   }
   
   async getAverageGradeBySubject(
