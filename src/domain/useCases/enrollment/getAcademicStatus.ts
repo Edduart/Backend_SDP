@@ -1,4 +1,4 @@
-import {GetAcademicStatusDto } from "../../dtos";
+import { GetAcademicStatusDto } from "../../dtos";
 import { EnrollmentEntity } from "../../entities";
 import { EnrollmentRepository } from "../../repositories";
 
