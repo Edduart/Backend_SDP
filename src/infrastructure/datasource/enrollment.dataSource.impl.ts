@@ -12,13 +12,64 @@ import {
   GetStageOfSeminarianDto,
   EnrollmentTestResult,
   stages,
+  CreateEnrollmentByEquivalenceDto,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
 import { GetStageOfSeminarianMap } from "./utils/getStageOfSeminarianFilter";
 import { calculateTestScore } from "./utils/calculateScore";
-import { calculateStageStatus, AllEnrollmentBySeminarian } from "./utils/calculateIfSeminarianApproveStage";
+import {
+  calculateStageStatus,
+  AllEnrollmentBySeminarian,
+} from "./utils/calculateIfSeminarianApproveStage";
+
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  async createByEquivalence(
+    dto: CreateEnrollmentByEquivalenceDto
+  ): Promise<object> {
+    const equivalenceTransactionResult = prisma.$transaction(async (tx) => {
+
+      const checkSeminarian = await tx.seminarian.findUnique({
+        where: {id: dto.seminarian_id}
+      })
+
+      if (!checkSeminarian) throw`seminarian id ${dto.seminarian_id} does't exist`
+
+      const equivalenceAcademicTerm = await tx.academic_term.findFirst({
+        where: { status: "EQUIVALENCIAS" },
+      });
+      if (!equivalenceAcademicTerm)
+        throw "there is a error with the academic term EQUIVALENCIAS";
+
+      const enroll = await tx.enrollment.create({
+        data: {
+          seminarian_id: dto.seminarian_id,
+          subject_id: dto.subject_id,
+          academic_term_id: equivalenceAcademicTerm.id,
+        },
+      });
+
+      const equivalenceTest = await tx.test.findFirst({
+        where: {subject_id: dto.subject_id}
+      })
+
+      if (!equivalenceTest) throw `there is a error with the equivalence test ${dto.subject_id}, it is no found!`
+        const testScore = await tx.test_score.create({
+          data: {
+            test_id: equivalenceTest.id,
+            enrollment_id: enroll.enrollment_id,
+            score: dto.subject_score,
+          },
+        });
+
+        console.log("all okay in equivalency transaction")
+
+        return { equivalenceAcademicTerm, enroll, testScore };
+    });
+
+
+    return equivalenceTransactionResult;
+  }
   async updateStageIfApproved(): Promise<object> {
     const allEnrollmentBySeminarian: AllEnrollmentBySeminarian[] =
       await prisma.seminarian.findMany({
@@ -38,7 +89,9 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     console.log(JSON.stringify(allEnrollmentBySeminarian));
     console.log({ allEnrollmentBySeminarian });
 
-    return await calculateStageStatus.calculateIfSeminarianApproveStage(allEnrollmentBySeminarian);
+    return await calculateStageStatus.calculateIfSeminarianApproveStage(
+      allEnrollmentBySeminarian
+    );
   }
   async updateStatusByFinalSubjectScore(): Promise<object> {
     const testScoreBySubject = await prisma.enrollment.findMany({

@@ -1,3 +1,4 @@
+import { envs } from "../../../config/envs";
 import { prisma } from "../../../data/postgres";
 import { EnrollmentTestResult } from "../../../domain/dtos/test/getTestBySubject.dto";
 import { formatDate } from "../../../presentation/utils/formatDate";
@@ -5,10 +6,10 @@ import { formatDate } from "../../../presentation/utils/formatDate";
 // TODO clean code and add try and catch, if all is working as intended
 // TODO redondeo si la nota es mas de .50
 
+const subjectScorePassMark: number = envs.MINIMAL_GRADE; // minimal required to approve
+
 export class calculateTestScore {
-  public static async calculateTestScoreFromSubject(
-    testScoreBySubject: any[]
-  ) {
+  public static async calculateTestScoreFromSubject(testScoreBySubject: any[]) {
     const decimalNumbers: number = 2;
     console.log(testScoreBySubject.map((test) => test));
     if (testScoreBySubject.length == 0) {
@@ -16,7 +17,6 @@ export class calculateTestScore {
     } else {
       const calculateScore: EnrollmentTestResult[] = testScoreBySubject.map(
         (seminarian) => {
-
           let seminarianGradeAverageCounter: number = 0;
           let numberOfEnrollments: number = 0;
 
@@ -117,11 +117,12 @@ export class calculateTestScore {
                       totalGradedScoreOutOf10,
               };
             }),
-            grade_point_average: (
-              seminarianGradeAverageCounter / numberOfEnrollments
-            ) < 1 ? "1.00" : (seminarianGradeAverageCounter / numberOfEnrollments).toFixed(
-              decimalNumbers
-            ),
+            grade_point_average:
+              seminarianGradeAverageCounter / numberOfEnrollments < 1
+                ? "1.00"
+                : (seminarianGradeAverageCounter / numberOfEnrollments).toFixed(
+                    decimalNumbers
+                  ),
           };
         }
       );
@@ -130,7 +131,6 @@ export class calculateTestScore {
   }
 
   public static async calculateFinalSubjectScore(testScoreBySubject: any[]) {
-    let subjectScorePassMark: number = 6; // minimal required to approve
     if (testScoreBySubject.length > 0) {
       for (const subject of testScoreBySubject) {
         let totalSubjectScore: number = 0;
@@ -178,7 +178,6 @@ export class calculateTestScore {
     }
 
     return { status: "Ok" };
-
   }
 
   public static calculateIndividualScore(

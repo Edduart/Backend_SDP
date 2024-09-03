@@ -1,3 +1,5 @@
+import { envs } from "../../config/envs";
+
 import { instructor_position } from "@prisma/client";
 import {
   ProfessorEntity,
@@ -12,12 +14,12 @@ import {
   PhoneEntity,
   DegreeEntity,
   SocialMediaEntity,
-  ParishEntity
+  ParishEntity,
 } from "../../domain";
 import { encode } from "../services/hash_handler";
 import { formatDate } from "../../presentation/utils/formatDate";
 
-const serverAddress: string = "http://127.0.0.1:3000/";
+const serverAddress: string = envs.SERVER_ADDRESS;
 
 export async function parsePersonData(req: any, path: any) {
   try {
@@ -60,14 +62,17 @@ export async function parseUserData(req: any, person: CreatePerson) {
   try {
     const origin = await JSON.parse(req); // check that is only a string
     const hashedPassword = await encode(origin.persona.id);
-    const degrees: CreateDegree[] | undefined =  origin.user.degree !=null ? origin.user.degree.map(
-      (degree_Actual: { description: string; link: string }) =>
-        new CreateDegree(
-          origin.persona.id,
-          degree_Actual.description,
-          degree_Actual.link
-        )
-    ) : undefined
+    const degrees: CreateDegree[] | undefined =
+      origin.user.degree != null
+        ? origin.user.degree.map(
+            (degree_Actual: { description: string; link: string }) =>
+              new CreateDegree(
+                origin.persona.id,
+                degree_Actual.description,
+                degree_Actual.link
+              )
+          )
+        : undefined;
     const userData = new CreateUserDTO(
       person,
       degrees,
@@ -87,12 +92,12 @@ export async function parseInstructorData(req: any) {
     const { is_instructor, starting_date, instructor_position, status } =
       origin.instructor;
     if (is_instructor == false) return null;
-    const professor_id  = origin.persona.id;
+    const professor_id = origin.persona.id;
     const instructorData = {
       professor_id,
       starting_date,
       instructor_position,
-      status
+      status,
     };
     return instructorData;
   } catch (error) {
@@ -102,7 +107,7 @@ export async function parseInstructorData(req: any) {
 
 export async function parseUserDataUpdate(req: any) {
   try {
-    const origin = await JSON.parse(req); 
+    const origin = await JSON.parse(req);
     //const hashedPassword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined = origin.user.degree.map(
       (degree_Actual: { description: string; link: string }) =>
@@ -118,7 +123,7 @@ export async function parseUserDataUpdate(req: any) {
       //origin.user.status,
       degrees,
       origin.user.parish_id,
-      origin.user?.role,
+      origin.user?.role
       //hashedPassword
     );
     return { userData };

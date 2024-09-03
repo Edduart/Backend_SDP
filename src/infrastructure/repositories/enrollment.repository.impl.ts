@@ -9,10 +9,14 @@ import {
   GetAcademicStatusDto,
   EnrollmentGetInterface,
   GetStageOfSeminarianDto,
+  CreateEnrollmentByEquivalenceDto,
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
+  createByEquivalence(dto: CreateEnrollmentByEquivalenceDto): Promise<object> {
+    return this.dataSource.createByEquivalence(dto);
+  }
   updateStageIfApproved(): Promise<object> {
     return this.dataSource.updateStageIfApproved();
   }

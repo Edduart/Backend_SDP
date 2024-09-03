@@ -7,10 +7,14 @@ import {
   GetAcademicStatusDto,
   EnrollmentGetInterface,
   GetStageOfSeminarianDto,
+  CreateEnrollmentByEquivalenceDto,
 } from "../dtos";
 
 export abstract class EnrollmentDataSource {
   abstract create(dto: CreateEnrollmentDto): Promise<object>;
+  abstract createByEquivalence(
+    dto: CreateEnrollmentByEquivalenceDto
+  ): Promise<object>;
   abstract get(dto: GetEnrollmentDto): Promise<EnrollmentGetInterface[]>;
   abstract getAcademicStatus(dto: GetAcademicStatusDto): Promise<object>;
   abstract getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object>;
