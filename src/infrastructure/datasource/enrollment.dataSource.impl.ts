@@ -46,6 +46,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
           seminarian_id: dto.seminarian_id,
           subject_id: dto.subject_id,
           academic_term_id: equivalenceAcademicTerm.id,
+          status: "APROBADO",
         },
       });
 
