@@ -12,11 +12,20 @@ import {
   CreateEnrollmentByEquivalenceDto,
   SubjectAllowToEnrollEquivalency,
   SubjectAllowToEnrollEquivalencyDto,
+  GetAcademicTermByEnrollmentDto,
+  academicTermMap,
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
-  getSubjectsToEnroll(dto: SubjectAllowToEnrollEquivalencyDto): Promise<SubjectAllowToEnrollEquivalency> {
+  getAcademicTermByEnrollment(
+    dto: GetAcademicTermByEnrollmentDto
+  ): Promise<academicTermMap[]> {
+    return this.dataSource.getAcademicTermByEnrollment(dto);
+  }
+  getSubjectsToEnroll(
+    dto: SubjectAllowToEnrollEquivalencyDto
+  ): Promise<SubjectAllowToEnrollEquivalency> {
     return this.dataSource.getSubjectsToEnroll(dto);
   }
   createByEquivalence(dto: CreateEnrollmentByEquivalenceDto): Promise<object> {

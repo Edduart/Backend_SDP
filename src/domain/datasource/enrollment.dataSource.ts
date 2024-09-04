@@ -9,7 +9,9 @@ import {
   GetStageOfSeminarianDto,
   CreateEnrollmentByEquivalenceDto,
   SubjectAllowToEnrollEquivalency,
-  SubjectAllowToEnrollEquivalencyDto
+  SubjectAllowToEnrollEquivalencyDto,
+  GetAcademicTermByEnrollmentDto,
+  academicTermMap,
 } from "../dtos";
 
 export abstract class EnrollmentDataSource {
@@ -23,6 +25,9 @@ export abstract class EnrollmentDataSource {
   abstract getSubjectsToEnroll(
     dto: SubjectAllowToEnrollEquivalencyDto
   ): Promise<SubjectAllowToEnrollEquivalency>;
+  abstract getAcademicTermByEnrollment(
+    dto: GetAcademicTermByEnrollmentDto
+  ): Promise<academicTermMap[]>;
   abstract update(dto: UpdateEnrollmentDto): Promise<EnrollmentEntity>;
   abstract delete(id: number): Promise<EnrollmentEntity>;
   abstract updateStatusByFinalSubjectScore(): Promise<object>;

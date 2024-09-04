@@ -5,16 +5,16 @@ import {
   EnrollmentDataSource,
   EnrollmentEntity,
   CreateEnrollmentDto,
-  DeleteEnrollmentDto,
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
   GetStageOfSeminarianDto,
-  EnrollmentTestResult,
   stages,
   CreateEnrollmentByEquivalenceDto,
   SubjectAllowToEnrollEquivalency,
   SubjectAllowToEnrollEquivalencyDto,
+  GetAcademicTermByEnrollmentDto,
+  academicTermMap
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
@@ -25,7 +25,58 @@ import {
   AllEnrollmentBySeminarian,
 } from "./utils/calculateIfSeminarianApproveStage";
 
+import {formatDate} from "../../presentation/utils/formatDate"
+
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  async getAcademicTermByEnrollment(
+    dto: GetAcademicTermByEnrollmentDto
+  ): Promise<academicTermMap[]> {
+
+    const seminarianAcademicTerm = await prisma.seminarian.findMany({
+      where: {
+        id: dto.seminarian_id,
+        enrollment: { some: { seminarian_id: dto.seminarian_id } },
+      },
+      select: {id:true, enrollment: { include: { academic_term: true } } },
+    });
+
+    console.log(seminarianAcademicTerm);
+
+    const removeRepeated = seminarianAcademicTerm.map((seminarian) => {
+      const seenIds = new Set();
+      return {
+        seminarian: seminarian.id,
+        enrollment: seminarian.enrollment.filter((enrollment) => {
+          const id = enrollment.academic_term.id;
+          if (!seenIds.has(id)) {
+            seenIds.add(id);
+            return true;
+          }
+          return false;
+        }),
+      };
+    });
+    const academicTermMap: academicTermMap[] = removeRepeated.flatMap(
+      (seminarian) => ({
+        seminarian_id: seminarian.seminarian,
+        academic_term: seminarian.enrollment.flatMap((enrollment) => ({
+          academic_term_id: enrollment.academic_term.id,
+          academic_term_semester: enrollment.academic_term.semester,
+          academic_term_start_date: formatDate(
+            enrollment.academic_term.start_date.toISOString()
+          ),
+          academic_term_end_date: formatDate(
+            enrollment.academic_term.end_date.toISOString()
+          ),
+          academic_term_status: enrollment.academic_term.status,
+        })),
+      })
+    );
+
+    console.log(academicTermMap);
+
+    return academicTermMap;
+  }
   async getSubjectsToEnroll(
     dto: SubjectAllowToEnrollEquivalencyDto
   ): Promise<SubjectAllowToEnrollEquivalency> {
