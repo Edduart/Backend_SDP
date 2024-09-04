@@ -40,9 +40,8 @@ export function BuildFicha(dataCB: (...args: any[]) => void, endCB: (...args: an
     //foto de perfil
     try{
         if(data.picture != null){
-            //path if running in localhost
-            const picture = data.picture.split("3000");
-            const path = "." + picture[1];
+            const picture = data.picture.split("images");
+            const path = ".images" + picture[1];
 
             doc.image(data.picture, 442,65,{
                 width:140,
