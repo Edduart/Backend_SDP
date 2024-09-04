@@ -14,7 +14,7 @@ import {
   SubjectAllowToEnrollEquivalency,
   SubjectAllowToEnrollEquivalencyDto,
   GetAcademicTermByEnrollmentDto,
-  academicTermMap
+  academicTermMap,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
@@ -25,21 +25,19 @@ import {
   AllEnrollmentBySeminarian,
 } from "./utils/calculateIfSeminarianApproveStage";
 
-import {formatDate} from "../../presentation/utils/formatDate"
+import { formatDate } from "../../presentation/utils/formatDate";
 
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
   async getAcademicTermByEnrollment(
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {
-
-
-    console.log(dto.seminarian_id)
+    console.log(dto.seminarian_id);
     const seminarianAcademicTerm = await prisma.seminarian.findMany({
       where: {
         id: dto.seminarian_id,
         enrollment: { some: { seminarian_id: dto.seminarian_id } },
       },
-      select: {id:true, enrollment: { include: { academic_term: true } } },
+      select: { id: true, enrollment: { include: { academic_term: true } } },
     });
 
     console.log(seminarianAcademicTerm);
@@ -61,10 +59,10 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
 
     console.log(removeRepeated);
 
-    const academicTermMap: academicTermMap[] = removeRepeated.map(
+    const academicTermMap: academicTermMap[] = removeRepeated.flatMap(
       (seminarian) => ({
         seminarian_id: seminarian.seminarian,
-        academic_term: seminarian.enrollment.flatMap((enrollment) => ({
+        academic_term: seminarian.enrollment.map((enrollment) => ({
           academic_term_id: enrollment.academic_term.id,
           academic_term_semester: enrollment.academic_term.semester,
           academic_term_start_date: formatDate(

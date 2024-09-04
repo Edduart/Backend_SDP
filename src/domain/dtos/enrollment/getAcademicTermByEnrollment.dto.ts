@@ -25,4 +25,4 @@ export interface academicTermMap {
     academic_term_end_date: string | null;
     academic_term_status: string;
   }[];
-}[];
+};
