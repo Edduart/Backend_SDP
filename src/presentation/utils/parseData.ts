@@ -68,7 +68,7 @@ export async function parseUserData(req: any, person: CreatePerson) {
             (degree_Actual: { description: string; link: string }) =>
               new CreateDegree(
                 origin.persona.id,
-                degree_Actual.description,
+                degree_Actual.description.toUpperCase(),
                 degree_Actual.link
               )
           )
