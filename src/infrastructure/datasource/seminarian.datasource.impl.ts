@@ -1,4 +1,5 @@
 import {
+  enrollment_status,
   foreigner_seminarian_stage,
   seminarian_Location,
   seminarian_Ministery,
@@ -169,6 +170,40 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   }
   }
   async getByID(id: string): Promise<DocumenDTO> {
+    const result = await prisma.seminarian.findFirst({where:{
+      user:{person_id: id},
+      enrollment:{
+        some:{
+          status: enrollment_status.CURSANDO
+        }
+      }
+    },include:{
+      user:{include:{person:true}},
+      enrollment: {include:{
+        academic_term: true
+      }}
+    }})
+      let stage = ""
+      switch (result?.stage) {
+        case 1:
+          stage = "Propedéutico"
+          break;
+          case 2:
+            stage = "Discipulado"
+          break;
+          case 3:
+            stage = "Configurativa"
+          break;
+      }
+      const year = result?.enrollment[0].academic_term.end_date.getFullYear().toString()
+
+    if(result == null)throw new Error("Seminarian does not exists");
+    const document = DocumenDTO.fromdb({id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname})
+    document.stage = stage
+    document.period = result.enrollment[0].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString()
+    return document
+  }
+  async getByIDCulminado(id: string): Promise<DocumenDTO> {
     const result = await prisma.seminarian.findFirst({where:{
       status: seminarian_status.CULMINADO,
       user:{person_id: id}},include:{user:{include:{person:true}}}})

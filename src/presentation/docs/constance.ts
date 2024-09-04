@@ -1,7 +1,8 @@
 import PDFDocument from 'pdfkit';
 import { Getmonth } from './Notas.Certificadas';
 
-export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string, period: string, etapa: string){
+export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, 
+forename: string, period: string, etapa: string, nombre_emisor : string, cedula_emisor: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
     try{
         doc.image("./images/assests/backgpround.png", 110,150,{
@@ -84,8 +85,8 @@ export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Bold', 12).text('Pbro. Lcdo. Frank Reinaldo Dorante Boquett', {align: 'center'});
-    doc.font('Times-Bold', 12).text('V-********', {align: 'center'});
+    doc.font('Times-Bold', 12).text(nombre_emisor, {align: 'center'});
+    doc.font('Times-Bold', 12).text(cedula_emisor, {align: 'center'});
     doc.font('Times-Bold', 12).text('Rector', {align: 'center'});
     doc.moveDown();
     doc.moveDown();

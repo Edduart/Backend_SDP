@@ -4,3 +4,4 @@ export * from "./delete.seminarian";
 export * from "./getSeminarian";
 export * from "./getid";
 export * from "./getFicha";
+export * from "./getculminado";

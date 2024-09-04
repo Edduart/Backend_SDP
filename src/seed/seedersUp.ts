@@ -178,7 +178,27 @@ async function main() {
           create: {
             subject_id: i,
             academic_term_id: 1,
-          },
+          },include:{
+          }
+        });
+      }
+      await delay(1000);
+      //creating equivalencia tests
+      for (let i = 1; i < subjectNO.length; i++) {
+        await prisma.test.upsert({
+          where:{
+            academic_term_id_subject_id: {
+              academic_term_id: 1,
+              subject_id: i
+            }
+          }, update:{},
+          create:{
+            academic_term_id: 1,
+            subject_id: i,
+            description: "EXAMEN UNICO",
+            status: true,
+            maximum_score: 100.0
+          }
         });
       }
       console.log("seeder completed");

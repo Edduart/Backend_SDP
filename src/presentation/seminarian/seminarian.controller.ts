@@ -3,7 +3,8 @@ import { CreateForeingSeminarian, DeleteSeminarianUseCase, CreateSeminarian, Upd
     StageEnum, UpdateSeminarianUseCase, GetSeminarianDTO, GetSeminarianUseCase,
     seminarian_status_enum,
     GetByIDSeminarianUseCase,
-    SeminarianFichaUseCase} from "../../domain";
+    SeminarianFichaUseCase,
+    GetByIDCulminadoSeminarianUseCase} from "../../domain";
 import { Request, Response } from "express";
 import fs from 'fs';
 import { parsePersonData, parseUserData } from "../utils/parseData";
@@ -32,12 +33,13 @@ export class SeminarianControler{
         })
     }
     public getCartaCulminacione = async (req: Request, res: Response) => {
-        new GetByIDSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
+        new GetByIDCulminadoSeminarianUseCase(this.repository).execute(req.params.id).then((data)=>{
             const line =res.writeHead(200,{
                 "Content-Type": "application/pdf",
                 "Content-Disposition": "inline; filename=CartaCulminacion.pdf"
             })
-            BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, data.forename);
+            BuildPDF((data)=>line.write(data),()=>line.end(), data.id, data.surname, 
+            data.forename, req.query.nombre as string, req.query.cedula as string);
         }).catch((error)=>{
             res.status(400).json({error: "error encontrando el seminarista"+ error}).send()
         })
@@ -48,7 +50,8 @@ export class SeminarianControler{
                 "Content-Type": "application/pdf",
                 "Content-Disposition": "inline; filename=constance.pdf"
             })
-            BuildConstance((data)=>line.write(data),()=>line.end(), result.id, result.surname, result.forename, "2023-2024", "Discipulado")
+            BuildConstance((data)=>line.write(data),()=>line.end(), result.id, result.surname, result.forename, 
+            result.period!, result.stage!, req.query.nombre as string, req.query.cedula as string)
         
         }).catch((error)=>{
             console.log(error);

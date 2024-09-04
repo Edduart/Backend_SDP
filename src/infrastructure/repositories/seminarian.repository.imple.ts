@@ -4,6 +4,9 @@ export class SeminarianRepositoryImpl implements SeminarianRepository{
     constructor (
         private readonly datasource: SeminarianDataSource,
     ){}
+    getByIDCulminado(id: string): Promise<DocumenDTO> {
+        return this.datasource.getByIDCulminado(id);
+    }
     Ficha(id: string): Promise<SeminarianFichaDTO> {
         return this.datasource.Ficha(id);
     }

@@ -1,7 +1,7 @@
 import PDFDocument from 'pdfkit';
 import { Getmonth } from './Notas.Certificadas';
 
-export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string){
+export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string, nombre_emisor : string, cedula_emisor: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
     try{
         doc.image("./images/assests/backgpround.png", 110,150,{
@@ -51,7 +51,7 @@ export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[
         align: 'justify',
         indent: 30,
         continued: true
-    }).font('Times-Bold', 12).text('Pbro. Lcdo. Dorante Boquett, Frank Reinaldo',{align: 'justify', continued: true})
+    }).font('Times-Bold', 12).text(nombre_emisor,{align: 'justify', continued: true})
     .font('Times-Roman', 12).text(', Director de Estudio del Instituto de Estudios Superiores “Divina Pastora”, por medio de las presentes líneas declaro y doy testimonio, que el Ciudadano ',{align: 'justify', continued: true})
     .font('Times-Bold', 12).text(surname + " " +forename,{align: 'justify', continued: true}).font('Times-Roman', 12)
     .text(' , de Cedula de Identidad: ', {align: 'justify', continued: true})
@@ -80,8 +80,8 @@ export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[
     doc.moveDown();
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Bold', 12).text('Pbro. Lcdo. Frank Reinaldo Dorante Boquett', {align: 'center'});
-    doc.font('Times-Bold', 12).text('V-********', {align: 'center'});
+    doc.font('Times-Bold', 12).text(nombre_emisor, {align: 'center'});
+    doc.font('Times-Bold', 12).text(cedula_emisor, {align: 'center'});
     doc.font('Times-Bold', 12).text('Director Académico', {align: 'center'});
     doc.moveDown();
     doc.moveDown();
