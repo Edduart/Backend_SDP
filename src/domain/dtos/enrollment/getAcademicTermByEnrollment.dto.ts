@@ -7,7 +7,7 @@ export class GetAcademicTermByEnrollmentDto {
     let { seminarian_id } = props;
     let dataErrors: string[] = [];
 
-    console.log("🚀 ~ GetEnrollmentDto ~ get ~ props:", props);
+    console.log("🚀 ~ GetAcademicTermByEnrollmentDto ~ get ~ props:", props);
 
     // TODO reWork validations
 
@@ -25,4 +25,4 @@ export interface academicTermMap {
     academic_term_end_date: string | null;
     academic_term_status: string;
   }[];
-}
+}[];

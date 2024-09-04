@@ -28,11 +28,7 @@ export class EnrollmentController {
 
   public getAcademicTermByEnrollment = (req: Request, res: Response) => {
 
-    const seminarian_id: string = req.params.seminarian_id;
-
-    const [error, getDto] = GetAcademicTermByEnrollmentDto.get({
-      seminarian_id,
-    });
+    const [error, getDto] = GetAcademicTermByEnrollmentDto.get(req.query);
     if (error)
       return res.status(400).json({ msj: "Data validation errors", error });
 

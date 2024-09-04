@@ -32,6 +32,8 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {
 
+
+    console.log(dto.seminarian_id)
     const seminarianAcademicTerm = await prisma.seminarian.findMany({
       where: {
         id: dto.seminarian_id,
@@ -56,7 +58,10 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
         }),
       };
     });
-    const academicTermMap: academicTermMap[] = removeRepeated.flatMap(
+
+    console.log(removeRepeated);
+
+    const academicTermMap: academicTermMap[] = removeRepeated.map(
       (seminarian) => ({
         seminarian_id: seminarian.seminarian,
         academic_term: seminarian.enrollment.flatMap((enrollment) => ({
