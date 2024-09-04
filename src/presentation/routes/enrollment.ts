@@ -15,6 +15,11 @@ router.get(
 );
 router.get("/seminarian-stage/", enrollmentController.getStageOfSeminarian);
 router.get("/equivalency-list/:seminarian_id", enrollmentController.getSubjectAllowToEnrollEquivalency);
+router.get(
+  "/seminarian-academic-term/",
+  enrollmentController.getAcademicTermByEnrollment
+);
+
 router.post(
   "/create-by-equivalence/",
   enrollmentController.createEnrollmentByEquivalence

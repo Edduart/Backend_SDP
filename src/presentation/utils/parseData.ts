@@ -24,7 +24,9 @@ const serverAddress: string = envs.SERVER_ADDRESS;
 export async function parsePersonData(req: any, path: any) {
   try {
     const origin = await JSON.parse(req);
-    const imageFile = path ? path.replace(/\\/g, "/") : null;
+    const imagePath = path
+      ? serverAddress + path.replace(/\\/g, "/")
+      : serverAddress + "images/default/default_profile_icon.jpeg";
     // Social Media Data Parsing
     const socials: CreateSocialMedia[] | null = origin?.persona?.social?.map(
       (social: { social_media_category: number; link: string }) =>
@@ -38,7 +40,7 @@ export async function parsePersonData(req: any, path: any) {
     // Person Data Parsing
     const personData = new CreatePerson(
       origin?.persona?.id,
-      serverAddress + imageFile,
+      imagePath,
       origin?.persona?.forename?.toUpperCase(),
       origin?.persona?.surname?.toUpperCase(),
       origin?.persona?.email,

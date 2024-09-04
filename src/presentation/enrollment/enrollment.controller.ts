@@ -17,12 +17,32 @@ import {
   CreateEnrollmentByEquivalence,
   SubjectAllowToEnrollEquivalencyDto,
   GetSubjectAllowToEnrollEquivalency,
+  GetAcademicTermByEnrollmentDto,
+  GetAcademicTermByEnrollment
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
 
 export class EnrollmentController {
   constructor(private readonly repository: EnrollmentRepository) {}
+
+  public getAcademicTermByEnrollment = (req: Request, res: Response) => {
+
+    const [error, getDto] = GetAcademicTermByEnrollmentDto.get(req.query);
+    if (error)
+      return res.status(400).json({ msj: "Data validation errors", error });
+
+    new GetAcademicTermByEnrollment(this.repository)
+      .execute(getDto!)
+      .then((enrollment) =>
+        res
+          .set({ "Access-Control-Expose-Headers": "auth" })
+          .json({ enrollment })
+      )
+      .catch((error) => res.status(400).json({ error }));
+
+
+  };
 
   public getSubjectAllowToEnrollEquivalency = (req: Request, res: Response) => {
     const seminarian_id: string = req.params.seminarian_id;

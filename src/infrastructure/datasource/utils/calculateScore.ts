@@ -115,6 +115,12 @@ export class calculateTestScore {
                     : totalSubjectScoreOutOf10.toFixed(decimalNumbers) +
                       " / " +
                       totalGradedScoreOutOf10,
+                subject_total_score_out_of_graded_scored_20_scale:
+                  totalSubjectScoreOutOf10 < 1
+                    ? "1.00"
+                    : +totalSubjectScoreOutOf10.toFixed(decimalNumbers) * 2 +
+                      " / " +
+                      totalGradedScoreOutOf10 * 2,
               };
             }),
             grade_point_average:

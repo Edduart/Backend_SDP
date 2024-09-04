@@ -62,6 +62,7 @@ export interface EnrollmentTestResult {
     }[];
     subject_total_score_out_of_graded_score: string;
     subject_total_score_out_of_graded_scored_10_scale: string;
+    subject_total_score_out_of_graded_scored_20_scale: string;
   }[];
 }
 [];
