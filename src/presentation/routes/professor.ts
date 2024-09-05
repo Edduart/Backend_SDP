@@ -39,9 +39,6 @@ router.post("/:id", (req: Request, res: Response) => {
   });
 });
 router.put("/:id", (req: Request, res: Response) => {
-
-  console.log("fileSize: ", req.headers["content-length"]);
-""
   updateFile.single("file")(req, res, (err) => {
     if (err) {
       console.log("error multer");
