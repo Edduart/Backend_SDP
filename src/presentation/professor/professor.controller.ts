@@ -23,6 +23,8 @@ import {
   parseUserDataUpdate,
 } from "../utils/parseData";
 import fs from "fs";
+import { imageResize } from "../../presentation/utils/imageManipulation";
+
 export class ProfessorController {
   constructor(
     private readonly repository: ProfessorRepository,
@@ -30,6 +32,8 @@ export class ProfessorController {
   ) {}
 
   public update = async (req: Request, res: Response) => {
+    console.log(req.baseUrl);
+
     const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
 
@@ -103,9 +107,7 @@ export class ProfessorController {
       const [error, createInstructor] =
         CreateInstructorDto.create(isInstructor);
       if (error) {
-        if (req.body.ayuda != null) {
-          fs.unlinkSync(req.body.ayuda);
-        }
+        fs.unlinkSync(req.body.ayuda);
         return res.status(400).json({ error });
       } else {
         userData.role = createInstructor?.instructor_role!;
@@ -113,11 +115,12 @@ export class ProfessorController {
       }
     }
 
+    console.log(req.body.ayuda);
+    await imageResize(req.body.ayuda);
+
     const dataValidationErrors = professorData.Validate();
     if (dataValidationErrors) {
-      if (req.body.ayuda != null) {
-        fs.unlinkSync(req.body.ayuda);
-      }
+      fs.unlinkSync(req.body.ayuda);
       return res.status(400).send("Error: " + dataValidationErrors);
     }
 

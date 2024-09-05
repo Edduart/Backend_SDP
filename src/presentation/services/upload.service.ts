@@ -1,16 +1,15 @@
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
-import { NextFunction, Request, Response } from "express";
+import { Request } from "express";
 
 const getDestination = (req: Request) => {
   // Use dynamic destination
-  const routeName = req.baseUrl; // Get the current route's url
-  const route = "./images" + routeName;
-  return route;
+  const basePath = req.baseUrl; // Get the current route's url
+  const imagePath = "./images" + basePath;
+  return imagePath;
 };
-
-const storageUpload = multer.diskStorage({
+const storage = multer.diskStorage({
   // upload first time
   destination: function (req, file, cb) {
     const destinationFolder = getDestination(req);
@@ -18,59 +17,54 @@ const storageUpload = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const filename = req.params.id + "." + file.mimetype.split("/")[1];
-    const filePath = path.join(getDestination(req), filename);
-    if (fs.existsSync(filePath)) {
-      cb(new Error("File already exist"), "");
-    }
     cb(null, filename);
     req.body.ayuda = path.join(getDestination(req), filename);
   },
 });
-
-const storageUpdate = multer.diskStorage({
-  // update if exist
-
-  destination: (req, file, cb) => {
-    const destinationFolder = getDestination(req);
-    cb(null, destinationFolder);
-  },
-
-  filename: (req, file, cb) => {
-    const filename = req.params.id + "." + file.mimetype.split("/")[1];
-    cb(null, filename);
-    req.body.ayuda = path.join(getDestination(req), filename);
-  },
-});
-
-const fileFilter = function (
+const CreateFileFilter = async function (
   req: any,
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) {
-  //mando un mensaje en caso de que esté vacio
-  if (file === undefined || file === null) {
-    req.body.ayuda = null;
-    return cb(null, false);
+  const allowedExtensions = [".jpg", ".jpeg", ".png"];
+  const extension = path.extname(file.originalname).toLowerCase();
+  if (!allowedExtensions.includes(extension)) {
+    return cb(new Error("Only valid image files are allowed (JPG, JPEG, PNG)"));
   }
-  // flitro para solo imagenes
-  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
-    req.fileValidationError = "Only valid images files!";
-    return cb(null, false);
+  const filename = req.params.id;
+  const constFolderPath = getDestination(req);;
+  const files = await fs.promises.readdir(constFolderPath);
+  const existingFile = files.find((file) => {
+    return file.toLowerCase().startsWith(filename.toLowerCase());
+  });
+  if (existingFile) {
+    return cb(
+      new Error(`File with the same name already exists ${existingFile}`)
+    );
   }
-  const filename = req.params.id + "." + file.mimetype.split("/")[1];
-  const filePath = path.join(getDestination(req), filename);
-  if (fs.existsSync(filePath)) {
-    cb(new Error("I don't have a clue!"));
+  cb(null, true);
+};
+export const uploadFile = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: CreateFileFilter,
+});
+
+const UpdateFileFilter = async function (
+  req: any,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) {
+  const allowedExtensions = [".jpg", ".jpeg", ".png"];
+  const extension = path.extname(file.originalname).toLowerCase();
+  if (!allowedExtensions.includes(extension)) {
+    return cb(new Error("Only valid image files are allowed (JPG, JPEG, PNG)"));
   }
   cb(null, true);
 };
 
-export const uploadFile = multer({
-  storage: storageUpload,
-  fileFilter: fileFilter,
-});
-
 export const updateFile = multer({
-  storage: storageUpdate,
-  fileFilter: fileFilter,
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: UpdateFileFilter,
 });

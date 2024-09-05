@@ -4,7 +4,7 @@ import { WorkerDataSourceImpl, WorkerRepositoryImpl } from "../../infrastructure
 import { WorkerControler } from "../worker/worker.crontroller";
 import { Request, Response, NextFunction } from 'express';
 import { ValidatorTo } from "../services/TokenValidator";
-import { updateFile} from "../services/upload.service";
+
 const router = Router();
 const datasource = new WorkerDataSourceImpl();
 const Repository = new WorkerRepositoryImpl(datasource);
