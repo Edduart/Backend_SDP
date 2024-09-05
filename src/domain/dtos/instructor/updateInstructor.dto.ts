@@ -5,7 +5,8 @@ export class UpdateInstructorDto {
     public readonly professor_id: string,
     public readonly starting_date: Date,
     public readonly instructor_position: InstructorPostion,
-    public readonly status?: number
+    public readonly status?: number,
+    public readonly instructor_role?: number
   ) {}
 
   get values() {
@@ -43,17 +44,32 @@ export class UpdateInstructorDto {
       throw "starting date is not a valid date";
     }
     if (!instructor_position) return ["instructor position is required"];
+    let instructor_role: number = 0;
 
-    /*if (typeof status !== "number" || (status !== 0 && status !== 1))
-      return ["status is required"];*/
-    
+    if (
+      instructor_position === "INSTRUCTOR" ||
+      instructor_position === "DIRECTOR_ESPIRITUAL" ||
+      instructor_position === "ECONOMO"
+    ) {
+      instructor_role = 6;
+    } else if (instructor_position === "ASESOR_PROPEDEUTICO") {
+      instructor_role = 7;
+    } else if (instructor_position === "VICERECTOR") {
+      instructor_role = 3;
+    } else if (instructor_position === "RECTOR") {
+      instructor_role = 2;
+    } else {
+      return [`error instructor role no valid, ${instructor_position}`];
+    }
+
     return [
       undefined,
       new UpdateInstructorDto(
         professor_id,
         starting_date,
         instructor_position,
-        status
+        status,
+        instructor_role
       ),
     ];
   }

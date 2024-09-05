@@ -27,11 +27,11 @@ router.get("/", professorController.get);
 router.post("/:id", (req: Request, res: Response) => {
   uploadFile.single("file")(req, res, (err) => {
     if (err) {
-      res.status(400).json({ ImageError: err.message });
+      console.log("error file size")
+      res.status(400).json({ ImageError1: err.message });
     } else {
       if (!req.file) {
-        req.body.ayuda = "./images" + req.baseUrl + req.url;
-
+        req.body.ayuda = "images" + req.baseUrl + req.url;
         console.log("no file", req.body.ayuda);
       }
       professorController.create(req, res);
@@ -39,10 +39,18 @@ router.post("/:id", (req: Request, res: Response) => {
   });
 });
 router.put("/:id", (req: Request, res: Response) => {
+
+  console.log("fileSize: ", req.headers["content-length"]);
+""
   updateFile.single("file")(req, res, (err) => {
     if (err) {
+      console.log("error multer");
       res.status(400).json({ ImageError: err.message });
     } else {
+      if (!req.file) {
+        req.body.ayuda = "images" + req.baseUrl + req.url;
+        console.log("no file", req.body.ayuda);
+      }
       professorController.update(req, res);
     }
   });

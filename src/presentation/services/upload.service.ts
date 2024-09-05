@@ -7,10 +7,10 @@ const getDestination = (req: Request) => {
   // Use dynamic destination
   const basePath = req.baseUrl; // Get the current route's url
   const imagePath = "./images" + basePath;
+
   return imagePath;
 };
 const storage = multer.diskStorage({
-  // upload first time
   destination: function (req, file, cb) {
     const destinationFolder = getDestination(req);
     cb(null, destinationFolder);
@@ -42,7 +42,7 @@ const CreateFileFilter = async function (
       new Error(`File with the same name already exists ${existingFile}`)
     );
   }
-  cb(null, true);
+  return cb(null, true);
 };
 export const uploadFile = multer({
   storage: storage,
@@ -55,16 +55,18 @@ const UpdateFileFilter = async function (
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) {
+  const maxFileSize: number = 1000000;
   const allowedExtensions = [".jpg", ".jpeg", ".png"];
   const extension = path.extname(file.originalname).toLowerCase();
   if (!allowedExtensions.includes(extension)) {
     return cb(new Error("Only valid image files are allowed (JPG, JPEG, PNG)"));
   }
-  cb(null, true);
+  if (req.headers["content-length"] > maxFileSize) {
+    return cb(new Error("File size no more than 1MB"));
+  } 
+  return cb(null, true);
 };
-
 export const updateFile = multer({
   storage: storage,
-  limits: { fileSize: 1000000 },
   fileFilter: UpdateFileFilter,
 });

@@ -29,8 +29,8 @@ async function setDefaultProfileImage(destinationFilePath: string) {
   const defaultProfileImage = "./images/assests/profile_icon.jpeg";
   console.log("running copy");
   try {
-    const readDefaultImage = fs.readFileSync(defaultProfileImage);
-    fs.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
+    const readDefaultImage = await fs.readFileSync(defaultProfileImage);
+    await fs.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
   } catch (error) {
     return error;
   }

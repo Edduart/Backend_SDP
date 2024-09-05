@@ -36,43 +36,49 @@ export class ProfessorController {
 
     const isInstructor = await parseInstructorData(req.body.data);
     const personData = await parsePersonData(req.body.data, req.body.ayuda);
-
     const { userData } = await parseUserDataUpdate(req.body.data);
-    const professorData = new UpdateProfessorDto(personData, userData);
 
+    const professorData = new UpdateProfessorDto(personData, userData);
     const dataValidation = await professorData.DataValidation();
 
     if (dataValidation) {
-      if (req.body.ayuda != null) {
-        fs.unlinkSync(req.body.ayuda);
-      }
       return res.status(400).send("Error: " + dataValidation);
     }
+
+    let newRole = userData.role_id;
 
     let dtoUpdateInstructor = null;
     if (isInstructor) {
       const [error, updateInstructor] =
         UpdateInstructorDto.update(isInstructor);
       if (error) {
-        if (req.body.ayuda != null) {
-          fs.unlinkSync(req.body.ayuda);
-        }
         return res.status(400).json({ error });
       } else {
+        newRole = updateInstructor!.instructor_role!;
         dtoUpdateInstructor = updateInstructor;
       }
     }
 
-    const updateProfessor = await new UpdateProfessor(this.repository)
+    await new UpdateProfessor(this.repository)
       .execute(professorData)
-      .then((professor) => {
+      .then(async (professor) => {
+        let instructorCreateStatus = {};
         if (isInstructor) {
-          new UpdateInstructor(this.instructorPositionRepo)
+          instructorCreateStatus = await new UpdateInstructor(this.instructorPositionRepo)
             .execute(dtoUpdateInstructor!)
+            .then(() => {
+              return {
+                msj: "Profesor creado e instructor creado correctamente!",
+              };
+            })
             .catch((error) => {
-              console.error(error);
+              return {
+                msj: "Profesor creado, ERROR al crear instructor",
+                error,
+              };
             });
         }
+        await imageResize(req.body.ayuda);
         res.set({ "Access-Control-Expose-Headers": "auth" }).json({
           msj: "Profesor actualizado correctamente",
           professor,
@@ -107,7 +113,7 @@ export class ProfessorController {
       const [error, createInstructor] =
         CreateInstructorDto.create(isInstructor);
       if (error) {
-        fs.unlinkSync(req.body.ayuda);
+        if (fs.existsSync(req.body.ayuda)) fs.unlinkSync(req.body.ayuda);
         return res.status(400).json({ error });
       } else {
         userData.role = createInstructor?.instructor_role!;
@@ -116,27 +122,42 @@ export class ProfessorController {
     }
 
     console.log(req.body.ayuda);
-    await imageResize(req.body.ayuda);
 
     const dataValidationErrors = professorData.Validate();
     if (dataValidationErrors) {
-      fs.unlinkSync(req.body.ayuda);
+      if (fs.existsSync(req.body.ayuda)) fs.unlinkSync(req.body.ayuda);
       return res.status(400).send("Error: " + dataValidationErrors);
     }
 
     await new CreateProfessorUseCase(this.repository)
       .execute(professorData)
-      .then((professor) => {
+      .then(async (professor) => {
+        let instructorCreateStatus = {};
+
         if (isInstructor) {
-          new CreateInstructor(this.instructorPositionRepo)
+          instructorCreateStatus = await new CreateInstructor(
+            this.instructorPositionRepo
+          )
             .execute(dtoCreateInstructor!)
+            .then(() => {
+              return {
+                msj: "Profesor creado e instructor creado correctamente!",
+              };
+            })
             .catch((error) => {
               console.error(error);
+              return {
+                msj: "Profesor creado, ERROR al crear instructor",
+                error,
+              };
             });
         }
-        res
-          .set({ "Access-Control-Expose-Headers": "auth" })
-          .json({ msj: "Profesor creado correctamente", professor });
+        await imageResize(req.body.ayuda);
+        res.set({ "Access-Control-Expose-Headers": "auth" }).json({
+          msj: "Profesor creado correctamente",
+          instructorCreateStatus,
+          professor,
+        });
       })
       .catch((error) => res.status(400).json({ error }));
   };
