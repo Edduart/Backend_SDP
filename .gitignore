@@ -3,7 +3,7 @@
 /postgres
 backup.data/
 migrations/
-images/worker
+
 images/seminarian
 images/professor
 images/icons
