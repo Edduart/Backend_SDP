@@ -10,7 +10,7 @@ export class CreateTestDto {
     let validationErrors: ValidationError[] = [];
 
     console.log({ props });
-
+    tests.description = tests.description.toupp
     // TODO reWork validations
 
     // descriptions to uppercase
