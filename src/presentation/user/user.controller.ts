@@ -86,7 +86,7 @@ export class UserControler {
               user.person_id,
               user.role.premissions,
               user.fecha,
-              user.role.name
+              user.role.name, user.forename, user.surname, user.profile_picture
             );
             const token = jwt.sign(
               { ...user_to_send },

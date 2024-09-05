@@ -109,6 +109,7 @@ export class UserDataSourceImplementation implements UserDataSource {
         AND: [{ person_id: data.person_id }, { status: true }],
       },
       include: {
+        person:true,
         role: {
           include: {
             role_permission: {
@@ -143,7 +144,7 @@ export class UserDataSourceImplementation implements UserDataSource {
         true,
         usuario.password,
         role,
-        usuario.LastIn
+        usuario.LastIn, usuario.person.forename,usuario.person.surname, usuario.person.profile_picture_path
       );
     });
     return resultado[0];
