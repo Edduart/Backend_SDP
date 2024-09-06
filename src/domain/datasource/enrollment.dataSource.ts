@@ -30,6 +30,7 @@ export abstract class EnrollmentDataSource {
   ): Promise<academicTermMap[]>;
   abstract update(dto: UpdateEnrollmentDto): Promise<EnrollmentEntity>;
   abstract delete(id: number): Promise<EnrollmentEntity>;
+  abstract ContarEnrolls(): Promise<number>;
   abstract updateStatusByFinalSubjectScore(): Promise<object>;
   abstract updateStageIfApproved(): Promise<object>;
 }

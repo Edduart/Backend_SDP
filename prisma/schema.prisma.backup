@@ -68,14 +68,14 @@ model diocese {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model enrollment {
-  enrollment_id    Int           @default(autoincrement()) @unique
-  seminarian_id    String        @db.VarChar(20)
+  enrollment_id    Int               @unique @default(autoincrement())
+  seminarian_id    String            @db.VarChar(20)
   subject_id       Int
   academic_term_id Int
-  status           String        @default("CURSANDO") @db.VarChar(20)
-  academic_term    academic_term @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
-  seminarian       seminarian    @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
-  subject          subject       @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
+  status           enrollment_status @default(CURSANDO)
+  academic_term    academic_term     @relation(fields: [academic_term_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_academic_term")
+  seminarian       seminarian        @relation(fields: [seminarian_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_seminarian")
+  subject          subject           @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_subject_subject")
   test_score       test_score[]
 
   @@id([enrollment_id, seminarian_id, subject_id, academic_term_id])
@@ -197,6 +197,7 @@ model seminarian {
   status               seminarian_status
   Location             seminarian_Location
   Ministery            seminarian_Ministery?
+  stage                Int                   @default(1)
   enrollment           enrollment[]
   foreigner_seminarian foreigner_seminarian?
   user                 user                  @relation(fields: [id], references: [person_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_seminarian_user")
@@ -257,7 +258,7 @@ model test {
   maximum_score    Decimal      @db.Decimal(5, 2)
   instruction      instruction  @relation(fields: [subject_id, academic_term_id], references: [subject_id, academic_term_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_instruction")
   test_score       test_score[]
-
+  @@unique([academic_term_id, subject_id])
   @@index([subject_id, academic_term_id], map: "fk_test_instruction_idx")
   @@index([subject_id, academic_term_id], map: "fk_test_instructor_idx")
 }
@@ -265,8 +266,8 @@ model test {
 model test_score {
   test_id          Int
   score            Decimal    @db.Decimal(5, 2)
-  enrollment_id    Int        
-  last_edited_date DateTime?  @db.DateTime(0) @default(now()) @updatedAt
+  enrollment_id    Int
+  last_edited_date DateTime?  @updatedAt @db.DateTime(0)
   enrollment       enrollment @relation(fields: [enrollment_id], references: [enrollment_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_enrollment")
   test             test       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_test_score_test")
 
@@ -292,6 +293,14 @@ model user {
   @@index([parish_id], map: "fk_user_parish_idx")
 }
 
+model bitacora {
+  ID      Int             @id @default(autoincrement())
+  User_id String          @db.VarChar(20)
+  action  bitacora_action
+  table   String          @db.VarChar(100)
+  date    DateTime        @db.DateTime(0)
+}
+
 enum basic_worker_job_position {
   MANTENIMIENTO
   COCINERO
@@ -314,10 +323,10 @@ enum seminarian_status {
 enum instructor_position {
   RECTOR              @map("RECTOR")
   VICERECTOR          @map("VICERECTOR")
-  ACADEMICO           @map("ACADEMICO")
   ASESOR_PROPEDEUTICO @map("ASESOR PROPEDEUTICO")
   DIRECTOR_ESPIRITUAL @map("DIRECTOR ESPIRITUAL")
   ECONOMO             @map("ECONOMO")
+  DESACTIVADO         @map("DESACTIVADO")
 }
 
 enum seminarian_Location {
@@ -348,4 +357,18 @@ enum academic_term_status {
   ACTIVO
   CULMINADO
   EQUIVALENCIAS
+}
+
+enum bitacora_action {
+  DELETE
+  CREATE
+  UPDATE
+  LOGIN
+}
+
+enum enrollment_status {
+  CURSANDO
+  APROBADO
+  REPROBADO
+  RETIRADO
 }

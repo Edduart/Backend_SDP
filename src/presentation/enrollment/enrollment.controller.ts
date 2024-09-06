@@ -18,14 +18,22 @@ import {
   SubjectAllowToEnrollEquivalencyDto,
   GetSubjectAllowToEnrollEquivalency,
   GetAcademicTermByEnrollmentDto,
-  GetAcademicTermByEnrollment
+  GetAcademicTermByEnrollment,
+  ContarEnrollsUseCase
 } from "../../domain";
 
 import { ValidatePermission } from "../services/permissionValidator";
 
 export class EnrollmentController {
   constructor(private readonly repository: EnrollmentRepository) {}
-
+  public Getcounts = (req: Request, res: Response) => {
+    new ContarEnrollsUseCase(this.repository)
+      .execute()
+      .then((enrollment) =>
+        res.json({ enrollment })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  };
   public getAcademicTermByEnrollment = (req: Request, res: Response) => {
 
     const [error, getDto] = GetAcademicTermByEnrollmentDto.get(req.query);

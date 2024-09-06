@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: seminario
 -- ------------------------------------------------------
@@ -30,7 +30,7 @@ CREATE TABLE `academic_degree` (
   PRIMARY KEY (`id`),
   KEY `fk_academic_degree_user_idx` (`user_id`),
   CONSTRAINT `fk_academic_degree_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `academic_degree` (
 
 LOCK TABLES `academic_degree` WRITE;
 /*!40000 ALTER TABLE `academic_degree` DISABLE KEYS */;
-INSERT INTO `academic_degree` VALUES (21,'V-123456789','test of description','www.facebook.com'),(22,'V-1234567891','test of description','www.facebook.com'),(23,'V-1234567892','test of description','www.facebook.com'),(24,'V-1234567893','test of description','www.facebook.com'),(25,'V-1234567894','test of description','www.facebook.com'),(26,'V-1234567895','test of description','www.facebook.com');
+INSERT INTO `academic_degree` VALUES (21,'V-123456789','test of description','www.facebook.com'),(22,'V-1234567891','test of description','www.facebook.com'),(23,'V-1234567892','test of description','www.facebook.com'),(24,'V-1234567893','test of description','www.facebook.com'),(25,'V-1234567894','test of description','www.facebook.com'),(26,'V-1234567895','test of description','www.facebook.com'),(27,'V-898087','','');
 /*!40000 ALTER TABLE `academic_degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +136,7 @@ CREATE TABLE `bitacora` (
   `table` varchar(100) NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +145,7 @@ CREATE TABLE `bitacora` (
 
 LOCK TABLES `bitacora` WRITE;
 /*!40000 ALTER TABLE `bitacora` DISABLE KEYS */;
-INSERT INTO `bitacora` VALUES (2,'V-1','LOGIN','USER','2024-08-31 20:02:30'),(3,'V-1','LOGIN','USER','2024-09-01 07:29:08');
+INSERT INTO `bitacora` VALUES (2,'V-1','LOGIN','USER','2024-08-31 20:02:30'),(3,'V-1','LOGIN','USER','2024-09-01 07:29:08'),(4,'V-1','LOGIN','USER','2024-09-02 14:43:03'),(5,'V-1','LOGIN','USER','2024-09-02 18:09:57'),(6,'V-1','LOGIN','USER','2024-09-02 18:40:13'),(7,'V-1','LOGIN','USER','2024-09-02 20:43:03'),(8,'V-1','LOGIN','USER','2024-09-02 21:00:39'),(9,'V-1','LOGIN','USER','2024-09-02 21:21:10'),(10,'V-1','LOGIN','USER','2024-09-03 01:17:00');
 /*!40000 ALTER TABLE `bitacora` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,8 +260,33 @@ CREATE TABLE `foreigner_seminarian` (
 
 LOCK TABLES `foreigner_seminarian` WRITE;
 /*!40000 ALTER TABLE `foreigner_seminarian` DISABLE KEYS */;
-INSERT INTO `foreigner_seminarian` VALUES ('V-123456789','Seminario Extranjero','2',2),('V-1234567891','Seminario Extranjero','2',2),('V-1234567892','Seminario Extranjero','2',2),('V-1234567893','Seminario Extranjero','2',2),('V-1234567894','Seminario Extranjero','2',2),('V-1234567895','Seminario Extranjero','2',2);
+INSERT INTO `foreigner_seminarian` VALUES ('V-123456789','Seminario Extranjero','2',2),('V-1234567891','Seminario Extranjero','2',2),('V-1234567892','Seminario Extranjero','2',2),('V-1234567893','Seminario Extranjero','2',2),('V-1234567894','Seminario Extranjero','2',2),('V-1234567895','Seminario Extranjero','2',2),('V-898087','Seminario Extranjero','2',2);
 /*!40000 ALTER TABLE `foreigner_seminarian` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `horarios`
+--
+
+DROP TABLE IF EXISTS `horarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `horarios` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Curso` varchar(200) NOT NULL,
+  `link` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `horarios`
+--
+
+LOCK TABLES `horarios` WRITE;
+/*!40000 ALTER TABLE `horarios` DISABLE KEYS */;
+INSERT INTO `horarios` VALUES (1,'PROPEDÉUTICO',NULL),(2,'I FILOSOFÍA',NULL),(3,'II FILOSOFÍA',NULL),(4,'III FILOSOFÍA',NULL),(5,'I TEOLOGÍA',NULL),(6,'II TEOLOGÍA',NULL),(7,'III TEOLOGÍA',NULL),(8,'IV TEOLOGÍA',NULL);
+/*!40000 ALTER TABLE `horarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -307,7 +332,7 @@ CREATE TABLE `instructor` (
   `professor_id` varchar(20) NOT NULL,
   `starting_date` date NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO') DEFAULT NULL,
+  `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','DESACTIVADO','ECONOMO') DEFAULT NULL,
   PRIMARY KEY (`professor_id`),
   KEY `fk_instructor_professor_idx` (`professor_id`),
   CONSTRAINT `instructor_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`)
@@ -403,7 +428,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('V-1',NULL,'None','Nobody','Noway@nowhere.com','2024-08-31',NULL,'UNKNOWN'),('V-123456789','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567891','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567892','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567893','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567894','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567895','http://127.0.0.1:3000/undefined','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+');
+INSERT INTO `person` VALUES ('V-1',NULL,'None','Nobody','Noway@nowhere.com','2024-08-31',NULL,'UNKNOWN'),('V-123456789','wh1372200.ispot.cc/images/seminarian/V-321654789.jpeg','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567891',NULL,'AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567892',NULL,'AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567893',NULL,'AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567894',NULL,'AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-1234567895',NULL,'AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+'),('V-898087','http://127.0.0.1:3000/images/seminarian/V-898087.png','AQUILES BRINCO','RUCIO GOMEZ','No lo voy a poner','2001-04-27',NULL,'O+');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -431,6 +456,7 @@ CREATE TABLE `phone_number` (
 
 LOCK TABLES `phone_number` WRITE;
 /*!40000 ALTER TABLE `phone_number` DISABLE KEYS */;
+INSERT INTO `phone_number` VALUES (1,'0532342','V-123456789','ddddd');
 /*!40000 ALTER TABLE `phone_number` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -479,7 +505,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'SUPERADMIN','ADMINISTRADOR CON ACCESO TOTAL'),(2,'RECTOR','RECTOR PRINCIPAL'),(3,'VICE RECTOR','USUARIO ENCARGADO DEL APARTADO ACADEMICO'),(4,'PROFESOR','USUARIO CON CAPACIDAD PARA ASIGNAR NOTAS A LOS TESTS'),(5,'SEMINARIAN','PERFIL DE SEMINARISTA COMÚN'),(6,'INSTRUCTOR','PROFESOR E INSTRUCTOR');
+INSERT INTO `role` VALUES (1,'SUPERADMIN','ADMINISTRADOR CON ACCESO TOTAL'),(2,'RECTOR','RECTOR PRINCIPAL'),(3,'VICE RECTOR','USUARIO ENCARGADO DEL APARTADO ACADEMICO'),(4,'PROFESOR','USUARIO CON CAPACIDAD PARA ASIGNAR NOTAS A LOS TESTS'),(5,'SEMINARIAN','PERFIL DE SEMINARISTA COMÚN'),(6,'INSTRUCTOR','PROFESOR E INSTRUCTOR'),(7,'PROPEDEUTICO','ASESOR DE PROPEDEUTICO');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -536,7 +562,7 @@ CREATE TABLE `seminarian` (
 
 LOCK TABLES `seminarian` WRITE;
 /*!40000 ALTER TABLE `seminarian` DISABLE KEYS */;
-INSERT INTO `seminarian` VALUES ('V-123456789','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',2),('V-1234567891','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567892','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567893','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567894','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567895','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1);
+INSERT INTO `seminarian` VALUES ('V-123456789','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',2),('V-1234567891','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567892','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567893','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567894','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-1234567895','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',1),('V-898087','no se que va aqui','ACTIVO','EXTERNO','UNKOWN',2);
 /*!40000 ALTER TABLE `seminarian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +583,7 @@ CREATE TABLE `social_media` (
   KEY `fk_social_media_person_idx` (`person_id`),
   CONSTRAINT `fk_social_media_person` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
   CONSTRAINT `fk_social_media_social_media_category` FOREIGN KEY (`social_media_category`) REFERENCES `social_media_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -566,7 +592,7 @@ CREATE TABLE `social_media` (
 
 LOCK TABLES `social_media` WRITE;
 /*!40000 ALTER TABLE `social_media` DISABLE KEYS */;
-INSERT INTO `social_media` VALUES (86,'V-123456789',2,'ya lo mando'),(87,'V-123456789',3,'ya lo mando'),(88,'V-1234567891',2,'ya lo mando'),(89,'V-1234567891',3,'ya lo mando'),(90,'V-1234567892',2,'ya lo mando'),(91,'V-1234567892',3,'ya lo mando'),(92,'V-1234567893',2,'ya lo mando'),(93,'V-1234567893',3,'ya lo mando'),(94,'V-1234567894',2,'ya lo mando'),(95,'V-1234567894',3,'ya lo mando'),(96,'V-1234567895',2,'ya lo mando'),(97,'V-1234567895',3,'ya lo mando');
+INSERT INTO `social_media` VALUES (86,'V-123456789',2,'ya lo mando'),(87,'V-123456789',3,'ya lo mando'),(88,'V-1234567891',2,'ya lo mando'),(89,'V-1234567891',3,'ya lo mando'),(90,'V-1234567892',2,'ya lo mando'),(91,'V-1234567892',3,'ya lo mando'),(92,'V-1234567893',2,'ya lo mando'),(93,'V-1234567893',3,'ya lo mando'),(94,'V-1234567894',2,'ya lo mando'),(95,'V-1234567894',3,'ya lo mando'),(96,'V-1234567895',2,'ya lo mando'),(97,'V-1234567895',3,'ya lo mando'),(98,'V-898087',2,'ya lo mando'),(99,'V-898087',3,'ya lo mando');
 /*!40000 ALTER TABLE `social_media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -672,7 +698,7 @@ CREATE TABLE `test` (
   KEY `fk_test_instructor_idx` (`subject_id`,`academic_term_id`),
   KEY `fk_test_instruction_idx` (`subject_id`,`academic_term_id`),
   CONSTRAINT `fk_test_instruction` FOREIGN KEY (`subject_id`, `academic_term_id`) REFERENCES `instruction` (`subject_id`, `academic_term_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -681,7 +707,7 @@ CREATE TABLE `test` (
 
 LOCK TABLES `test` WRITE;
 /*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` VALUES (1,1,2,'exmanen 1',1,25.00),(2,1,2,'examen 2',1,25.00),(3,1,2,'examen 3',1,15.00),(4,1,2,'examen 4',1,35.00),(5,3,2,'examen 1',1,50.00),(6,3,2,'exmane 2',1,50.00);
+INSERT INTO `test` VALUES (1,1,2,'exmanen 1',1,25.00),(2,1,2,'examen 2',1,25.00),(3,1,2,'examen 3',1,15.00),(4,1,2,'examen 4',1,35.00),(5,3,2,'examen 1',1,50.00),(6,3,2,'exmane 2',1,50.00),(56,1,1,'EXAMEN UNICO',1,100.00),(57,2,1,'EXAMEN UNICO',1,100.00),(58,3,1,'EXAMEN UNICO',1,100.00),(59,4,1,'EXAMEN UNICO',1,100.00),(60,5,1,'EXAMEN UNICO',1,100.00),(61,6,1,'EXAMEN UNICO',1,100.00),(62,7,1,'EXAMEN UNICO',1,100.00),(63,8,1,'EXAMEN UNICO',1,100.00),(64,9,1,'EXAMEN UNICO',1,100.00),(65,10,1,'EXAMEN UNICO',1,100.00),(66,11,1,'EXAMEN UNICO',1,100.00),(67,12,1,'EXAMEN UNICO',1,100.00),(68,13,1,'EXAMEN UNICO',1,100.00),(69,14,1,'EXAMEN UNICO',1,100.00),(70,15,1,'EXAMEN UNICO',1,100.00),(71,16,1,'EXAMEN UNICO',1,100.00),(72,17,1,'EXAMEN UNICO',1,100.00),(73,18,1,'EXAMEN UNICO',1,100.00),(74,19,1,'EXAMEN UNICO',1,100.00),(75,20,1,'EXAMEN UNICO',1,100.00),(76,21,1,'EXAMEN UNICO',1,100.00),(77,22,1,'EXAMEN UNICO',1,100.00),(78,23,1,'EXAMEN UNICO',1,100.00),(79,24,1,'EXAMEN UNICO',1,100.00),(80,25,1,'EXAMEN UNICO',1,100.00),(81,26,1,'EXAMEN UNICO',1,100.00),(82,27,1,'EXAMEN UNICO',1,100.00),(83,28,1,'EXAMEN UNICO',1,100.00),(84,29,1,'EXAMEN UNICO',1,100.00),(85,30,1,'EXAMEN UNICO',1,100.00),(86,31,1,'EXAMEN UNICO',1,100.00),(87,32,1,'EXAMEN UNICO',1,100.00),(88,33,1,'EXAMEN UNICO',1,100.00),(89,34,1,'EXAMEN UNICO',1,100.00),(90,35,1,'EXAMEN UNICO',1,100.00),(91,36,1,'EXAMEN UNICO',1,100.00),(92,37,1,'EXAMEN UNICO',1,100.00),(93,38,1,'EXAMEN UNICO',1,100.00),(94,39,1,'EXAMEN UNICO',1,100.00),(95,40,1,'EXAMEN UNICO',1,100.00),(96,41,1,'EXAMEN UNICO',1,100.00),(97,42,1,'EXAMEN UNICO',1,100.00),(98,43,1,'EXAMEN UNICO',1,100.00),(99,44,1,'EXAMEN UNICO',1,100.00),(100,45,1,'EXAMEN UNICO',1,100.00),(101,46,1,'EXAMEN UNICO',1,100.00),(102,47,1,'EXAMEN UNICO',1,100.00),(103,48,1,'EXAMEN UNICO',1,100.00);
 /*!40000 ALTER TABLE `test` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -743,7 +769,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('V-1',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-09-01'),('V-123456789',1,1,'$2b$10$Ml8u0QMhkhhgbg/52JGF.ev9CDw07i65suB3vYyoLkyCRc5USKrhO',5,NULL),('V-1234567891',1,1,'$2b$10$lo6Hgww8i3IT3RhbFDPK3OPVlKfqW66LF8ws8.0y9hEuljh31cU9C',5,NULL),('V-1234567892',1,1,'$2b$10$3pdq.xqncHLE3Jjqo0p/WOnfLWJOfs8ty.V300vWKWW4PbUzQz6ou',5,NULL),('V-1234567893',1,1,'$2b$10$aM3qXxqStbavAdzHtd3TOOJuR5T2535w4rbvi0fJKlwhPtcnJl63i',5,NULL),('V-1234567894',1,1,'$2b$10$AISHJUPjKUSnbFbBShUfgO4f.b2ou2pG0B0KcGVqosLcPs58zs44.',5,NULL),('V-1234567895',1,1,'$2b$10$vx3mOa43dEIQq9oqpEJNZ.fsOvq9/T7CNvilumj8KbbmIW2LJRz0C',5,NULL);
+INSERT INTO `user` VALUES ('V-1',1,1,'$2b$10$5j7lHV9y6cmER4OyfKXhwuHBEMDSsNERXKLCU74ai0jmf4TAeblqe',1,'2024-09-03'),('V-123456789',1,1,'$2b$10$Ml8u0QMhkhhgbg/52JGF.ev9CDw07i65suB3vYyoLkyCRc5USKrhO',5,NULL),('V-1234567891',1,1,'$2b$10$lo6Hgww8i3IT3RhbFDPK3OPVlKfqW66LF8ws8.0y9hEuljh31cU9C',5,NULL),('V-1234567892',1,1,'$2b$10$3pdq.xqncHLE3Jjqo0p/WOnfLWJOfs8ty.V300vWKWW4PbUzQz6ou',5,NULL),('V-1234567893',1,1,'$2b$10$aM3qXxqStbavAdzHtd3TOOJuR5T2535w4rbvi0fJKlwhPtcnJl63i',5,NULL),('V-1234567894',1,1,'$2b$10$AISHJUPjKUSnbFbBShUfgO4f.b2ou2pG0B0KcGVqosLcPs58zs44.',5,NULL),('V-1234567895',1,1,'$2b$10$vx3mOa43dEIQq9oqpEJNZ.fsOvq9/T7CNvilumj8KbbmIW2LJRz0C',5,NULL),('V-898087',1,1,'$2b$10$gBwX/y1t/c2u.ojE1ESNYewNs8O9DjiLSEaJwfCGuvXGRekWZQClu',5,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -756,4 +782,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-01 23:59:31
+-- Dump completed on 2024-09-06 14:02:39

@@ -18,6 +18,9 @@ import {
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
+  ContarEnrolls(): Promise<number> {
+    return this.dataSource.ContarEnrolls();
+  }
   getAcademicTermByEnrollment(
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {

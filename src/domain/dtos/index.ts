@@ -7,7 +7,7 @@ export * from "./seminarian"
 export * from "./subject";
 export * from "./person";
 export * from "./user";
-
+export * from "./horarios"
 export * from "./phone/phone.create";
 export * from "./professor/createProfessor.dto";
 export * from "./degree/create.degree";

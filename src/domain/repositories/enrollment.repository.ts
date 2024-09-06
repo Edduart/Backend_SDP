@@ -21,6 +21,7 @@ export abstract class EnrollmentRepository {
   ): Promise<object>;
   abstract get(dto: GetEnrollmentDto): Promise<EnrollmentGetInterface[]>;
   abstract getAcademicStatus(dto: GetAcademicStatusDto): Promise<object>;
+  abstract ContarEnrolls(): Promise<number>;
   abstract getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object>;
   abstract getSubjectsToEnroll(
     dto: SubjectAllowToEnrollEquivalencyDto

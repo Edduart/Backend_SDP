@@ -7,7 +7,6 @@ export * from "./instructor.repostory";
 export * from "./course.repository";
 export * from "./professor.repository";
 export * from "./user.repository";
-export * from "./user.repository"
 export * from "./seminarian.repository";
 export * from "./subject.repository";
 export * from "./academic.tern.repository";
@@ -16,3 +15,4 @@ export * from "./enrollment.repository";
 export * from "./test.repository";
 export * from "./testScore.repository";
 export * from "./bitacora.repository";
+export * from "./horario.repository";

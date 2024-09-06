@@ -14,7 +14,7 @@ import {
   person as personsData,
   user as usersData,
   subject as subjectsData,
-  subjectNO,
+  subjectNO, Horarios
 } from "./data/";
 import { prisma } from "../data/postgres";
 import { academic_term_status } from "@prisma/client";
@@ -30,6 +30,14 @@ function delay(ms: number) {
 async function main() {
   try {
     await prisma.$transaction(async (tx) => {
+      Horarios.forEach(async (Element)=>{
+        await prisma.horarios.upsert({
+          where: {ID: Element.ID},
+          update: {},
+          create: Element,
+        })
+      })
+      
       console.log("Seeding: permissions");
       permsData.forEach(async (element) => {
         await prisma.permission.upsert({
