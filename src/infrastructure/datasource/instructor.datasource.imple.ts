@@ -77,16 +77,17 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     return dto;
   }
   async create(createDto: CreateInstructorDto): Promise<InstructorEntity> {
-
-    /*const checkInstructorPosition = await prisma.instructor.findMany({
+    const checkInstructorPosition = await prisma.instructor.findMany({
       where: {
         instructor_position:
           createDto.instructor_position as instructor_position,
       },
-    });*/
+    });
 
-    //console.log({ checkInstructorPosition });
+    console.log({ checkInstructorPosition });
 
+    if (checkInstructorPosition.length > 0)
+      throw `there is already one instructor in the position: ${createDto.instructor_position}`;
     const createInstructor = await prisma.instructor.create({
       data: {
         professor_id: createDto.professor_id,
@@ -108,6 +109,18 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     console.log(updateDto);
 
     await this.findById(updateDto.professor_id);
+
+    const checkInstructorPosition = await prisma.instructor.findMany({
+      where: {
+        instructor_position:
+          updateDto.instructor_position as instructor_position,
+      },
+    });
+
+    console.log({ checkInstructorPosition });
+
+    if (checkInstructorPosition.length > 0)
+      throw `there is already one instructor in the position: ${updateDto.instructor_position}`;
 
     const updateInstructor = await prisma.instructor.update({
       where: { professor_id: updateDto.professor_id },

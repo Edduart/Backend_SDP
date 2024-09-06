@@ -1,34 +1,59 @@
 import { Router } from "express";
 import { ValidatorTo } from "../services/TokenValidator";
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 import { profile, profileU } from "../services/upload.seminarian";
-import { SeminarianDataSourceImpl, SeminarianRepositoryImpl } from "../../infrastructure";
+import {
+  SeminarianDataSourceImpl,
+  SeminarianRepositoryImpl,
+} from "../../infrastructure";
 import { SeminarianControler } from "../seminarian/seminarian.controller";
+
+import { uploadFile, updateFile } from "../services/upload.service";
 
 const router = Router();
 const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
-router.get('/ficha/:id', SeminarianControl.ficha);
-router.get('/carcaCulmin/:id', SeminarianControl.getCartaCulminacione)
-router.get('/constance/:id', SeminarianControl.GetConstance)
-router.post('/create/:id', ValidatorTo.ValidarTokenH,(req: Request, res: Response, next: NextFunction) => {
-    profile.single('picture')(req, res, async (err) => {
-        if (err) {
-            return next(err);
+router.get("/ficha/:id", SeminarianControl.ficha);
+router.get("/carcaCulmin/:id", SeminarianControl.getCartaCulminacione);
+router.get("/constance/:id", SeminarianControl.GetConstance);
+router.post(
+  "/create/:id",
+  ValidatorTo.ValidarTokenH,
+  (req: Request, res: Response) => {
+    uploadFile.single("picture")(req, res, async (err) => {
+      if (err) {
+        res.status(400).json({ ImageError: err.message });
+      } else {
+        if (!req.file) {
+          const preparePath: string = "images" + req.baseUrl + req.url;
+          const newImagePath = preparePath.replace("/create/", "/");
+          req.body.ayuda = newImagePath;
+          console.log("no file", req.body.ayuda);
         }
         SeminarianControl.Create(req, res);
+      }
     });
-});
-router.put('/update/:id', ValidatorTo.ValidarTokenH, (req: Request, res: Response, next: NextFunction)=>{
-    profileU.single('picture')(req, res, async (err) => {
-        if (err) {
-            return next(err);
-        }
+  }
+);
+router.put(
+  "/update/:id",
+  ValidatorTo.ValidarTokenH,
+  (req: Request, res: Response) => {
+    updateFile.single("picture")(req, res, async (err) => {
+      if (err) {
+        res.status(400).json({ ImageError: err.message });
+      } else {
         SeminarianControl.update(req, res);
+      }
     });
-});
-router.get('/seminarianlist', ValidatorTo.ValidarToken, SeminarianControl.CreateList);
-router.get('/getsem', ValidatorTo.ValidarToken, SeminarianControl.get);
-router.delete('/:id', ValidatorTo.ValidarToken, SeminarianControl.delete);
-module.exports= router;
+  }
+);
+router.get(
+  "/seminarianlist",
+  ValidatorTo.ValidarToken,
+  SeminarianControl.CreateList
+);
+router.get("/getsem", ValidatorTo.ValidarToken, SeminarianControl.get);
+router.delete("/:id", ValidatorTo.ValidarToken, SeminarianControl.delete);
+module.exports = router;

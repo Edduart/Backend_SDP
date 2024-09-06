@@ -8,7 +8,6 @@ export * from "./parish.entity";
 export * from "./phone.entity";
 export * from "./social.media.entity";
 export * from "./social.media.cate.entity";
-export * from "./instructorPosition.entity";
 export * from "./instructor.entity";
 export * from "./course.entity";
 export * from "./professor.entity";

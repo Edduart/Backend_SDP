@@ -51,6 +51,9 @@ export async function UpdatePersonFunc(data: CreatePerson) {
         data: cell_json,
       });
     }
+
+    console.log(data.profile_picture_path)
+
     //now updating the person
     await prisma.person.update({
       where: {
