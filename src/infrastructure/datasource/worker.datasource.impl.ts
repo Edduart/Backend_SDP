@@ -175,7 +175,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
                 .social_media_category_social_media_social_media_categoryTosocial_media_category
                 .description,
             link: sociales.link,
-            id: sociales.id
+            id: sociales.social_media_category
           });
         }
       );
