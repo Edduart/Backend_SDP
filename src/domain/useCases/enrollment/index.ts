@@ -9,3 +9,4 @@ export * from "./updateStageIfApproved";
 export * from "./createByEnrollmentEquivalence";
 export * from "./getSubjectAllowToEnrollEquivalency";
 export * from "./getAcademicTermByEnrollment";
+export * from "./count"

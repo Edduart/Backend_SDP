@@ -332,7 +332,7 @@ CREATE TABLE `instructor` (
   `professor_id` varchar(20) NOT NULL,
   `starting_date` date NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','ECONOMO') DEFAULT NULL,
+  `instructor_position` enum('RECTOR','VICERECTOR','ACADEMICO','ASESOR PROPEDEUTICO','DIRECTOR ESPIRITUAL','DESACTIVADO','ECONOMO') DEFAULT NULL,
   PRIMARY KEY (`professor_id`),
   KEY `fk_instructor_professor_idx` (`professor_id`),
   CONSTRAINT `instructor_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor` (`id`)
@@ -782,4 +782,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-06 13:03:38
+-- Dump completed on 2024-09-06 14:02:39

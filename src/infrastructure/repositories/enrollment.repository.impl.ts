@@ -14,10 +14,14 @@ import {
   SubjectAllowToEnrollEquivalencyDto,
   GetAcademicTermByEnrollmentDto,
   academicTermMap,
+  CantidadSeminaristas,
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
+  ContarEnrolls(): Promise<CantidadSeminaristas> {
+    return this.dataSource.ContarEnrolls();
+  }
   getAcademicTermByEnrollment(
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {

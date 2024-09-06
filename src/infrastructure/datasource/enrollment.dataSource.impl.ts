@@ -15,6 +15,7 @@ import {
   SubjectAllowToEnrollEquivalencyDto,
   GetAcademicTermByEnrollmentDto,
   academicTermMap,
+  CantidadSeminaristas,
 } from "../../domain";
 
 import { EnrollmentSubjectFilter } from "./utils/subjectEnrollmentFilter";
@@ -28,6 +29,11 @@ import {
 import { formatDate } from "../../presentation/utils/formatDate";
 
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  async ContarEnrolls(): Promise<CantidadSeminaristas> {
+    
+    //console.log(result);
+    throw new Error("Method not implemented.");
+  }
   async getAcademicTermByEnrollment(
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {

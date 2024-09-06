@@ -115,10 +115,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
     return result_individual[0];
   }
 
-  async get(
-    id_re: string | undefined,
-    puesto: Job_Psotion_Enum | undefined
-  ): Promise<WorkerEntity[]> {
+  async get(id_re: string | undefined,puesto: Job_Psotion_Enum | undefined): Promise<WorkerEntity[]> {
     const retunrFromDB = await prisma.person.findMany({
       where: {
         AND: [
@@ -178,6 +175,7 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
                 .social_media_category_social_media_social_media_categoryTosocial_media_category
                 .description,
             link: sociales.link,
+            id: sociales.id
           });
         }
       );
