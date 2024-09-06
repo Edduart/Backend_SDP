@@ -16,7 +16,7 @@ import {
   SocialMediaEntity,
   ParishEntity,
 } from "../../domain";
-import { encode } from "../services/hash_handler";
+import { encode } from "../services/hashHandler";
 import { formatDate } from "../../presentation/utils/formatDate";
 
 const serverAddress: string = envs.SERVER_ADDRESS;
@@ -56,13 +56,13 @@ export async function parsePersonData(req: any, path: any) {
     return personData;
   } catch (error: unknown) {
     console.error("Error parsing person data:", error);
-    throw new Error("An error occurred while processing person data.");
+    throw { msj: "An error occurred while processing person data", error };
   }
 } // fine
 // User Data Parsing
 export async function parseUserData(req: any, person: CreatePerson) {
   try {
-    const origin = await JSON.parse(req); // check that is only a string
+    const origin = await JSON.parse(req);
     const hashedPassword = await encode(origin.persona.id);
     const degrees: CreateDegree[] | undefined =
       origin.user.degree != null
@@ -84,7 +84,8 @@ export async function parseUserData(req: any, person: CreatePerson) {
     );
     return userData;
   } catch (error) {
-    throw error;
+    console.error("Error parsing user data:", error);
+    throw { msj: "An error occurred while processing user data", error };
   }
 }
 
