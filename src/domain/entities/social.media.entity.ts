@@ -1,6 +1,6 @@
 export class SocialMediaEntity{
     constructor(
-        public social_media_category: number,
+        public category: number,
         public link: string,
         public id?: number,
         public person_id?: string,

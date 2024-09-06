@@ -170,10 +170,8 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
           //ahora creo el array de redes sociales, en caso de que existan
           return SocialMediaEntity.fromdb({
             //esta tira es debido al nombre de la relacion
-            social_Cate:
-              sociales
-                .social_media_category_social_media_social_media_categoryTosocial_media_category
-                .description,
+            category:
+              sociales.social_media_category,
             link: sociales.link,
             id: sociales.social_media_category
           });
