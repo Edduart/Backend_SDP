@@ -38,9 +38,7 @@ router.post(
   }
 );
 
-router.put(
-  "/:id",
-  ValidatorTo.ValidarTokenH,
+router.put("/:id",/*ValidatorTo.ValidarTokenH,*/
   (req: Request, res: Response, next: NextFunction) => {
     updateFile.single("file")(req, res, async (err) => {
       if (err) {

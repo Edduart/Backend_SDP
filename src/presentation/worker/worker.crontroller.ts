@@ -20,7 +20,7 @@ export class WorkerControler {
   public GetSocials = async (req: Request, res: Response) => {
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      const result = ValidatePermission(req.body.Permisos, "instructor", "R");
+      const result = ValidatePermission(req.body.Permisos, "USER", "R");
 
       new GetSocials(this.repository)
         .execute()
@@ -53,7 +53,7 @@ export class WorkerControler {
         : undefined;
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      const result = ValidatePermission(req.body.Permisos, "instructor", "R");
+      const result = ValidatePermission(req.body.Permisos, "USER", "R");
       new GetWorker(this.repository)
         .execute(id, job as Job_Psotion_Enum | undefined)
         .then((worker) =>
@@ -68,7 +68,7 @@ export class WorkerControler {
   public deleteRole = (req: Request, res: Response) => {
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      const result = ValidatePermission(req.body.Permisos, "instructor", "D");
+      const result = ValidatePermission(req.body.Permisos, "USER", "D");
       new DeleteWorker(this.repository)
         .execute(req.params.id)
         .then((worker) =>
@@ -84,7 +84,7 @@ export class WorkerControler {
     const source = req.headers["Permissions"];
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      const result = ValidatePermission(source, "instructor", "U");
+      //const result = ValidatePermission(source, "USER", "U");
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
       let origin = JSON.parse(req.body.data);
       const persondto = await parsePersonData(
@@ -117,7 +117,7 @@ export class WorkerControler {
     //debido a los comflictos con mutler, todos los permisos seran enviados por header
     const source = req.headers["Permissions"];
     try {
-      const result = ValidatePermission(source, "instructor", "C");
+      const result = ValidatePermission(source, "USER", "C");
       let origin = JSON.parse(req.body.data);
 
       const persondto = await parsePersonData(req.body.data, req.body.ayuda);
