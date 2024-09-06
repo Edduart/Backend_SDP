@@ -147,16 +147,36 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     return InstructorEntity.fromObject(getInstructorById);
   }
   async deleteById(id: string): Promise<InstructorEntity> {
-    const deleteInstructor = await prisma.instructor.update({
-      where: { professor_id: id },
-      data: { status: 0, instructor_position: "DESACTIVADO" },
+    await this.findById(id);
+    const deleteInstructor = await prisma.$transaction(async (tx) => {
+      const instructor = await tx.instructor.update({
+        where: { professor_id: id },
+        data: { status: 0, instructor_position: "DESACTIVADO" },
+      });
+
+      await tx.user.update({
+        where: { person_id: id },
+        data: {
+          Role_id: 4,
+        },
+      });
+
+      const coursesWithInstructorId = await tx.course.findMany({
+        where: { instructor_id: id },
+      });
+
+      const coursesId = coursesWithInstructorId.map((id) => id.id);
+
+      if (coursesId.length > 0) {
+        await tx.course.updateMany({
+          where: { id: { in: coursesId } },
+          data: { instructor_id: null },
+        });
+      }
+      return instructor;
     });
-    await prisma.user.update({
-      where: { person_id: id },
-      data: {
-        Role_id: 4,
-      },
-    });
+
+    console.log({ deleteInstructor });
 
     return InstructorEntity.fromObject(deleteInstructor);
   }

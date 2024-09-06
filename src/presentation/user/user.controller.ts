@@ -16,7 +16,7 @@ import {
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { compare, encode } from "../services/hash_handler";
+import { compare, encode } from "../services/hashHandler";
 import { ActualizarFecha } from "../../infrastructure";
 import { ValidatePermission } from "../services/permissionValidator";
 import { BitacoraDataSourceImpl } from "../../infrastructure/datasource/bitacora.datasource.imple";
