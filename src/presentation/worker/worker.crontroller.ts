@@ -84,7 +84,8 @@ export class WorkerControler {
     const source = req.headers["Permissions"];
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      //const result = ValidatePermission(source, "USER", "U");
+      console.log(source)
+      const result = ValidatePermission(source, "USER", "U");
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
       let origin = JSON.parse(req.body.data);
       const persondto = await parsePersonData(
