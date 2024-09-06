@@ -7,4 +7,3 @@ export * from "./deleteEnrollment.dto";
 export * from "./createEnrollmentByEquivalence.dto";
 export * from "./getSubjectToEnrollEquivalency.dto";
 export * from "./getAcademicTermByEnrollment.dto";
-export * from "./getcount"

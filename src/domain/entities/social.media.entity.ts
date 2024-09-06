@@ -7,8 +7,8 @@ export class SocialMediaEntity{
     ){}
     
     public static fromdb(object: {[key: string]: any}){
-        const {social_media_category, link} = object;
-        return new SocialMediaEntity(social_media_category, link)
+        const {social_media_category, link, id} = object;
+        return new SocialMediaEntity(social_media_category, link, id)
     }
 
 
