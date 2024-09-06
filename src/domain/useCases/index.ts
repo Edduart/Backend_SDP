@@ -18,3 +18,4 @@ export * from "./enrollment";
 export * from "./test";
 export * from "./testScore";
 export * from "./bitacora";
+export * from "./horario"

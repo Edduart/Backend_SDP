@@ -16,3 +16,4 @@ export * from "./enrollment.dataSource";
 export * from "./test.datasource";
 export * from "./testScore.datasource";
 export * from "./bitacora.datasource";
+export * from "./horario.datasource"

@@ -301,6 +301,12 @@ model bitacora {
   date    DateTime        @db.DateTime(0)
 }
 
+model horarios {
+  ID    Int     @id @default(autoincrement())
+  Curso String  @db.VarChar(200)
+  link  String? @db.VarChar(45)
+}
+
 enum basic_worker_job_position {
   MANTENIMIENTO
   COCINERO

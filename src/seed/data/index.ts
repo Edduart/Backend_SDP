@@ -12,3 +12,4 @@ export * from "./user";
 export * from "./person";
 export * from "./subject";
 export * from "./subject-no-precedent"
+export * from "./horarios"

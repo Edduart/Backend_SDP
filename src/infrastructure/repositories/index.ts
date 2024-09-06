@@ -15,3 +15,4 @@ export * from "./instructor.repository.imple";
 export * from "./enrollment.repository.impl";
 export * from "./test.repository";
 export * from "./testScore.repository";
+export * from "./horario.repository.impl"

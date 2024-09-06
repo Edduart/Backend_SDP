@@ -17,4 +17,5 @@ export * from "./instruction.impl";
 export * from "./enrollment.dataSource.impl";
 export * from "./test.datasource.impl";
 export * from "./testScore.datasource.impl";
+export * from "./horario.datasource.imple";
 export * from "./bitacora.datasource.imple";

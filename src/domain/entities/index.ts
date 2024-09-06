@@ -25,3 +25,4 @@ export * from "./enrollment.entity";
 export * from "./test.entity";
 export * from "./testScore.entity";
 export * from "./bitacora.entity";
+export * from "./horario"
