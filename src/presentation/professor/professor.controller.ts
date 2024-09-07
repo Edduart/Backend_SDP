@@ -89,7 +89,6 @@ export class ProfessorController {
         })
         .catch((error) => res.status(400).json({ error }));
     } catch (error) {
-      if (fs.existsSync(req.body.ayuda)) fs.unlinkSync(req.body.ayuda);
       res.status(400).json({ error });
     }
   };
@@ -167,8 +166,12 @@ export class ProfessorController {
             professor,
           });
         })
-        .catch((error) => res.status(400).json({ error }));
+        .catch((error) => {
+          if (fs.existsSync(req.body.ayuda)) fs.unlinkSync(req.body.ayuda);
+          res.status(400).json({ error });
+        });
     } catch (error) {
+      if (fs.existsSync(req.body.ayuda)) fs.unlinkSync(req.body.ayuda);
       res.status(400).json({ error });
     }
   };
@@ -177,11 +180,8 @@ export class ProfessorController {
     const id = req.params.id;
     new DeleteProfessor(this.repository)
       .execute(id)
-      .then((Professor) => {
-        if (req.body.ayuda != null) {
-          fs.unlinkSync(req.body.ayuda);
-        }
-        res.json({ Professor }).send;
+      .then((professor) => {
+        res.json({ professor }).send({ professor });
       })
       .catch((error) => {
         res.status(418).send({ error });
