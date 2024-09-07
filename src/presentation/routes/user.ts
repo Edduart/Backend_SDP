@@ -9,12 +9,12 @@ const datasource = new UserDataSourceImplementation();
 const Repository = new UserRepositoryImpl(datasource);
 const UserControl = new UserControler(Repository);
 
-router.get('/', ValidatorTo.ValidarToken, UserControl.getAll);
-router.get("/user-by-type/", UserControl.getByType);
-router.get("/:id", UserControl.getById);
-router.post('/Login/', ValidatorLogin, UserControl.Login);
-router.post('/logout', ValidatorTo.Eliminate);
-router.post('/reset', ValidatorTo.ValidarToken, UserControl.Reset);
-router.post('/pass', ValidatorTo.ValidarToken, ValidatorLogin, UserControl.ChangePass)
+router.get('/',                 ValidatorTo.ValidarToken, UserControl.getAll);
+router.get("/user-by-type/",    UserControl.getByType);
+router.get("/:id",              UserControl.getById);
+router.post('/Login/',                                    ValidatorLogin, UserControl.Login);
+router.post('/logout',          ValidatorTo.Eliminate);
+router.post('/reset',           ValidatorTo.ValidarToken, UserControl.Reset);
+router.post('/pass',            ValidatorTo.ValidarToken, ValidatorLogin, UserControl.ChangePass)
 
 module.exports= router;

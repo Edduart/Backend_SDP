@@ -8,6 +8,7 @@ import {
 import { AcademicTermController } from "../academic_Term/AcademicTerm";
 
 import { EnrollmentController } from "../enrollment/enrollment.controller";
+import { ValidatorTo } from "../services/TokenValidator";
 
 const router = Router();
 
@@ -21,10 +22,10 @@ const Controller = new AcademicTermController(
   enrollmentRepository
 );
 
-router.post("/", Controller.Create);
-router.get("/", Controller.Get);
-router.get("/:id", Controller.Getid);
-router.put("/", Controller.Update);
-router.delete("/delete/:id", Controller.Deactivate);
-router.put("/activate/:id", Controller.Activate);
+router.post("/",              ValidatorTo.ValidarToken, Controller.Create);
+router.get("/",               ValidatorTo.ValidarToken, Controller.Get);
+router.get("/:id",            ValidatorTo.ValidarToken, Controller.Getid);
+router.put("/",               ValidatorTo.ValidarToken, Controller.Update);
+router.delete("/delete/:id",  ValidatorTo.ValidarToken, Controller.Deactivate);
+router.put("/activate/:id",   ValidatorTo.ValidarToken, Controller.Activate);
 module.exports = router;

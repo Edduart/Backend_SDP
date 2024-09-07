@@ -49,8 +49,7 @@ export class InstructorDataSourceImple implements InstructorDataSource {
         return cellphone.phone_number;
       }
     );
-    const redes: SocialMediaDTO[] =
-      person.professor.user.person.social_media.map((socialdata) => {
+    const redes: SocialMediaDTO[] = person.professor.user.person.social_media.map((socialdata) => {
         return new SocialMediaDTO(
           socialdata.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
           socialdata.link

@@ -34,14 +34,15 @@ export class GetSeminarianDTO{
         const academic = Number(academic_term_id);
         const notenum = Number(note);
         const subjet = Number(subject_id);
+        console.log()
         if (diocese_id !== undefined) {
-            diocese_id_number = Number(id);
+            diocese_id_number = Number(diocese_id);
             if (Number.isNaN(diocese_id_number) || !Number.isInteger(diocese_id_number) || diocese_id_number < 0) {
                 errorarray.push("diocesis id must be a non-negative integer");
             }
         }
         if (parish_id !== undefined) {
-            parish_id_number = Number(id);
+            parish_id_number = Number(parish_id);
             if (Number.isNaN(parish_id_number) || !Number.isInteger(parish_id_number) || parish_id_number < 0) {
                 errorarray.push("parish id must be a non-negative integer");
             }

@@ -8,6 +8,7 @@ import {
   InstructorRepositoryImpl,
 } from "../../infrastructure";
 import { ProfessorController } from "../professor/professor.controller";
+import { ValidatorTo } from "../services/TokenValidator";
 
 const router = Router();
 
@@ -22,9 +23,9 @@ const professorController = new ProfessorController(
 );
 
 // TODO check token
-
-router.get("/", professorController.get);
-router.post("/:id", (req: Request, res: Response) => {
+router.get("/ficha/:id", ValidatorTo.ValidarToken, professorController.ficha);
+router.get("/", ValidatorTo.ValidarToken, professorController.get);
+router.post("/:id", ValidatorTo.ValidarTokenH, (req: Request, res: Response) => {
   uploadFile.single("file")(req, res, (err) => {
     if (err) {
       console.log("error file size")
@@ -38,7 +39,7 @@ router.post("/:id", (req: Request, res: Response) => {
     }
   });
 });
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", ValidatorTo.ValidarTokenH,(req: Request, res: Response) => {
   updateFile.single("file")(req, res, (err) => {
     if (err) {
       console.log("error multer");
@@ -52,5 +53,5 @@ router.put("/:id", (req: Request, res: Response) => {
     }
   });
 });
-router.delete("/:id", professorController.delete);
+router.delete("/:id", ValidatorTo.ValidarToken, professorController.delete);
 module.exports = router;

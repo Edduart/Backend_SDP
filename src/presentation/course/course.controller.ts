@@ -9,11 +9,17 @@ import {
   UpdateCourseDto,
   DeleteCourse,
 } from "../../domain";
+import { ValidatePermission } from "../services/permissionValidator";
 
 export class CourseController {
   constructor(private readonly courseRepository: CourseRepository) {}
 
   public getCourses = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "COURSE", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     new GetCourses(this.courseRepository)
       .execute()
       .then((courses) => {
@@ -27,6 +33,11 @@ export class CourseController {
   };
 
   public getCourseById = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "COURSE", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
     new GetCourse(this.courseRepository)
       .execute(id)
@@ -40,6 +51,11 @@ export class CourseController {
   };
 
   public updateCourseById = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "COURSE", "U");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
     const [error, updateCourseDto] = UpdateCourseDto.update({
       ...req.body,
@@ -59,6 +75,11 @@ export class CourseController {
   };
 
   public createCourse = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "COURSE", "C");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const [error, createCourseDto] = CreateCourseDto.create(req.body);
     if (error) return res.status(400).json({ error });
     new CreateCourse(this.courseRepository)
@@ -68,6 +89,11 @@ export class CourseController {
   };
 
   public deleteCourse = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "COURSE", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
     new DeleteCourse(this.courseRepository)
       .execute(id)

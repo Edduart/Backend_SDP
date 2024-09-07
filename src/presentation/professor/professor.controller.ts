@@ -14,6 +14,7 @@ import {
   UpdateInstructorDto,
   UpdateInstructor,
   GetProfessorDto,
+  FichaUsePRofe,
 } from "../../domain";
 import { Request, Response } from "express";
 import {
@@ -24,14 +25,35 @@ import {
 } from "../utils/parseData";
 import fs from "fs";
 import { imageResize } from "../../presentation/utils/imageManipulation";
+import { ValidatePermission } from "../services/permissionValidator";
+import { BuildFichaProfessor } from "../docs/fichaProfessor";
 
 export class ProfessorController {
   constructor(
-    private readonly repository: ProfessorRepository,
-    private readonly instructorPositionRepo: InstructorRepository
-  ) {}
-
+    private readonly repository: ProfessorRepository, private readonly instructorPositionRepo: InstructorRepository) {}
+  public ficha = (req: Request, res: Response) => {
+    try{
+      //const result = ValidatePermission(req.body.Permisos, "USER", "R");
+      new FichaUsePRofe(this.repository).execute(req.params.id).then((profesor)=>{
+        const line =res.writeHead(200,{
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "inline; filename=ficha.pdf"
+        })
+        BuildFichaProfessor((data)=>line.write(data),()=>line.end(), profesor); 
+      }).catch((error)=>{
+          res.status(418).send("unable to create ID: " + error);})
+    }catch(error){
+      res.status(418).send(error);
+    }
+    
+}
   public update = async (req: Request, res: Response) => {
+    try{
+      const source = req.headers["Permissions"];
+      const result = ValidatePermission(source, "INSTRUCTOR", "U");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     try {
       console.log(req.baseUrl);
 
@@ -94,6 +116,7 @@ export class ProfessorController {
   };
 
   public get = async (req: Request, res: Response) => {
+
     const [error, getDto] = GetProfessorDto.GetDto(req.query);
     if (error)
       return res.status(400).json({
@@ -107,6 +130,12 @@ export class ProfessorController {
   };
 
   public create = async (req: Request, res: Response) => {
+    try{
+      const source = req.headers["Permissions"];
+      const result = ValidatePermission(source, "INSTRUCTOR", "C");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     try {
       let dtoCreateInstructor = null;
       const isInstructor = await parseInstructorData(req.body.data);
@@ -177,6 +206,11 @@ export class ProfessorController {
   };
 
   public delete = async (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = req.params.id;
     new DeleteProfessor(this.repository)
       .execute(id)

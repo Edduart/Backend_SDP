@@ -9,8 +9,8 @@ const dataSource = new TestScoreDataSourceImpl();
 const testScoreRepository = new TestScoreRepositoryImpl(dataSource);
 const testScoreController = new TestScoreController(testScoreRepository);
 
-router.post("/", testScoreController.create);
-router.get("/", testScoreController.get);
-router.put("/", testScoreController.update);
+router.post("/",    ValidatorTo.ValidarToken, testScoreController.create);
+router.get("/",     ValidatorTo.ValidarToken, testScoreController.get);
+router.put("/",     ValidatorTo.ValidarToken, testScoreController.update);
 //router.delete("/", enrollmentController.delete);
 module.exports = router;

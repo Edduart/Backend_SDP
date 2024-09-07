@@ -14,9 +14,9 @@ const router = Router();
 const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
-router.get("/ficha/:id", SeminarianControl.ficha);
-router.get("/carcaCulmin/:id", SeminarianControl.getCartaCulminacione);
-router.get("/constance/:id", SeminarianControl.GetConstance);
+router.get("/ficha/:id",        ValidatorTo.ValidarToken, SeminarianControl.ficha);
+router.get("/carcaCulmin/:id",  ValidatorTo.ValidarToken, SeminarianControl.getCartaCulminacione);
+router.get("/constance/:id",    ValidatorTo.ValidarToken, SeminarianControl.GetConstance);
 router.post(
   "/create/:id",
   ValidatorTo.ValidarTokenH,
@@ -51,8 +51,7 @@ router.put(
 );
 router.get(
   "/seminarianlist",
-  ValidatorTo.ValidarToken,
-  SeminarianControl.CreateList
+  ValidatorTo.ValidarToken, SeminarianControl.CreateList
 );
 router.get("/getsem", ValidatorTo.ValidarToken, SeminarianControl.get);
 router.delete("/:id", ValidatorTo.ValidarToken, SeminarianControl.delete);
