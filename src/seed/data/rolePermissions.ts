@@ -30,4 +30,9 @@ export const rolePermissions = [
         role_id: 4,
         permission_id:  16
     },
+    //rector
+    {
+        role_id: 2,
+        permission_id:  1
+    },
 ]
