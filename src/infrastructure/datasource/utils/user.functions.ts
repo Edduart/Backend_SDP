@@ -51,6 +51,9 @@ export async function UpdatePersonFunc(data: CreatePerson) {
         data: cell_json,
       });
     }
+
+    console.log(data.profile_picture_path);
+
     //now updating the person
     await prisma.person.update({
       where: {
@@ -82,7 +85,7 @@ export async function CreatePersonFunc(data: CreatePerson) {
   });
   if (check_exist != null) return;
 
-  console.log(data)
+  console.log(data);
   try {
     //creating person
     const result_op = await prisma.person.create({
@@ -140,8 +143,24 @@ export async function CreateUser(user: CreateUserDTO) {
   if (check_exist != null) return;
   try {
     await prisma.$transaction(async (tx) => {
-      //start with creating the person
+      // check if user db constraints exist
 
+      console.log("promise run");
+      const [parish, role] = await Promise.all([
+        await prisma.parish.findUnique({
+          where: { id: user.parish_id },
+        }),
+        await prisma.role.findUnique({
+          where: { id: user.role },
+        }),
+      ]);
+
+      console.log("promise run end");
+
+      if (!parish) throw `parish Id does'nt exist`;
+      if (!role) throw `role Id does'nt exist`;
+
+      //start with creating the person
       await CreatePersonFunc(user.person);
 
       //create the user
@@ -169,8 +188,8 @@ export async function CreateUser(user: CreateUserDTO) {
         });
       }
     }); //transaction
-  } catch (error) {
-    throw new Error("Error creating user" + error);
+  } catch (error: unknown) {
+    throw { msj: "error creating user", error };
   }
 }
 
@@ -219,7 +238,7 @@ export async function UpdateUserFunc(user: UpdateUserDto) {
         password: user.password,
       },
     });
-  } catch (error) {
-    throw new Error("Error updating user" + error);
+  } catch (error: unknown) {
+    throw { msj: "error updating user", error };
   }
 }

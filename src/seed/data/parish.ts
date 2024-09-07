@@ -72,6 +72,7 @@ export const parishes = [
     patron: "SANTÍSIMO SACRAMENTO",
   },
   {
+    id: 17,
     diocese_id: 13,
     name: "LA RESURRECCIÓN DEL SEÑOR",
     patron: "SAN JOSÉ",

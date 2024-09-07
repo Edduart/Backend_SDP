@@ -2,21 +2,14 @@ import { instructor_position } from "@prisma/client";
 import { prisma } from "../../data/postgres";
 import {
   CreateProfessor,
-  PersonEntity,
-  PhoneEntity,
-  DegreeEntity,
-  InstructorEntity,
-  SocialMediaEntity,
   ProfessorDataSource,
   ProfessorEntity,
   UpdateProfessorDto,
-  UpdateUserDto,
   GetProfessorDto
 } from "../../domain";
 
 import {
   CreateUser,
-  CreatePersonFunc,
   UpdatePersonFunc,
   UpdateUserFunc,
 } from "./utils/user.functions";
@@ -61,7 +54,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     if (isInstructor != null) {
       await prisma.instructor.update({
         where: { professor_id: id },
-        data: { status: 0 },
+        data: { status: 0, instructor_position: "DESACTIVADO" },
       });
     }
     return { success: true, msj: "Profesor desactivado" };
@@ -71,7 +64,7 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     const exists = await prisma.user.findUnique({
       where: { person_id: createDto.user.person.id },
     });
-    if (exists) throw "Persona ya existe!";
+    if (exists) throw "Person already exist";
     await CreateUser(createDto.user);
     await prisma.professor.create({
       data: {
@@ -79,11 +72,11 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         status_id: 1,
       },
     });
-    const DtoForResponse = new GetProfessorDto(
+    const dtoForResponse = new GetProfessorDto(
       createDto.user.person.id
     );
-    const resultIndividual = await this.get(DtoForResponse);
-    return resultIndividual[0]; // check error in get
+    const resultIndividual = await this.get(dtoForResponse);
+    return resultIndividual[0]; 
   }
 
   async get(filter: GetProfessorDto): Promise<ProfessorEntity[]> {

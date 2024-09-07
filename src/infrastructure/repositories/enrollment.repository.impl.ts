@@ -8,10 +8,41 @@ import {
   GetEnrollmentDto,
   GetAcademicStatusDto,
   EnrollmentGetInterface,
+  GetStageOfSeminarianDto,
+  CreateEnrollmentByEquivalenceDto,
+  SubjectAllowToEnrollEquivalency,
+  SubjectAllowToEnrollEquivalencyDto,
+  GetAcademicTermByEnrollmentDto,
+  academicTermMap,
 } from "../../domain";
 
 export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   constructor(private readonly dataSource: EnrollmentDataSource) {}
+  ContarEnrolls(): Promise<number> {
+    return this.dataSource.ContarEnrolls();
+  }
+  getAcademicTermByEnrollment(
+    dto: GetAcademicTermByEnrollmentDto
+  ): Promise<academicTermMap[]> {
+    return this.dataSource.getAcademicTermByEnrollment(dto);
+  }
+  getSubjectsToEnroll(
+    dto: SubjectAllowToEnrollEquivalencyDto
+  ): Promise<SubjectAllowToEnrollEquivalency> {
+    return this.dataSource.getSubjectsToEnroll(dto);
+  }
+  createByEquivalence(dto: CreateEnrollmentByEquivalenceDto): Promise<object> {
+    return this.dataSource.createByEquivalence(dto);
+  }
+  updateStageIfApproved(): Promise<object> {
+    return this.dataSource.updateStageIfApproved();
+  }
+  updateStatusByFinalSubjectScore(): Promise<object> {
+    return this.dataSource.updateStatusByFinalSubjectScore();
+  }
+  getStageOfSeminarian(dto: GetStageOfSeminarianDto): Promise<object> {
+    return this.dataSource.getStageOfSeminarian(dto);
+  }
   getAcademicStatus(dto: GetAcademicStatusDto): Promise<object> {
     return this.dataSource.getAcademicStatus(dto);
   }
@@ -24,7 +55,7 @@ export class EnrollmentRepositoryImpl implements EnrollmentRepository {
   update(dto: UpdateEnrollmentDto): Promise<EnrollmentEntity> {
     return this.dataSource.update(dto);
   }
-  delete(dto: DeleteEnrollmentDto): Promise<EnrollmentEntity> {
-    return this.dataSource.delete(dto);
+  delete(id: number): Promise<EnrollmentEntity> {
+    return this.dataSource.delete(id);
   }
 }

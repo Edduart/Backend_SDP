@@ -3,7 +3,6 @@ export * from "./role.datasource.implementation";
 export * from "./stage.datasource.imple";
 export * from "./parish.datasource.impl"
 export * from "./worker.datasource.impl";
-export * from "./instructorPostion.datasource.impl";
 export * from "./instructor.datasource.imple";
 export * from "./course.datasource.impl";
 export * from "./professor.datasource.impl";
@@ -14,4 +13,8 @@ export * from "./seminarian.datasource.impl";
 export * from "./subject.datasource.impl";
 export * from "./academic.term.datasource.impl";
 export * from "./instruction.impl";
-export * from "./enrollment.dataSource.impl"
+export * from "./enrollment.dataSource.impl";
+export * from "./test.datasource.impl";
+export * from "./testScore.datasource.impl";
+export * from "./horario.datasource.imple";
+export * from "./bitacora.datasource.imple";

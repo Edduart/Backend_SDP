@@ -11,9 +11,7 @@ export class CreateEnrollmentDto {
     let { seminarian_id, subject_id, academic_term_id } = props;
     let validationErrors: ValidationError[] = [];
 
-    console.log(subject_id);
-
-    // TODO reWork validations
+    console.log({ props });
 
     if (!seminarian_id) {
       validationErrors.push({
@@ -26,25 +24,33 @@ export class CreateEnrollmentDto {
         message: "Seminarian_id must follows this format: V-xxxxxx!",
       });
     }
-
-    if (subject_id.length == 0) {
+    if (!Array.isArray(subject_id)) {
       validationErrors.push({
         field: "subject_id",
-        message: "subject_id is required!",
+        message: "subject_id is should be a valid array!",
       });
-    } else {
-      subject_id.forEach((element: number) => {
-        if (
-          Number.isNaN(element) ||
-          !Number.isInteger(element) ||
-          element <= 0
-        ) {
-          validationErrors.push({
-            field: "subject_id",
-            message: "subject_id must be a valid number!",
-          });
-        }
-      });
+    }
+    if (Array.isArray(subject_id)) {
+      console.log("es array");
+      if (subject_id.length == 0) {
+        validationErrors.push({
+          field: "subject_id",
+          message: "subject_id is required!",
+        });
+      } else {
+        subject_id.forEach((element: any) => {
+          if (
+            Number.isNaN(element) ||
+            !Number.isInteger(element) ||
+            element <= 0
+          ) {
+            validationErrors.push({
+              field: "subject_id",
+              message: "subject_id must be a valid array of numbers > to 0!",
+            });
+          }
+        });
+      }
     }
 
     if (!academic_term_id) {
@@ -77,4 +83,32 @@ export class CreateEnrollmentDto {
 interface ValidationError {
   field: string;
   message: string;
+}
+
+export interface SubjectAllowToEnroll {
+  seminarian_id: string;
+  stage: string;
+  course?: {
+    course?: string;
+    subject?: {
+      id: number;
+      name: string;
+      semester: number;
+    }[];
+  }[];
+}
+
+export interface SubjectAllowToEnrollEquivalency {
+  seminarian_id: string;
+  stage: {
+    name: string;
+    course?: {
+      course?: string;
+      subject?: {
+        id: number;
+        name: string;
+        semester: number;
+      }[];
+    }[];
+  }[];
 }

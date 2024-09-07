@@ -7,9 +7,20 @@ import {
   UserEntity,
   RoleEntity,
 } from "../../domain";
+import { encode } from "../../presentation/services/hashHandler";
 import { filterNullValues } from "../../presentation/utils/FilterNullObject";
 
 export class UserDataSourceImplementation implements UserDataSource {
+  async RestartPassword(id: string): Promise<String> {
+    const password = await encode(id);
+    const actu = await prisma.user.update({
+      where:{person_id:id}, data:{
+        password: password,
+        LastIn: null
+      }
+    })
+    return actu.person_id
+  }
   async getById(id: string): Promise<object> {
     const userById = await prisma.user.findUnique({
       where: { person_id: id },
@@ -58,7 +69,11 @@ export class UserDataSourceImplementation implements UserDataSource {
   async getAll(): Promise<object> {
     const users = await prisma.user.findMany({
       where:{
-        person_id: {notIn:["1"]}
+        role:{
+          id: {
+            not: 1
+          }
+        }
       },
       select: {
         person: { select: { id: true, forename: true, surname: true } },
@@ -94,6 +109,7 @@ export class UserDataSourceImplementation implements UserDataSource {
         AND: [{ person_id: data.person_id }, { status: true }],
       },
       include: {
+        person:true,
         role: {
           include: {
             role_permission: {
@@ -128,7 +144,7 @@ export class UserDataSourceImplementation implements UserDataSource {
         true,
         usuario.password,
         role,
-        usuario.LastIn
+        usuario.LastIn, usuario.person.forename,usuario.person.surname, usuario.person.profile_picture_path
       );
     });
     return resultado[0];

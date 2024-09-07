@@ -8,7 +8,6 @@ export * from "./parish.entity";
 export * from "./phone.entity";
 export * from "./social.media.entity";
 export * from "./social.media.cate.entity";
-export * from "./instructorPosition.entity";
 export * from "./instructor.entity";
 export * from "./course.entity";
 export * from "./professor.entity";
@@ -22,3 +21,7 @@ export * from "./academic.field";
 export * from "./instruction.entity"
 export * from "./academic.term";
 export * from "./enrollment.entity";
+export * from "./test.entity";
+export * from "./testScore.entity";
+export * from "./bitacora.entity";
+export * from "./horario"

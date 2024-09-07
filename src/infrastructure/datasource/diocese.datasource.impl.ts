@@ -1,4 +1,4 @@
-  import { prisma } from "../../data/postgres";
+import { prisma } from "../../data/postgres";
 import {
   UpdateDioceseDto,
   DioceseDatasource,
@@ -35,38 +35,48 @@ export class DioceseDataSourceImpl implements DioceseDatasource {
     return DioceseEntity.fromObject(diocese);
   }
 
-  async getByName(
-    name: string
-  ): Promise<DioceseEntity[]> {
+  async getByName(name: string): Promise<DioceseEntity[]> {
     const dioceseByName = await prisma.diocese.findMany({
       where: {
         name: { contains: name },
-      }
+      },
     });
     return dioceseByName.map((diocese) => DioceseEntity.fromObject(diocese));
   }
 
   async updateById(updateDioceseDto: UpdateDioceseDto): Promise<DioceseEntity> {
-    await this.findById(updateDioceseDto.id);
+    /* 
     const check: DioceseEntity[] = await this.getByName(updateDioceseDto.name);
     const dioceseExist = check.find(
       (item) => item.name === updateDioceseDto.name
     );
     if (dioceseExist)
       throw `Diocese with name: ${updateDioceseDto.name}, already exist`;
+    */
+    await this.findById(updateDioceseDto.id);
+    const result = await prisma.diocese.findFirst({
+      where: { name: updateDioceseDto.name, id: { not: updateDioceseDto.id } },
+    });
+    if (result != null) {
+      throw "diocese with same name already exists";
+    }
+
     const updateDiocese = await prisma.diocese.update({
       where: { id: updateDioceseDto.id },
-      data: updateDioceseDto!.values
+      data: updateDioceseDto!.values,
     });
     return DioceseEntity.fromObject(updateDiocese);
   }
 
   async deleteById(id: number): Promise<DioceseEntity> {
-    const user_with_parish = await prisma.parish.findMany({where: {diocese_id: id}});
-    if(user_with_parish.length > 0)throw `Unable to delete this record, there are parishes with this diocesis`;
+    const checkIfHaveParish = await prisma.parish.findMany({
+      where: { diocese_id: id },
+    });
+    if (checkIfHaveParish.length > 0)
+      throw `Unable to delete this record, there are parishes with this diocese`;
     await this.findById(id);
     const deleteDiocese = await prisma.diocese.delete({
-      where: { id: id }
+      where: { id: id },
     });
     return DioceseEntity.fromObject(deleteDiocese);
   }

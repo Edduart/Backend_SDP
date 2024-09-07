@@ -1,9 +1,9 @@
-import { AcademicTermDatasource, AcademicTermEntityt, AcademicTermRepository, CreateAcademicTerm, GetAcademicTerm, UpdateAcademicTerm } from "../../domain";
+import { AcademicTermDatasource, AcademicTermEntityt, AcademicTermRepository, CreateAcademicTerm, GetAcademicTerm, } from "../../domain";
 
 export class AcademicTermRepositoryImpl implements AcademicTermRepository {
     constructor(private readonly datasource: AcademicTermDatasource) {}
-    PassSemester(id: number): Promise<AcademicTermEntityt> {
-        return this.datasource.PassSemester(id);
+    GetByID(data: GetAcademicTerm): Promise<AcademicTermEntityt> {
+        return this.datasource.GetByID(data);
     }
     EndAcademicTerm(id: number): Promise<AcademicTermEntityt> {
         return this.datasource.EndAcademicTerm(id);
@@ -11,8 +11,8 @@ export class AcademicTermRepositoryImpl implements AcademicTermRepository {
     ActivateAcademicTerm(id: number): Promise<AcademicTermEntityt> {
         return this.datasource.ActivateAcademicTerm(id);
     }
-    Update(data: UpdateAcademicTerm): Promise<AcademicTermEntityt> {
-        return this.datasource.Update(data);
+    Update(id: number): Promise<AcademicTermEntityt> {
+        return this.datasource.Update(id);
     }
     Get(data: GetAcademicTerm): Promise<AcademicTermEntityt[]> {
         return this.datasource.Get(data);

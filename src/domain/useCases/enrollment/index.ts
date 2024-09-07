@@ -2,4 +2,11 @@ export * from "./createEnrollment";
 export * from "./updateEnrollment";
 export * from "./getEnrollment";
 export * from "./getAcademicStatus";
+export * from "./getStageOfSeminarian";
 export * from "./deleteEnrollment";
+export * from "./updateEnrollmentStatusByFinalScore";
+export * from "./updateStageIfApproved";
+export * from "./createByEnrollmentEquivalence";
+export * from "./getSubjectAllowToEnrollEquivalency";
+export * from "./getAcademicTermByEnrollment";
+export * from "./count"

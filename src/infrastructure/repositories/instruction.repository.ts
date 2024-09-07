@@ -2,6 +2,9 @@ import { CreateInstruction, GetInstruction, InstructionDatasource, InstructionEn
 
 export class InstructionRepositoryImpl implements InstructionRepository {
     constructor(private readonly datasource: InstructionDatasource) {}
+    Update(data: CreateInstruction): Promise<InstructionEntity> {
+        return this.datasource.Update(data);
+    }
     Get(data: GetInstruction): Promise<InstructionEntity[]> {
         return this.datasource.Get(data);
     }

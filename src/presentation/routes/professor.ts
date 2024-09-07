@@ -5,9 +5,10 @@ import {
   ProfessorDataSourceImpl,
   ProfessorRepositoryImpl,
   InstructorDataSourceImple,
-  InstructorRepositoryImpl
+  InstructorRepositoryImpl,
 } from "../../infrastructure";
 import { ProfessorController } from "../professor/professor.controller";
+
 const router = Router();
 
 const instructorDataSource = new InstructorDataSourceImple();
@@ -20,32 +21,36 @@ const professorController = new ProfessorController(
   instructorRepository
 );
 
-// TODO check token and permissions
+// TODO check token
 
 router.get("/", professorController.get);
-
-router.post("/:id", (req: Request, res: Response, next: NextFunction) => {
+router.post("/:id", (req: Request, res: Response) => {
   uploadFile.single("file")(req, res, (err) => {
     if (err) {
-      return res
-        .status(500)
-        .json({ msj: "Unexpected error on the image file", error: err });
+      console.log("error file size")
+      res.status(400).json({ ImageError1: err.message });
     } else {
+      if (!req.file) {
+        req.body.ayuda = "images" + req.baseUrl + req.url;
+        console.log("no file", req.body.ayuda);
+      }
       professorController.create(req, res);
     }
   });
 });
-router.put("/:id", (req: Request, res: Response, next: NextFunction) => {
+router.put("/:id", (req: Request, res: Response) => {
   updateFile.single("file")(req, res, (err) => {
     if (err) {
-      return res
-        .status(500)
-        .json({ msj: "Unexpected error on the image file", error: err });
+      console.log("error multer");
+      res.status(400).json({ ImageError: err.message });
     } else {
+      if (!req.file) {
+        req.body.ayuda = "images" + req.baseUrl + req.url;
+        console.log("no file", req.body.ayuda);
+      }
       professorController.update(req, res);
     }
   });
 });
 router.delete("/:id", professorController.delete);
-
 module.exports = router;

@@ -1,12 +1,17 @@
-import { PersonEntity } from "../../entities";
-import { CreatePerson, CreateUserDTO } from "../";
+import { CreateUserDTO } from "../";
 
 export class CreateProfessor {
-  constructor(
-    //public readonly person: PersonEntity,
-    public readonly user: CreateUserDTO //public readonly phones: CreatePhone[] | null
-  ) //public readonly socials: CreateSocialMedia[] | null,
-  {}
+  constructor(public readonly user: CreateUserDTO) {}
 
-  //validations
+  public Validate(): string | null {
+    let error: string[] = [];
+    const userValidation = this.user.Validate();
+    if (userValidation != null) {
+      error.push(userValidation);
+    }
+    if (error.length > 0) {
+      return error.join(", ");
+    }
+    return null;
+  }
 }

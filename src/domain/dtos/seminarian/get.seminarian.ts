@@ -13,10 +13,17 @@ export class GetSeminarianDTO{
         public readonly foreing:        boolean                    | undefined,
         public readonly location:       Locations_enum             | undefined,
         public readonly status:         seminarian_status_enum     | undefined,
+        public readonly curse_id?:      number                     | undefined,
+        public readonly subject_id?:    number                     | undefined,
+        public readonly note?:          number                     | undefined,
+        public academic_term_id?:       number,
+        public menor_a_la_nota?:        boolean
+        //si es verddero se agarra las notas inferiores al valor dado, si no, se agarra las mayores
     ){}
     
     static CreateDTO(object: { [key: string]: any }): [string?, GetSeminarianDTO?]{
-        const { id, forename, surname, parish_id, diocese_id, first_Date, second_Date, ministery,foreing,location, status} = object;
+        const { id, forename, surname, parish_id, diocese_id, first_Date, second_Date, 
+            ministery,foreing,location, status, curse_id, subject_id, note, academic_term_id, menor_a_la_nota} = object;
         let errorarray: string[]= [];
         //these auxiliaries var are for all the other params that are not strings
         let parish_id_number, diocese_id_number,
@@ -24,6 +31,9 @@ export class GetSeminarianDTO{
         if(id != undefined){
             if(id.length > 20)errorarray.push("Id is too large");
         }
+        const academic = Number(academic_term_id);
+        const notenum = Number(note);
+        const subjet = Number(subject_id);
         if (diocese_id !== undefined) {
             diocese_id_number = Number(id);
             if (Number.isNaN(diocese_id_number) || !Number.isInteger(diocese_id_number) || diocese_id_number < 0) {
@@ -88,7 +98,7 @@ export class GetSeminarianDTO{
         }
         return [undefined, new GetSeminarianDTO(id, forename, surname, parish_id_number, diocese_id_number,
             first_Date_obj, second_Date_obj, ministery as seminarianMinistery_ENUM, bool_fore, location as Locations_enum,
-            status as seminarian_status_enum)];
+            status as seminarian_status_enum, curse_id, subjet,notenum, academic, menor_a_la_nota)];
     }
 
     static isValidDate(date: string): boolean {

@@ -8,6 +8,8 @@ export class UpdateSeminarian{
         public readonly person:          CreatePerson,
         public readonly ministery:       seminarianMinistery_ENUM,
         public readonly status:          seminarian_status_enum,
+        public stage:                    string,
+        public stage_num?:              number
     ){}
     
     public Validate(): string|null{
@@ -21,7 +23,17 @@ export class UpdateSeminarian{
         if(result_user != null){
             errorarray.push(result_user);
         }
-        
+        switch (this.stage) {
+            case "PROPEDEUTICO":
+                this.stage_num = 1;
+                break;
+            case "DISCIPULADO":
+                this.stage_num = 2;
+                break;
+            case "CONFIGURATIVA":
+                this.stage_num = 3;
+                break;
+        }
         
         if(result_foreing != null){
             errorarray.push(result_foreing);

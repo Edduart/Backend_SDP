@@ -6,16 +6,25 @@ import {
   UserTrans,
   GetUsers,
   GetUserbyId,
-  GetUsersByType
+  GetUsersByType,
+  Restart_use,
+  CreateLog,
+  BitacoraRepository,
+  BitacoraLog,
+  actions_enum,
 } from "../../domain";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { compare, encode } from "../services/hash_handler";
+import { compare, encode } from "../services/hashHandler";
 import { ActualizarFecha } from "../../infrastructure";
+import { ValidatePermission } from "../services/permissionValidator";
+import { BitacoraDataSourceImpl } from "../../infrastructure/datasource/bitacora.datasource.imple";
+import { BitacoraRepositoryImpl } from "../../infrastructure/repositories/bitacora.repository.imple";
 
 export class UserControler {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {
+  }
 
   public getByType = async (req: Request, res: Response) => {
     const {type} = req.query;
@@ -26,6 +35,8 @@ export class UserControler {
       )
       .catch((error) => res.status(400).json({ error }));
   };
+
+  
 
   public getById = (req: Request, res: Response) => {
     const id: string = req.params.id;
@@ -40,11 +51,19 @@ export class UserControler {
   };
 
   public getAll = (req: Request, res: Response) => {
-    new GetUsers(this.repository)
+    try{
+      console.log("validando")
+      const result = ValidatePermission(req.body.Permisos, "USER", 'R');
+      console.log("entro")
+      new GetUsers(this.repository)
       .execute()
       .then((users) =>{
         res.set({ "Access-Control-Expose-Headers": "auth" }).json(users)
     }).catch((error) => res.status(400).json({ error }));
+    }catch(error){
+      res.status(400).json({ error })
+    }
+    
   };
 
   public Login = (req: Request, res: Response) => {
@@ -66,13 +85,20 @@ export class UserControler {
             const user_to_send = new UserTrans(
               user.person_id,
               user.role.premissions,
-              user.fecha
+              user.fecha,
+              user.role.name, user.forename, user.surname, user.profile_picture
             );
             const token = jwt.sign(
               { ...user_to_send },
               process.env.SECRET as string,
               { expiresIn: "30m" }
             );
+            const datasource = new BitacoraDataSourceImpl();
+            const Repository = new BitacoraRepositoryImpl(datasource);
+            new CreateLog(Repository).execute(new BitacoraLog(new Date(),
+          user.person_id,
+        "USER",
+      actions_enum.LOGIN,))
             res
               .header("auth", token)
               .set({ "Access-Control-Expose-Headers": "auth" })
@@ -82,7 +108,30 @@ export class UserControler {
       })
       .catch((error) => res.status(400).json({ error }));
   };
-
+  public Reset = async (req: Request, res: Response) => {
+    const source = req.headers['Permissions'];
+    const user = req.headers['User'];
+    try{
+      const result = ValidatePermission(source, "USER", 'U'); 
+      new Restart_use(this.repository)
+      .execute(req.body.id)
+      .then((result) => {
+        const datasource = new BitacoraDataSourceImpl();
+            const Repository = new BitacoraRepositoryImpl(datasource);
+            new CreateLog(Repository).execute(new BitacoraLog(new Date(),
+            user as string,
+        "USER",
+      actions_enum.UPDATE,))
+        res
+          .json("Contraseña cambiada").send;
+      })
+      .catch((error) => res.status(400).json({ error }));
+    }catch(error){
+      console.log("unexpected error while executing");
+      res.status(418).send("Error: " + error);
+    }
+    
+  };
   public ChangePass = async (req: Request, res: Response) => {
     const new_pass = encode(req.body.password);
     const acces_promts = new Login(req.body.id, await new_pass);
