@@ -13,8 +13,6 @@ export class CreateEnrollmentDto {
 
     console.log({ props });
 
-    // TODO reWork validations
-
     if (!seminarian_id) {
       validationErrors.push({
         field: "seminarian_id",
