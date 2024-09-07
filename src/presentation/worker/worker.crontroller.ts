@@ -84,13 +84,11 @@ export class WorkerControler {
     const source = req.headers["Permissions"];
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      console.log(source)
+      console.log(source);
       const result = ValidatePermission(source, "USER", "U");
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
       let origin = JSON.parse(req.body.data);
-      const persondto = await parsePersonData(
-        req.body.data, req.body.ayuda
-      );
+      const persondto = await parsePersonData(req.body.data, req.body.ayuda);
       const workerdto = new CreateWorker(
         persondto,
         origin.job_position as Job_Psotion_Enum
@@ -99,7 +97,8 @@ export class WorkerControler {
       if (result_validations == null) {
         new UpdateWorkerUseCase(this.repository)
           .execute(workerdto)
-          .then((worker) => {
+          .then(async (worker) => {
+            await imageResize(req.body.ayuda);
             res.json(worker).send;
           })
           .catch((error) => {
@@ -131,7 +130,7 @@ export class WorkerControler {
       if (result_validations == null) {
         new CreateWorkerUseCase(this.repository)
           .execute(workerdto)
-          .then(async(worker) => {
+          .then(async (worker) => {
             await imageResize(req.body.ayuda);
             res.json(worker).send;
           })

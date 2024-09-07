@@ -5,6 +5,8 @@ export class CreateTestScoreDto {
     public testIds: number[]
   ) {}
 
+  // FIXME this is no used, delete
+
   static create(props: {
     [key: string]: any;
   }): [object[]?, CreateTestScoreDto?] {

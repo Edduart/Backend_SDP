@@ -17,15 +17,35 @@ export class GetTestBySubjectDto {
 
     console.log("🚀 ~ GetEnrollmentDto ~ get ~ props:", props);
 
-    // TODO reWork validations
+    if (enrollment_id != undefined) {
+      if (isNaN(Number(enrollment_id)) || +enrollment_id < 0)
+        dataErrors.push("id is must be a valid number");
+      enrollment_id = +enrollment_id;
+    }
 
-    if (enrollment_id != undefined) enrollment_id = +enrollment_id;
+    if (seminarian_id != undefined) {
+      if (!/^(V|E)-\d{1,18}$/.test(seminarian_id))
+        dataErrors.push("id is must follows this format: V-xxxxxx");
+    }
 
-    if (subject_id != undefined) subject_id = +subject_id;
+    if (subject_id != undefined) {
+      if (isNaN(Number(subject_id)) || +subject_id < 0)
+        dataErrors.push("subject_id is must be a valid number");
+      subject_id = +subject_id;
+    }
 
-    if (academic_term_id != undefined) academic_term_id = +academic_term_id;
+    if (academic_term_id != undefined) {
+      if (isNaN(Number(academic_term_id)) || +academic_term_id < 0)
+        dataErrors.push("academic_term_id is must be a valid number");
+      academic_term_id = +academic_term_id;
+    }
+
+    if (status != undefined) {
+      if(!Object.values(EnrollmentStatus).includes(status)) dataErrors.push("status is must be a valid enrollment status in uppercase");
+    }
 
     if (dataErrors.length > 0) return [dataErrors];
+
     return [
       undefined,
       new GetTestBySubjectDto(

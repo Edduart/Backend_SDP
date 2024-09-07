@@ -7,14 +7,21 @@ export class GetTestForTestScoreDto {
     let { subject_id, academic_term_id } = props;
     let dataErrors: string[] = [];
 
-    // TODO reWork validations
+    if (!subject_id || isNaN(Number(subject_id)) || +subject_id < 0) {
+      dataErrors.push("subject_id is must be a valid number");
+    } else {
+      subject_id = +subject_id;
+    }
 
-
-    // FIXME cannot be undefined
-
-    if (subject_id != undefined) subject_id = +subject_id;
-
-    if (academic_term_id != undefined) academic_term_id = +academic_term_id;
+    if (
+      !academic_term_id ||
+      isNaN(Number(academic_term_id)) ||
+      +academic_term_id < 0
+    ) {
+      dataErrors.push("subject_id is must be a valid number");
+    } else {
+      academic_term_id = +academic_term_id;
+    }
 
     if (dataErrors.length > 0) return [dataErrors];
     return [

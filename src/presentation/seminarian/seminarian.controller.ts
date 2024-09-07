@@ -175,33 +175,23 @@ export class SeminarianControler {
       //now check if there are errors
       const errores = seminarian.Validate();
       if (errores == null) {
-        await imageResize(req.body.ayuda);
-
         new UpdateSeminarianUseCase(this.repository)
           .execute(seminarian)
-          .then(() => {
-            res.json({ message: "ready" }).send;
+          .then(async() => {
+            await imageResize(req.body.ayuda);
+            res.json({ message: "ready" });
           })
           .catch((error) => {
-            if (req.body.ayuda != null) {
-              fs.unlinkSync(req.body.ayuda);
-            }
             console.log("unexpected error while executing" + error);
             res.status(400).send("Unexpected error: " + error);
           });
       } else {
-        if (req.body.ayuda != null) {
-          fs.unlinkSync(req.body.ayuda);
-        }
         //validation errors
         console.log(errores);
         res.status(400).send("Validation error: " + errores);
       }
     } catch (error) {
       // errores de verificacion
-      if (req.body.ayuda != null) {
-        fs.unlinkSync(req.body.ayuda);
-      }
       console.log("unexpected error while executing");
       res.status(418).send("Error: " + error);
     }
