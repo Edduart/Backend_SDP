@@ -301,6 +301,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       const media: SocialMediaEntity[] = person_actual.social_media.map(
         (social_Actual) => {
           return SocialMediaEntity.fromdb({
+            social_media_category:social_Actual.social_media_category,
             category:social_Actual.social_media_category,
             link: social_Actual.link,
           });
