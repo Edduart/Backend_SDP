@@ -181,10 +181,10 @@ export class ProfessorController {
     new DeleteProfessor(this.repository)
       .execute(id)
       .then((professor) => {
-        res.json({ professor }).send({ professor });
+        res.status(200).json({ professor });
       })
       .catch((error) => {
-        res.status(418).send({ error });
+        res.status(400).send({ error });
       });
   };
 }
