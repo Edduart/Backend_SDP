@@ -152,7 +152,7 @@ export async function parseProfessorGet(returnFromDB: Array<any>) {
       (socials: any) => {
         return SocialMediaEntity.fromdb({
           link: socials.link,
-          social_media_category: socials.social_media_category,
+          category: socials.social_media_category,
         });
       }
     );
