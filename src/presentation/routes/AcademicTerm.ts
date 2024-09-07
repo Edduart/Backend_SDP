@@ -23,8 +23,8 @@ const Controller = new AcademicTermController(
 );
 
 router.post("/",              ValidatorTo.ValidarToken, Controller.Create);
-router.get("/",               ValidatorTo.ValidarToken, Controller.Get);
-router.get("/:id",            ValidatorTo.ValidarToken, Controller.Getid);
+router.get("/",               Controller.Get);
+router.get("/:id",            Controller.Getid);
 router.put("/",               ValidatorTo.ValidarToken, Controller.Update);
 router.delete("/delete/:id",  ValidatorTo.ValidarToken, Controller.Deactivate);
 router.put("/activate/:id",   ValidatorTo.ValidarToken, Controller.Activate);

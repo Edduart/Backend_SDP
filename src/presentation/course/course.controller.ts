@@ -15,11 +15,6 @@ export class CourseController {
   constructor(private readonly courseRepository: CourseRepository) {}
 
   public getCourses = (req: Request, res: Response) => {
-    try{
-      const result = ValidatePermission(req.body.Permisos, "COURSE", "R");
-    }catch(error){
-      return res.status(401).json("Not allowed" + error);
-    }
     new GetCourses(this.courseRepository)
       .execute()
       .then((courses) => {
@@ -33,11 +28,6 @@ export class CourseController {
   };
 
   public getCourseById = (req: Request, res: Response) => {
-    try{
-      const result = ValidatePermission(req.body.Permisos, "COURSE", "R");
-    }catch(error){
-      return res.status(401).json("Not allowed" + error);
-    }
     const id = +req.params.id;
     new GetCourse(this.courseRepository)
       .execute(id)

@@ -10,8 +10,8 @@ const courseRepository = new CourseRepositoryImpl(dataSource);
 const courseController = new CourseController(courseRepository);
 
 //router.post("/", courseController.createCourse);
-router.get("/",     ValidatorTo.ValidarToken, courseController.getCourses);
-router.get("/:id",  ValidatorTo.ValidarToken, courseController.getCourseById);
+router.get("/",     courseController.getCourses);
+router.get("/:id",  courseController.getCourseById);
 router.put("/:id",  ValidatorTo.ValidarToken, courseController.updateCourseById);
 //router.delete("/:id", courseController.deleteCourse);
 module.exports = router;
