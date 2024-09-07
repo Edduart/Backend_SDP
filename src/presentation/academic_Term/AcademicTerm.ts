@@ -43,11 +43,6 @@ export class AcademicTermController {
     }
   };
   public Get = (req: Request, res: Response) => {
-    try{
-      const result = ValidatePermission(req.body.Permisos, "STAGE", "R");
-    }catch(error){
-      return res.status(401).json("Not allowed" + error);
-    }
     const get_dto = GetAcademicTerm.create(req.query);
     new GetAcademicTermUseCase(this.repository)
       .execute(get_dto)
@@ -60,11 +55,6 @@ export class AcademicTermController {
       });
   };
   public Getid = (req: Request, res: Response) => {
-    try{
-      const result = ValidatePermission(req.body.Permisos, "STAGE", "R");
-    }catch(error){
-      return res.status(401).json("Not allowed" + error);
-    }
     const get_dto = GetAcademicTerm.create(req.params);
     new GetbyidAcademicTermUseCase(this.repository)
       .execute(get_dto)
