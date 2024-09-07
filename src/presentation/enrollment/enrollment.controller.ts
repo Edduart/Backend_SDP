@@ -72,6 +72,7 @@ export class EnrollmentController {
   };
 
   public createEnrollmentByEquivalence = (req: Request, res: Response) => {
+    
     const [error, createDto] = CreateEnrollmentByEquivalenceDto.create(
       req.body
     );

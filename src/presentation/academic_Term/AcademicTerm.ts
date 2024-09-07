@@ -13,7 +13,7 @@ import {
   UpdateEnrollmentStatusByFinalScore,
   UpdateStageIfApproved,
 } from "../../domain";
-import { error } from "console";
+import { ValidatePermission } from "../services/permissionValidator";
 
 export class AcademicTermController {
   constructor(
@@ -21,6 +21,11 @@ export class AcademicTermController {
     private readonly enrollmentRepository: EnrollmentRepository
   ) {}
   public Create = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "C");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const [error_Arr, academicCreateDTO] = CreateAcademicTerm.create(req.body);
     if (academicCreateDTO != undefined) {
       new CreateAcademicTermUseCase(this.repository)
@@ -38,6 +43,11 @@ export class AcademicTermController {
     }
   };
   public Get = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const get_dto = GetAcademicTerm.create(req.query);
     new GetAcademicTermUseCase(this.repository)
       .execute(get_dto)
@@ -50,6 +60,11 @@ export class AcademicTermController {
       });
   };
   public Getid = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const get_dto = GetAcademicTerm.create(req.params);
     new GetbyidAcademicTermUseCase(this.repository)
       .execute(get_dto)
@@ -62,6 +77,11 @@ export class AcademicTermController {
       });
   };
   public Update = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "U");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     new updateAcademicTermUseCase(this.repository)
       .execute(req.body.id)
       .then((academic) => {
@@ -72,6 +92,11 @@ export class AcademicTermController {
       });
   };
   public Activate = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
     if (id == undefined) {
       return res.status(400).json("el id es requerido");
@@ -86,6 +111,11 @@ export class AcademicTermController {
       });
   };
   public Deactivate = async (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "STAGE", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
     console.log(id);
     if (id == undefined) {

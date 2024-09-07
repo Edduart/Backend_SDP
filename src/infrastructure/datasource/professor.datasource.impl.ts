@@ -5,7 +5,9 @@ import {
   ProfessorDataSource,
   ProfessorEntity,
   UpdateProfessorDto,
-  GetProfessorDto
+  GetProfessorDto,
+  ProfesorFichaDTO,
+  SocialMediaDTO
 } from "../../domain";
 
 import {
@@ -17,6 +19,50 @@ import {
 import { parseProfessorGet } from '../../presentation/utils/parseData';
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
+  async Ficha(id: string): Promise<ProfesorFichaDTO> {
+    const result = await prisma.professor.findFirst({
+      where: {
+        id: id
+      },include:{
+        user:{
+          include:{
+            academic_degree:true,
+            person:{include:{phone_number: true,social_media: {include:{social_media_category_social_media_social_media_categoryTosocial_media_category: true}}}},
+            parish:{include:{diocese:true}}
+          }
+        }
+      }
+    })
+    if (result == null) throw new Error("Instructor does not exists");
+    const cellpones: string[] = result.user.person.phone_number.map(
+      (cellphone) => {
+        return cellphone.phone_number;
+      }
+    );
+    const redes: SocialMediaDTO[] = result.user.person.social_media.map((socialdata) => {
+        return new SocialMediaDTO(
+          socialdata.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
+          socialdata.link
+        );
+    });
+    let instruction_Grade = "PROFESOR";
+    if (result.user.academic_degree.length > 0) {
+      instruction_Grade = result.user.academic_degree[0].description;
+    }
+    const dto = new ProfesorFichaDTO(
+      result.id,
+      result.user.person.profile_picture_path,
+      result.user.person.forename,
+      result.user.person.surname,
+      result.user.person.birthdate,
+      result.user.parish.name,
+      result.user.parish.diocese.name,
+      cellpones,
+      redes,
+      instruction_Grade
+    );
+    return dto;
+  }
   async update(data: UpdateProfessorDto): Promise<object> {
     const professorExist = await prisma.professor.findUnique({
       where: { id: data.person.id },

@@ -24,7 +24,7 @@ export class RoleController{
         const name = typeof req.query.name === 'string' && req.query.name.length < 100 &&  req.query.name.length > 1? req.query.name : undefined;
         try {
           //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-          const result = ValidatePermission(req.body.Permisos, "user", 'R');
+          const result = ValidatePermission(req.body.Permisos, "USER", 'R');
           //aqui empieza el contenido del controlador
           new GetRole(this.repository)
           .execute(id, name)
@@ -38,7 +38,7 @@ export class RoleController{
       public createRole = (req: Request, res: Response) => {
         try {
           //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-            const result = ValidatePermission(req.body.Permisos, "user", 'C');
+            const result = ValidatePermission(req.body.Permisos, "USER", 'C');
           //aqui empieza el contenido del controlador
           const [ error, CreateRole_ ] = CreateRoleStruc.Create( req.body );
           if ( error ) return res.status( 400 ).json( { error } );
@@ -53,7 +53,7 @@ export class RoleController{
       public deleteRole = (req: Request, res: Response) => {
         try {
           //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-            const result = ValidatePermission(req.body.Permisos, "user", 'D');
+            const result = ValidatePermission(req.body.Permisos, "USER", 'D');
           //aqui empieza el contenido del controlador
           const id = parseInt(req.params.id);
           new DeleteRole(this.repository)
@@ -67,7 +67,7 @@ export class RoleController{
       public getAllPermissions = (req: Request, res: Response) => {
         try {
           //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-            const result = ValidatePermission(req.body.Permisos, "user", 'R');
+            const result = ValidatePermission(req.body.Permisos, "USER", 'R');
           //aqui empieza el contenido del controlador
           new GetAllPermissions(this.repository)
           .execute()
@@ -80,7 +80,7 @@ export class RoleController{
       public UpdateRole = (req: Request, res: Response) => {
         try {
           //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-            const result = ValidatePermission(req.body.Permisos, "user", 'U');
+            const result = ValidatePermission(req.body.Permisos, "USER", 'U');
           //aqui empieza el contenido del controlador
           const [ error, nuevo ] = UpdateRoleStruc.Create( req.body );
           if ( error ) return res.status( 400 ).json( { error } ); 

@@ -11,6 +11,7 @@ import {
   InstructorFichaUseCase,
 } from "../../domain";
 import { BuildFichaInstructor } from "../docs/ficha.instructor";
+import { ValidatePermission } from "../services/permissionValidator";
 
 
 export class InstructorController {
@@ -26,6 +27,11 @@ export class InstructorController {
         res.status(418).send("unable to create ID: " + error);})
 }
   public createInstructor = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "C");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const [error, createInstructorDto] = CreateInstructorDto.create(req.body);
     if (error) return res.status(400).json({ error });
     new CreateInstructor(this.instructorRepository)
@@ -40,6 +46,11 @@ export class InstructorController {
   };
 
   public getInstructors = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+  }
     new GetInstructors(this.instructorRepository)
       .execute()
       .then((instructors) => res.json(instructors))
@@ -50,6 +61,11 @@ export class InstructorController {
   };
 
   public getInstructorById = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "R");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+  }
     const id = req.params.id;
 
     new GetInstructor(this.instructorRepository)
@@ -70,6 +86,11 @@ export class InstructorController {
   };
 
   public updateInstructorById = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "U");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+  }
     const professor_id = req.params.id;
     const [error, updateInstructorDto] = UpdateInstructorDto.update({
       ...req.body,
@@ -95,6 +116,11 @@ export class InstructorController {
   };
 
   public deleteInstructor = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+  }
     const id = req.params.id;
     new DeleteInstructor(this.instructorRepository)
       .execute(id)
