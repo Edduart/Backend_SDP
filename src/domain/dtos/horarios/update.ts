@@ -6,24 +6,24 @@ export class UpdateHorario {
     ) {} 
 
     static CreateDTO(object: { [key: string]: any }): [string?, UpdateHorario?]{
-        let { id,Curso, link} = object;
+        let { id, link} = object;
 
         console.log({object})
 
 
-        /*let errorarray: string[]= [];
+        let errorarray: string[]= [];
         if (Number.isNaN(id) || !Number.isInteger(id) || id < 0) {
             errorarray.push("ID must be a non-negative integer");
         }
-        if(Curso.length = 0 || Curso == undefined){
+       /* if(Curso.length = 0 || Curso == undefined){
             errorarray.push("Curso can not be undefined or empty"); 
-        }else Curso = Curso.toUpperCase();
+        }else Curso = Curso.toUpperCase();*/
         
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
-        }*/
+        }
         
-        return [undefined, new UpdateHorario(id,Curso, link)];
+        return [undefined, new UpdateHorario(id, link)];
     }
 
 }

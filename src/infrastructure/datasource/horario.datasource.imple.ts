@@ -2,7 +2,10 @@ import { prisma } from "../../data/postgres";
 import { HorarioDatasource, HorarioEntity, UpdateHorario } from "../../domain";
 
 export class HorarioDataSourceImplementation implements HorarioDatasource {
-  async get(id?: number): Promise<HorarioEntity[]> {
+  async get(id?: number | undefined): Promise<HorarioEntity[]> {
+
+    console.log(id)
+
     const results = await prisma.horarios.findMany({
       where: {
         ID: id,
@@ -20,7 +23,7 @@ export class HorarioDataSourceImplementation implements HorarioDatasource {
       where: {
         ID: data.id,
       },
-      data: { Curso: data.Curso, link: data.link },
+      data: { link: data.link },
     });
     return HorarioEntity.fromObject(result);
   }

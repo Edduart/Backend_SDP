@@ -9,12 +9,14 @@ export class HorarioController {
   constructor(private readonly horariorepository: HorarioRepository) {}
 
   public Get = (req: Request, res: Response) => {
-    let id = undefined;
-    try {
-      id = Number(req.query.id);
-    } catch (error) {
-      id = undefined;
-    }
+    console.log(req.query);
+
+    let id: any = req.query.id;
+
+    if (id != undefined) id = +id;
+
+    console.log(id);
+
     new HorarioGetUseCase(this.horariorepository)
       .execute(id)
       .then((horarios) => res.json(horarios))
