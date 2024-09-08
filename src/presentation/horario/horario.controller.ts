@@ -4,9 +4,11 @@ export class HorarioController {
   constructor(private readonly horariorepository: HorarioRepository) {}
   
   public Get = (req: Request, res: Response) => {
+    
     let id = undefined
     try{
       id = Number(req.query.id)
+      Number.isNaN(id) ? id = undefined : id
     }catch(error){
       id = undefined
     }
