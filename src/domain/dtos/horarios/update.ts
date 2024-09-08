@@ -7,7 +7,11 @@ export class UpdateHorario {
 
     static CreateDTO(object: { [key: string]: any }): [string?, UpdateHorario?]{
         let { id,Curso, link} = object;
-        let errorarray: string[]= [];
+
+        console.log({object})
+
+
+        /*let errorarray: string[]= [];
         if (Number.isNaN(id) || !Number.isInteger(id) || id < 0) {
             errorarray.push("ID must be a non-negative integer");
         }
@@ -17,7 +21,7 @@ export class UpdateHorario {
         
         if (errorarray.length > 0) {
             return [errorarray.join(", "), undefined];
-        }
+        }*/
         
         return [undefined, new UpdateHorario(id,Curso, link)];
     }
