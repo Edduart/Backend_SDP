@@ -28,14 +28,13 @@ import {
 import { formatDate } from "../../presentation/utils/formatDate";
 
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
-  
   async ContarEnrolls(): Promise<number> {
     const result = await prisma.enrollment.count({
-      where:{
-        status: EnrollmentStatus.CURSANDO
-      }
-    })
-    return result
+      where: {
+        status: EnrollmentStatus.CURSANDO,
+      },
+    });
+    return result;
   }
 
   async getAcademicTermByEnrollment(
@@ -256,13 +255,17 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
           OR: [
             {
               seminarian_id: getDto.seminarian_id,
-              NOT: { OR: [{ status: "REPROBADO" }, { status: "RETIRADO" }] },
+              academic_term: { status: { not: "ACTIVO" } },
+              NOT: {
+                OR: [{ status: "REPROBADO" } , { status: "RETIRADO" }],
+              },
             },
             {
-              AND: [
-                { academic_term: { status: "ACTIVO" } },
-                { status: "RETIRADO" },
-              ],
+              seminarian_id: getDto.seminarian_id,
+              academic_term: { status: "ACTIVO" },
+              NOT: {
+                OR: [{ status: "REPROBADO" }],
+              },
             },
           ],
         },
