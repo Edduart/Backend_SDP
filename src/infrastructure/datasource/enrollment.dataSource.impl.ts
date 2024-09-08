@@ -28,6 +28,7 @@ import {
 import { formatDate } from "../../presentation/utils/formatDate";
 
 export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
+  
   async ContarEnrolls(): Promise<number> {
     const result = await prisma.enrollment.count({
       where:{
@@ -36,6 +37,7 @@ export class EnrollmentDataSourceImpl implements EnrollmentDataSource {
     })
     return result
   }
+
   async getAcademicTermByEnrollment(
     dto: GetAcademicTermByEnrollmentDto
   ): Promise<academicTermMap[]> {
