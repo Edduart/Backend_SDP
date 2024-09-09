@@ -35,6 +35,7 @@ export async function parsePersonData(req: any, path: any) {
     // Phone Data Parsing
     const phones: CreatePhone[] | null = origin.persona.phone?.map(
       (phone: { phone_number: string; description: string }) =>
+
         new CreatePhone(phone.phone_number, phone.description.toUpperCase())
     );
     // Person Data Parsing

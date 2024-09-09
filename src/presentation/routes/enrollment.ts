@@ -9,7 +9,6 @@ const dataSource = new EnrollmentDataSourceImpl();
 const enrollmentRepository = new EnrollmentRepositoryImpl(dataSource);
 const enrollmentController = new EnrollmentController(enrollmentRepository);
 router.get("/count", 
-  ValidatorTo.ValidarToken, 
   enrollmentController.Getcounts);
 router.get("/academic-status/:seminarian_id",
   ValidatorTo.ValidarToken, 

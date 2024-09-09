@@ -12,7 +12,7 @@ const instructorRepository = new InstructorRepositoryImpl(
 const instructorController = new InstructorController(
   instructorRepository
 );
-router.get("/ficha/:id",  ValidatorTo.ValidarToken, instructorController.ficha)
+router.get("/ficha/:id", instructorController.ficha)
 router.post("/",          ValidatorTo.ValidarToken, instructorController.createInstructor);
 router.get("/",           ValidatorTo.ValidarToken, instructorController.getInstructors);
 router.get("/:id",        ValidatorTo.ValidarToken, instructorController.getInstructorById);

@@ -44,7 +44,7 @@ export async function UpdatePersonFunc(data: CreatePerson) {
         return {
           person_id: data.id,
           phone_number: actual.phone_number,
-          description: actual.phone_number,
+          description: actual.description,
         };
       });
       await prisma.phone_number.createMany({
@@ -119,7 +119,7 @@ export async function CreatePersonFunc(data: CreatePerson) {
         return {
           person_id: data.id,
           phone_number: actual.phone_number,
-          description: actual.phone_number,
+          description: actual.description,
         };
       });
       await prisma.phone_number.createMany({
