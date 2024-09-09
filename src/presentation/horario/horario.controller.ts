@@ -9,18 +9,20 @@ export class HorarioController {
   constructor(private readonly horariorepository: HorarioRepository) {}
 
   public Get = (req: Request, res: Response) => {
-    console.log(req.query);
+    try {
+      let id: any = undefined;
+      if (req.query.id) {
+        id = req.query.id;
+        if (id != undefined) id = +id;
+      }
 
-    let id: any = req.query.id;
-
-    if (id != undefined) id = +id;
-
-    console.log(id);
-
-    new HorarioGetUseCase(this.horariorepository)
-      .execute(id)
-      .then((horarios) => res.json(horarios))
-      .catch((error) => res.status(400).json({ error }));
+      new HorarioGetUseCase(this.horariorepository)
+        .execute(id)
+        .then((horarios) => res.json(horarios))
+        .catch((error) => res.status(400).json({ error }));
+    } catch (err) {
+      res.status(400).json({ err });
+    }
   };
   public Update = (req: Request, res: Response) => {
     try {

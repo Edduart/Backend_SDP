@@ -24,7 +24,7 @@ const professorController = new ProfessorController(
 
 // TODO check token
 router.get("/ficha/:id", ValidatorTo.ValidarToken, professorController.ficha);
-router.get("/", ValidatorTo.ValidarToken, professorController.get);
+router.get("/:id", ValidatorTo.ValidarToken, professorController.get);
 router.post("/:id", ValidatorTo.ValidarTokenH, (req: Request, res: Response) => {
   uploadFile.single("file")(req, res, (err) => {
     if (err) {
