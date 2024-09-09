@@ -22,7 +22,7 @@ const professorController = new ProfessorController(
   instructorRepository
 );
 
-// TODO check token
+
 router.get("/ficha/:id", ValidatorTo.ValidarToken, professorController.ficha);
 router.get("/", ValidatorTo.ValidarToken, professorController.get);
 router.post("/:id", ValidatorTo.ValidarTokenH, (req: Request, res: Response) => {
