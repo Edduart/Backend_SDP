@@ -1,10 +1,11 @@
-import { PersonEntity } from "../../entities";
-import { CreatePerson, CreateUserDTO, UpdateUserDto } from "../";
+import { instructor_position } from "@prisma/client";
+import { CreatePerson, UpdateUserDto } from "../";
 
 export class UpdateProfessorDto {
   constructor(
-    public readonly person: CreatePerson,
-    public readonly user: UpdateUserDto
+    public person: CreatePerson,
+    public user: UpdateUserDto,
+    public instructor_position?: instructor_position
   ) {}
 
   public DataValidation(): string | null {

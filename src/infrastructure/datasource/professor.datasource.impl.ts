@@ -7,7 +7,7 @@ import {
   UpdateProfessorDto,
   GetProfessorDto,
   ProfesorFichaDTO,
-  SocialMediaDTO
+  SocialMediaDTO,
 } from "../../domain";
 
 import {
@@ -16,35 +16,50 @@ import {
   UpdateUserFunc,
 } from "./utils/user.functions";
 
-import { parseProfessorGet } from '../../presentation/utils/parseData';
+import { FilterEnum } from "../../presentation/utils/filterEnum";
+
+import { parseProfessorGet } from "../../presentation/utils/parseData";
 
 export class ProfessorDataSourceImpl implements ProfessorDataSource {
   async Ficha(id: string): Promise<ProfesorFichaDTO> {
     const result = await prisma.professor.findFirst({
       where: {
-        id: id
-      },include:{
-        user:{
-          include:{
-            academic_degree:true,
-            person:{include:{phone_number: true,social_media: {include:{social_media_category_social_media_social_media_categoryTosocial_media_category: true}}}},
-            parish:{include:{diocese:true}}
-          }
-        }
-      }
-    })
+        id: id,
+      },
+      include: {
+        user: {
+          include: {
+            academic_degree: true,
+            person: {
+              include: {
+                phone_number: true,
+                social_media: {
+                  include: {
+                    social_media_category_social_media_social_media_categoryTosocial_media_category:
+                      true,
+                  },
+                },
+              },
+            },
+            parish: { include: { diocese: true } },
+          },
+        },
+      },
+    });
     if (result == null) throw new Error("Instructor does not exists");
     const cellpones: string[] = result.user.person.phone_number.map(
       (cellphone) => {
         return cellphone.phone_number;
       }
     );
-    const redes: SocialMediaDTO[] = result.user.person.social_media.map((socialdata) => {
+    const redes: SocialMediaDTO[] = result.user.person.social_media.map(
+      (socialdata) => {
         return new SocialMediaDTO(
           socialdata.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
           socialdata.link
         );
-    });
+      }
+    );
     let instruction_Grade = "PROFESOR";
     if (result.user.academic_degree.length > 0) {
       instruction_Grade = result.user.academic_degree[0].description;
@@ -63,17 +78,37 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
     );
     return dto;
   }
-  async update(data: UpdateProfessorDto): Promise<object> {
+  async update(dto: UpdateProfessorDto): Promise<object> {
     const professorExist = await prisma.professor.findUnique({
-      where: { id: data.person.id },
+      where: { id: dto.person.id },
     });
     if (professorExist == null) throw "Professor doesn't exist!";
-    await UpdatePersonFunc(data.person);
-    await UpdateUserFunc(data.user);
-    /*await prisma.professor.update({
-      where: { id: data.person.id },
-      data: { status_id: data.status_id },
-    });*/
+    const getInstructorById = await prisma.instructor.findUnique({
+      where: { professor_id: dto.person.id },
+    });
+    if (!getInstructorById) throw "Instructor with ID: ${id} no found";
+    const instructorPositions = await prisma.instructor.findMany({
+      where: {
+        NOT: { instructor_position: "DESACTIVADO" },
+      },
+      select: { instructor_position: true },
+    });
+    const filteredInstructorPosition =
+      FilterEnum.filterInstructorPosition(instructorPositions);
+    console.log({ msj: "inside update", filteredInstructorPosition });
+    if (dto.instructor_position) {
+      if (!(dto.instructor_position == getInstructorById.instructor_position)) {
+        if (
+          !Object.keys(filteredInstructorPosition).includes(
+            dto.instructor_position
+          )
+        ) {
+          throw "there is other instructor with the same position";
+        }
+      }
+    }
+    await UpdatePersonFunc(dto.person);
+    await UpdateUserFunc(dto.user);
     return { msj: "Professor Updated!" };
   }
 
@@ -111,6 +146,16 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       where: { person_id: createDto.user.person.id },
     });
     if (exists) throw "Person already exist";
+    if (createDto.instructor_position) {
+      const checkInstructorPosition = await prisma.instructor.findMany({
+        where: {
+          instructor_position:
+            createDto.instructor_position as instructor_position,
+        },
+      });
+      if (checkInstructorPosition.length > 0)
+        throw `there is already one instructor in the position: ${createDto.instructor_position}`;
+    }
     await CreateUser(createDto.user);
     await prisma.professor.create({
       data: {
@@ -118,13 +163,10 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         status_id: 1,
       },
     });
-    const dtoForResponse = new GetProfessorDto(
-      createDto.user.person.id
-    );
+    const dtoForResponse = new GetProfessorDto(createDto.user.person.id);
     const resultIndividual = await this.get(dtoForResponse);
-    return resultIndividual[0]; 
+    return resultIndividual[0];
   }
-
   async get(filter: GetProfessorDto): Promise<ProfessorEntity[]> {
     const returnFromDB = await prisma.professor.findMany({
       where: { id: filter.id, status_id: filter.status },
@@ -157,8 +199,9 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         },
       },
     });
-    if (returnFromDB.length === 0) throw "No se encontraron coincidencias con los parametros especificados!"  
+    if (returnFromDB.length === 0)
+      throw "No se encontraron coincidencias con los parametros especificados!";
     console.log(returnFromDB);
-    return parseProfessorGet(returnFromDB);;
+    return parseProfessorGet(returnFromDB);
   }
 }

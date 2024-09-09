@@ -26,7 +26,8 @@ router.post(
         res.status(400).json({ ImageError: err.message });
       } else {
         if (!req.file) {
-          const preparePath: string = "images" + req.baseUrl + req.url;
+          const preparePath: string =
+            "images" + req.baseUrl + req.url + ".jpeg";
           const newImagePath = preparePath.replace("/create/", "/");
           req.body.ayuda = newImagePath;
           console.log("no file", req.body.ayuda);

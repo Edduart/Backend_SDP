@@ -22,7 +22,7 @@ const professorController = new ProfessorController(
   instructorRepository
 );
 
-// TODO check token
+
 router.get("/ficha/:id", ValidatorTo.ValidarToken, professorController.ficha);
 router.get("/", ValidatorTo.ValidarToken, professorController.get);
 router.post("/:id", ValidatorTo.ValidarTokenH, (req: Request, res: Response) => {
@@ -32,7 +32,7 @@ router.post("/:id", ValidatorTo.ValidarTokenH, (req: Request, res: Response) => 
       res.status(400).json({ ImageError1: err.message });
     } else {
       if (!req.file) {
-        req.body.ayuda = "images" + req.baseUrl + req.url;
+        req.body.ayuda = "images" + req.baseUrl + req.url + ".jpeg";
         console.log("no file", req.body.ayuda);
       }
       professorController.create(req, res);
