@@ -35,7 +35,7 @@ export enum Locations_enum {
 
 export enum seminarianMinistery_ENUM {
   UNKOWN = "UNKOWN",
-  ADMISI_N = "ADMISIÓN",
+  ADMISI_N = "ADMISION",
   LECTORADO = "LECTORADO",
   ACOLITADO = "ACOLITADO",
 }
