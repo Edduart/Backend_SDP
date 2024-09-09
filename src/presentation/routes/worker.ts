@@ -29,7 +29,7 @@ router.post(
         res.status(400).json({ ImageError1: err.message });
       } else {
         if (!req.file) {
-          req.body.ayuda = "images" + req.baseUrl + req.url;
+          req.body.ayuda = "images" + req.baseUrl + req.url + ".jpeg";
           console.log("no file", req.body.ayuda);
         }
         WorkerControl.create(req, res);
