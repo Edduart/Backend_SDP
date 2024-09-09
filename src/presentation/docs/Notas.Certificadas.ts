@@ -48,7 +48,7 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
     doc.moveDown();
     let startinyear = data[0].enrollment[0].start_date?.split('-')[0]
     let endyeard = data[0].enrollment[data[0].enrollment.length-1].end_date?.split('-')[0]
-    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + "cursó en este Instituto materias de FILOSOFIA durante el período académico " +startinyear + "-"+ endyeard+ " obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", {indent: 30,});
+    doc.font('Times-Roman', 12).text("Portador de la C.I.Nº:" + data[0].seminarian_id + " cursó en este Instituto materias de FILOSOFIA durante el período académico " +startinyear + "-"+ endyeard+ " obteniendo las siguientes calificaciones según el pénsum que a continuación se especifica.", {indent: 30,});
     
     doc.on("data", dataCB);
     doc.on("end", endCB);
