@@ -14,12 +14,6 @@ export class FilterEnum {
       if (instructorPosition.instructor_position == "VICERECTOR") {
         delete instructorPositionEnum.VICERECTOR;
       }
-      if (instructorPosition.instructor_position == "ASESOR_PROPEDEUTICO") {
-        delete instructorPositionEnum.ASESOR_PROPEDEUTICO;
-      }
-      if (instructorPosition.instructor_position == "DIRECTOR_ESPIRITUAL") {
-        delete instructorPositionEnum.DIRECTOR_ESPIRITUAL;
-      }
       if (instructorPosition.instructor_position == "ECONOMO") {
         delete instructorPositionEnum.ECONOMO;
       }

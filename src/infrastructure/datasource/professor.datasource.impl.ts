@@ -155,6 +155,12 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
         where: {
           instructor_position:
             createDto.instructor_position as instructor_position,
+            NOT: {
+          OR: [
+            { instructor_position: "ASESOR_PROPEDEUTICO" },
+            { instructor_position: "DIRECTOR_ESPIRITUAL" },
+          ],
+        },
         },
       });
       if (checkInstructorPosition.length > 0)
