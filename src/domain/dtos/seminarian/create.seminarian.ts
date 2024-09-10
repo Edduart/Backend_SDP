@@ -23,7 +23,7 @@ export class CreateSeminarian{
         if(result_user != null){
             errorarray.push(result_user);
         }
-
+        
         switch (this.stage) {
             case "PROPEDEUTICO":
                 this.stage_num = 1;

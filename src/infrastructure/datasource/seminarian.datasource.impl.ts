@@ -478,11 +478,14 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       
     } catch (error) {
       console.log(error);
-      await prisma.phone_number.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.social_media.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.academic_degree.deleteMany({where:{user_id: data.user.person.id}});
-      await prisma.user.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.person.delete({where:{id: data.user.person.id}})
+      try{
+        await prisma.phone_number.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.social_media.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.academic_degree.deleteMany({where:{user_id: data.user.person.id}});
+        await prisma.user.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.person.delete({where:{id: data.user.person.id}})
+      }catch(error2){}
+      
       throw new Error("Unable to create seminarian" + error);
     }
   }

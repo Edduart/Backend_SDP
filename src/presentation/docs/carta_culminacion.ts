@@ -3,15 +3,6 @@ import { Getmonth } from './Notas.Certificadas';
 
 export function BuildPDF(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, forename: string, nombre_emisor : string, cedula_emisor: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
-    try{
-        doc.image("./images/assests/backgpround.png", 110,150,{
-            align:'center',
-            
-        });
-    }catch(error){
-        //si hay un error cargando la imagen lo envia
-        doc.text('Error en el fondo', 10,10);
-    }
     
     surname = surname.toLowerCase();
     let nombre = surname.split(" ");
