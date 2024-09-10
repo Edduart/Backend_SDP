@@ -35,12 +35,12 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
         throw `worker not found`;
       }
       await UpdatePersonFunc(data.persona);
-      const perona_actualizar = prisma.basic_worker.update({
+      const perona_actualizar = await tx.basic_worker.update({
         where: {
           person_id: data.persona.id,
         },
         data: {
-          job_position: data.job_position as basic_worker_job_position,
+          job_position: data.job_position.toUpperCase() as basic_worker_job_position,
         },
       });
       return await this.get(data.persona.id, undefined);
