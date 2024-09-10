@@ -4,18 +4,7 @@ import { EnrollmentTestResult } from '../../domain';
 export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: EnrollmentTestResult[]) {
     const doc = new PDFDocument({ font: 'Times-Roman' });
     doc.font('Times-Roman', 12)
-    try{
-        doc.image('./images/assests/backgproundcolored.png', 25,65,{
-            fit:[100,100],
-            align:'right',
-            
-        });
-    }catch(error){
-        //si hay un error cargando la imagen lo envia
-        doc.text('Error en el icono', 25,65);
-    }
 
-    
     doc.moveDown();
     doc.moveDown();
     doc.font('Times-Bold', 12).text("Arquidiósis de Barquisimeto", {align: 'center'});
@@ -62,11 +51,13 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
             "-" +
             element.end_date?.split("-")[0],
         ]);
-    });   
+    });  
+    doc.font('Times-Roman', 16) 
     const table = {
         headers: [{ label: '   Asignatura', headerColor: "#FFFFFF"}, { label: '  Nota', property: 'nota', headerColor: '#FFFFFF' },
             { label: '  Período', property: 'periodo', headerColor: '#FFFFFF' }],
-        rows: materias
+        rows: materias,
+        
     }
     await doc.table(table, { 
         divider:{
@@ -74,7 +65,9 @@ export async function BuildNotas(dataCB: (...args: any[]) => void, endCB: (...ar
             header:{disabled: true}
         },
         columnSpacing: 10,
-        columnsSize: [350, 40, 50]
+        columnsSize: [350, 40, 50],
+        prepareHeader: () =>doc.font('Times-Bold', 12),
+        prepareRow: (row, indexColumn, indexRow, rectRow, rectCell)=> doc.font('Times-Roman', 12),
     });
     doc.font('Times-Roman', 12).text("La escala de calificaciones es del UNO (01) al DIEZ (10) y la nota mínima aprobatoria es de SEIS (06) puntos.", {indent: 30,});
     doc.moveDown();
