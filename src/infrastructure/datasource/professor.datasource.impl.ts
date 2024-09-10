@@ -83,27 +83,31 @@ export class ProfessorDataSourceImpl implements ProfessorDataSource {
       where: { id: dto.person.id },
     });
     if (professorExist == null) throw "Professor doesn't exist!";
-    const getInstructorById = await prisma.instructor.findUnique({
-      where: { professor_id: dto.person.id },
-    });
-    if (!getInstructorById) throw "Instructor with ID: ${id} no found";
-    const instructorPositions = await prisma.instructor.findMany({
-      where: {
-        NOT: { instructor_position: "DESACTIVADO" },
-      },
-      select: { instructor_position: true },
-    });
-    const filteredInstructorPosition =
-      FilterEnum.filterInstructorPosition(instructorPositions);
-    console.log({ msj: "inside update", filteredInstructorPosition });
     if (dto.instructor_position) {
-      if (!(dto.instructor_position == getInstructorById.instructor_position)) {
+      const getInstructorById = await prisma.instructor.findUnique({
+        where: { professor_id: dto.person.id },
+      });
+      if (!getInstructorById) throw `instructor with ID: ${dto.instructor_position} no found`;
+      const instructorPositions = await prisma.instructor.findMany({
+        where: {
+          NOT: { instructor_position: "DESACTIVADO" },
+        },
+        select: { instructor_position: true },
+      });
+      const filteredInstructorPosition =
+        FilterEnum.filterInstructorPosition(instructorPositions);
+      console.log({ msj: "inside update", filteredInstructorPosition });
+      if (dto.instructor_position) {
         if (
-          !Object.keys(filteredInstructorPosition).includes(
-            dto.instructor_position
-          )
+          !(dto.instructor_position == getInstructorById.instructor_position)
         ) {
-          throw "there is other instructor with the same position";
+          if (
+            !Object.keys(filteredInstructorPosition).includes(
+              dto.instructor_position
+            )
+          ) {
+            throw "there is other instructor with the same position";
+          }
         }
       }
     }
