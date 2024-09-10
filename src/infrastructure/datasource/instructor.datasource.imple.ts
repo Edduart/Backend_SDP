@@ -83,6 +83,12 @@ export class InstructorDataSourceImple implements InstructorDataSource {
       where: {
         instructor_position:
           createDto.instructor_position as instructor_position,
+        NOT: {
+          OR: [
+            { instructor_position: "ASESOR_PROPEDEUTICO" },
+            { instructor_position: "DIRECTOR_ESPIRITUAL" },
+          ],
+        },
       },
     });
 
@@ -132,7 +138,8 @@ export class InstructorDataSourceImple implements InstructorDataSource {
           updateDto.instructor_position
         )
       ) {
-        throw "there is other instructor with the same position";}
+        throw "there is other instructor with the same position";
+      }
     }
 
     const updateInstructor = await prisma.instructor.update({
