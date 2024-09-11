@@ -14,6 +14,7 @@ import { ValidatePermission } from "../services/permissionValidator";
 import { parsePersonData } from "../utils/parseData";
 
 import { imageResize } from "../../presentation/utils/imageManipulation";
+import { BuildFichaWorker } from "../docs/worker.ficha";
 
 export class WorkerControler {
   constructor(private readonly repository: WorkerRepository) {}
@@ -35,7 +36,28 @@ export class WorkerControler {
       res.status(400).json("Acces denied");
     }
   };
-
+  public Ficha = (req: Request, res: Response) =>{
+    const id =
+      typeof req.params.id === "string" &&
+      req.params.id.length < 20 &&
+      req.params.id.length > 1
+        ? req.params.id
+        : undefined;
+    new GetWorker(this.repository).execute(id, undefined)
+    .then((infoworker)=>{
+      
+      const line = res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "inline; filename=ficha.pdf",
+      });
+      BuildFichaWorker(
+        (data) => line.write(data),
+            () => line.end(),
+            infoworker
+      )
+    })
+    .catch((error) => res.status(400).json({ error }));
+  }
   public get = (req: Request, res: Response) => {
     //si el id es string y mayor a 0 caracteres, y no es numero entonces se manda undefined, si es number tambien se manda el id convertido en numero
     const id =

@@ -56,7 +56,7 @@ router.put(
     });
   }
 );
-
+router.get("/ficha/:id", /*ValidatorTo.ValidarToken,*/ WorkerControl.Ficha);
 router.get("/", ValidatorTo.ValidarToken, WorkerControl.get);
 router.delete("/:id", ValidatorTo.ValidarToken, WorkerControl.deleteRole);
 
