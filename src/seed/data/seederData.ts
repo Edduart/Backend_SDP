@@ -11,7 +11,6 @@ import {
   rolePermissions as rolePermissionsData,
   person as personsData,
   user as usersData,
-  subject as subjectsData,
 } from "./";
 
 
@@ -29,5 +28,4 @@ export const modelData = {
   role_permission: {model: prisma.role_permission.createMany,data: rolePermissionsData,},
   person: { model: prisma.person.createMany, data: personsData },
   user: { model: prisma.user.createMany, data: usersData },
-  subject: { model: prisma.subject.createMany, data: subjectsData },
 };
