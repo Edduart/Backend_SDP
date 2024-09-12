@@ -30,7 +30,7 @@ async function setDefaultProfileImage(destinationFilePath: string) {
   console.log("running copy");
   try {
     const readDefaultImage = await fs.readFileSync(defaultProfileImage);
-    await fs.writeFileSync(destinationFilePath + ".jpeg", readDefaultImage);
+    await fs.writeFileSync(destinationFilePath, readDefaultImage);
   } catch (error) {
     return error;
   }

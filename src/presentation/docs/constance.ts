@@ -4,15 +4,6 @@ import { Getmonth } from './Notas.Certificadas';
 export function BuildConstance(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void,infor: string, surname: string, 
 forename: string, period: string, etapa: string, nombre_emisor : string, cedula_emisor: string){
     const doc = new PDFDocument({font: 'Times-Roman'});
-    try{
-        doc.image("./images/assests/backgpround.png", 110,150,{
-            align:'center',
-            
-        });
-    }catch(error){
-        //si hay un error cargando la imagen lo envia
-        doc.text('Error en el fondo', 110,150);
-    }
     
     surname = surname.toLowerCase();
     let nombre = surname.split(" ");
@@ -60,7 +51,7 @@ forename: string, period: string, etapa: string, nombre_emisor : string, cedula_
     doc.font('Times-Roman', 18).text(surname + ', ' + forename, {align: 'center'})
     doc.moveDown();
     doc.moveDown();
-    doc.font('Times-Roman', 12).text("Portador de la C.I. Nº:"+ infor +" está inscrito en el lapso académico "+period+", de la "+etapa+".", {
+    doc.font('Times-Roman', 12).text("Portador de la C.I. Nº:"+ infor +" está inscrito en el lapso académico "+period+", de "+etapa+".", {
         indent: 30
     });
     doc.moveDown();

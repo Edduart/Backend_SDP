@@ -35,6 +35,7 @@ export async function parsePersonData(req: any, path: any) {
     // Phone Data Parsing
     const phones: CreatePhone[] | null = origin.persona.phone?.map(
       (phone: { phone_number: string; description: string }) =>
+
         new CreatePhone(phone.phone_number, phone.description.toUpperCase())
     );
     // Person Data Parsing
@@ -75,10 +76,14 @@ export async function parseUserData(req: any, person: CreatePerson) {
               )
           )
         : undefined;
+    const parsed_parish_id = Number(origin.user.parish_id);
+    if (Number.isNaN(parsed_parish_id) || !Number.isInteger(parsed_parish_id) || parsed_parish_id < 0) {
+        throw new Error("Parish id invalid, must be a non negative integer")
+    }
     const userData = new CreateUserDTO(
       person,
       degrees,
-      origin.user.parish_id,
+      parsed_parish_id,
       origin.user.role,
       hashedPassword
     );

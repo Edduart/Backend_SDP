@@ -1,8 +1,14 @@
 import { CreateInstruction, CreateInstructionUseCase, GetInstruction, GetInstructionUseCase, InstructionRepository } from "../../domain";
 import { Request, Response } from "express";
+import { ValidatePermission } from "../services/permissionValidator";
 export class InstructionController {
     constructor(private readonly repository: InstructionRepository){}
     public create = async (req: Request, res: Response) => {
+        try{
+            const result = ValidatePermission(req.body.Permisos, "INSTRUCTOR", "C");
+          }catch(error){
+            return res.status(401).json("Not allowed" + error);
+        }
         const [errores, createinstruction] = CreateInstruction.CreateDTO(req.body);
         if(errores != undefined){
             console.log("verification errors:" + errores);

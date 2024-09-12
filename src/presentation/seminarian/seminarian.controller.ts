@@ -51,8 +51,7 @@ export class SeminarianControler {
       });
   };
   public getCartaCulminacione = async (req: Request, res: Response) => {
-    new GetByIDCulminadoSeminarianUseCase(this.repository)
-      .execute(req.params.id)
+    new GetByIDCulminadoSeminarianUseCase(this.repository).execute(req.params.id)
       .then((data) => {
         const line = res.writeHead(200, {
           "Content-Type": "application/pdf",
@@ -96,8 +95,8 @@ export class SeminarianControler {
         );
       })
       .catch((error) => {
-        console.log(error);
-        res.send(error);
+        console.log("error creado la carta" + error);
+        res.status(404).json({error: "Seminarian might not exists"}).send();
       });
   };
   public get = async (req: Request, res: Response) => {
@@ -175,33 +174,23 @@ export class SeminarianControler {
       //now check if there are errors
       const errores = seminarian.Validate();
       if (errores == null) {
-        await imageResize(req.body.ayuda);
-
         new UpdateSeminarianUseCase(this.repository)
           .execute(seminarian)
-          .then(() => {
-            res.json({ message: "ready" }).send;
+          .then(async() => {
+            await imageResize(req.body.ayuda);
+            res.json({ message: "ready" });
           })
           .catch((error) => {
-            if (req.body.ayuda != null) {
-              fs.unlinkSync(req.body.ayuda);
-            }
             console.log("unexpected error while executing" + error);
             res.status(400).send("Unexpected error: " + error);
           });
       } else {
-        if (req.body.ayuda != null) {
-          fs.unlinkSync(req.body.ayuda);
-        }
         //validation errors
         console.log(errores);
         res.status(400).send("Validation error: " + errores);
       }
     } catch (error) {
       // errores de verificacion
-      if (req.body.ayuda != null) {
-        fs.unlinkSync(req.body.ayuda);
-      }
       console.log("unexpected error while executing");
       res.status(418).send("Error: " + error);
     }

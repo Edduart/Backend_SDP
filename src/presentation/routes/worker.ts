@@ -29,7 +29,7 @@ router.post(
         res.status(400).json({ ImageError1: err.message });
       } else {
         if (!req.file) {
-          req.body.ayuda = "images" + req.baseUrl + req.url;
+          req.body.ayuda = "images" + req.baseUrl + req.url + ".jpeg";
           console.log("no file", req.body.ayuda);
         }
         WorkerControl.create(req, res);
@@ -38,7 +38,9 @@ router.post(
   }
 );
 
-router.put("/:id",ValidatorTo.ValidarTokenH,
+router.put(
+  "/:id",
+  ValidatorTo.ValidarTokenH,
   (req: Request, res: Response, next: NextFunction) => {
     updateFile.single("file")(req, res, async (err) => {
       if (err) {
@@ -54,7 +56,7 @@ router.put("/:id",ValidatorTo.ValidarTokenH,
     });
   }
 );
-
+router.get("/ficha/:id", /*ValidatorTo.ValidarToken,*/ WorkerControl.Ficha);
 router.get("/", ValidatorTo.ValidarToken, WorkerControl.get);
 router.delete("/:id", ValidatorTo.ValidarToken, WorkerControl.deleteRole);
 

@@ -1,21 +1,21 @@
 import PDFDocument from 'pdfkit';
-import { instructorFichaDTO } from '../../domain';
+import { ProfesorFichaDTO } from '../../domain';
 
-export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: instructorFichaDTO){
+export function BuildFichaProfessor(dataCB: (...args: any[]) => void, endCB: (...args: any[]) => void, data: ProfesorFichaDTO){
     const doc = new PDFDocument({font: 'Times-Roman'});
     /*Funciones de callback, no tocar*/
     doc.on("data", dataCB);
     doc.on("end", endCB);
     doc.font('Times-Bold',12)
     //tabla del carnet
-    doc.rect(40, 40, 530, 356).stroke();
+    doc.rect(40, 40, 530, 326).stroke();
     //Linea superior del ID
     doc.rect(42, 42, 525, 20).lineWidth(3)
     .fillOpacity(5)
     .fillAndStroke("#ffff99")
     doc.fillColor("black")
     //titulo del id
-    doc.text("DATOS DEL INSTRUCTOR", 45,47,{align: 'center'})
+    doc.text("DATOS DEL PROFESOR", 45,47,{align: 'center'})
     //icono
     try{
         doc.image('./images/assests/seminary.icon.png', 55,65,{
@@ -46,11 +46,11 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
                 
             });
         }else{
-            doc.text('instructor no tiene foto', 442,65);
+            doc.text('profesor no tiene foto', 442,65);
         }
     }catch(error){
         //si hay un error cargando la imagen lo envia
-        doc.text('Error en la foto del instructor', 442,65);
+        doc.text('Error en la foto del profesor', 442,65);
     }
     //Apellidos
     doc.rect(170, 95, 268, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#ccfcff")
@@ -83,14 +83,13 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
     const years = hoy.getFullYear() - birth_date.getFullYear();
     doc.text(years + " AÑOS", 390,150)
 
-    
-
-    //Curso
+    //grado de instruccion
     doc.rect(42, 210, 200, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#f2f2f2")
     doc.fillColor("black")
-    doc.text("FECHA DE RECIBIMIENTO", 60,216)
+    doc.text("GRADO DE INSTRUCCION", 60,216)
     //texto
-    doc.text(data.starting_Date.toISOString().split('T')[0], 100,235)
+    doc.text(data.instruction_grade, 60,235)
+
 
     //Diocesis
     doc.rect(250, 210, 316, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#f2f2f2")
@@ -135,19 +134,8 @@ export function BuildFichaInstructor(dataCB: (...args: any[]) => void, endCB: (.
     if(data.redes.length > 4)doc.text(data.redes[4].description, 420,334,{ link: data.redes[4].link});
 
 
-    //grado de instruccion
-    doc.rect(42, 350, 372, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#f2f2f2")
-    doc.fillColor("black")
-    doc.text("GRADO DE INSTRUCCION", 160,356)
-    //texto
-    doc.text(data.instruction_grade, 80,376)
+    
 
-    //posicion
-    doc.rect(420, 350, 146, 20).lineWidth(3).fillOpacity(5).fillAndStroke("#f2f2f2")
-    doc.fillColor("black")
-    doc.text("POSICION", 434,356)
-    //texto
-    doc.text(data.posicion, 442,376)
 
     doc.end();
 }

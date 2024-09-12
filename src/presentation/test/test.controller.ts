@@ -42,6 +42,11 @@ export class TestController {
   };
 
   public delete = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "TEST", "D");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
 
     new DeleteTest(this.repository)
@@ -56,6 +61,11 @@ export class TestController {
   };
 
   public update = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "TEST", "U");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const id = +req.params.id;
 
     const [error, updateDto] = UpdateTestDto.update({
@@ -165,6 +175,11 @@ export class TestController {
       .catch((error) => res.status(400).json({ error }));
   };
   public create = (req: Request, res: Response) => {
+    try{
+      const result = ValidatePermission(req.body.Permisos, "TEST", "C");
+    }catch(error){
+      return res.status(401).json("Not allowed" + error);
+    }
     const [error, createDto] = CreateTestDto.create(req.body);
 
     console.log("inside create controller", { createDto });

@@ -1,5 +1,4 @@
 import {
-  enrollment_status,
   foreigner_seminarian_stage,
   seminarian_Location,
   seminarian_Ministery,
@@ -170,13 +169,10 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
   }
   }
   async getByID(id: string): Promise<DocumenDTO> {
+    console.log(id)
     const result = await prisma.seminarian.findFirst({where:{
+      status: seminarian_status.ACTIVO,
       user:{person_id: id},
-      enrollment:{
-        some:{
-          status: enrollment_status.CURSANDO
-        }
-      }
     },include:{
       user:{include:{person:true}},
       enrollment: {include:{
@@ -195,12 +191,12 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
             stage = "Configurativa"
           break;
       }
-      const year = result?.enrollment[0].academic_term.end_date.getFullYear().toString()
-
+      const year = result?.enrollment[result.enrollment.length - 1].academic_term.end_date.getFullYear().toString()
+      console.log("Before break:" + result)
     if(result == null)throw new Error("Seminarian does not exists");
     const document = DocumenDTO.fromdb({id: result.user.person.id, forename: result.user.person.forename, surname: result.user.person.surname})
     document.stage = stage
-    document.period = result.enrollment[0].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString()
+    document.period = result.enrollment[result.enrollment.length - 1].academic_term.start_date.getFullYear().toString() + " - " + result.enrollment[0].academic_term.end_date.getFullYear().toString()
     return document
   }
   async getByIDCulminado(id: string): Promise<DocumenDTO> {
@@ -302,6 +298,7 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
         (social_Actual) => {
           return SocialMediaEntity.fromdb({
             social_media_category:social_Actual.social_media_category,
+            category:social_Actual.social_media_category,
             link: social_Actual.link,
           });
         }
@@ -481,11 +478,14 @@ export class SeminarianDataSourceImpl implements SeminarianDataSource {
       
     } catch (error) {
       console.log(error);
-      await prisma.phone_number.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.social_media.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.academic_degree.deleteMany({where:{user_id: data.user.person.id}});
-      await prisma.user.deleteMany({where:{person_id: data.user.person.id}});
-      await prisma.person.delete({where:{id: data.user.person.id}})
+      try{
+        await prisma.phone_number.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.social_media.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.academic_degree.deleteMany({where:{user_id: data.user.person.id}});
+        await prisma.user.deleteMany({where:{person_id: data.user.person.id}});
+        await prisma.person.delete({where:{id: data.user.person.id}})
+      }catch(error2){}
+      
       throw new Error("Unable to create seminarian" + error);
     }
   }

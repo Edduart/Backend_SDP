@@ -14,9 +14,9 @@ const router = Router();
 const datasource = new SeminarianDataSourceImpl();
 const Repository = new SeminarianRepositoryImpl(datasource);
 const SeminarianControl = new SeminarianControler(Repository);
-router.get("/ficha/:id", SeminarianControl.ficha);
-router.get("/carcaCulmin/:id", SeminarianControl.getCartaCulminacione);
-router.get("/constance/:id", SeminarianControl.GetConstance);
+router.get("/ficha/:id",        ValidatorTo.ValidarToken, SeminarianControl.ficha);
+router.get("/carcaCulmin/:id",  ValidatorTo.ValidarToken, SeminarianControl.getCartaCulminacione);
+router.get("/constance/:id",    ValidatorTo.ValidarToken, SeminarianControl.GetConstance);
 router.post(
   "/create/:id",
   ValidatorTo.ValidarTokenH,
@@ -26,7 +26,8 @@ router.post(
         res.status(400).json({ ImageError: err.message });
       } else {
         if (!req.file) {
-          const preparePath: string = "images" + req.baseUrl + req.url;
+          const preparePath: string =
+            "images" + req.baseUrl + req.url + ".jpeg";
           const newImagePath = preparePath.replace("/create/", "/");
           req.body.ayuda = newImagePath;
           console.log("no file", req.body.ayuda);
@@ -51,8 +52,7 @@ router.put(
 );
 router.get(
   "/seminarianlist",
-  ValidatorTo.ValidarToken,
-  SeminarianControl.CreateList
+  ValidatorTo.ValidarToken, SeminarianControl.CreateList
 );
 router.get("/getsem", ValidatorTo.ValidarToken, SeminarianControl.get);
 router.delete("/:id", ValidatorTo.ValidarToken, SeminarianControl.delete);

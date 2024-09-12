@@ -35,12 +35,12 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
         throw `worker not found`;
       }
       await UpdatePersonFunc(data.persona);
-      const perona_actualizar = prisma.basic_worker.update({
+      const perona_actualizar = await tx.basic_worker.update({
         where: {
           person_id: data.persona.id,
         },
         data: {
-          job_position: data.job_position as basic_worker_job_position,
+          job_position: data.job_position.toUpperCase() as basic_worker_job_position,
         },
       });
       return await this.get(data.persona.id, undefined);
@@ -170,7 +170,8 @@ export class WorkerDataSourceImpl implements WorkerDataSource {
           //ahora creo el array de redes sociales, en caso de que existan
           return SocialMediaEntity.fromdb({
             //esta tira es debido al nombre de la relacion
-            category:
+            category: sociales.social_media_category_social_media_social_media_categoryTosocial_media_category.description,
+            social_media_category:
               sociales.social_media_category,
             link: sociales.link,
           });

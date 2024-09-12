@@ -23,7 +23,7 @@ export class UserDataSourceImplementation implements UserDataSource {
   }
   async getById(id: string): Promise<object> {
     const userById = await prisma.user.findUnique({
-      where: { person_id: id },
+      where: { person_id: id, role: { NOT: { name: "SUPERADMIN" } } },
       select: {
         person: { select: { id: true, forename: true, surname: true } },
         seminarian: {

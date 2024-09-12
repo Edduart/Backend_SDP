@@ -8,25 +8,25 @@ const router = Router();
 const dataSource = new EnrollmentDataSourceImpl();
 const enrollmentRepository = new EnrollmentRepositoryImpl(dataSource);
 const enrollmentController = new EnrollmentController(enrollmentRepository);
-router.get("/count", enrollmentController.Getcounts);
-router.get(
-  "/academic-status/:seminarian_id",
-  enrollmentController.getAcademicStatus
-);
-router.get("/seminarian-stage/", enrollmentController.getStageOfSeminarian);
-router.get("/equivalency-list/:seminarian_id", enrollmentController.getSubjectAllowToEnrollEquivalency);
-router.get(
-  "/seminarian-academic-term/",
-  enrollmentController.getAcademicTermByEnrollment
-);
-
-router.post(
-  "/create-by-equivalence/",
-  enrollmentController.createEnrollmentByEquivalence
-);
-
-router.post("/", enrollmentController.create);
-router.get("/", enrollmentController.get);
-router.put("/:id", enrollmentController.update);
-router.delete("/:id", enrollmentController.delete);
+router.get("/count", 
+  enrollmentController.Getcounts);
+router.get("/academic-status/:seminarian_id",
+  ValidatorTo.ValidarToken, 
+  enrollmentController.getAcademicStatus);
+router.get("/seminarian-stage/", 
+  ValidatorTo.ValidarToken, 
+  enrollmentController.getStageOfSeminarian);
+router.get("/equivalency-list/:seminarian_id", 
+  ValidatorTo.ValidarToken, 
+  enrollmentController.getSubjectAllowToEnrollEquivalency);
+router.get("/seminarian-academic-term/",
+  ValidatorTo.ValidarToken, 
+  enrollmentController.getAcademicTermByEnrollment);
+router.post("/create-by-equivalence/",  
+  ValidatorTo.ValidarToken, 
+  enrollmentController.createEnrollmentByEquivalence);
+router.post("/",      ValidatorTo.ValidarToken, enrollmentController.create);
+router.get("/",       ValidatorTo.ValidarToken, enrollmentController.get);
+router.put("/:id",    ValidatorTo.ValidarToken, enrollmentController.update);
+router.delete("/:id", ValidatorTo.ValidarToken, enrollmentController.delete);
 module.exports = router;

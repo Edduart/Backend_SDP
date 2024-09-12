@@ -14,6 +14,7 @@ import { ValidatePermission } from "../services/permissionValidator";
 import { parsePersonData } from "../utils/parseData";
 
 import { imageResize } from "../../presentation/utils/imageManipulation";
+import { BuildFichaWorker } from "../docs/worker.ficha";
 
 export class WorkerControler {
   constructor(private readonly repository: WorkerRepository) {}
@@ -35,7 +36,28 @@ export class WorkerControler {
       res.status(400).json("Acces denied");
     }
   };
-
+  public Ficha = (req: Request, res: Response) =>{
+    const id =
+      typeof req.params.id === "string" &&
+      req.params.id.length < 20 &&
+      req.params.id.length > 1
+        ? req.params.id
+        : undefined;
+    new GetWorker(this.repository).execute(id, undefined)
+    .then((infoworker)=>{
+      
+      const line = res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "inline; filename=ficha.pdf",
+      });
+      BuildFichaWorker(
+        (data) => line.write(data),
+            () => line.end(),
+            infoworker
+      )
+    })
+    .catch((error) => res.status(400).json({ error }));
+  }
   public get = (req: Request, res: Response) => {
     //si el id es string y mayor a 0 caracteres, y no es numero entonces se manda undefined, si es number tambien se manda el id convertido en numero
     const id =
@@ -84,13 +106,11 @@ export class WorkerControler {
     const source = req.headers["Permissions"];
     try {
       //la declaracion de variable es para obligar al execute a esperar a que ser ejecute la validacion
-      console.log(source)
+      console.log(source);
       const result = ValidatePermission(source, "USER", "U");
       //el json viene escrito en un string dentro de data asi que aqui lo cambio a json
       let origin = JSON.parse(req.body.data);
-      const persondto = await parsePersonData(
-        req.body.data, req.body.ayuda
-      );
+      const persondto = await parsePersonData(req.body.data, req.body.ayuda);
       const workerdto = new CreateWorker(
         persondto,
         origin.job_position as Job_Psotion_Enum
@@ -99,7 +119,8 @@ export class WorkerControler {
       if (result_validations == null) {
         new UpdateWorkerUseCase(this.repository)
           .execute(workerdto)
-          .then((worker) => {
+          .then(async (worker) => {
+            await imageResize(req.body.ayuda);
             res.json(worker).send;
           })
           .catch((error) => {
@@ -131,7 +152,7 @@ export class WorkerControler {
       if (result_validations == null) {
         new CreateWorkerUseCase(this.repository)
           .execute(workerdto)
-          .then(async(worker) => {
+          .then(async (worker) => {
             await imageResize(req.body.ayuda);
             res.json(worker).send;
           })

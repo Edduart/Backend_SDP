@@ -9,6 +9,8 @@ import {
   UpdateInstructorDto,
 } from "../../domain";
 
+import { FilterEnum } from "../../presentation/utils/filterEnum";
+
 export class InstructorDataSourceImple implements InstructorDataSource {
   async Ficha(id: string): Promise<instructorFichaDTO> {
     const person = await prisma.instructor.findFirst({
@@ -81,6 +83,12 @@ export class InstructorDataSourceImple implements InstructorDataSource {
       where: {
         instructor_position:
           createDto.instructor_position as instructor_position,
+        NOT: {
+          OR: [
+            { instructor_position: "ASESOR_PROPEDEUTICO" },
+            { instructor_position: "DIRECTOR_ESPIRITUAL" },
+          ],
+        },
       },
     });
 
@@ -106,21 +114,33 @@ export class InstructorDataSourceImple implements InstructorDataSource {
     return InstructorEntity.fromObject(createInstructor);
   }
   async updateById(updateDto: UpdateInstructorDto): Promise<InstructorEntity> {
-    console.log(updateDto);
+    console.log({ updateDto });
 
-    await this.findById(updateDto.professor_id);
+    const instructorToUpdate = await this.findById(updateDto.professor_id);
 
-    const checkInstructorPosition = await prisma.instructor.findMany({
+    const instructorPositions = await prisma.instructor.findMany({
       where: {
-        instructor_position:
-          updateDto.instructor_position as instructor_position,
+        NOT: { instructor_position: "DESACTIVADO" },
       },
+      select: { instructor_position: true },
     });
 
-    console.log({ checkInstructorPosition });
+    const filteredInstructorPosition =
+      FilterEnum.filterInstructorPosition(instructorPositions);
 
-    if (checkInstructorPosition.length > 0)
-      throw `there is already one instructor in the position: ${updateDto.instructor_position}`;
+    console.log({ msj: "inside update", filteredInstructorPosition });
+
+    if (
+      !(updateDto.instructor_position == instructorToUpdate.instructor_position)
+    ) {
+      if (
+        !Object.keys(filteredInstructorPosition).includes(
+          updateDto.instructor_position
+        )
+      ) {
+        throw "there is other instructor with the same position";
+      }
+    }
 
     const updateInstructor = await prisma.instructor.update({
       where: { professor_id: updateDto.professor_id },
