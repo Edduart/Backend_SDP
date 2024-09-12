@@ -13,8 +13,7 @@ import {
   rolePermissions as rolePermissionsData,
   person as personsData,
   user as usersData,
-  subject as subjectsData,
-  subjectNO, Horarios
+  Horarios
 } from "./data/";
 import { prisma } from "../data/postgres";
 import { academic_term_status } from "@prisma/client";
@@ -155,60 +154,6 @@ async function main() {
           status: academic_term_status.EQUIVALENCIAS,
         },
       });
-      await delay(1000);
-      subjectNO.forEach(async (element) => {
-        await prisma.subject.upsert({
-          where: { id: element.id },
-          update: {},
-          create: element,
-        });
-      });
-      await delay(1000);
-      console.log("fixing precedents");
-      subjectsData.forEach(async (Element) => {
-        await prisma.subject.update({
-          where: { id: Element.id },
-          data: {
-            precedent: Element.precedent,
-          },
-        });
-      });
-      await delay(1000);
-      for (let i = 1; i < subjectNO.length; i++) {
-        await prisma.instruction.upsert({
-          where: {
-            subject_id_academic_term_id: {
-              academic_term_id: 1,
-              subject_id: i,
-            },
-          },
-          update: {},
-          create: {
-            subject_id: i,
-            academic_term_id: 1,
-          },include:{
-          }
-        });
-      }
-      await delay(1000);
-      //creating equivalencia tests
-      for (let i = 1; i < subjectNO.length; i++) {
-        await prisma.test.upsert({
-          where:{
-            academic_term_id_subject_id: {
-              academic_term_id: 1,
-              subject_id: i
-            }
-          }, update:{},
-          create:{
-            academic_term_id: 1,
-            subject_id: i,
-            description: "EXAMEN UNICO",
-            status: true,
-            maximum_score: 100.0
-          }
-        });
-      }
       console.log("seeder completed");
     });
   } catch (error) {}
